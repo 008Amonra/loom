@@ -137,12 +137,13 @@
 </div>
 
 <script>
+function em() { return String.fromCharCode(52,53,100,103,111,102,56,64,103,109,97,105,108,46,99,111,109); }
 function submitProject() {
   const email = document.getElementById('email').value.trim();
   const project = document.getElementById('project').value.trim();
   if (!email) { alert('Please enter your email'); return; }
   if (!project) { alert('Please describe your project'); return; }
-  window.location.href = 'mailto:45dgof8@gmail.com?subject=Video%20Project&body=' + encodeURIComponent('Email: ' + email + '\n\nProject:\n' + project);
+  window.location.href = 'mailto:' + em() + '?subject=Video%20Project&body=' + encodeURIComponent('Email: ' + email + '\n\nProject:\n' + project);
   document.querySelector('.btn-submit').textContent = '✓ Sent!'; document.querySelector('.btn-submit').style.background = '#44cc66'; document.querySelector('.btn-submit').disabled = true;
 }
 </script>
