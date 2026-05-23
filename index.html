@@ -144,33 +144,17 @@
   <p class="note" style="margin-top:12px;color:#aaa">This is a separate one-time service, not an add-on to the prices above. You get the full setup guide + email support to get your own agent ops center running.</p>
 </div>
 
-<!-- Payment -->
-<h2>Pay</h2>
-<div class="card">
-  <label style="color:#aaa;font-size:0.9rem" for="amount">Amount (CHF)</label>
-  <div class="amount-row">
-    <input type="number" id="amount" min="1" step="0.5" value="19" onchange="updatePayPal()" />
-    <span style="color:#888;font-size:0.9rem">min. SFr. 5</span>
-  </div>
-
-  <div class="pay-btns">
-    <div><button class="btn btn-paypal" id="paypal-btn" onclick="showPayPal()">💳 Pay with PayPal</button></div>
-    <div><button class="btn btn-pulse" onclick="openPulse()">🤖 Pay with Pulse</button></div>
-  </div>
-
-  <div id="paypal-container" style="display:none"></div>
-  <div id="payment-status" class="status"></div>
-
-  <p class="note">
-    <strong>PayPal:</strong> Instant checkout in CHF.<br>
-    <strong>Pulse:</strong> Opens the Pulse payment assistant in a new tab — guided flow with PayPal, Stripe, or TWINT.
-  </p>
+<!-- Inquire -->
+<h2>Interested?</h2>
+<div class="card" style="text-align:center;border-color:#4a3a6a">
+  <p style="color:#c0a0ff;font-size:1.1rem;margin-bottom:8px">Payments coming soon — beta pricing active</p>
+  <p style="color:#aaa">Prices listed above. First revision free.<br>
+  Send a project brief and I'll get back to you within 24h.</p>
 </div>
 
-<!-- Prompt Form -->
-<h2>Describe your project</h2>
+<!-- Project Form -->
+<h2>Tell me what you need</h2>
 <div class="card">
-  <p style="color:#aaa;margin-bottom:16px">After payment, tell us what you need. We'll deliver to your email within 24h.</p>
   <div class="form-group">
     <label for="email">Your email</label>
     <input type="email" id="email" placeholder="you@example.com" />
@@ -180,13 +164,7 @@
     <textarea id="project" placeholder="I need a 30-second video ad for my brand. Dark cinematic style, electronic background music, text overlays with my tagline..."></textarea>
   </div>
   <button class="btn-submit" onclick="submitProject()">Send project brief</button>
-  <p class="note" style="margin-top:8px">We'll reply within 24h with a concept. No commitment until you approve.</p>
-</div>
-
-<div class="disclaimer">
-  <strong>Disclaimer:</strong> 45dgof8 provides AI agent coordination services. Payments are processed via PayPal or 45dgof8-pulse (coordination hub).<br>
-  45dgof8-pulse does not hold or transmit funds. A 1% infrastructure fee applies to Pulse-coordinated payments.<br>
-  No sensitive data is stored. Prices in Swiss Francs (CHF). All prices include applicable taxes.
+  <p class="note" style="margin-top:8px">I'll reply within 24h. No commitment until you approve.</p>
 </div>
 
 <hr />
@@ -198,91 +176,7 @@
 </div>
 <!-- close .wrap -->
 
-<!-- PayPal JS SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAAmB7lcCMqajEX6ZQ6_EnZ0PtDeUv5VKZFrO06dRXN64vpMoAkt--npuAWXUVVznCgrUBfQdWizxX1UPY&currency=CHF&components=buttons"></script>
-
 <script>
-let paypalRendered = false;
-
-function getAmount() {
-  const raw = parseFloat(document.getElementById('amount').value);
-  if (isNaN(raw) || raw < 1) {
-    document.getElementById('payment-status').textContent = 'Please enter a valid amount (min. SFr. 5)';
-    document.getElementById('payment-status').className = 'status err';
-    return null;
-  }
-  document.getElementById('payment-status').textContent = '';
-  document.getElementById('payment-status').className = 'status';
-  return raw.toFixed(2);
-}
-
-function showPayPal() {
-  const amount = getAmount();
-  if (!amount) return;
-
-  const container = document.getElementById('paypal-container');
-  const btn = document.getElementById('paypal-btn');
-
-  if (paypalRendered) {
-    container.style.display = container.style.display === 'none' ? 'block' : 'none';
-    return;
-  }
-
-  container.style.display = 'block';
-  btn.textContent = '💳 Processing...';
-
-  paypal.Buttons({
-    style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
-
-    createOrder: function(data, actions) {
-      const val = getAmount();
-      if (!val) return Promise.reject('Invalid amount');
-      return actions.order.create({
-        purchase_units: [{ amount: { currency_code: 'CHF', value: val } }]
-      });
-    },
-
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-        const name = details.payer?.name?.given_name || 'customer';
-        document.getElementById('payment-status').textContent = '✅ Paid by ' + name + '! Amount: CHF ' + getAmount();
-        document.getElementById('payment-status').className = 'status ok';
-        btn.textContent = '💳 Paid ✓';
-        btn.style.background = '#44cc66';
-        btn.disabled = true;
-      });
-    },
-
-    onCancel: function() {
-      document.getElementById('payment-status').textContent = '✕ PayPal cancelled';
-      document.getElementById('payment-status').className = 'status err';
-      btn.textContent = '💳 Pay with PayPal';
-    },
-
-    onError: function(err) {
-      console.error(err);
-      document.getElementById('payment-status').textContent = '✕ PayPal error. Try again or use Pulse.';
-      document.getElementById('payment-status').className = 'status err';
-      btn.textContent = '💳 Pay with PayPal';
-    }
-  }).render('#paypal-container').then(() => {
-    paypalRendered = true;
-    btn.textContent = '💳 Pay with PayPal';
-  });
-}
-
-function openPulse() {
-  const amount = getAmount();
-  const pulseUrl = 'https://45dgof8.com/45dgof8-pulse.html';
-  if (amount) {
-    window.open(pulseUrl + '?amount=' + amount + '&currency=CHF', '_blank');
-  } else {
-    window.open(pulseUrl, '_blank');
-  }
-  document.getElementById('payment-status').textContent = 'Pulse opened in new tab';
-  document.getElementById('payment-status').className = 'status info';
-}
-
 function submitProject() {
   const email = document.getElementById('email').value.trim();
   const project = document.getElementById('project').value.trim();
