@@ -1,0 +1,12 @@
+# Secrets
+*.enc.json
+.env
+secrets.env
+
+# Dependencies
+node_modules/
+
+# Large generated assets
+assets/*.wav
+assets/*.mp4
+*.tar.gz
