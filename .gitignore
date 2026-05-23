@@ -9,4 +9,4 @@ node_modules/
 # Large generated assets
 assets/*.wav
 assets/*.mp4
-*.tar.gz
+assets/*.tar.gz
