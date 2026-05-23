@@ -193,6 +193,8 @@
 <!-- close .wrap -->
 
 <script>
+function em() { return String.fromCharCode(52,53,100,103,111,102,56,64,103,109,97,105,108,46,99,111,109); }
+
 function submitProject() {
   const email = document.getElementById('email').value.trim();
   const project = document.getElementById('project').value.trim();
@@ -200,7 +202,7 @@ function submitProject() {
   if (!email) { alert('Please enter your email'); return; }
   if (!project) { alert('Please describe your project'); return; }
 
-  const mailto = 'mailto:45dgof8@gmail.com?subject=Project%20Brief&body=' +
+  const mailto = 'mailto:' + em() + '?subject=Project%20Brief&body=' +
     encodeURIComponent('Email: ' + email + '\n\nProject:\n' + project);
 
   window.location.href = mailto;
