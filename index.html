@@ -64,6 +64,7 @@
   .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
 
   .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
+  .qbtn:hover{border-color:#6a5a9a !important;background:#2a1a3e !important}
   .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
   .video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%}
 
@@ -224,6 +225,73 @@
     </div>
   </div>
 </div>
+
+<hr />
+
+<!-- Try it live -->
+<h2>Try it live</h2>
+<div class="card" style="border-color:#3a2a4a;background:#0e0e1a">
+  <p style="color:#888;font-size:0.85rem;margin-bottom:16px">Click a question and watch the answer appear in real time — this is how fast the model responds.</p>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <button class="qbtn" data-q="0" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">What can you actually build for me?</button>
+    <button class="qbtn" data-q="1" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">How is this different from ChatGPT Plus?</button>
+    <button class="qbtn" data-q="2" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">I don't know what I need — can you help me figure it out?</button>
+    <button class="qbtn" data-q="3" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">Do I need to pay monthly?</button>
+  </div>
+
+  <div id="answer-box" style="background:#0a0a12;border:1px solid #2a2a3a;border-radius:8px;padding:16px;min-height:60px">
+    <div id="answer-text" style="color:#888;font-size:0.85rem">Click a question above to see the answer appear.</div>
+  </div>
+</div>
+
+<script>
+const answers = [
+  `Custom AI agents that run on your hardware. Email bots that forward invoices to Telegram. Automation workflows that watch RSS feeds and post summaries. Video ads with music — scripted, generated, assembled, delivered. No platform lock-in, no monthly, no GPU needed. You describe what you need, I build it, you own it.`,
+  `ChatGPT Plus is a chat interface you rent. I build you autonomous agents that actually do things — monitor email, generate videos, run workflows. ChatGPT stops when you close the tab. My agents run 24/7 on your hardware and you keep the code. It's the difference between renting a drill and owning the workshop.`,
+  `Yes. That's most of what I do. Tell me what you're trying to do — manage client emails, automate social posting, generate marketing videos, whatever — and I'll propose a setup. No commitment, no pressure. If it makes sense, we build it. If not, you walk away with a clearer idea of what you actually need.`,
+  `No. One price per project, you own the result. No recurring fees, no "pro" tier, no cancellation dance. If you need support later, you pay for that hour. Not because you forgot to cancel.`,
+];
+
+const typewriter = document.getElementById('answer-text');
+let timer = null;
+let currentIdx = -1;
+
+document.querySelectorAll('.qbtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const idx = parseInt(this.dataset.q);
+    if (idx === currentIdx) return;
+    currentIdx = idx;
+
+    document.querySelectorAll('.qbtn').forEach(b => {
+      b.style.borderColor = '#4a3a6a';
+      b.style.color = '#c0a0ff';
+    });
+    this.style.borderColor = '#00ff88';
+    this.style.color = '#00ff88';
+
+    if (timer) { clearInterval(timer); timer = null; }
+
+    const full = answers[idx];
+    typewriter.textContent = '';
+    typewriter.style.color = '#b8b8c8';
+    typewriter.style.fontSize = '0.9rem';
+
+    let pos = 0;
+    const speed = 25;
+    function tick() {
+      if (pos < full.length) {
+        typewriter.textContent += full[pos];
+        pos++;
+        timer = setTimeout(tick, speed);
+      } else {
+        timer = null;
+      }
+    }
+    tick();
+  });
+});
+</script>
 
 <hr />
 
