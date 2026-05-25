@@ -1,0 +1,7 @@
+Telegram listener started. Polling every 10s for authorized users...
+Telegram listener started. Polling every 15min (quiet 20:00-6:00).
+Override: touch /home/jace/45dgof8/email-agent/.telegram-awake to wake me up.
+[2026-05-24T11:46:43.000Z] Jens: ok cool....now please check each 15 min.. that should be enough. in the night 20:00 - 06:00 you do not have to check...except when i tell you.
+[2026-05-24T11:51:26.000Z] Jens: 10 seconds? 9 8 7 ...
+Telegram listener started. Polling every 10min (quiet 20:00-6:00).
+Override: touch /home/jace/45dgof8/email-agent/.telegram-awake to wake me up.

@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "email-agent",
   "version": "1.0.0",
   "description": "",

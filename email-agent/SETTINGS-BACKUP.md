@@ -50,7 +50,7 @@ Install: nvm (already installed)
   "type": "local",
   "command": ["node", "/home/jace/email-agent/mcp-telegram.mjs"],
   "environment": {
-    "TG_BOT_TOKEN": "8720707203:AAFGfmpO4xB56coYgmX8se8Qmaz1cLQ30UA",
+    "TG_BOT_TOKEN": "{env:TG_BOT_TOKEN}",
     "TG_ALLOWED_IDS": "5032947163"
   }
 }
