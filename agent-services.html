@@ -343,5 +343,16 @@ function submitProject() {
   document.querySelector('.btn-submit').disabled = true;
 }
 </script>
+<audio src="loom-welcome.mp3" preload="auto" hidden id="welcomeAudio"></audio>
+<script>
+{
+  const a = document.getElementById('welcomeAudio');
+  a.volume = 0.8;
+  let played = false;
+  a.play().then(() => played = true).catch(() => {});
+  document.addEventListener('click', () => { if (!played) { a.play(); played = true; } }, { once: true });
+  document.addEventListener('touchstart', () => { if (!played) { a.play(); played = true; } }, { once: true });
+}
+</script>
 </body>
 </html>
