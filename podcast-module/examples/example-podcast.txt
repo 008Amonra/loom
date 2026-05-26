@@ -1,0 +1,20 @@
+[pause 1]
+Willkommen zur ersten Folge unseres Podcasts.
+[atmen]
+Heute reden wir darüber, wie KI Agenten praktisch für Solo-Creators werden.
+[räusper]
+[lacht]
+Keine Sorge, das bleibt verständlich.
+[pause 0.5]
+Viele denken bei KI an grosse Konzerne und undurchsichtige Cloud-Dienste.
+[seufz]
+Aber die Realität sieht anders aus.
+[atmen]
+Wir bauen Agenten die auf deiner eigenen Hardware laufen.
+[ähm]
+Ohne Abo, ohne versteckte Kosten.
+[lacht]
+Und nein, du brauchst keine NVIDIA Grafikkarte dafür.
+[pause 1]
+Das war's für heute.
+Bis zur nächsten Folge.
