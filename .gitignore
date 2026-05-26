@@ -10,3 +10,4 @@ node_modules/
 assets/*.wav
 assets/*.mp4
 assets/*.tar.gz
+whisperer-data/
