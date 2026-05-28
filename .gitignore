@@ -12,3 +12,4 @@ assets/*.mp4
 assets/*.tar.gz
 whisperer-data/
 tts-env/
+email-credentials.enc.json
