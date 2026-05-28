@@ -11,3 +11,4 @@ assets/*.wav
 assets/*.mp4
 assets/*.tar.gz
 whisperer-data/
+tts-env/
