@@ -222,3 +222,280 @@
 2026-05-26T03:06:52Z INF Registered tunnel connection connIndex=2 connection=d551cfe0-5ce9-4906-b804-7b6617d25398 event=0 ip=198.41.200.23 location=ams20 protocol=quic
 2026-05-26T03:06:52Z INF Registered tunnel connection connIndex=3 connection=10d68467-a6b0-41df-81e1-5c61d32f2f1d event=0 ip=198.41.192.37 location=zrh01 protocol=quic
 2026-05-26T03:06:52Z INF Registered tunnel connection connIndex=1 connection=cf5cd3dd-fc1c-4f3c-a5fb-652beac89f78 event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-26T09:35:45Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:45Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:45Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:35:45Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:35:45Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:35:45Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:35:45Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:35:45Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:45Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:45Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:45Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:35:45Z ERR failed to run the datagram handler error="context canceled" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:35:45Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:35:45Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:35:45Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:35:46Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:35:46Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:35:46Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:35:46Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:35:46Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:35:47Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T09:35:47Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-26T09:35:47Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T09:35:47Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=1
+2026-05-26T09:35:47Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T09:35:47Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:47Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:47Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.57
+2026-05-26T09:35:47Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T09:35:47Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=3
+2026-05-26T09:35:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T09:35:49Z INF Registered tunnel connection connIndex=0 connection=ca412d28-62f0-49ae-b38a-4eb9e6192cbb event=0 ip=198.41.192.47 location=zrh02 protocol=quic
+2026-05-26T09:36:06Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T09:36:06Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T09:36:06Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T09:36:06Z INF Registered tunnel connection connIndex=3 connection=07bdf371-0c87-4477-8b13-163f4039f703 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-26T09:36:06Z INF Registered tunnel connection connIndex=2 connection=28577679-685c-43f7-8f6d-51c83aed3ddb event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-26T09:36:06Z INF Registered tunnel connection connIndex=1 connection=2757c009-26fe-4ab6-9d0b-57927b0df9cb event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-26T19:02:49Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:02:49Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:02:49Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:02:49Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:02:49Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:02:49Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.47:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T19:02:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z WRN Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.47:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.47
+2026-05-26T19:02:49Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:49Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:49Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:49Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:49Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:49Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:49Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:49Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:49Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:49Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:49Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T19:02:49Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=3
+2026-05-26T19:02:50Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T19:02:50Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=2
+2026-05-26T19:02:51Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-26T19:02:51Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=1
+2026-05-26T19:02:53Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2026-05-26T19:02:53Z INF Registered tunnel connection connIndex=0 connection=6b3bd875-98f5-4684-a26b-685ea3695dae event=0 ip=198.41.192.7 location=zrh01 protocol=quic
+2026-05-26T19:02:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-26T19:02:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-26T19:02:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-26T19:03:00Z INF Registered tunnel connection connIndex=3 connection=09196dd9-f970-4416-9a04-188bf982e6c1 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-26T19:03:00Z INF Registered tunnel connection connIndex=2 connection=bbcdb799-97a5-4793-bc4b-f0e48f1dbfaa event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-26T19:03:00Z INF Registered tunnel connection connIndex=1 connection=6287e119-66bf-4d51-8282-d5053ba3da27 event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-26T19:03:04Z ERR update failed to apply error="checksum validation failed"
+2026-05-27T02:33:38Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:38Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:38Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:38Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:38Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:38Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:38Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:38Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:38Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:38Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:38Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:38Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:38Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:38Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:38Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:38Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:38Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:38Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:38Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:38Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:39Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T02:33:39Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=3
+2026-05-27T02:33:39Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T02:33:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:39Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:39Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T02:33:40Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T02:33:40Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-27T02:33:40Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T02:33:40Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=1
+2026-05-27T02:33:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T02:33:43Z INF Registered tunnel connection connIndex=0 connection=913c5fe3-618d-4dfa-a207-9a9cecc35be9 event=0 ip=198.41.192.57 location=zrh01 protocol=quic
+2026-05-27T02:33:58Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T02:33:58Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T02:33:58Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T02:33:59Z INF Registered tunnel connection connIndex=3 connection=9e90af34-c360-4d77-9376-7fd6a57d874c event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-27T02:33:59Z INF Registered tunnel connection connIndex=2 connection=1b3cdf86-c5de-43fd-9ce2-a70f2003e6de event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-27T02:33:59Z INF Registered tunnel connection connIndex=1 connection=0cb652ef-95e6-4863-a3e9-7618bc5ebe4e event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-27T05:18:30Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:30Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:30Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:30Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:30Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:30Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:30Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:30Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:30Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:30Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:30Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:30Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:30Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:30Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:30Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:30Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:30Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:30Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:30Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:30Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:31Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T05:18:31Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-27T05:18:31Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T05:18:31Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=1
+2026-05-27T05:18:31Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T05:18:31Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:31Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:31Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T05:18:32Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T05:18:32Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=3
+2026-05-27T05:18:32Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.77
+2026-05-27T05:18:32Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.77:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.77
+2026-05-27T05:18:32Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.192.77
+2026-05-27T05:18:38Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T05:18:38Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T05:18:38Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T05:18:38Z INF Registered tunnel connection connIndex=3 connection=242be081-bdbd-4a31-b614-aa2042102657 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-27T05:18:38Z INF Registered tunnel connection connIndex=1 connection=1b2c28e6-d3ff-407e-bf38-6ede3761cf70 event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-27T05:18:38Z INF Registered tunnel connection connIndex=2 connection=2eb4de37-c745-492b-83ad-6a70a5888b5f event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-27T05:18:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T05:18:39Z INF Registered tunnel connection connIndex=0 connection=4750b29f-6831-4a13-8de4-c920283076cc event=0 ip=198.41.192.167 location=zrh02 protocol=quic
+2026-05-27T14:09:55Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:09:55Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:09:55Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:09:55Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:09:55Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.167:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:55Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:09:55Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.167:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:55Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:09:55Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:09:55Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:55Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:09:55Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:09:55Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:55Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:09:55Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:09:55Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:55Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:09:55Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:09:55Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:09:55Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:09:56Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T14:09:56Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=3
+2026-05-27T14:09:57Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T14:09:57Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:57Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.167:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:57Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T14:09:57Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T14:09:57Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=1
+2026-05-27T14:09:57Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T14:09:57Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-27T14:09:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T14:10:00Z INF Registered tunnel connection connIndex=0 connection=a28b9cbd-a283-4ed6-91f5-817520f9dd87 event=0 ip=198.41.192.57 location=zrh01 protocol=quic
+2026-05-27T14:10:03Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T14:10:03Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T14:10:03Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T14:10:03Z INF Registered tunnel connection connIndex=2 connection=f943af5b-1a25-4d9f-aae2-7b6423913985 event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-27T14:10:03Z INF Registered tunnel connection connIndex=1 connection=230611bf-9a27-435d-a1a1-3d065527bd3c event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-27T14:10:03Z INF Registered tunnel connection connIndex=3 connection=14994586-1cde-44cf-9ed5-3a65fdfb5ef3 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-27T21:01:59Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:01:59Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:01:59Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:01:59Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:01:59Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:01:59Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:01:59Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:01:59Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:01:59Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:01:59Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:01:59Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:01:59Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:01:59Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:01:59Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:01:59Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:01:59Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T21:01:59Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-27T21:01:59Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T21:01:59Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:01:59Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.57
+2026-05-27T21:02:00Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T21:02:00Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=1
+2026-05-27T21:02:00Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-27T21:02:00Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=3
+2026-05-27T21:02:00Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T21:02:00Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.167:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T21:02:00Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.192.167
+2026-05-27T21:02:05Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-27T21:02:05Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-27T21:02:05Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-27T21:02:06Z INF Registered tunnel connection connIndex=1 connection=e07ecdd2-8c35-4bb6-bbf1-06f9208c571d event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-27T21:02:06Z INF Registered tunnel connection connIndex=2 connection=a28941b5-4b20-421f-a6da-2c9196d0fad3 event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-27T21:02:06Z INF Registered tunnel connection connIndex=3 connection=1a008eb0-86be-4d9a-958d-b3da440db693 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-27T21:02:07Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2026-05-27T21:02:07Z INF Registered tunnel connection connIndex=0 connection=c9f68f1d-7ef0-48fb-89fc-b1b46d15b9e1 event=0 ip=198.41.192.7 location=zrh01 protocol=quic
+2026-05-28T04:41:40Z ERR failed to run the datagram handler error="write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:40Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:54331->198.41.200.193:7844: sendmsg: network is unreachable" connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:40Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:40Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:40Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:40Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:40Z ERR failed to run the datagram handler error="write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:40Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:40Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:40Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:40Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:40Z ERR failed to run the datagram handler error="write udp [::]:42665->198.41.192.37:7844: sendmsg: network is unreachable" connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:40Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:40Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:40Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:40Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:40Z ERR failed to run the datagram handler error="write udp [::]:56855->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:40Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:40Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:40Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:41Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-28T04:41:41Z ERR Connection terminated error="datagram manager encountered a failure while serving" connIndex=1
+2026-05-28T04:41:41Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-28T04:41:41Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=3
+2026-05-28T04:41:41Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-28T04:41:41Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:41Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.7:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:41Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.7
+2026-05-28T04:41:42Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-28T04:41:42Z ERR Connection terminated error="accept stream listener encountered a failure while serving" connIndex=2
+2026-05-28T04:41:43Z ERR Failed to refresh protocol error="lookup protocol-v2.argotunnel.com on 127.0.0.53:53: no such host"
+2026-05-28T04:41:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-05-28T04:41:43Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp [::]:36926->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-05-28T04:41:43Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.192.57
+2026-05-28T04:41:45Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=2 event=0 ip=198.41.200.23
+2026-05-28T04:41:45Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=3 event=0 ip=198.41.192.37
+2026-05-28T04:41:45Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=1 event=0 ip=198.41.200.193
+2026-05-28T04:41:45Z INF Registered tunnel connection connIndex=2 connection=729f89d7-de83-4ed7-acbb-de3d742f6fb1 event=0 ip=198.41.200.23 location=ams20 protocol=quic
+2026-05-28T04:41:45Z INF Registered tunnel connection connIndex=3 connection=7ad59834-d1e7-4d15-9444-bd1e42149bb9 event=0 ip=198.41.192.37 location=zrh01 protocol=quic
+2026-05-28T04:41:46Z INF Registered tunnel connection connIndex=1 connection=c9dada3d-e1e1-47b5-b6db-2e8fd4f310d5 event=0 ip=198.41.200.193 location=ams20 protocol=quic
+2026-05-28T04:41:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.77
+2026-05-28T04:41:50Z INF Registered tunnel connection connIndex=0 connection=aa8e9ef0-4618-403c-87b9-1cb9f1a3cb4c event=0 ip=198.41.192.77 location=zrh01 protocol=quic

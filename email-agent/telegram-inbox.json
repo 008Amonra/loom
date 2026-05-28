@@ -52,5 +52,14 @@
     "text": "i am online...",
     "date": "2026-05-26T05:44:18.000Z",
     "replied": false
+  },
+  {
+    "id": 412113691,
+    "chat_id": 5032947163,
+    "from": "Jens",
+    "username": "amonra_8",
+    "text": "/status",
+    "date": "2026-05-27T14:31:00.000Z",
+    "replied": false
   }
 ]
