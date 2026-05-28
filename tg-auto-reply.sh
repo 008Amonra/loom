@@ -32,17 +32,16 @@ for u in data.get('result', []):
     uid = u['update_id']
     name = m.get('from', {}).get('first_name', 'there')
     if text and cid:
-        print(f'{uid}|{cid}|{name}|{text[:100]}')" 2>/dev/null)
+        print(f'{uid}|{cid}|{name}|{text[:200]}')" 2>/dev/null)
 
-  while IFS='|' read -r UID CID NAME TEXT; do
+  while IFS='|' read -r UPD_ID CID NAME TEXT; do
     [ -z "$CID" ] && continue
 
     case "$TEXT" in
       /start*)
         curl -s "$API/sendMessage" -d chat_id=$CID -d text="Hey $NAME! $WELCOME_TEXT" > /dev/null
-        # send voice (reuse tg-voice approach)
         TMP=$(mktemp /tmp/tg-reply-XXXXXX.ogg)
-        echo "$WELCOME_TEXT" | piper --model "$HOME/.local/share/piper/en-us-lessac-medium.onnx" --length-scale 1.3 --output-raw | ffmpeg -f s16le -ar 22050 -ac 1 -i pipe: -c:a libopus -b:a 16k "$TMP" -y 2>/dev/null
+        echo "$WELCOME_TEXT" | piper --model "$HOME/.local/share/piper/en-us-lessac-medium.onnx" --length-scale 1.6 --output-raw | ffmpeg -f s16le -ar 22050 -ac 1 -i pipe: -c:a libopus -b:a 16k "$TMP" -y 2>/dev/null
         curl -s -X POST "$API/sendVoice" -F chat_id=$CID -F voice=@"$TMP" > /dev/null
         rm -f "$TMP"
         ;;
@@ -51,7 +50,7 @@ for u in data.get('result', []):
         ;;
     esac
 
-    OFFSET=$((UID + 1))
+    OFFSET=$((UPD_ID + 1))
     echo $OFFSET > "$OFFSET_FILE"
   done <<< "$RESULT"
 
