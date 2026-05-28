@@ -1,0 +1,121 @@
+[pause 1]
+
+Welcome to the show. [cough] Another week, another firehose of tech news. Let's jump right in.
+
+[pause 1]
+
+── CHAPTER 1: SAP GOES ALL-IN ON AI AGENTS ──
+
+[cough] SAP just dropped what might be their biggest announcement of the year. Mid-May 2026, Walldorf unveiled the SAP Autonomous Suite and SAP Business AI Platform. [pause 1]
+
+What does that mean? AI agents are moving straight into core ERP processes. Imagine an agent that scans your bank statements every morning, reconciles accounts automatically, and flags anomalies. That's the Cash Management Agent. SAP claims it cuts manual effort by up to 80 percent. [laugh] Eighty percent. That's not nothing. [pause 1]
+
+There are more. Compliance agents cut packaging compliance checks in half. Simulations that used to take a full day now run in about 20 minutes. [sigh] That's a massive productivity jump. [pause 1]
+
+And then there's the Custom Code Migration Agent — helps migrate old ECC systems to S/4HANA. Not by blindly copying code, but by intelligently analyzing what you have and suggesting migration paths. [pause 1]
+
+The key enabler? A secure sandbox runtime built with NVIDIA OpenShell. That solves the trust problem that's been blocking autonomous agents in regulated mid-market companies. [laugh] Because who wants to hand over their bookkeeping to a black box? [pause 1]
+
+For SAP customers in Europe, the question isn't whether agentic AI enters the ERP — it's when. Four steps for this summer: check your license model for Joule Assistant activation, pilot the Cash Management Agent, commission a custom-code migration audit, and don't file the Autonomous Suite under "2027 roadmap" — treat it as a Q3 2026 operational question. [pause 2]
+
+── CHAPTER 2: GERMANY'S AI GAMBLE ──
+
+[cough] The German government launched an AI competition worth 125 million euros. Sounds like a lot? It is. But in a world where OpenAI and DeepSeek play with billions, it's a first step. [pause 1]
+
+It's run by SPRIND — the Federal Agency for Disruptive Innovation. The program is called "Next Frontier AI" and aims to fund companies that could one day become a European OpenAI. [pause 1]
+
+The program runs in three phases over 24 months. Phase one: up to ten teams get three million each. Phase two: up to six teams get eight million each. Final phase: up to three teams get fifteen and a half million each. [pause 1]
+
+The real question: is 125 million enough? [sigh] SPRIND's Jano Costard says openly: "This 125 million is just the first step." The goal is to mobilize billions in additional funding. [pause 1]
+
+Europe's best bet, he says, is in its own strengths: industrial data, manufacturing know-how, and privacy-friendly AI. "We don't lack research competence. We don't lack technological ability. What we lack is the ability to turn it into companies, products, and services." [breath] That sentence hits hard. [pause 2]
+
+── CHAPTER 3: THE GERMANY STACK ──
+
+[cough] Closely related: the "Germany Stack". The Federal Ministry for Digital Affairs awarded a 250-million-euro contract. Two consortia split it — one led by T-Systems and SAP, the other by SVA, Schwarz Digits, and Codesphere. [pause 1]
+
+It's designed as a sovereign AI cloud platform for government agencies and companies. Multi-tenant, zero-trust architecture. For those wondering: zero trust means no user and no system is automatically trusted. Every access gets verified. [pause 1]
+
+The first concrete application is KIPITZ — an AI assistant for document processing, translation, and administrative tasks. [pause 1]
+
+Parallel to this, Munich is getting one of Europe's most powerful AI data centers. Deutsche Telekom and NVIDIA are investing around a billion euros. Up to 10,000 Blackwell GPUs. Half an exaflop of compute power. [sigh] That's enough to train models with hundreds of billions of parameters. [pause 1]
+
+These aren't toys. Germany is moving from planning to execution in digital policy. The Germany Stack, the Munich AI factory, and the EUDI wallet are the building blocks. [pause 1]
+
+The open question for the coming months: can they pull off the balancing act between data sovereignty and international competitiveness? [laugh] Or will bureaucracy outrun digitalization? [pause 2]
+
+── CHAPTER 4: GOOGLE GEMINI 3 AND OMNI ──
+
+[cough] May 23, 2026. Google drops two big announcements: Gemini Omni for video production and Gemini 3 for developers. [pause 1]
+
+Gemini Omni generates video clips. It's being integrated into the Gemini app, Google Flow, and especially YouTube. Free in Shorts and Create. The advanced "Ask YouTube" search stays premium — US only for now. [pause 1]
+
+The timing is interesting. The fight between OpenAI's Sora and Google's Omni will come down to who has better workflow integration. Google has YouTube. That's a clear advantage. [pause 1]
+
+Then Gemini 3. The numbers are impressive: 2.8 times faster than GPT-4o, 47 percent cheaper. 0.53 euros per million input tokens. 89.4 percent on MMLU-Pro. [laugh] That's top tier. [pause 1]
+
+The Gemini app now has 900 million monthly users. Google wants AI agents embedded in everyday life — from YouTube creators to scientists. [pause 1]
+
+Not everything is smooth. Google is shutting down the free Gemini CLI tool on June 18, 2026 — despite over 6,000 community contributions. Replacement is Antigravity CLI, a closed-source alternative. Naturally, developers aren't thrilled. [pause 1]
+
+Meanwhile, OpenAI is preparing an IPO at up to a trillion euro valuation. A trillion. More than most German DAX companies combined. And they solved an 80-year-old math problem — the Erdős unit distance conjecture — using a reasoning model. [laugh] That's the kind of story that shows where this is heading. [pause 2]
+
+── CHAPTER 5: MERCEDES DRIVE PILOT ──
+
+[cough] From software to hardware. Mercedes is moving to the next stage of autonomous driving. Starting end of 2026, the first German cities will be navigable with Mercedes Drive Pilot. [pause 1]
+
+Point-to-point navigation. The driver stays formally responsible and has to touch the wheel every few seconds. But the electronics handle the driving — even in complex situations. [pause 1]
+
+Pedestrian crossings, traffic lights, turning, stop-and-go in rush hour — Drive Pilot handles it. Eventually, cars will also handle first and last meters — like parking garages. [sigh] [pause 1]
+
+Mercedes development chief Jörg Burzer promised nationwide coverage by 2027. [pause 1]
+
+Technical base: their own MB.OS software architecture, a network of lidar and radar sensors, half a dozen cameras. Vehicles like the new CLA, GLC, and C-Class can even be activated later via over-the-air update. [laugh] A software update turns your car into an autonomous vehicle. That's the future becoming present. [pause 2]
+
+── CHAPTER 6: EU REGULATION AND THE CYBER THREAT ──
+
+[cough] The EU Commission published new guidelines on high-risk AI regulation in May 2026. For European companies, this means massive changes. [pause 1]
+
+From August 2, 2026: mandatory labeling of AI-generated content. Every text, image, or video from corporate AI systems must be clearly marked for users. Companies of all sizes are affected. [pause 1]
+
+Financial risk: fines up to 30 million euros or six percent of global annual turnover. [sigh] That's not pocket change. [pause 1]
+
+Emotion recognition systems at work are completely banned. Admins must proactively remove such applications. [pause 1]
+
+Parallel to regulation, the threat landscape is exploding. 86 percent of all phishing attacks are now automated and AI-driven. Banking trojans: 1.24 million incidents in Q1 2026. That's a 196 percent increase year over year. [pause 1]
+
+Attackers are using the same technology we use for productive purposes. [sigh] An endless arms race. [pause 1]
+
+Global cybercrime damages in 2026: about 442 billion euros. Interpol's Operation FRONTIER Plus III led to over 3,000 arrests and 752 million dollars seized — but that's a drop in the ocean. [breath] [pause 2]
+
+── CHAPTER 7: HIGHTECH AGENDA ──
+
+[cough] The German cabinet presented roadmaps for key technologies. Six focus areas. [pause 1]
+
+One: AI — we covered that. Two: quantum technologies — goal is a fault-corrected quantum computer at European top level by 2030. [pause 1]
+
+Three: microelectronics — new chip fabs, pilot lines, and a chip design competence center to reduce dependency on Asia. Four: biotechnology — first mRNA-based cancer immunotherapy to be approved by 2028. [pause 1]
+
+Five: fusion. The world's first commercial fusion power plant is supposed to be built in Germany. [laugh] Yes, fusion energy. Sounds like science fiction. It's an official government goal. [pause 1]
+
+Six: climate-neutral energy and mobility. New battery research in Münster produced a functional lithium-ion cell using a fully European process chain. Sodium-ion batteries aim to reduce critical raw material dependencies. [pause 1]
+
+And a battery research milestone: the Research Factory Battery Cell in Münster produced a fully functional lithium-ion cell with a completely European supply chain. [pause 2]
+
+── OUTRO ──
+
+[cough] Three takeaways from this week. [pause 1]
+
+First: agentic AI isn't a future topic anymore. SAP is shipping it, Google is building it in, and governments are funding it. If you're not on board, you're missing the train. [pause 1]
+
+Second: Europe and Germany have a strategy. Whether it works is an open question. But the Germany Stack, the SPRIND initiative, and the Munich AI factory are concrete steps. [laugh] Better than the years of hesitation we've been through. [pause 1]
+
+Third: the threat grows at the same speed as the opportunity. AI-driven cyber attacks are exploding, and regulation is trying to catch up. If you don't have a security strategy now, you'll have a rude awakening in fall 2026. [sigh] [pause 1]
+
+That's your tech news for this week. From SAP to Google to Mercedes — from AI offensives to cyber threats. A lot is moving, and it's going to stay interesting. [pause 1]
+
+If you liked the show, send a message. And there'll be a new episode soon with the biggest stories from the world of technology. [pause 1]
+
+Until then: stay curious, stay critical, and don't let the AI steal your show. [laugh] We'll talk soon.
+
+[pause 3]

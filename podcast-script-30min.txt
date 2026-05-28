@@ -1,0 +1,171 @@
+
+[pause 1]
+
+Hallo und herzlich willkommen zur heutigen Ausgabe unseres Tech-Podcasts. Es ist wieder viel passiert in der deutschen und internationalen Technologie-Welt, und ich nehme euch mit durch die wichtigsten Geschichten dieser Woche. [lacht] Wir haben eine Menge Stoff, also lasst uns direkt einsteigen. [pause 2]
+
+LOS GEHT ES MIT SAP. [räusper] Der Walldorfer Konzern hat Mitte Mai 2026 eine richtungweisende Ankündigung gemacht: Die SAP Autonomous Suite und die SAP Business AI Platform sind offiziell vorgestellt worden. [pause 1] Was bedeutet das für Unternehmen in Deutschland? Kurz gesagt: Künstliche Intelligenz in Form von autonomen Agenten zieht direkt in die ERP-Kernprozesse ein. [pause 1]
+
+Stellt euch vor, ein KI-Agent analysiert täglich eure Kontoauszüge, führt automatische Abstimmungen durch und meldet Auffälligkeiten. Der sogenannte Cash Management Agent macht genau das. SAP nennt eine Reduktion des manuellen Aufwands um bis zu 80 Prozent. [lacht] Achtzig Prozent. Das ist nicht wenig. [pause 1]
+
+Und es gibt weitere konkrete Agenten. Neue Compliance-Agenten halbieren den Zeitaufwand für Verpackungs-Compliance-Prüfungen. Simulationen, die früher einen ganzen Tag gedauert haben, sind in etwa 20 Minuten erledigt. [seufz] Das ist eine massive Produktivitätssteigerung. [pause 1]
+
+Dann gibt es die Custom Code Migration Agents. Die helfen dabei, alte ECC-Systeme auf S/4HANA zu migrieren. [ähm] Und zwar nicht nur durch simples Kopieren, sondern durch intelligente Analyse des vorhandenen Custom Codes. Die Agenten schlagen Migrationspfade vor, prüfen auf Kompatibilität und dokumentieren den gesamten Prozess. [pause 1]
+
+Wer bisher die S/4HANA-Migration vor sich hergeschoben hat, bekommt jetzt also einen KI-gestützten Pfad. Das war bisher einer der teuersten Beratungsposten bei SAP-Migrationen überhaupt. [atmen] [pause 1]
+
+Der entscheidende Schritt aus meiner Sicht: Eine sichere Sandbox-Laufzeitumgebung in Zusammenarbeit mit NVIDIA OpenShell. Die löst das Vertrauensproblem, das bisher den breiten Einsatz autonomer Agenten im regulierten Mittelstand blockiert hat. [lacht] Denn wer gibt schon gerne die Kontrolle über seine Finanzbuchhaltung an eine Blackbox? [pause 1]
+
+Für SAP-Kunden im DACH-Raum stellt sich damit nicht mehr die Frage, ob agentische KI ins ERP einzieht, sondern wann. Vier konkrete Schritte sind im Sommer 2026 sinnvoll: Erstens das eigene SAP-Lizenzmodell auf Joule-Assistant-Aktivierung prüfen. Zweitens den Cash Management Agent in einer kontrollierten Pilotphase testen. [pause 1] Drittens ein Custom-Code-Migration-Audit beauftragen. Und viertens: Die Autonomous Suite nicht als Roadmap-Punkt für 2027 abheften, sondern als operative Frage für das dritte Quartal 2026. Wer jetzt sauber pilotiert, hat im Frühjahr 2027 belastbare Zahlen für die nächste Investitions-Diskussion. [pause 1] [pause 3]
+
+WEITER GEHT ES MIT DEUTSCHLANDS KI-OFFENSIVE. [räusper] Die Bundesregierung hat einen Wettbewerb zur Künstlichen Intelligenz mit einem Volumen von 125 Millionen Euro gestartet. Klingt nach viel Geld? Ist es auch. Aber im globalen Kontext, wo OpenAI und DeepSeek mit Milliardenbeträgen hantieren, ist es eher ein erster Schritt. [lacht] [pause 1]
+
+Hinter der Initiative steht die Bundesagentur für Sprunginnovationen, kurz SPRIND. Das Programm "Next Frontier AI" soll Firmen fördern, die eines Tages zu einem europäischen Pendant von OpenAI werden könnten. [pause 1]
+
+Jano Costard von SPRIND hat in einem Interview mit Euronews gesagt: "Deutschland übernimmt hier die Führung, weil wir keine Zeit haben, darauf zu warten, dass andere Akteure dieses Feld betreten. Der globale Wettbewerb legt keine Pause ein. Wir müssen jetzt handeln." [pause 1]
+
+Das Programm läuft in drei Phasen über 24 Monate. In der ersten Phase können bis zu zehn Teams jeweils bis zu drei Millionen Euro erhalten. Bis zu sechs Teams ziehen in die zweite Phase ein und bekommen bis zu acht Millionen Euro pro Team. In der letzten Phase können bis zu drei Teams jeweils bis zu 15,5 Millionen Euro erhalten. [pause 1]
+
+Die entscheidende Frage ist natürlich: Reichen 125 Millionen Euro? [seufz] Costard sagt offen: "Die 125 Millionen Euro, die wir bereitstellen, sind nur der erste Schritt." Ziel ist es, zusätzliche Mittel in Milliardenhöhe zu mobilisieren. Die 125 Millionen dienen dazu, die Technologie bis zu einem Punkt zu entwickeln, an dem Investoren einsteigen. [pause 1]
+
+Europa habe seine besten Chancen in eigenen Stärken, sagt Costard: Industriedaten, Fertigungs-Know-how und datenschutzfreundliche KI. "An Forschungskompetenz mangelt es uns nicht. Uns fehlt auch nicht die technologische Fähigkeit. Was uns fehlt, ist die Fähigkeit, daraus Unternehmen sowie Produkte und Dienstleistungen zu machen." [atmen] Das ist ein Satz, der nachhallt. [pause 1] [pause 3]
+
+ENG VERWANDT mit diesem Thema ist der sogenannte "Germany Stack". [räusper] Das Bundesministerium für Digitales und Verkehr hat einen Auftrag über 250 Millionen Euro vergeben. Zwei Konsortien teilen sich den Zuschlag: ein Team aus T-Systems und SAP, sowie eine Gruppe mit SVA, Schwarz Digits und Codesphere. [pause 1]
+
+Die Plattform heißt intern "Germany Stack" und ist als souveräne KI-Cloud-Plattform konzipiert. Sie soll Regierungsbehörden und Unternehmen eine sichere Umgebung für KI-Anwendungen bieten. Das Besondere: Die Plattform ist mandantenfähig und basiert auf Zero-Trust-Architektur. [lacht] Für alle, die sich fragen: Zero Trust bedeutet, dass kein Benutzer und kein System automatisch vertrauenswürdig ist. Jeder Zugriff wird geprüft. [pause 1]
+
+Die erste konkrete Anwendung ist der KI-Assistent KIPITZ. Der Name klingt witzig, aber die Anwendung ist ernst: KIPITZ übernimmt Dokumentenverarbeitung, Übersetzung und Verwaltungsaufgaben für Behörden. [pause 1]
+
+Parallel dazu entsteht in München eines der leistungsstärksten KI-Rechenzentren Europas. Die Deutsche Telekom und NVIDIA investieren rund eine Milliarde Euro in die Anlage. Bis zu 10.000 Blackwell-GPUs sollen dort installiert werden. Die Rechenleistung beträgt 0,5 Exaflops. [seufz] Um das einzuordnen: Das ist genug Rechenleistung, um komplexe KI-Modelle mit mehreren hundert Milliarden Parametern zu trainieren. [pause 1]
+
+Das sind keine Spielereien. Deutschland wechselt in der Digitalpolitik von der Planungs- in die Umsetzungsphase. Der Germany Stack, die Münchner KI-Fabrik und die EUDI-Wallet sind die zentralen Bausteine. [pause 1] Die entscheidende Frage für die kommenden Monate: Gelingt der Spagat zwischen Datensouveränität und internationaler Wettbewerbsfähigkeit? Oder ist die Bürokratie doch schneller als die Digitalisierung? [lacht] [pause 1] [pause 3]
+
+SPRECHEN WIR ÜBER GOOGLE. [räusper] Am 23. Mai 2026 hat der Konzern zwei große Neuigkeiten präsentiert: Gemini Omni für die Videoproduktion und Gemini 3 für Entwickler. [pause 1]
+
+Fangen wir mit Gemini Omni an. Das ist ein Modell, das Videoclips generieren kann. Integriert wird es in die Gemini-App, in Google Flow und vor allem in YouTube. In den Apps Shorts und Create ist die Funktion kostenlos nutzbar. Die erweiterte Suchfunktion "Ask YouTube" bleibt dagegen Premium-Nutzern in den USA vorbehalten. [pause 1]
+
+Interessant ist der Timing: Der Wettkampf zwischen OpenAIs Sora und Googles Gemini Omni wird sich daran entscheiden, wer die bessere Integration in bestehende Workflows bietet. Google hat hier mit YouTube einen klaren Vorteil. [pause 1]
+
+Parallel zu den Verbraucher-Features stellte Google Gemini 3 vor. Die Zahlen sind beeindruckend: Gemini 3 ist 2,8-mal schneller als GPT-4o und 47 Prozent günstiger. Der Preis liegt bei 0,53 Euro pro Million Input-Tokens. Im MMLU-Pro-Benchmark erreichte das Modell 89,4 Prozent. [lacht] Das ist absolute Spitzenklasse. [pause 1]
+
+Die Gemini-App hat inzwischen 900 Millionen monatliche Nutzer erreicht. Das ist ein klares Zeichen für das rasante Wachstum des Ökosystems. Google will KI-Agenten fest im Alltag verankern, vom YouTube-Creator bis zum Wissenschaftler. [pause 1]
+
+Nicht alles läuft reibungslos. Google hat angekündigt, das Gemini CLI-Tool für kostenlose Nutzer zum 18. Juni 2026 einzustellen. Die Community hatte über 6.000 Beiträge dazu geleistet. [seufz] Ersatz ist das Antigravity CLI, eine Closed-Source-Alternative. Das sorgt natürlich für Unmut in der Entwickler-Community. [pause 1]
+
+Die Expansion von Gemini findet in einem hochdynamischen Umfeld statt. OpenAI bereitet einen Börsengang mit einer Bewertung von bis zu einer Billion Euro vor. Eine Billion. Das ist mehr als die meisten deutschen DAX-Konzerne zusammen wert sind. [pause 1]
+
+OpenAI gelang zudem ein Prestigeerfolg: Ein Reasoning-Modell löste die Erdős-Einheitsdistanz-Vermutung, ein 80 Jahre altes mathematisches Problem. [lacht] Das sind genau die Geschichten, die zeigen, wohin die Reise geht. [pause 1] [pause 3]
+
+VON SOFTWARE ZU HARDWARE: Mercedes und das autonome Fahren. [räusper] Der Stuttgarter Autobauer startet in die nächste Stufe. Ab Ende 2026 sollen die ersten deutschen Städte mit dem Mercedes Drive Pilot nahezu autonom befahrbar sein. [pause 1]
+
+Es geht um die sogenannte Punkt-zu-Punkt-Navigation. Der Fahrer bleibt zwar formal in der Verantwortung und muss alle paar Sekunden pro forma die Hände ans Lenkrad nehmen. Aber die Elektronik übernimmt die Führung des Fahrzeugs, auch in komplexen Situationen. [pause 1]
+
+Was bedeutet das konkret? Fußgängerüberwege, Ampelkreuzungen, Abbiegen oder Stop-and-Go in der Rushhour – all das soll der Drive Pilot bewältigen können. Mittelfristig sollen die Autos auch die ersten und letzten Meter etwa im Parkhaus übernehmen. [seufz] [pause 1]
+
+Mercedes-Entwicklungsvorstand Jörg Burzer hat den Dienst ab 2027 flächendeckend für ganz Deutschland in Aussicht gestellt. Man treibe das assistierte und automatisierte Fahren in enger Abstimmung mit dem Bundesverkehrsministerium voran. [pause 1]
+
+Technische Basis sind die firmeneigene Software-Architektur MB OS sowie ein Netzwerk aus Lidar- und Radarsensoren und ein halbes Dutzend Kameras. Fahrzeuge wie der neue CLA, der GLC oder die C-Klasse können teilweise auch nachträglich per Over-the-Air-Update freigeschaltet werden. [lacht] Ein Software-Update macht das Auto also zum autonomen Fahrzeug. Das ist die Zukunft, die gerade Gegenwart wird. [pause 1] [pause 3]
+
+UND DAS THEMA REGULIERUNG. [räusper] Die EU-Kommission hat im Mai 2026 neue Leitlinien zur Regulierung von Hochrisiko-KI veröffentlicht. Für deutsche Unternehmen bedeutet das massive Umstellungen. [pause 1]
+
+Ab dem 2. August 2026 gilt eine Pflicht zur Kennzeichnung KI-generierter Inhalte. Jeder Text, jedes Bild oder Video, das von firmenweiten KI-Systemen erzeugt wird, muss für Nutzer klar erkennbar sein. Das betrifft Unternehmen jeder Größe. [pause 1]
+
+Die finanziellen Risiken sind enorm: Bei Verstößen drohen Strafen von bis zu 30 Millionen Euro oder sechs Prozent des globalen Jahresumsatzes. [seufz] Das ist kein Pappenstiel, wie man in der Schweiz sagt. [lacht] [pause 1]
+
+Komplett verboten sind Systeme zur Emotionserkennung am Arbeitsplatz. Administratoren müssen solche Anwendungen proaktiv aus ihren Systemen entfernen. Wer das nicht tut, riskiert empfindliche Strafen. [pause 1]
+
+Das Bundesland Bremen hat bereits eine Dienstvereinbarung für den KI-Einsatz in der Verwaltung abgeschlossen. Sie schreibt vor: Human-in-the-Loop-Entscheidungen, also jeder KI-Beschluss muss von einem Menschen überprüft werden. Dazu strikter Diskriminierungsschutz. [pause 1]
+
+Der regionale KI-Assistent heißt übrigens "LLMoin". Ja, der Name ist ein Wortspiel aus LLM und Moin, der norddeutschen Begrüßung. [lacht] Das zeigt: Auch Behörden haben Humor. [pause 1]
+
+Parallel zur Regulierung verschärft sich die Bedrohungslage massiv. 86 Prozent aller Phishing-Angriffe sind inzwischen automatisiert und werden von gegnerischer KI gesteuert. Banking-Trojaner haben dramatisch zugelegt: 1,24 Millionen Vorfälle im ersten Quartal 2026. [pause 1] Das ist ein Anstieg um 196 Prozent im Vergleich zum Vorjahr. Fast 200 Prozent mehr Cyber-Angriffe durch KI. Die Angreifer nutzen genau die gleiche Technologie, die wir für produktive Zwecke einsetzen. [seufz] Ein Wettlauf ohne Ende. [pause 1]
+
+Die globalen Schäden durch Cyberkriminalität belaufen sich im laufenden Jahr 2026 auf rund 442 Milliarden Euro. Die Interpol-Operation FRONTIER Plus III führte zwar zu über 3.000 Festnahmen und der Sicherstellung von 752 Millionen Dollar, aber das ist nur ein Tropfen auf den heißen Stein. [atmen] [pause 1] [pause 3]
+
+ZUM ABSCHLUSS: DIE HIGHTECH AGENDA. [räusper] Das Bundeskabinett hat Mitte Mai die Roadmaps für die Schlüsseltechnologien der Hightech Agenda Deutschland vorgestellt. Sechs Bereiche stehen im Fokus. [pause 1]
+
+Erstens: Künstliche Intelligenz, über die wir heute schon viel gesprochen haben. Zweitens: Quantentechnologien. Hier ist das Ziel, bis 2030 einen fehlerkorrigierten Quantencomputer auf europäischem Spitzenniveau zu realisieren. [pause 1]
+
+Drittens: Mikroelektronik. Neue Chipfabriken, Pilotlinien und das Kompetenzzentrum Chipdesign sollen die Abhängigkeit von asiatischen Herstellern reduzieren. Viertens: Biotechnologie. Bis 2028 soll die erste mRNA-basierte Krebsimmuntherapie zugelassen werden. [pause 1]
+
+Fünftens: Fusion. Das weltweit erste kommerzielle Fusionskraftwerk soll in Deutschland entstehen. [lacht] Ja, Fusionsenergie. Klingt nach Science-Fiction, ist aber ein erklärtes Ziel der Bundesregierung. Sechstens: Klimaneutrale Energieerzeugung und Mobilität. [pause 1]
+
+Neu ist auch die Batterieforschung: Mit der Forschungsfertigung Batteriezelle in Münster wurde eine funktionsfähige Lithium-Ionen-Batteriezelle auf Basis einer durchgängig europäischen Prozesskette hergestellt. Neue Zellchemien wie Natrium-Ionen-Batterien sollen kritische Rohstoffabhängigkeiten reduzieren. [pause 1] [pause 3]
+
+WAS NEHME ICH AUS DIESER WOCHE MIT? [räusper] Drei Dinge. Erstens: Agentische KI ist kein Zukunftsthema mehr. SAP liefert sie aus, Google baut sie ein, und die deutsche Politik fördert sie mit Millionen. Wer jetzt nicht aufspringt, verpasst den Zug. [pause 1]
+
+Zweitens: Europa und Deutschland haben eine Strategie. Ob sie aufgeht, ist offen. Aber der Germany Stack, die SPRIND-Initiative und die Münchner KI-Fabrik sind konkrete Schritte. [lacht] Besser als die Jahre des Zögerns, die wir hinter uns haben. [pause 1]
+
+Drittens: Die Bedrohung wächst im gleichen Tempo wie die Chancen. KI-gesteuerte Cyberangriffe nehmen explodieren, und die Regulierung versucht hinterherzulaufen. Wer jetzt keine Sicherheitsstrategie hat, wird im Herbst 2026 böse aufwachen. [seufz] [pause 1] [pause 2]
+
+So, das war sie, die Tech-News der Woche. Von SAP über Google bis Mercedes, von der KI-Offensive bis zur Cyber-Bedrohung. Es bewegt sich viel, und es wird spannend bleiben. [pause 1]
+
+Wenn euch der Podcast gefallen hat, freue ich mich über eine Rückmeldung per Telegram oder Mail. Und natürlich gibt es in Kürze eine neue Ausgabe mit den wichtigsten Geschichten aus der Welt der Technologie. [pause 1]
+
+Bis dahin: Bleibt neugierig, bleibt kritisch, und lasst euch von der KI nicht die Show stehlen. [lacht] Wir lesen und hören uns. Tschüss, und bis zum nächsten Mal. [pause 3]
+
+
+Bevor wir zum Abschluss kommen, noch ein paar Gedanken zur digitalen Identität. [räusper] Am 20. Mai 2026 hat das Bundeskabinett den Entwurf des Digital Identities Act verabschiedet. Damit ist der Weg frei für die europäische EUDI-Wallet. Das ist eine digitale Brieftasche auf dem Smartphone, die ab Januar 2027 zur Verfügung stehen soll. [pause 1]
+
+Stellt euch vor: Statt jedes Mal einen Ausweis zu zücken, wenn ihr euch online ausweisen müsst, habt ihr alles auf dem Handy. Der Führungsausweis, der Personalausweis, Versicherungskarten. Alles in einer App. [lacht] Die Idee ist nicht neu, aber die EU macht jetzt ernst. [pause 1]
+
+Der Bundestag hat am 22. Mai 2026 die Einführung digitaler Führungszeugnisse beschlossen. Statt per Post gibt es das Dokument künftig als PDF über das BundID-Konto. Die Wirtschaft spart dadurch rund 440.000 Euro pro Jahr. Das klingt nicht nach viel, ist aber ein Symbol: Die Verwaltung wird digital, Schritt für Schritt. [pause 1]
+
+Noch ambitionierter ist ein Pilotprojekt in Dresden: Ab Sommer 2026 soll die Gründung eines Unternehmens von mehreren Wochen auf 24 Stunden schrumpfen. Vollständig digital, inklusive Gewerbe- und Steueranmeldung. [seufz] Wenn das klappt, wäre das ein echtes Signal. Deutschland als Gründerstandort, der nicht mehr wochenlang auf Behördengänge wartet. [pause 1]
+
+In Heidelberg testet die Stadtverwaltung den "HeidelbergPass" als digitale Brieftasche. Der Pilot läuft innerhalb der SPRIND EUDI Wallet Sandbox und zielt auf schnellere Anträge und Bescheide ab. Der Regelbetrieb ist für 2027 geplant. [pause 1] [pause 2]
+
+UND WO STEHEN WIR EIGENTLICH BEI DER GLOBALEN TECH-SZENE? [räusper] Die USA treiben derweil die Stablecoin-Regulierung voran. Die US-Aufsichtsbehörde FDIC hat am 22. Mai 2026 strengere Regeln für Stablecoin-Emittenten vorgeschlagen. Künftig müssen sie umfassende Anti-Geldwäsche-Programme vorweisen. Analysten rechnen mit fünf bis dreißig neuen Stablecoin-Emittenten in den kommenden Jahren. [pause 1]
+
+PYUSD, der Stablecoin von PayPal, erreichte Ende Mai 2026 den siebzigsten Markt, zuletzt in Uganda und Malawi. Die Dollar-gestützten Assets sollen grenzüberschreitende Zahlungen beschleunigen. [lacht] Während Europa über Regulierung diskutiert, rollt die USA einfach aus. [pause 1]
+
+Apropos Regulierung: In Großbritannien erwägt das Parlament sogar einen KI-Notausschalter. Ein Notfallgesetz, das Minister ermächtigen würde, KI-Systeme oder Rechenzentren bei Gefahr für die nationale Sicherheit abzuschalten. [seufz] Stellt euch vor, die britische Regierung könnte per Knopfdruck ein Rechenzentrum vom Netz nehmen, weil eine KI außer Kontrolle geraten ist. Klingt nach Science-Fiction, ist aber ernsthafte Politik. [pause 1]
+
+In den USA wurde eine geplante Executive Order zur KI-Regulierung am 21. Mai 2026 verschoben. Angeblich nach einem Telefonat mit David Sacks, der vor Wettbewerbsnachteilen gegenüber China warnte. Die USA zögern also bei der Regulierung, während Europa vorprescht. Zwei unterschiedliche Ansätze, und die Zeit wird zeigen, welcher der richtige ist. [pause 2]
+
+Ein Thema noch, bevor wir zum Ende kommen: Der Arbeitsmarkt und KI. [räusper] Eine Bitkom-Studie vom Mai 2026 zeigt: 81 Prozent der Unternehmen empfinden die Datenschutz-Grundverordnung, also die DSGVO, als erhebliche Belastung. Zwar haben 71 Prozent die DSGVO inzwischen vollständig umgesetzt, ein massiver Anstieg von nur 7 Prozent im Jahr 2018. Aber fast 69 Prozent geben an, dass Datenschutzauflagen das Training von KI-Modellen behindern. [pause 1]
+
+Das ist ein echtes Dilemma. Europa hat mit der DSGVO weltweit Maßstäbe gesetzt. Aber diese Standards behindern jetzt die Entwicklung genau der Technologien, die Europa braucht, um wirtschaftlich konkurrieren zu können. [lacht] Ein klassischer Zielkonflikt zwischen Schutz und Innovation. [pause 1]
+
+Und dann ist da noch das Urheberrecht. Das OLG Düsseldorf hat am 2. April 2026 klargestellt: KI-generierte Bilder genießen keinen automatischen Urheberrechtsschutz. In einem weiteren Fall entschied das Gericht, dass die Umwandlung eines Fotos in eine Comic-Illustration mittels KI keine Urheberrechtsverletzung darstellt. [atmen] [pause 1]
+
+Die Rechtsprechung beginnt also, sich zu formen. Und sie tut das in einer Richtung, die mehr Freiheit für KI-Nutzer bedeutet. Zumindest in Deutschland. Wie das mit der EU-Richtlinie zusammenpasst, wird sich zeigen. [pause 2]
+
+EIN LETZTER PUNKT: Die Senioren-Union der CDU/CSU hat am 23. Mai 2026 die Münchner Erklärung verabschiedet. Sie fordert eine ausgewogene Digitalisierung: soziale Teilhabe, Schutz des Bargelds und gezielte Förderung digitaler Kompetenzen für ältere Generationen. [pause 1]
+
+Das ist wichtig. Denn während wir hier über KI-Agenten, Quantencomputer und Fusionskraftwerke sprechen, fühlen sich viele Menschen von der Entwicklung abgehängt. Eine Digitalisierung, die niemanden zurücklässt, ist nicht nur sozial klug, sondern auch wirtschaftlich notwendig. Denn wer die Technologie nicht versteht, wird sie auch nicht nutzen. [seufz] [pause 2]
+
+So, jetzt aber wirklich genug für heute. [lacht] Wir haben über SAP gesprochen, über Deutschlands KI-Offensive, über den Germany Stack, über Google und Mercedes, über die EU-Regulierung, über Cyber-Bedrohungen, über die Hightech Agenda, über digitale Identitäten und sogar über Stablecoins und Urheberrecht. [pause 1]
+
+Wenn euch der Podcast gefallen hat, sagt es weiter oder schreibt mir eine Nachricht. Wer Anregungen oder Themenwünsche hat, immer her damit. Die nächste Ausgabe kommt bestimmt. [pause 1]
+
+Bis dahin: Bleibt neugierig, bleibt kritisch, und lasst euch von keiner KI die Show stehlen. [lacht] In diesem Sinne: Tschüss, und bis zum nächsten Mal. [pause 3]
+
+
+LASS UNS NOCH ETWAS TIEFER IN DIE CYBERSICHERHEIT EINTAUCHEN. [räusper] Ich habe vorhin die Zahlen genannt, aber sie sind es wert, wiederholt zu werden. 86 Prozent aller Phishing-Angriffe sind KI-gesteuert. Der Banking-Trojaner-Anstieg um 196 Prozent. [pause 1]
+
+Was bedeutet das konkret für den Normalbürger? Stellt euch vor, ihr bekommt eine E-Mail von eurer Hausbank. Das Layout ist perfekt. Die Rechtschreibung stimmt. Der Ton ist vertraut. Früher konnte man Phishing-Mails an der schlechten Grammatik erkennen. [lacht] Diese Zeiten sind vorbei. KI-generierte Phishing-Mails sind von echten Mails praktisch nicht mehr zu unterscheiden. [pause 1]
+
+Die Bundesregierung reagiert mit dem Germany Stack und KIPITZ. Aber das ist nur die eine Seite der Medaille. Die andere Seite ist die Prävention. Und da sind wir als Gesellschaft noch nicht gut aufgestellt. [seufz] Das zeigt auch die Bitkom-Studie: Unternehmen fühlen sich von der DSGVO ausgebremst, aber gleichzeitig steigen die Sicherheitsrisiken. [pause 1]
+
+Ein spannender Ansatz kommt vom VDE. Die Organisation hat ein Konzept namens "Compliance by Design" vorgestellt. Die Idee: Statt nachträglich Regeln einzuhalten, werden Sicherheit und Compliance von Anfang an in die Software-Architektur eingebaut. Das ist wie beim Hausbau: Man kann nachträglich ein Fenster einbauen, aber es ist einfacher, es von Anfang an einzuplanen. [pause 1]
+
+Apropos Vorsorge: Die GITEX AI Europe findet vom 30. Juni bis 1. Juli 2026 in Berlin statt. Über 800 Unternehmen werden dort neue defensive KI-Technologien präsentieren. [lacht] Wenn jemand einen Grund braucht, nach Berlin zu fahren: GITEX ist der Ort, an dem die Abwehr von KI-Angriffen zur Industrie wird. [pause 1]
+
+EIN THEMA, DAS OFT UNTERGEHT: DIE SOZIALEN AUSWIRKUNGEN DER DIGITALISIERUNG. [räusper] Die Senioren-Union der CDU/CSU hat die Münchner Erklärung verabschiedet. Sie fordert eine ausgewogene Digitalisierung mit sozialer Teilhabe, Schutz des Bargelds und gezielter Förderung digitaler Kompetenzen für ältere Menschen. [pause 1]
+
+Warum ist das wichtig? Weil wir in einer Blase leben. Ich sitze hier, rede über KI-Agenten und Quantencomputer, aber mein Nachbar, der Rentner ist, kann vielleicht gerade noch seine E-Mails lesen. Die Schere zwischen Digital Natives und denen, die mit der Technologie nicht aufgewachsen sind, wird immer größer. [pause 1]
+
+Die Lösung kann nicht heißen: "Dann müssen die sich halt anpassen." Sondern: Die Technologie muss zugänglicher werden. Intuitiver. Weniger abschreckend. [lacht] Eine KI, die man einfach fragen kann, ohne ein Handbuch zu lesen, ist vielleicht der Schlüssel. [pause 2]
+
+SCHLUSSGEDANKE. [räusper] Diese Woche hat gezeigt: Deutschland und Europa sind nicht mehr nur Zuschauer im globalen Tech-Wettbewerb. Die 125 Millionen von SPRIND, der 250-Millionen-Germany-Stack, die Milliarden-Investition in München, die SAP Autonomous Suite, die EUDI-Wallet. [pause 1]
+
+Das sind alles handfeste Projekte. Keine Ankündigungen mehr, sondern Umsetzung. Ob die Summen ausreichen, ist eine andere Frage. Aber der Richtungswechsel ist deutlich zu spüren. [atmen] [pause 1]
+
+Gleichzeitig wachsen die Risiken. KI-gesteuerte Cyberangriffe, regulatorische Hürden, soziale Ungleichheit. Die Technologie ist nie neutral. Sie verstärkt, was schon da ist. Und das ist sowohl Chance als auch Verantwortung. [pause 1]
+
+Für mich persönlich: Ich finde es aufregend, in dieser Zeit zu leben. Wir erleben einen Wandel, der mit der Erfindung des Internets oder des Smartphones vergleichbar ist. Vielleicht sogar größer. [lacht] Und das Beste daran? Wir gestalten ihn aktiv mit, ob wir wollen oder nicht. [pause 1]
+
+So, jetzt aber wirklich Schluss für heute. [lacht] Danke, dass ihr bis hierher zugehört habt. Wenn euch der Podcast gefällt, gebt Bescheid. Wenn nicht, auch. [pause 1]
+
+Bis zur nächsten Ausgabe: Bleibt neugierig, bleibt kritisch, und denkt dran: Die beste KI ist immer noch die zwischen euren Ohren. [lacht] Tschüss, und bis zum nächsten Mal. [pause 2]
+
