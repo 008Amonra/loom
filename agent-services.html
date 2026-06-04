@@ -13,6 +13,8 @@
   body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(13,13,20,.85) 0%,rgba(13,13,20,.75) 50%,rgba(13,13,20,.92) 100%);z-index:0;pointer-events:none}
   .wrap{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:40px 24px 80px}
 
+  #fireworks{position:fixed;top:0;right:0;width:300px;height:100vh;z-index:0;pointer-events:none;opacity:.5}
+
   #loader{position:fixed;inset:0;z-index:9999;background:#0d0d14;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
   #loader.hide{opacity:0;pointer-events:none}
   .spinner{width:40px;height:40px;border:3px solid #2a2a3a;border-top-color:#00ff88;border-radius:50%;animation:spin .8s linear infinite}
@@ -83,6 +85,7 @@
 </head>
 <body>
 <div id="loader"><div class="spinner"></div><div class="loader-label">45dgof8</div></div>
+<canvas id="fireworks"></canvas>
 <div class="wrap">
 
 <div style="text-align:center;margin-bottom:24px">
@@ -94,6 +97,7 @@
   <span class="hat-brim">Agent Services</span>
   <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
   <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
+  <span style="display:block;font-size:0.9rem;letter-spacing:3px;color:#00cc77;margin-top:12px">may the <strong style="color:#00ff88">RIGHT Answer</strong> be with you</span>
 </div>
 
 <!-- About -->
@@ -414,6 +418,73 @@ function submitProject() {
   }, 4000);
   document.addEventListener('click', () => { if (!played) { a.play(); played = true; } }, { once: true });
   document.addEventListener('touchstart', () => { if (!played) { a.play(); played = true; } }, { once: true });
+}
+</script>
+
+<script>
+{
+  const c = document.getElementById('fireworks');
+  if (c) {
+    const ctx = c.getContext('2d');
+    c.width = 300;
+    c.height = window.innerHeight;
+    window.addEventListener('resize', () => c.height = window.innerHeight);
+
+    const colors = ['#00ff88','#00ccff','#c0a0ff','#44cc66','#ffc439','#ff6644'];
+    let particles = [];
+    let frame = 0;
+
+    function burst(x, y) {
+      const count = 40 + Math.floor(Math.random() * 40);
+      for (let i = 0; i < count; i++) {
+        const a = Math.PI * 2 * Math.random();
+        const s = 1 + Math.random() * 3;
+        particles.push({
+          x, y, ox: x, oy: y,
+          vx: Math.cos(a) * s,
+          vy: Math.sin(a) * s - 2,
+          life: 1,
+          decay: 0.01 + Math.random() * 0.02,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.5 + Math.random() * 2.5
+        });
+      }
+    }
+
+    let started = false;
+    setTimeout(() => { started = true; }, 3000);
+
+    function tick() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      frame++;
+
+      if (started && frame % 40 === 0 && Math.random() < 0.5) {
+        const x = 150 + (Math.random() - 0.5) * 200;
+        const y = 100 + Math.random() * (c.height * 0.4);
+        burst(x, y);
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.04;
+        p.vx *= 0.99;
+        p.life -= p.decay;
+
+        if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+        ctx.globalAlpha = p.life * 0.7;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x - c.width / 2 + 150, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
 }
 </script>
 </body>
