@@ -9,8 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;min-height:100vh}
-  .wrap{max-width:800px;margin:0 auto;padding:40px 24px 80px}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;min-height:100vh;background:url('Z8f8U.webp') center center/cover fixed no-repeat}
+  body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(13,13,20,.85) 0%,rgba(13,13,20,.75) 50%,rgba(13,13,20,.92) 100%);z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:40px 24px 80px}
+
+  #loader{position:fixed;inset:0;z-index:9999;background:#0d0d14;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
+  #loader.hide{opacity:0;pointer-events:none}
+  .spinner{width:40px;height:40px;border:3px solid #2a2a3a;border-top-color:#00ff88;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loader-label{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:4px;color:#888;margin-top:16px}
 
   .hat-title{text-align:center;margin-bottom:40px;border-bottom:1px solid #222;padding-bottom:24px}
   .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
@@ -75,6 +82,7 @@
 </style>
 </head>
 <body>
+<div id="loader"><div class="spinner"></div><div class="loader-label">45dgof8</div></div>
 <div class="wrap">
 
 <div style="text-align:center;margin-bottom:24px">
@@ -396,6 +404,13 @@ function submitProject() {
   a.volume = 0.8;
   let played = false;
   a.play().then(() => played = true).catch(() => {});
+
+  window.addEventListener('load', () => {
+    document.getElementById('loader').classList.add('hide');
+  });
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+  }, 4000);
   document.addEventListener('click', () => { if (!played) { a.play(); played = true; } }, { once: true });
   document.addEventListener('touchstart', () => { if (!played) { a.play(); played = true; } }, { once: true });
 }
