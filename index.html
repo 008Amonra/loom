@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest-chat.json">
+<meta name="theme-color" content="#0d0d14">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;min-height:100vh}
@@ -91,6 +94,7 @@
   <span class="hat-brim">Agent Services</span>
   <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
   <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
+  <a href="/chat.html" style="display:inline-block;margin-top:16px;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
 </div>
 
 <!-- About -->
@@ -388,5 +392,6 @@ function submitProject() {
   document.querySelector('.btn-submit').disabled = true;
 }
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 </body>
 </html>

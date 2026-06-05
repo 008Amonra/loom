@@ -1,0 +1,19 @@
+{
+  "name": "45dgof8 Chat",
+  "short_name": "Big Pickle",
+  "description": "Chat with Big Pickle — 45dgof8 agent",
+  "start_url": "/chat.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0d14",
+  "theme_color": "#0d0d14",
+  "icons": [
+    {
+      "src": "/loom-figure.webp",
+      "sizes": "any",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"]
+}
