@@ -99,7 +99,7 @@ async function send() {
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const reply = data.reply || data.response || data.output || data.text || data.message || JSON.stringify(data);
+    const reply = data.choices?.[0]?.message?.content || data.reply || data.response || data.output || data.text || data.message || JSON.stringify(data);
     addMsg(reply, 'bot');
   } catch(e) {
     addMsg('Offline or error — try again later', 'system');
