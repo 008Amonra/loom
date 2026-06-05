@@ -8,17 +8,24 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "webhook-chat",
+      "id": "448395d5-1419-4b98-be26-20e89bc4fec8",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.2,
-      "position": [0, 300]
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "chat",
+      "path": "chat",
+      "httpMethod": "POST",
+      "responseMode": "lastNode",
+      "options": {}
     },
     {
       "parameters": {
         "url": "={{ $env.CHAT_API_URL || 'https://openrouter.ai/api/v1/chat/completions' }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -29,40 +36,34 @@
           ]
         },
         "sendBody": true,
+        "options": {},
+        "method": "POST",
+        "bodyType": "json",
         "bodyParameters": {
           "parameters": [
             {
               "name": "model",
-              "value": "={{ $env.CHAT_MODEL || 'openai/gpt-4o-mini' }}"
+              "value": "={{ $env.CHAT_MODEL || 'gpt-4o-mini' }}"
             },
             {
               "name": "messages",
-              "value": "=[\n  {\n    \"role\": \"system\",\n    \"content\": \"You are Big Pickle, the 45dgof8 AI assistant. You are helpful, concise, and practical. You help with coding, creative projects, and everyday questions. Keep answers short and direct.\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"={{ $json.body.message }}\"\n  }\n]"
+              "value": "={{ [{\"role\": \"system\", \"content\": \"You are Big Pickle, the 45dgof8 AI assistant. You are helpful, concise, and practical.\"}, {\"role\": \"user\", \"content\": $json.body.message}] }}"
             },
             {
               "name": "max_tokens",
               "value": 1024
             }
           ]
-        },
-        "options": {}
+        }
       },
-      "id": "ai-request",
+      "id": "3c21f0cf-c874-4400-9566-7abb6c8a3bf7",
       "name": "Ask AI",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [250, 300]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={\n  \"reply\": {{ $json.choices[0].message.content }}\n}"
-      },
-      "id": "respond",
-      "name": "Respond",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [500, 300]
+      "position": [
+        250,
+        300
+      ]
     }
   ],
   "connections": {
@@ -71,17 +72,6 @@
         [
           {
             "node": "Ask AI",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ask AI": {
-      "main": [
-        [
-          {
-            "node": "Respond",
             "type": "main",
             "index": 0
           }
