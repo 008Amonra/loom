@@ -1,0 +1,47 @@
+===narrator1===
+The station is called AR-7. It sits on a cliff in the Swiss Alps — nobody knows why it's still running. For thirty-seven years it received nothing but static. Then, on a Tuesday morning, while the operator drank his coffee, something happened.
+
+===operator1===
+Hm. A signal.
+
+===narrator2===
+He turned through the frequencies. Normally it was just weather balloons and forgotten satellites.
+
+===operator2===
+No callsign. No timeslot. This is... clean. Too clean.
+
+===computer1===
+Frequency: 1420 megahertz. Hydrogen line.
+
+===operator3===
+Of course. The hydrogen line. The one frequency every intelligent species in the universe knows.
+
+===narrator3===
+He leaned back. Thirty-seven years of static, and then this. The signal repeated. Same pattern. Short. Long. Short. Short. Long.
+
+===operator4===
+Thirty bits. That's not random.
+
+===narrator4===
+He fed the translation into his terminal. Three seconds later, the screen showed one sentence.
+
+===computer2===
+Translation complete. Source language: Unknown. Target language: English.
+
+===operator5===
+Whoever wakes up first makes breakfast.
+
+===alien1===
+We have been watching your coffee habits for thirty-seven years. You are not as alone as you think. And your espresso machine needs maintenance.
+
+===narrator5===
+The operator set down his mug. He looked out the window. The sky was blue, the mountains quiet, the world perfectly normal. Only the signal on his screen still flickered.
+
+===operator6===
+Alright. I'll report in the morning.
+
+===computer3===
+Connection closed. Signal terminated.
+
+===narrator6===
+He finished his coffee. Outside, the sun was rising. And somewhere out there, four hundred and seven light-years away, someone was probably standing in a foreign kitchen, smiling.
