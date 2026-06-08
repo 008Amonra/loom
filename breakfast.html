@@ -30,6 +30,11 @@
   .art{width:200px;height:200px;border-radius:16px;margin:0 auto 20px;display:block;overflow:hidden;border:1px solid #2a2a3a;background:#14141e}
   .art img{width:100%;height:100%;object-fit:cover}
 
+  .comic-strip{display:flex;gap:8px;margin-bottom:16px;justify-content:center}
+  .comic-panel{flex:1;min-width:0;border-radius:8px;overflow:hidden;border:2px solid #333}
+  .comic-panel svg{width:100%;height:auto;display:block}
+  @media(max-width:600px){.comic-strip{flex-direction:column;gap:10px}}
+
   .ep-card{background:#14141e;border:1px solid #2a2a3a;border-radius:16px;padding:28px 24px;margin-bottom:20px}
   .ep-number{font-size:0.7rem;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
   .ep-title{font-size:1.2rem;font-weight:600;margin-bottom:4px}
@@ -94,7 +99,165 @@
   </div>
 </div>
 
-<!-- Episode 2 placeholder -->
+<!-- Episode 2 -->
+<div class="ep-card">
+  <div class="ep-number">Season 1 &middot; Episode 2</div>
+  <div class="ep-title">The Buried Signal</div>
+  <div class="ep-meta">~1 min 45s &middot; English &middot; Sci-Fi</div>
+
+  <div class="comic-strip">
+    <!-- Panel 1: Desert Dig -->
+    <div class="comic-panel">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e88d5a"/>
+            <stop offset="100%" stop-color="#f0c27a"/>
+          </linearGradient>
+          <linearGradient id="sphere-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e0e0e8"/>
+            <stop offset="100%" stop-color="#8888a0"/>
+          </linearGradient>
+        </defs>
+        <!-- Sky -->
+        <rect x="0" y="0" width="300" height="130" fill="url(#sky1)"/>
+        <!-- Sun -->
+        <circle cx="250" cy="35" r="22" fill="#ff6b35" opacity="0.8"/>
+        <circle cx="250" cy="35" r="16" fill="#ff8c42"/>
+        <!-- Dunes -->
+        <path d="M0 130 Q50 105 120 115 Q180 125 240 110 Q270 105 300 115 L300 130 Z" fill="#c4904a"/>
+        <path d="M0 130 Q80 95 160 108 Q220 118 300 100 L300 130 Z" fill="#d4a357"/>
+        <!-- Ground -->
+        <rect x="0" y="130" width="300" height="70" fill="#b8843a"/>
+        <!-- Trench -->
+        <polygon points="120,130 155,185 190,130" fill="#6b4421"/>
+        <polygon points="122,130 155,183 188,130" fill="#5a3718"/>
+        <!-- Tent -->
+        <rect x="30" y="108" width="40" height="22" fill="#d4a357"/>
+        <polygon points="25,108 50,88 75,108" fill="#8a6b30"/>
+        <!-- Figure 1 (Amara) -->
+        <circle cx="100" cy="118" r="6" fill="#2c2c3a"/>
+        <line x1="100" y1="124" x2="100" y2="145" stroke="#2c2c3a" stroke-width="2.5"/>
+        <line x1="100" y1="130" x2="90" y2="140" stroke="#2c2c3a" stroke-width="2"/>
+        <line x1="100" y1="130" x2="110" y2="138" stroke="#2c2c3a" stroke-width="2"/>
+        <line x1="100" y1="145" x2="95" y2="155" stroke="#2c2c3a" stroke-width="2"/>
+        <line x1="100" y1="145" x2="105" y2="155" stroke="#2c2c3a" stroke-width="2"/>
+        <!-- Figure 2 (assistant) -->
+        <circle cx="160" cy="120" r="5" fill="#1a1a28"/>
+        <line x1="160" y1="125" x2="160" y2="142" stroke="#1a1a28" stroke-width="2"/>
+        <line x1="160" y1="130" x2="152" y2="137" stroke="#1a1a28" stroke-width="1.5"/>
+        <line x1="160" y1="145" x2="157" y2="152" stroke="#1a1a28" stroke-width="1.5"/>
+        <!-- Caption -->
+        <rect x="0" y="0" width="300" height="24" fill="#1a1a2e" opacity="0.85"/>
+        <text x="150" y="16" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10" letter-spacing="1">TÉNÉRÉ-7, SAHARA DESERT</text>
+      </svg>
+    </div>
+
+    <!-- Panel 2: Sphere Discovery -->
+    <div class="comic-panel">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="metal" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#f0f0f8"/>
+            <stop offset="50%" stop-color="#b0b0c0"/>
+            <stop offset="100%" stop-color="#707088"/>
+          </radialGradient>
+        </defs>
+        <!-- Earth strata -->
+        <rect x="0" y="0" width="300" height="200" fill="#3d2817"/>
+        <rect x="0" y="30" width="300" height="5" fill="#6b4421" opacity="0.6"/>
+        <rect x="0" y="60" width="300" height="8" fill="#5a3718" opacity="0.5"/>
+        <rect x="0" y="95" width="300" height="6" fill="#4a2f14" opacity="0.7"/>
+        <rect x="0" y="130" width="300" height="4" fill="#6b4421" opacity="0.5"/>
+        <rect x="0" y="165" width="300" height="7" fill="#2c1a0d" opacity="0.6"/>
+        <!-- Cavity around sphere -->
+        <ellipse cx="155" cy="110" rx="45" ry="40" fill="#2c1a0d"/>
+        <!-- Sphere -->
+        <circle cx="155" cy="110" r="32" fill="url(#metal)"/>
+        <!-- Highlight -->
+        <ellipse cx="142" cy="96" rx="10" ry="6" fill="#ffffff" opacity="0.4"/>
+        <ellipse cx="140" cy="94" rx="5" ry="3" fill="#ffffff" opacity="0.6"/>
+        <!-- Scattered dirt particles -->
+        <circle cx="120" cy="100" r="1.5" fill="#8a6b30"/>
+        <circle cx="130" cy="120" r="1" fill="#8a6b30"/>
+        <circle cx="180" cy="95" r="1.5" fill="#8a6b30"/>
+        <circle cx="185" cy="115" r="1" fill="#8a6b30"/>
+        <circle cx="160" cy="135" r="1.2" fill="#8a6b30"/>
+        <!-- Hand reaching toward sphere -->
+        <rect x="0" y="88" width="28" height="10" rx="3" fill="#c48a5c"/>
+        <circle cx="28" cy="90" r="5" fill="#c48a5c"/>
+        <circle cx="28" cy="96" r="4" fill="#c48a5c"/>
+        <!-- Caption -->
+        <rect x="0" y="0" width="300" height="24" fill="#1a1a2e" opacity="0.85"/>
+        <text x="150" y="16" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10" letter-spacing="1">LAYER DATE: ~8,000 BCE</text>
+      </svg>
+    </div>
+
+    <!-- Panel 3: Night Humming -->
+    <div class="comic-panel">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Night sky -->
+        <rect x="0" y="0" width="300" height="158" fill="#070720"/>
+        <!-- Stars -->
+        <circle cx="30" cy="25" r="1" fill="#fff" opacity="0.9"/>
+        <circle cx="80" cy="50" r="0.8" fill="#fff" opacity="0.5"/>
+        <circle cx="120" cy="15" r="1.2" fill="#fff" opacity="0.8"/>
+        <circle cx="160" cy="45" r="0.6" fill="#fff" opacity="0.4"/>
+        <circle cx="210" cy="20" r="1" fill="#fff" opacity="0.7"/>
+        <circle cx="260" cy="55" r="0.8" fill="#fff" opacity="0.5"/>
+        <circle cx="50" cy="70" r="0.7" fill="#fff" opacity="0.3"/>
+        <circle cx="100" cy="85" r="1" fill="#fff" opacity="0.6"/>
+        <circle cx="180" cy="75" r="0.7" fill="#fff" opacity="0.4"/>
+        <circle cx="240" cy="90" r="1.1" fill="#fff" opacity="0.7"/>
+        <circle cx="280" cy="30" r="0.5" fill="#fff" opacity="0.3"/>
+        <circle cx="140" cy="60" r="0.6" fill="#fff" opacity="0.5"/>
+        <circle cx="45" cy="100" r="0.5" fill="#fff" opacity="0.3"/>
+        <circle cx="220" cy="105" r="0.8" fill="#fff" opacity="0.4"/>
+        <!-- Moon crescent -->
+        <circle cx="250" cy="40" r="14" fill="#e8e0c8"/>
+        <circle cx="243" cy="37" r="12" fill="#070720"/>
+        <!-- Ground -->
+        <rect x="0" y="158" width="300" height="42" fill="#1a0f08"/>
+        <!-- Ground texture -->
+        <path d="M0 158 Q30 155 60 158 Q90 161 120 158 Q150 155 180 158 Q210 161 240 158 Q270 155 300 158" fill="#231408"/>
+        <!-- Glow effect -->
+        <circle cx="150" cy="170" r="55" fill="#00ffcc" opacity="0.05"/>
+        <circle cx="150" cy="170" r="40" fill="#00ffcc" opacity="0.1"/>
+        <circle cx="150" cy="170" r="28" fill="#00ffcc" opacity="0.18"/>
+        <circle cx="150" cy="170" r="18" fill="#00ffcc" opacity="0.35"/>
+        <!-- Sphere -->
+        <circle cx="150" cy="170" r="10" fill="#00ffcc"/>
+        <ellipse cx="147" cy="167" rx="3.5" ry="2" fill="#ffffff" opacity="0.7"/>
+        <!-- Silhouette figure -->
+        <circle cx="85" cy="138" r="5" fill="#0d0d18"/>
+        <line x1="85" y1="143" x2="85" y2="160" stroke="#0d0d18" stroke-width="2.5"/>
+        <line x1="85" y1="148" x2="76" y2="155" stroke="#0d0d18" stroke-width="1.8"/>
+        <line x1="85" y1="160" x2="82" y2="166" stroke="#0d0d18" stroke-width="1.8"/>
+        <!-- Caption -->
+        <rect x="0" y="0" width="300" height="24" fill="#1a1a2e" opacity="0.85"/>
+        <text x="150" y="16" text-anchor="middle" fill="#ccc" font-family="monospace" font-size="10" letter-spacing="1">FREQUENCY: 432 Hz</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ep-desc">
+    An archaeological dig in the Sahara uncovers a perfect metal sphere buried for ten thousand years.
+    Then it starts humming. The frequency is not a coincidence.
+  </div>
+
+  <div class="ep-player">
+    <audio controls preload="metadata">
+      <source src="https://008amonra.github.io/loom/breakfast/ep2-en.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <div class="ep-links">
+    <a class="dl-mp3" href="https://008amonra.github.io/loom/breakfast/ep2-en.mp3" download>&#x2B07; Download MP3</a>
+    <a class="dl-script" href="https://008amonra.github.io/loom/breakfast/ep2-en-script.txt" download>&#x1F4DD; Script</a>
+  </div>
+</div>
+
+<!-- Episode 1 German -->
 <div class="ep-card" style="opacity:0.7">
   <div class="ep-number">Season 1 &middot; Episode 1 &middot; German</div>
   <div class="ep-title">Die Letzte Frequenz</div>
@@ -109,7 +272,7 @@
 </div>
 
 <div class="future">
-  &#x2615; Episode 2 coming when the coffee is ready.<br>
+  &#x2615; Episode 3 coming when the coffee is ready.<br>
   <span style="font-size:0.78rem;color:#444">Topics: space, technology, odd signals, small wonders.</span>
 </div>
 
