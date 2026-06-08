@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Surprise with Good Stuff",
+    "desc": "White Glossy Mug",
+    "price": 40.66,
+    "img": "surprise-with-good-stuff.jpg"
+  },
+  {
+    "name": "Gemstone Amulet",
+    "desc": "Viral Coffee Mug \u2013 Silver Pendant Design",
+    "price": 39.89,
+    "img": "gemstone-amulet.jpg"
+  },
+  {
+    "name": "Quantum Paradox",
+    "desc": "Hot & Cold Ceramic Cup, Unique Science Gift",
+    "price": 39.24,
+    "img": "quantum-paradox.jpg"
+  },
+  {
+    "name": "Telepathy",
+    "desc": "White Glossy Mug, Funny Coffee Cup Gift",
+    "price": 40.66,
+    "img": "telepathy.jpg"
+  },
+  {
+    "name": "Black Cosmic Mug",
+    "desc": "Futuristic Ceramic Coffee & Tea Cup, 3i Atlas's Center",
+    "price": 40.66,
+    "img": "black-cosmic-mug.jpg"
+  },
+  {
+    "name": "Coffee First. Everything Else Later",
+    "desc": "Black Mug",
+    "price": 40.52,
+    "img": "coffee-first-everything-else-later.jpg"
+  },
+  {
+    "name": "Stellar Sunburst",
+    "desc": "White Glossy Ceramic Mug",
+    "price": 40.66,
+    "img": "stellar-sunburst.jpg"
+  },
+  {
+    "name": "Black Edition Party Mug",
+    "desc": "Bold. Loud. Unforgettable. Nightlife Statement Piece",
+    "price": 40.66,
+    "img": "black-edition-party-mug.jpg"
+  },
+  {
+    "name": "Maximal Degree of Freedom",
+    "desc": "Glossy White Art Mug",
+    "price": 40.66,
+    "img": "maximal-degree-of-freedom.jpg"
+  },
+  {
+    "name": "Elegant Geisha Portrait",
+    "desc": "Sakura Japanese Zen Decor, Framed Poster",
+    "price": 158.12,
+    "img": "elegant-geisha-portrait.jpg"
+  },
+  {
+    "name": "Telepathy (alt)",
+    "desc": "White Glossy Ceramic Coffee Mug",
+    "price": 40.66,
+    "img": "telepathy-alt.jpg"
+  },
+  {
+    "name": "Mystic Mandala",
+    "desc": "Black Glossy Mug, Spiritual Gift",
+    "price": 43.51,
+    "img": "mystic-mandala.jpg"
+  },
+  {
+    "name": "Mystical Fantasy Art",
+    "desc": "Black Ceramic Coffee Cup, Spiritual Gift",
+    "price": 39.89,
+    "img": "mystical-fantasy-art.jpg"
+  },
+  {
+    "name": "Gemstone Mandala",
+    "desc": "Black Ceramic Mug, Glossy Coffee Mug 11/15 oz",
+    "price": 36.9,
+    "img": "gemstone-mandala.jpg"
+  },
+  {
+    "name": "Moonlight Blossom",
+    "desc": "Minimalist Geisha Art in Black Frame",
+    "price": 82.62,
+    "img": "moonlight-blossom.jpg"
+  },
+  {
+    "name": "Phoenix Circuit",
+    "desc": "Futuristic Cyber Art Coffee Mug",
+    "price": 40.52,
+    "img": "phoenix-circuit.jpg"
+  },
+  {
+    "name": "Cosmic Dreamer",
+    "desc": "Guardian of Dreams - Limited Edition 24x36\"",
+    "price": 158.12,
+    "img": "cosmic-dreamer.jpg"
+  },
+  {
+    "name": "Dreamy Moon Lady",
+    "desc": "Mystic Woman in Moon Gicl\u00e9e Art",
+    "price": 35.62,
+    "img": "dreamy-moon-lady.jpg"
+  },
+  {
+    "name": "Abstract Sunburst",
+    "desc": "White Glossy Mug, Surreal Cosmic Coffee Cup",
+    "price": 39.24,
+    "img": "abstract-sunburst.jpg"
+  }
+]
