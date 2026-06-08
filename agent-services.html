@@ -128,13 +128,14 @@
 <!-- About -->
 <div class="card" style="border-color:#2a3a2a;background:#0e0e14">
   <h2 style="margin-top:0">What is 45dgof8?</h2>
-  <p>I build custom AI agents for solo creators — email bots, Telegram assistants, automation workflows, video and music generation. Everything runs on your hardware, you own the setup, no subscriptions.</p>
+  <p>I build custom AI agents for solo creators — email bots, Telegram assistants, automation workflows (<strong style="color:#44cc66">n8n</strong>-powered), video and music generation. Everything runs on your hardware, you own the setup, no subscriptions.</p>
   <p>This isn't a startup. It's one person building useful AI tools for people who want the power of agents without the enterprise overhead.</p>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
     <span class="tag">custom AI agents</span>
     <span class="tag">email + Telegram</span>
     <span class="tag">video + music</span>
     <span class="tag">automation</span>
+    <span class="tag">n8n workflows</span>
     <span class="tag">open source</span>
   </div>
 </div>
@@ -145,7 +146,7 @@
   <div class="price-item" style="background:#0f0f1a;border:1px solid #2a4a2a;border-radius:8px">
     <span class="service" style="display:flex;flex-direction:column;gap:4px">
       <span style="font-size:1.2rem">🆓 Free</span>
-      <span style="font-weight:400;font-size:0.85rem;color:#b8b8c8">Open-source tools and guides. Everything you need to set up your own agent ops center. No payment, no account.</span>
+      <span style="font-weight:400;font-size:0.85rem;color:#b8b8c8">Open-source tools and guides. Everything you need to set up your own agent ops center — opencode CLI, n8n automation, TTS voice, health monitoring. No payment, no account.</span>
     </span>
     <span class="price" style="color:#44cc66">CHF 0</span>
   </div>
@@ -227,9 +228,10 @@
 <hr />
 
 <!-- Get the installer -->
-<h2>Start here</h2>
+<h2>Run AI agents on your own machine</h2>
 <div class="card" style="border-color:#2a4a3a;background:#0e0e14">
-  <p style="color:#b8b8c8;margin-bottom:16px">One command to set up opencode, AI agent tools, and project directory. Runs on Linux, macOS, and Windows. The toolchain is free with no account needed. Choose <a href="https://lmstudio.ai/" target="_blank" style="color:#44cc66">local models (LM Studio, free)</a> or cloud providers (API key required).</p>
+  <p style="color:#b8b8c8;margin-bottom:16px"><strong style="color:#00ff88">You don't need a cloud subscription to run AI agents.</strong> This installer gives you a complete local AI ops center — opencode CLI for coding agents, n8n for automation, TTS voice, health monitoring — all on your own hardware. Your data stays on your machine. No monthly fees. No accounts. One command, everything works.</p>
+  <p style="color:#b8b8c8;margin-bottom:16px">Choose <a href="https://lmstudio.ai/" target="_blank" style="color:#44cc66">free local models (LM Studio)</a> for full privacy, or connect cloud providers if you prefer. Either way, the toolchain is the same — <strong style="color:#ddd">you own the setup, not a subscription.</strong></p>
   <p style="color:#888;font-size:0.85rem;margin-bottom:16px;padding:8px 12px;border:1px solid #2a4a2a;border-radius:6px;background:#0a1a0a"><strong style="color:#44cc66">⏺ Recommended:</strong> Create a system restore point or back up your system before installing. The script is safe and tested in Docker, but backups are cheap insurance.</p>
   <div class="grid2">
     <a href="install.sh" class="btn" style="background:#1a2a1a;color:#44cc66;border:1px solid #2a4a2a;text-decoration:none;padding:16px;border-radius:10px;text-align:center;font-weight:700;transition:all .15s;display:block">🐧 install.sh<br><span style="font-weight:400;font-size:0.8rem;color:#888">Linux / macOS</span></a>
@@ -242,6 +244,9 @@
     → download a <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Q4_K_M</code> quant
     → start the server. opencode connects on port 1234 automatically.
     <a href="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF" target="_blank" style="color:#4488ff;margin-left:6px">Browse models →</a>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
+    <strong style="color:#44cc66">⚡ Also included:</strong> <strong style="color:#ddd">n8n</strong> is the automation engine — connect email → Telegram, generate videos from text, monitor RSS feeds, run AI workflows, trigger talking-head animations. All pre-configured with automatic daily backups. You describe what you want, the workflows do the rest.
   </div>
 </div>
 
@@ -277,7 +282,14 @@
   <div class="price-item" style="background:#0f0f1a;border:1px solid #2a2a3a;border-radius:8px;margin-top:8px">
     <span class="service" style="display:flex;flex-direction:column;gap:4px">
       <span style="font-size:1.2rem">🖥️ Find hardware</span>
-      <span style="font-weight:400;font-size:0.85rem;color:#b8b8c8">Laptop, desktop, GPU, monitor, peripherals — new or used. You tell me what you need it for and your budget. I find the best deals across ricardo, tutti, digitec, and more, with compatibility checks.</span>
+      <span style="font-weight:400;font-size:0.85rem;color:#b8b8c8">Laptop, desktop, GPU, monitor, peripherals — new or used. You tell me what you need it for and your budget. I find the best deals across local marketplaces and shops, with compatibility checks.</span>
+    </span>
+    <span class="price" style="color:#44cc66">pay what you can</span>
+  </div>
+  <div class="price-item" style="background:#0f0f1a;border:1px solid #2a2a3a;border-radius:8px;margin-top:8px">
+    <span class="service" style="display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:1.2rem">🎤 Talking Head</span>
+      <span style="font-weight:400;font-size:0.85rem;color:#b8b8c8">Upload a face image, type what you want them to say. I generate a talking-head video — lips move, eyes blink, head tilts. Runs on your hardware, takes a few minutes. Pay what you can.</span>
     </span>
     <span class="price" style="color:#44cc66">pay what you can</span>
   </div>
@@ -334,7 +346,11 @@
   </div>
   <div style="background:#0f0f1a;border-radius:8px;padding:16px;margin-bottom:12px">
     <div style="color:#44cc66;font-weight:600;font-size:0.85rem;margin-bottom:6px">🖥️ Hardware search</div>
-    <div style="color:#b8b8c8;font-size:0.85rem;font-family:monospace;line-height:1.8">"I need a [laptop / desktop / GPU / monitor] for [gaming / work / video editing / general use]. Budget is CHF [amount]. I'd prefer [new / used / doesn't matter]. Must have: [specific specs]. Any good deals out there right now?"</div>
+    <div style="color:#b8b8c8;font-size:0.85rem;font-family:monospace;line-height:1.8">"I need a [laptop / desktop / GPU / monitor] for [gaming / work / video editing / general use]. Budget is [amount] [CHF/EUR/USD]. I'd prefer [new / used / doesn't matter]. Must have: [specific specs]. Any good deals out there right now?"</div>
+  </div>
+  <div style="background:#0f0f1a;border-radius:8px;padding:16px;margin-bottom:12px">
+    <div style="color:#44cc66;font-weight:600;font-size:0.85rem;margin-bottom:6px">🎤 Talking head</div>
+    <div style="color:#b8b8c8;font-size:0.85rem;font-family:monospace;line-height:1.8">"I want a talking head video from this image. Text: [what you want them to say]. Language: [English / German / etc]. Style: [neutral / smile / serious]."</div>
   </div>
   <div style="background:#0f0f1a;border-radius:8px;padding:16px;margin-bottom:12px">
     <div style="color:#44cc66;font-weight:600;font-size:0.85rem;margin-bottom:6px">🎧 HiFi search</div>
@@ -490,7 +506,28 @@ document.querySelectorAll('.qbtn').forEach(btn => {
       <source src="45dgof8-ad-final.mp4" type="video/mp4">
     </video>
   </div>
-  <p style="color:#aaa;font-size:0.9rem;margin-bottom:0">The assistant can help you create things like this video with n8n. After installation it is reachable with the command <code style="font-size:inherit">opencode</code> in the terminal.</p>
+  <p style="color:#aaa;font-size:0.9rem;margin-bottom:0">Talk with your assistant to set it up — just run <code style="font-size:inherit">opencode</code> in the terminal after installation and tell it what you want to build.</p>
+</div>
+
+<hr />
+
+<!-- Audio Stories -->
+<h2>Audio stories & podcasts</h2>
+<div class="card" style="border-color:#3a2a4a;background:#0e0e16">
+  <p style="color:#b8b8c8;margin-bottom:16px">The same agents that build your infrastructure also write, narrate, and produce audio content — from sci-fi Hörspiele to daily morning episodes. All generated locally, TTS voice, original scripts.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <a href="https://008amonra.github.io/loom/breakfast.html" style="background:#0f0f1a;border:1px solid #2a4a3a;border-radius:10px;padding:16px;text-decoration:none;transition:all .15s;display:flex;flex-direction:column;gap:4px">
+      <span style="color:#44cc66;font-weight:700;font-size:1.05rem">☀️ Morning Signals</span>
+      <span style="color:#b8b8c8;font-size:0.85rem">Daily audio story series — short episodes to start your day. Sci-fi, reflection, atmosphere.</span>
+      <span style="color:#888;font-size:0.78rem;margin-top:4px">→ Listen to episode 1</span>
+    </a>
+    <a href="https://008amonra.github.io/loom/hoerspiel.html" style="background:#0f0f1a;border:1px solid #4a2a3a;border-radius:10px;padding:16px;text-decoration:none;transition:all .15s;display:flex;flex-direction:column;gap:4px">
+      <span style="color:#ff6688;font-weight:700;font-size:1.05rem">🎧 Die Letzte Frequenz</span>
+      <span style="color:#b8b8c8;font-size:0.85rem">German sci-fi Hörspiel — the last quantum engineer fights entropy. English version available.</span>
+      <span style="color:#888;font-size:0.78rem;margin-top:4px">→ Listen now (~2 min)</span>
+    </a>
+  </div>
+  <p style="color:#aaa;font-size:0.9rem;margin-top:14px;margin-bottom:0">Want your own podcast series, audio ads, or narrated content? <a href="https://008amonra.github.io/loom/agent-services.html#contact" style="color:#4488ff">Describe what you need →</a></p>
 </div>
 
 <hr />
@@ -505,6 +542,11 @@ document.querySelectorAll('.qbtn').forEach(btn => {
   <p style="color:#b8b8c8;margin-bottom:6px"><strong style="color:#ddd">Dosage:</strong> One curl command daily, or as needed when the algorithm changes.</p>
   <p style="color:#b8b8c8;margin-bottom:6px"><strong style="color:#ddd">Side effects:</strong> May cause sudden ownership of your own infrastructure, increased terminal confidence, and a mild intolerance for SaaS lock-in.</p>
   <p style="color:#b8b8c8;margin-bottom:0"><strong style="color:#ddd">Warning:</strong> Not tested on venture capital. Keep out of reach of product managers. If symptoms persist past 48 hours, you're probably enjoying it.</p>
+</div>
+
+<div style="text-align:center;margin-top:40px">
+  <a href="https://008amonra.github.io/loom/cups.html" class="btn" style="background:#1a2a1a;color:#44cc66;border:1px solid #2a4a2a;text-decoration:none;padding:14px 28px;border-radius:10px;display:inline-block;font-weight:700;font-size:0.95rem;transition:all .15s">☕ Support Us — Shop Mugs & Prints</a>
+  <p style="color:#555;font-size:0.78rem;margin-top:8px">Original designs. Free shipping. Every purchase keeps this project going.</p>
 </div>
 
 <div class="footer">
