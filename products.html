@@ -33,7 +33,8 @@
     .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
     .product-card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;overflow:hidden;transition:border-color .2s}
     .product-card:hover{border-color:#00ff88}
-    .product-card img{display:block;width:100%;aspect-ratio:769/340;object-fit:cover;background:#fff}
+    .product-card .img-wrap{background:#fff;padding:8px;display:flex;align-items:center;justify-content:center}
+    .product-card .img-wrap img{display:block;width:80%;aspect-ratio:34/27;object-fit:contain}
     .product-info{padding:14px 16px 16px}
     .product-name{font-weight:600;color:#e0e0e8;font-size:0.95rem;margin-bottom:4px}
     .product-desc{color:#888;font-size:0.8rem;margin-bottom:8px;line-height:1.4}
@@ -136,7 +137,7 @@ products.forEach(p => {
   const card = document.createElement('div');
   card.className = 'product-card';
   card.innerHTML = `
-    <img src="https://008amonra.github.io/loom/cups-products/${p.img}" alt="${p.name}" loading="lazy">
+    <div class="img-wrap"><img src="https://008amonra.github.io/loom/cups-products/${p.img}" alt="${p.name}" loading="lazy"></div>
     <div class="product-info">
       <div class="product-name">${p.name}</div>
       <div class="product-desc">${p.desc}</div>
