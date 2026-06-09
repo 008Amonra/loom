@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ambient Studio — 45DGOF8</title>
+<meta name="description" content="Generative soundscape mixer. Eight synthesis tracks, volume sliders, presets, randomizer, and record-to-file export. Built entirely with Web Audio API.">
+<link rel="canonical" href="https://45dgof8.com/ambient.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;background:radial-gradient(ellipse at top,rgba(0,255,136,.02),transparent 60%),radial-gradient(ellipse at bottom,rgba(0,204,255,.02),transparent 60%),#0d0d14}
+.wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px}
+
+.back{display:inline-block;color:#4488ff;text-decoration:none;font-size:0.82rem;letter-spacing:1px;margin-bottom:16px}
+.back:hover{text-decoration:underline}
+
+header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222}
+h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00ff88,#00ccff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.tagline{color:#888;font-size:0.9rem;max-width:600px;margin:0 auto}
+
+.study-note{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.82rem;color:#aaa;line-height:1.5}
+.study-note strong{color:#ddd}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;padding:12px;background:#14141e;border:1px solid #2a2a3a;border-radius:12px}
+.controls button{font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;padding:9px 18px;border:none;border-radius:8px;cursor:pointer;transition:all .15s}
+.btn-start{background:#00cc77;color:#0a0a0a}
+.btn-start:hover{background:#22dd88}
+.btn-stop{background:#cc4444;color:#fff}
+.btn-stop:hover{background:#dd5555}
+.btn-rand{background:#2a2a3a;color:#e0e0e8}
+.btn-rand:hover{background:#3a3a4a}
+.btn-rec{background:#cc3344;color:#fff}
+.btn-rec:hover{background:#dd4455}
+.btn-rec.active{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.btn-rec:disabled{background:#444;color:#888;cursor:not-allowed}
+.btn-dl{background:#4488ff;color:#fff}
+.btn-dl:hover{background:#5599ff}
+.btn-dl:disabled{background:#333;color:#666;cursor:not-allowed}
+
+.presets select{font-family:'Inter',sans-serif;font-size:0.82rem;padding:9px 14px;border-radius:8px;border:1px solid #333;background:#1a1a2e;color:#e0e0e8;cursor:pointer}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.track-card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;padding:14px 14px 12px;transition:border-color .2s}
+.track-card.active{border-color:#4488ff}
+.track-card.muted{opacity:0.45}
+.track-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.track-icon{font-size:1.3rem;width:32px;text-align:center}
+.track-name{font-size:0.82rem;font-weight:600;flex:1}
+.track-mute{background:none;border:1px solid #444;color:#666;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.7rem;transition:all .15s}
+.track-mute:hover{border-color:#888;color:#aaa}
+.track-mute.muted{background:#cc3344;border-color:#cc3344;color:#fff}
+
+.slider-wrap{display:flex;align-items:center;gap:8px}
+.slider-wrap input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:2px;background:#2a2a3a;outline:none}
+.slider-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
+.slider-wrap input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
+.slider-val{font-size:0.72rem;color:#666;min-width:26px;text-align:right;font-variant-numeric:tabular-nums}
+
+.rec-indicator{display:none;align-items:center;gap:8px;font-size:0.82rem;color:#cc3344}
+.rec-indicator.active{display:flex}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#cc3344;animation:pulse 1s infinite}
+.rec-time{font-variant-numeric:tabular-nums}
+
+.status-bar{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:#555;padding:4px 0}
+
+.footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.82rem;border-top:1px solid #222;margin-top:40px}
+.footer a{color:#4488ff}
+
+@media(max-width:640px){
+  .wrap{padding:20px 16px 60px}
+  h1{font-size:1.4rem}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="back" href="https://008amonra.github.io/loom/agent-services.html">&larr; Back to Agent Services</a>
+
+<header>
+  <h1>Ambient Studio</h1>
+  <p class="tagline">Generative soundscape mixer — eight synthetic tracks, real-time control, export to file.</p>
+</header>
+
+<div class="study-note">
+  <strong>Example Study: What an AI Agent Can Build in One Session.</strong><br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) in a single conversation. Eight parallel sound sources synthesized entirely with the Web Audio API — no samples, no external files, no dependencies. Volume sliders, mute buttons, presets, a randomizer, and a recording export function. The prompt was a short description of sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, animals, boats, monks.</em> All of it runs in your browser, zero install.<br>
+  <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
+</div>
+
+<div class="controls">
+  <button class="btn-start" id="btnStart">&#x25B6; Start</button>
+  <button class="btn-stop" id="btnStop" style="display:none">&#x25A0; Stop</button>
+  <button class="btn-rand" id="btnRand">&#x1F3B2; Randomize</button>
+  <span class="presets">
+    <select id="presetSelect">
+      <option value="custom">Custom</option>
+      <option value="winter">Winter Forest Walk</option>
+      <option value="harbor">Harbor Dawn</option>
+      <option value="monastery">Mountain Monastery</option>
+      <option value="full">Full Spectrum</option>
+    </select>
+  </span>
+  <button class="btn-rec" id="btnRec">&#x25CF; Record</button>
+  <button class="btn-dl" id="btnDl" disabled>&#x2B07; Download</button>
+</div>
+
+<div class="status-bar">
+  <span id="statusText">Click Start to begin</span>
+  <span class="rec-indicator" id="recIndicator">
+    <span class="rec-dot"></span>
+    <span class="rec-time" id="recTime">0:00</span>
+  </span>
+</div>
+
+<div class="grid" id="trackGrid"></div>
+
+<div class="footer">
+  45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a>
+</div>
+
+</div>
+
+<script>
+const TRACK_DEFS = [
+  { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff',
+    desc:'Lowpass-filtered noise with slow LFO — open field, moving air' },
+  { id:'gravel',     icon:'&#x1F463;', name:'Gravel',     color:'#ccaa88',
+    desc:'Short bandpass noise bursts — footsteps on dry earth, scattered rhythm' },
+  { id:'glockchen',  icon:'&#x1F514;', name:'Glöckchen',  color:'#ffdd44',
+    desc:'Sine arpeggios at consonant intervals — distant little bells' },
+  { id:'voices',     icon:'&#x1F5E3;', name:'Voices',     color:'#cc88cc',
+    desc:'Filtered noise with speech-rhythm amplitude modulation — vague distant conversation' },
+  { id:'car',        icon:'&#x1F697;', name:'Car',        color:'#88ddff',
+    desc:'Oscillator doppler sweep + road rumble — occasional pass-by' },
+  { id:'birds',      icon:'&#x1F426;', name:'Birds',      color:'#66dd88',
+    desc:'FM synthesis chirps — randomized pitch, timing, and harmonics' },
+  { id:'monks',      icon:'&#x1F64F;', name:'Monks',      color:'#ffaa44',
+    desc:'Low sine drone with perfect fifth — deep chanting, long reverb' },
+  { id:'boat',       icon:'&#x26F5;',  name:'Boat Horn',  color:'#66ccdd',
+    desc:'Very low sine swell — distant harbor fog signal' },
+];
+
+const PRESETS = {
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4 },
+};
+
+let ctx = null;
+let masterGain = null;
+let destNode = null;
+let tracks = [];
+let isPlaying = false;
+let isRecording = false;
+let mediaRecorder = null;
+let recChunks = [];
+let recStartTime = 0;
+let recTimer = null;
+let recordedBlob = null;
+
+function initAudio() {
+  if (ctx) return;
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = ctx.createGain();
+  masterGain.gain.value = 0.65;
+  masterGain.connect(ctx.destination);
+  destNode = ctx.createMediaStreamDestination();
+  masterGain.connect(destNode);
+}
+
+// --- Sound generators ---
+function createWind() {
+  const sr = ctx.sampleRate;
+  const len = sr * 4;
+  const buf = ctx.createBuffer(1, len, sr);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * 0.4;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 400;
+  filter.Q.value = 0.5;
+  const lfo = ctx.createOscillator();
+  lfo.frequency.value = 0.12;
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 300;
+  lfo.connect(lfoGain);
+  lfoGain.connect(filter.frequency);
+  lfo.start();
+  const gain = ctx.createGain();
+  gain.gain.value = 1;
+  src.connect(filter);
+  filter.connect(gain);
+  return { src, lfo, filter, gain, start:() => src.start(), stop:() => { try{src.stop()}catch(e){} lfo.stop() } };
+}
+
+function createGravel() {
+  const sr = ctx.sampleRate;
+  const gain = ctx.createGain();
+  gain.gain.value = 0.6;
+  let interval = null;
+  function step() {
+    const len = Math.floor(sr * (0.04 + Math.random() * 0.06));
+    const buf = ctx.createBuffer(1, len, sr);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1500 + Math.random() * 1500;
+    filter.Q.value = 1.5;
+    const env = ctx.createGain();
+    env.gain.value = 0.3 + Math.random() * 0.5;
+    env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + len / sr);
+    src.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    src.start();
+    src.stop(ctx.currentTime + len / sr + 0.01);
+    const next = 0.3 + Math.random() * 1.2;
+    interval = setTimeout(step, next * 1000);
+  }
+  return {
+    gain,
+    start() { step() },
+    stop() { clearTimeout(interval) },
+  };
+}
+
+function createGlockchen() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.4;
+  const notes = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+  let interval = null;
+  function ring() {
+    const now = ctx.currentTime;
+    const freq = notes[Math.floor(Math.random() * notes.length)];
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.5, now + 0.005);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 1.2 + Math.random() * 1.0);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + 2.2);
+    // Second harmonic for richness
+    if (Math.random() > 0.4) {
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.value = freq * 0.5;
+      const env2 = ctx.createGain();
+      env2.gain.setValueAtTime(0, now);
+      env2.gain.linearRampToValueAtTime(0.15, now + 0.01);
+      env2.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+      osc2.connect(env2);
+      env2.connect(gain);
+      osc2.start(now);
+      osc2.stop(now + 1.6);
+    }
+    const next = 0.8 + Math.random() * 2.0;
+    interval = setTimeout(ring, next * 1000);
+  }
+  return { gain, start() { ring() }, stop() { clearTimeout(interval) } };
+}
+
+function createVoices() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let interval = null;
+  function murmur() {
+    const now = ctx.currentTime;
+    const len = 0.3 + Math.random() * 0.6;
+    const sr = ctx.sampleRate;
+    const bufLen = Math.floor(sr * len);
+    const buf = ctx.createBuffer(1, bufLen, sr);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) d[i] = (Math.random() * 2 - 1) * 0.3;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 300 + Math.random() * 600;
+    filter.Q.value = 0.8;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.5, now + 0.03);
+    env.gain.setValueAtTime(0.5, now + len - 0.03);
+    env.gain.linearRampToValueAtTime(0, now + len);
+    src.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    src.start(now);
+    src.stop(now + len + 0.01);
+    const next = 1.0 + Math.random() * 2.5;
+    interval = setTimeout(murmur, next * 1000);
+  }
+  return { gain, start() { murmur() }, stop() { clearTimeout(interval) } };
+}
+
+function createCar() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let interval = null;
+  function pass() {
+    const now = ctx.currentTime;
+    const dur = 3 + Math.random() * 2;
+    // Doppler oscillator
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    const oscGain = ctx.createGain();
+    oscGain.gain.setValueAtTime(0.15, now);
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(120, now + dur * 0.5);
+    osc.frequency.exponentialRampToValueAtTime(80, now + dur);
+    osc.connect(oscGain);
+    oscGain.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur);
+    // Road noise
+    const sr = ctx.sampleRate;
+    const noiseLen = Math.floor(sr * dur);
+    const noiseBuf = ctx.createBuffer(1, noiseLen, sr);
+    const nd = noiseBuf.getChannelData(0);
+    for (let i = 0; i < noiseLen; i++) nd[i] = (Math.random() * 2 - 1) * 0.2;
+    const noiseSrc = ctx.createBufferSource();
+    noiseSrc.buffer = noiseBuf;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'lowpass';
+    noiseFilter.frequency.value = 200;
+    const noiseEnv = ctx.createGain();
+    noiseEnv.gain.setValueAtTime(0, now);
+    noiseEnv.gain.linearRampToValueAtTime(0.4, now + 0.5);
+    noiseEnv.gain.setValueAtTime(0.4, now + dur - 0.5);
+    noiseEnv.gain.linearRampToValueAtTime(0, now + dur);
+    noiseSrc.connect(noiseFilter);
+    noiseFilter.connect(noiseEnv);
+    noiseEnv.connect(gain);
+    noiseSrc.start(now);
+    noiseSrc.stop(now + dur);
+    const next = 8 + Math.random() * 12;
+    interval = setTimeout(pass, next * 1000);
+  }
+  return { gain, start() { pass() }, stop() { clearTimeout(interval) } };
+}
+
+function createBirds() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let interval = null;
+  function chirp() {
+    const now = ctx.currentTime;
+    const baseFreq = 2000 + Math.random() * 3000;
+    const modFreq = baseFreq * (3 + Math.random() * 4);
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    const mod = ctx.createOscillator();
+    mod.frequency.value = modFreq;
+    const modGain = ctx.createGain();
+    modGain.gain.value = baseFreq * 0.3;
+    mod.connect(modGain);
+    modGain.connect(osc.frequency);
+    osc.frequency.value = baseFreq;
+    const env = ctx.createGain();
+    const dur = 0.06 + Math.random() * 0.12;
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.2 + Math.random() * 0.3, now + dur * 0.1);
+    env.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.01);
+    mod.start(now);
+    mod.stop(now + dur + 0.01);
+    // Occasional double-chirp
+    if (Math.random() > 0.6) {
+      const now2 = now + 0.12 + Math.random() * 0.1;
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      const mod2 = ctx.createOscillator();
+      mod2.frequency.value = modFreq * (0.8 + Math.random() * 0.4);
+      const modGain2 = ctx.createGain();
+      modGain2.gain.value = baseFreq * 0.25;
+      mod2.connect(modGain2);
+      modGain2.connect(osc2.frequency);
+      osc2.frequency.value = baseFreq * (0.9 + Math.random() * 0.2);
+      const env2 = ctx.createGain();
+      const dur2 = 0.04 + Math.random() * 0.08;
+      env2.gain.setValueAtTime(0, now2);
+      env2.gain.linearRampToValueAtTime(0.15, now2 + dur2 * 0.1);
+      env2.gain.exponentialRampToValueAtTime(0.001, now2 + dur2);
+      osc2.connect(env2);
+      env2.connect(gain);
+      osc2.start(now2);
+      osc2.stop(now2 + dur2 + 0.01);
+      mod2.start(now2);
+      mod2.stop(now2 + dur2 + 0.01);
+    }
+    const next = 1.0 + Math.random() * 4.0;
+    interval = setTimeout(chirp, next * 1000);
+  }
+  return { gain, start() { chirp() }, stop() { clearTimeout(interval) } };
+}
+
+function createMonks() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.4;
+  let interval = null;
+  let active = false;
+  function chant() {
+    active = true;
+    const now = ctx.currentTime;
+    const base = 90 + Math.random() * 20;
+    // Fundamental
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.value = base;
+    const env1 = ctx.createGain();
+    env1.gain.setValueAtTime(0, now);
+    env1.gain.linearRampToValueAtTime(0.5, now + 1.5);
+    env1.gain.setValueAtTime(0.5, now + 3.5);
+    env1.gain.linearRampToValueAtTime(0, now + 5);
+    osc1.connect(env1);
+    env1.connect(gain);
+    osc1.start(now);
+    osc1.stop(now + 5.5);
+    // Fifth
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = base * 1.5;
+    const env2 = ctx.createGain();
+    env2.gain.setValueAtTime(0, now);
+    env2.gain.linearRampToValueAtTime(0.25, now + 1.8);
+    env2.gain.setValueAtTime(0.25, now + 3.2);
+    env2.gain.linearRampToValueAtTime(0, now + 4.5);
+    osc2.connect(env2);
+    env2.connect(gain);
+    osc2.start(now);
+    osc2.stop(now + 4.8);
+    // Octave shimmer
+    const osc3 = ctx.createOscillator();
+    osc3.type = 'sine';
+    osc3.frequency.value = base * 2;
+    const env3 = ctx.createGain();
+    env3.gain.setValueAtTime(0, now);
+    env3.gain.linearRampToValueAtTime(0.08, now + 2.0);
+    env3.gain.setValueAtTime(0.08, now + 3.0);
+    env3.gain.linearRampToValueAtTime(0, now + 4.0);
+    osc3.connect(env3);
+    env3.connect(gain);
+    osc3.start(now);
+    osc3.stop(now + 4.2);
+    const next = 5 + Math.random() * 3;
+    interval = setTimeout(chant, next * 1000);
+  }
+  return { gain, start() { chant() }, stop() { clearTimeout(interval); active = false } };
+}
+
+function createBoat() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.35;
+  let interval = null;
+  function horn() {
+    const now = ctx.currentTime;
+    const freq = 55 + Math.random() * 25;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const env = ctx.createGain();
+    const dur = 3 + Math.random() * 2;
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.4, now + 1.0);
+    env.gain.setValueAtTime(0.4, now + dur - 0.8);
+    env.gain.linearRampToValueAtTime(0, now + dur);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.1);
+    // Sub harmonic
+    if (Math.random() > 0.3) {
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.value = freq * 0.5;
+      const env2 = ctx.createGain();
+      env2.gain.setValueAtTime(0, now);
+      env2.gain.linearRampToValueAtTime(0.15, now + 1.5);
+      env2.gain.setValueAtTime(0.15, now + dur - 1.0);
+      env2.gain.linearRampToValueAtTime(0, now + dur);
+      osc2.connect(env2);
+      env2.connect(gain);
+      osc2.start(now);
+      osc2.stop(now + dur + 0.1);
+    }
+    const next = 8 + Math.random() * 12;
+    interval = setTimeout(horn, next * 1000);
+  }
+  return { gain, start() { horn() }, stop() { clearTimeout(interval) } };
+}
+
+const GENERATORS = {
+  wind: createWind,
+  gravel: createGravel,
+  glockchen: createGlockchen,
+  voices: createVoices,
+  car: createCar,
+  birds: createBirds,
+  monks: createMonks,
+  boat: createBoat,
+};
+
+// --- UI ---
+const grid = document.getElementById('trackGrid');
+TRACK_DEFS.forEach(def => {
+  const card = document.createElement('div');
+  card.className = 'track-card';
+  card.id = 'card-' + def.id;
+  card.innerHTML = `
+    <div class="track-header">
+      <span class="track-icon">${def.icon}</span>
+      <span class="track-name">${def.name}</span>
+      <button class="track-mute" id="mute-${def.id}" title="Mute">&#x1F507;</button>
+    </div>
+    <div class="slider-wrap">
+      <input type="range" min="0" max="1" step="0.01" value="0" id="slider-${def.id}">
+      <span class="slider-val" id="val-${def.id}">0%</span>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+const sliders = {};
+const muteBtns = {};
+const valDisps = {};
+TRACK_DEFS.forEach(def => {
+  sliders[def.id] = document.getElementById('slider-' + def.id);
+  muteBtns[def.id] = document.getElementById('mute-' + def.id);
+  valDisps[def.id] = document.getElementById('val-' + def.id);
+});
+
+// --- Engine state ---
+let engines = {};
+let muted = {};
+
+TRACK_DEFS.forEach(def => { muted[def.id] = false });
+
+function setVolume(id, val) {
+  if (engines[id] && engines[id].gain) {
+    const muteFactor = muted[id] ? 0 : 1;
+    engines[id].gain.gain.setTargetAtTime(val * muteFactor, ctx.currentTime, 0.05);
+  }
+}
+
+function updateSliderDisplay(id) {
+  valDisps[id].textContent = Math.round(sliders[id].value * 100) + '%';
+}
+
+TRACK_DEFS.forEach(def => {
+  sliders[def.id].addEventListener('input', () => {
+    updateSliderDisplay(def.id);
+    if (isPlaying) setVolume(def.id, parseFloat(sliders[def.id].value));
+  });
+  muteBtns[def.id].addEventListener('click', () => {
+    muted[def.id] = !muted[def.id];
+    muteBtns[def.id].classList.toggle('muted');
+    const card = document.getElementById('card-' + def.id);
+    card.classList.toggle('muted');
+    if (engines[def.id]) {
+      const muteFactor = muted[def.id] ? 0 : 1;
+      engines[def.id].gain.gain.setTargetAtTime(
+        parseFloat(sliders[def.id].value) * muteFactor, ctx.currentTime, 0.05
+      );
+    }
+  });
+});
+
+function startAll() {
+  initAudio();
+  if (ctx.state === 'suspended') ctx.resume();
+  isPlaying = true;
+  TRACK_DEFS.forEach(def => {
+    const eng = GENERATORS[def.id]();
+    eng.gain.connect(masterGain);
+    eng.start();
+    engines[def.id] = eng;
+    const vol = parseFloat(sliders[def.id].value);
+    const muteFactor = muted[def.id] ? 0 : 1;
+    eng.gain.gain.setValueAtTime(vol * muteFactor, ctx.currentTime);
+    document.getElementById('card-' + def.id).classList.add('active');
+  });
+  document.getElementById('btnStart').style.display = 'none';
+  document.getElementById('btnStop').style.display = '';
+  document.getElementById('statusText').textContent = 'Playing';
+}
+
+function stopAll() {
+  isPlaying = false;
+  Object.keys(engines).forEach(id => {
+    if (engines[id]) {
+      engines[id].stop();
+      try { engines[id].gain.disconnect(); } catch(e) {}
+    }
+  });
+  engines = {};
+  TRACK_DEFS.forEach(def => {
+    document.getElementById('card-' + def.id).classList.remove('active');
+  });
+  document.getElementById('btnStart').style.display = '';
+  document.getElementById('btnStop').style.display = 'none';
+  document.getElementById('statusText').textContent = 'Stopped';
+}
+
+function applyPreset(name) {
+  const p = PRESETS[name];
+  if (!p) return;
+  TRACK_DEFS.forEach(def => {
+    const val = p[def.id] !== undefined ? p[def.id] : 0;
+    sliders[def.id].value = val;
+    updateSliderDisplay(def.id);
+    if (isPlaying) setVolume(def.id, val);
+  });
+}
+
+function randomize() {
+  TRACK_DEFS.forEach(def => {
+    // Weighted: favor lower volumes for most, occasional loud
+    const r = Math.random();
+    let val;
+    if (r < 0.3) val = 0;
+    else if (r < 0.55) val = 0.1 + Math.random() * 0.2;
+    else if (r < 0.8) val = 0.3 + Math.random() * 0.3;
+    else val = 0.6 + Math.random() * 0.4;
+    sliders[def.id].value = val;
+    updateSliderDisplay(def.id);
+    if (isPlaying) setVolume(def.id, val);
+  });
+  document.getElementById('presetSelect').value = 'custom';
+}
+
+// --- Recording ---
+function startRecording() {
+  if (!isPlaying || isRecording) return;
+  recChunks = [];
+  const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus'
+    : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm'
+    : MediaRecorder.isTypeSupported('audio/ogg;codecs=opus') ? 'audio/ogg;codecs=opus'
+    : '';
+  mediaRecorder = new MediaRecorder(destNode.stream, mime ? { mimeType: mime } : {});
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recChunks.push(e.data) };
+  mediaRecorder.onstop = () => {
+    recordedBlob = new Blob(recChunks, { type: 'audio/webm' });
+    document.getElementById('btnDl').disabled = false;
+    document.getElementById('recIndicator').classList.remove('active');
+    clearInterval(recTimer);
+  };
+  mediaRecorder.start();
+  isRecording = true;
+  recStartTime = Date.now();
+  document.getElementById('btnRec').classList.add('active');
+  document.getElementById('btnRec').disabled = true;
+  document.getElementById('recIndicator').classList.add('active');
+  recTimer = setInterval(() => {
+    const sec = Math.floor((Date.now() - recStartTime) / 1000);
+    document.getElementById('recTime').textContent = Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0');
+  }, 200);
+  document.getElementById('statusText').textContent = 'Recording';
+  // Auto-stop after 60s
+  setTimeout(() => {
+    if (isRecording) stopRecording();
+  }, 60000);
+}
+
+function stopRecording() {
+  if (!isRecording) return;
+  isRecording = false;
+  mediaRecorder.stop();
+  document.getElementById('btnRec').classList.remove('active');
+  document.getElementById('btnRec').disabled = false;
+  document.getElementById('statusText').textContent = 'Recording stopped';
+}
+
+function downloadRecording() {
+  if (!recordedBlob) return;
+  const url = URL.createObjectURL(recordedBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ambient-mix-' + new Date().toISOString().slice(0,19).replace(/[:-]/g,'') + '.webm';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// --- Event wiring ---
+document.getElementById('btnStart').addEventListener('click', startAll);
+document.getElementById('btnStop').addEventListener('click', stopAll);
+document.getElementById('btnRand').addEventListener('click', randomize);
+document.getElementById('btnRec').addEventListener('click', () => {
+  if (!isRecording) startRecording(); else stopRecording();
+});
+document.getElementById('btnDl').addEventListener('click', downloadRecording);
+
+document.getElementById('presetSelect').addEventListener('change', e => {
+  if (e.target.value !== 'custom') applyPreset(e.target.value);
+});
+
+// Init sliders with a gentle default
+applyPreset('winter');
+
+// Update all displays
+TRACK_DEFS.forEach(def => updateSliderDisplay(def.id));
+</script>
+</body>
+</html>
