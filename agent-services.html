@@ -15,6 +15,13 @@
 
   #fireworks{position:fixed;top:0;right:0;width:300px;height:100vh;z-index:0;pointer-events:none;opacity:.5}
 
+  .ambient-toggle{position:fixed;top:16px;right:20px;z-index:100;display:flex;align-items:center;gap:8px;font-size:0.75rem;color:#555;letter-spacing:2px;cursor:pointer;user-select:none;font-family:'Inter',sans-serif;background:rgba(13,13,20,.7);padding:6px 12px;border-radius:20px;border:1px solid #2a2a3a;backdrop-filter:blur(4px)}
+  .ambient-toggle .switch{width:32px;height:18px;background:#2a2a3a;border-radius:10px;position:relative;transition:background .3s;flex-shrink:0}
+  .ambient-toggle .switch .knob{width:14px;height:14px;background:#555;border-radius:50%;position:absolute;top:2px;left:2px;transition:all .3s}
+  .ambient-toggle.on .switch{background:#1a4a2a}
+  .ambient-toggle.on .switch .knob{left:16px;background:#00ff88}
+  .ambient-toggle.on{color:#44cc66;border-color:#2a4a3a}
+
   #loader{position:fixed;inset:0;z-index:9999;background:#0d0d14;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
   #loader.hide{opacity:0;pointer-events:none}
   .spinner{width:40px;height:40px;border:3px solid #2a2a3a;border-top-color:#00ff88;border-radius:50%;animation:spin .8s linear infinite}
@@ -98,6 +105,11 @@
 <body>
 <div id="loader"><div class="spinner"></div><div class="loader-label">45dgof8</div></div>
 <canvas id="fireworks"></canvas>
+<div class="ambient-toggle" id="ambientToggle">
+  <span id="ambientLabel">silence</span>
+  <div class="switch"><div class="knob"></div></div>
+</div>
+
 <div class="wrap">
 
 <div style="text-align:center;margin-bottom:24px">
@@ -661,6 +673,242 @@ function submitProject() {
   }
 }
 </script>
+<script>
+{
+  let ctx, master, hum1, hum2, hum3, padL, padR, reverbNode, reverbGain;
+  let tings = [];
+  let harps = [];
+  let running = false;
+  let toggleEl = document.getElementById('ambientToggle');
+  let labelEl = document.getElementById('ambientLabel');
+
+  function initAudio() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    master = ctx.createGain();
+    master.gain.value = 0;
+    master.connect(ctx.destination);
+
+    reverbGain = ctx.createGain();
+    reverbGain.gain.value = 0.5;
+    const delay1 = ctx.createDelay(2);
+    delay1.delayTime.value = 0.6;
+    const delay2 = ctx.createDelay(2);
+    delay2.delayTime.value = 0.8;
+    const delay3 = ctx.createDelay(2);
+    delay3.delayTime.value = 1.1;
+    const fb1 = ctx.createGain();
+    fb1.gain.value = 0.3;
+    const fb2 = ctx.createGain();
+    fb2.gain.value = 0.2;
+    const fb3 = ctx.createGain();
+    fb3.gain.value = 0.15;
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 3000;
+
+    reverbNode = ctx.createGain();
+    reverbNode.gain.value = 0.6;
+
+    reverbGain.connect(delay1);
+    delay1.connect(fb1);
+    fb1.connect(delay1);
+    fb1.connect(delay2);
+    delay2.connect(fb2);
+    fb2.connect(delay2);
+    fb2.connect(delay3);
+    delay3.connect(fb3);
+    fb3.connect(delay3);
+    fb3.connect(lpf);
+    lpf.connect(ctx.destination);
+
+    // deep hums
+    function makeHum(freq, detune) {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.detune.value = detune;
+      const lfo = ctx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.value = 0.1 + Math.random() * 0.2;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 4 + Math.random() * 4;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      const humGain = ctx.createGain();
+      humGain.gain.value = 0.03 + Math.random() * 0.02;
+      const humFilter = ctx.createBiquadFilter();
+      humFilter.type = 'lowpass';
+      humFilter.frequency.value = 120;
+      osc.connect(humFilter);
+      humFilter.connect(humGain);
+      humGain.connect(master);
+      humGain.connect(reverbGain);
+      osc.start();
+      lfo.start();
+      return { osc, lfo, gain: humGain };
+    }
+
+    hum1 = makeHum(32, -15);
+    hum2 = makeHum(42, 8);
+    hum3 = makeHum(55, -5);
+
+    // spherical pad
+    padL = ctx.createOscillator();
+    padL.type = 'sawtooth';
+    padL.frequency.value = 110;
+    const padLFilter = ctx.createBiquadFilter();
+    padLFilter.type = 'lowpass';
+    padLFilter.frequency.value = 400;
+    padLFilter.Q.value = 2;
+    const padLGain = ctx.createGain();
+    padLGain.gain.value = 0;
+    const padLLfo = ctx.createOscillator();
+    padLLfo.type = 'sine';
+    padLLfo.frequency.value = 0.08;
+    const padLLfoGain = ctx.createGain();
+    padLLfoGain.gain.value = 0.015;
+    padLLfo.connect(padLLfoGain);
+    padLLfoGain.connect(padLGain.gain);
+    padL.connect(padLFilter);
+    padLFilter.connect(padLGain);
+    padLGain.connect(reverbGain);
+
+    padR = ctx.createOscillator();
+    padR.type = 'sawtooth';
+    padR.frequency.value = 146.83;
+    const padRFilter = ctx.createBiquadFilter();
+    padRFilter.type = 'lowpass';
+    padRFilter.frequency.value = 400;
+    padRFilter.Q.value = 2;
+    const padRGain = ctx.createGain();
+    padRGain.gain.value = 0;
+    const padRLfo = ctx.createOscillator();
+    padRLfo.type = 'sine';
+    padRLfo.frequency.value = 0.1;
+    const padRLfoGain = ctx.createGain();
+    padRLfoGain.gain.value = 0.015;
+    padRLfo.connect(padRLfoGain);
+    padRLfoGain.connect(padRGain.gain);
+    padR.connect(padRFilter);
+    padRFilter.connect(padRGain);
+    padRGain.connect(reverbGain);
+
+    padL.start();
+    padLLfo.start();
+    padR.start();
+    padRLfo.start();
+
+    // schedule pad fade-in
+    setTimeout(() => { padLGain.gain.linearRampToValueAtTime(0.02, ctx.currentTime + 4); }, 1000);
+    setTimeout(() => { padRGain.gain.linearRampToValueAtTime(0.02, ctx.currentTime + 4); }, 1500);
+
+    // start random events
+    scheduleTing();
+    scheduleHarp();
+  }
+
+  function scheduleTing() {
+    if (!running) return;
+    const delay = 4000 + Math.random() * 12000;
+    setTimeout(() => {
+      if (!running) return;
+      playTing();
+      scheduleTing();
+    }, delay);
+  }
+
+  function playTing() {
+    if (!ctx || !running) return;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 2000 + Math.random() * 2500;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.04 + Math.random() * 0.03, ctx.currentTime + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5 + Math.random() * 0.5);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = osc.frequency.value;
+    filter.Q.value = 15;
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(reverbGain);
+    osc.start();
+    osc.stop(ctx.currentTime + 1.2);
+  }
+
+  function scheduleHarp() {
+    if (!running) return;
+    const delay = 8000 + Math.random() * 20000;
+    setTimeout(() => {
+      if (!running) return;
+      playHarp();
+      scheduleHarp();
+    }, delay);
+  }
+
+  function playHarp() {
+    if (!ctx || !running) return;
+    const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 523.25, 587.33];
+    const count = 2 + Math.floor(Math.random() * 3);
+    const base = Math.floor(Math.random() * (notes.length - count));
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        if (!running) return;
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = notes[base + i];
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.03, ctx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2 + i * 0.1);
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 2000;
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(reverbGain);
+        osc.start();
+        osc.stop(ctx.currentTime + 2);
+      }, i * 180);
+    }
+  }
+
+  var ambientOn = false;
+
+  function startAmbient() {
+    if (!ctx) initAudio();
+    if (ctx.state === 'suspended') ctx.resume();
+    running = true;
+    ambientOn = true;
+    master.gain.linearRampToValueAtTime(0.45, ctx.currentTime + 3);
+    toggleEl.classList.add('on');
+    labelEl.textContent = 'ambient';
+    scheduleTing();
+    scheduleHarp();
+  }
+
+  function stopAmbient() {
+    running = false;
+    ambientOn = false;
+    if (ctx) master.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
+    toggleEl.classList.remove('on');
+    labelEl.textContent = 'silence';
+  }
+
+  toggleEl.addEventListener('click', () => {
+    if (ambientOn) { stopAmbient(); }
+    else { startAmbient(); }
+  });
+
+  document.addEventListener('click', () => {
+    if (!ctx && toggleEl.classList.contains('on')) initAudio();
+  }, { once: true });
+}
+</script>
+
 <!-- PayPal SDK -->
 <script src="https://www.paypal.com/sdk/js?client-id=BAAmB7lcCMqajEX6ZQ6_EnZ0PtDeUv5VKZFrO06dRXN64vpMoAkt--npuAWXUVVznCgrUBfQdWizxX1UPY&currency=CHF&components=buttons" data-namespace="paypal_sdk"></script>
 
