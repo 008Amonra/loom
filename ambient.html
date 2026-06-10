@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ambient Studio — 45DGOF8</title>
-<meta name="description" content="Generative soundscape mixer. Eight synthesis tracks, volume sliders, presets, randomizer, and record-to-file export. Built entirely with Web Audio API.">
+<meta name="description" content="Generative soundscape mixer. Fifteen synthesis tracks, volume sliders, presets, randomizer, and record-to-file export. Built entirely with Web Audio API.">
 <link rel="canonical" href="https://45dgof8.com/ambient.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,12 +90,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <header>
   <h1>Ambient Studio</h1>
-  <p class="tagline">Generative soundscape mixer — ten synthetic tracks, real-time control, export to file.</p>
+  <p class="tagline">Generative soundscape mixer — fifteen synthetic tracks, real-time control, export to file.</p>
 </header>
 
 <div class="study-note">
   <strong>Example Study: What an AI Agent Can Build in One Session.</strong><br>
-  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) in a single conversation. Ten parallel sound sources synthesized entirely with the Web Audio API — no samples, no external files, no dependencies. Volume sliders, mute buttons, presets, a randomizer, and a recording export function. The prompt was a short description of sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, animals, boats, monks.</em> All of it runs in your browser, zero install.<br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) in a single conversation. Fifteen parallel sound sources synthesized entirely with the Web Audio API — no samples, no external files, no dependencies. Volume sliders, mute buttons, presets, a randomizer, and a recording export function. The prompt was a short description of sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, animals, boats, monks.</em> All of it runs in your browser, zero install.<br>
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
@@ -154,13 +154,23 @@ const TRACK_DEFS = [
     desc:'Purring oscillator with occasional meow — warm, close' },
   { id:'dog',        icon:'&#x1F436;', name:'Dog',        color:'#cc8844',
     desc:'Short bark bursts — alert but calm, from a distance' },
+  { id:'rain',       icon:'&#x1F327;', name:'Rain',       color:'#6699cc',
+    desc:'Filtered noise with intensity variation — steady drizzle' },
+  { id:'lightning',  icon:'&#x26A1;',  name:'Lightning',  color:'#ffee44',
+    desc:'Sudden crack noise + low thunder rumble — nearby strike' },
+  { id:'police',     icon:'&#x1F6A8;', name:'Police',     color:'#ff4444',
+    desc:'Alternating high-low frequency siren — emergency approach' },
+  { id:'medical',    icon:'&#x1F691;', name:'Medical',    color:'#ee6644',
+    desc:'Warbling rising siren — ambulance passing through' },
+  { id:'ufo',        icon:'&#x1F47D;', name:'UFO',        color:'#44ff88',
+    desc:'Sci-fi sweep with scanning pulse — extraterrestrial flyover' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2 },
 };
 
 let ctx = null;
@@ -608,6 +618,210 @@ function createDog() {
   return { gain, start() { bark() }, stop() { clearTimeout(interval) } };
 }
 
+function createRain() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let src = null;
+  let filter = null;
+  let lfo = null;
+  return {
+    gain,
+    start() {
+      const sr = ctx.sampleRate;
+      const len = sr * 8;
+      const buf = ctx.createBuffer(1, len, sr);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
+      src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      filter = ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.value = 2000;
+      filter.Q.value = 0.3;
+      lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.08;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 1000;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start();
+      src.connect(filter);
+      filter.connect(gain);
+      src.start();
+    },
+    stop() {
+      try { src.stop() } catch(e) {}
+      try { lfo.stop() } catch(e) {}
+    }
+  };
+}
+
+function createLightning() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.5;
+  let interval = null;
+  function strike() {
+    const now = ctx.currentTime;
+    // Crack — short broadband noise burst
+    const sr = ctx.sampleRate;
+    const crackLen = Math.floor(sr * 0.08);
+    const crackBuf = ctx.createBuffer(1, crackLen, sr);
+    const cd = crackBuf.getChannelData(0);
+    for (let i = 0; i < crackLen; i++) cd[i] = (Math.random() * 2 - 1) * 0.8;
+    const crackSrc = ctx.createBufferSource();
+    crackSrc.buffer = crackBuf;
+    const crackEnv = ctx.createGain();
+    crackEnv.gain.setValueAtTime(0, now);
+    crackEnv.gain.linearRampToValueAtTime(0.9, now + 0.005);
+    crackEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    crackSrc.connect(crackEnv);
+    crackEnv.connect(gain);
+    crackSrc.start(now);
+    crackSrc.stop(now + 0.09);
+    // Thunder — low rumble after delay
+    const tDelay = 0.3 + Math.random() * 0.5;
+    const t = now + tDelay;
+    const thunderLen = Math.floor(sr * (2 + Math.random() * 2));
+    const thunderBuf = ctx.createBuffer(1, thunderLen, sr);
+    const td = thunderBuf.getChannelData(0);
+    for (let i = 0; i < thunderLen; i++) td[i] = (Math.random() * 2 - 1) * 0.3;
+    const thunderSrc = ctx.createBufferSource();
+    thunderSrc.buffer = thunderBuf;
+    const thunderFilter = ctx.createBiquadFilter();
+    thunderFilter.type = 'lowpass';
+    thunderFilter.frequency.value = 80;
+    thunderFilter.Q.value = 2;
+    const thunderEnv = ctx.createGain();
+    thunderEnv.gain.setValueAtTime(0, t);
+    thunderEnv.gain.linearRampToValueAtTime(0.6, t + 0.3);
+    thunderEnv.gain.exponentialRampToValueAtTime(0.001, t + thunderLen / sr - 0.3);
+    thunderSrc.connect(thunderFilter);
+    thunderFilter.connect(thunderEnv);
+    thunderEnv.connect(gain);
+    thunderSrc.start(t);
+    thunderSrc.stop(t + thunderLen / sr + 0.01);
+    const next = 15 + Math.random() * 25;
+    interval = setTimeout(strike, next * 1000);
+  }
+  return { gain, start() { strike() }, stop() { clearTimeout(interval) } };
+}
+
+function createPolice() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.2;
+  let interval = null;
+  function wail() {
+    const now = ctx.currentTime;
+    const dur = 1.5 + Math.random() * 1.0;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.linearRampToValueAtTime(1200, now + dur * 0.5);
+    osc.frequency.linearRampToValueAtTime(800, now + dur);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.12, now + 0.05);
+    env.gain.setValueAtTime(0.12, now + dur - 0.1);
+    env.gain.linearRampToValueAtTime(0, now + dur);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1000;
+    filter.Q.value = 2;
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.1);
+    const next = 3 + Math.random() * 4;
+    interval = setTimeout(wail, next * 1000);
+  }
+  return { gain, start() { wail() }, stop() { clearTimeout(interval) } };
+}
+
+function createMedical() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.2;
+  let interval = null;
+  function siren() {
+    const now = ctx.currentTime;
+    const dur = 1.0 + Math.random() * 0.8;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, now);
+    osc.frequency.linearRampToValueAtTime(800, now + dur * 0.3);
+    osc.frequency.linearRampToValueAtTime(400, now + dur * 0.6);
+    osc.frequency.linearRampToValueAtTime(900, now + dur * 0.85);
+    osc.frequency.linearRampToValueAtTime(400, now + dur);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.15, now + 0.03);
+    env.gain.setValueAtTime(0.15, now + dur - 0.05);
+    env.gain.linearRampToValueAtTime(0, now + dur);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 700;
+    filter.Q.value = 1.5;
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.1);
+    const next = 4 + Math.random() * 5;
+    interval = setTimeout(siren, next * 1000);
+  }
+  return { gain, start() { siren() }, stop() { clearTimeout(interval) } };
+}
+
+function createUfo() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let interval = null;
+  function flyover() {
+    const now = ctx.currentTime;
+    const dur = 4 + Math.random() * 3;
+    // Main hum — descending then rising doppler
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(80, now + dur * 0.5);
+    osc.frequency.exponentialRampToValueAtTime(250, now + dur);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.2, now + 0.5);
+    env.gain.setValueAtTime(0.2, now + dur - 0.5);
+    env.gain.linearRampToValueAtTime(0, now + dur);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.1);
+    // Scanning pulse — periodic blip
+    const pulseCount = Math.floor(Math.random() * 4) + 2;
+    for (let i = 0; i < pulseCount; i++) {
+      const t = now + 0.5 + (i / pulseCount) * (dur - 0.8);
+      const pLen = 0.06 + Math.random() * 0.08;
+      const pOsc = ctx.createOscillator();
+      pOsc.type = 'sine';
+      pOsc.frequency.value = 1500 + Math.random() * 1000;
+      const pEnv = ctx.createGain();
+      pEnv.gain.setValueAtTime(0, t);
+      pEnv.gain.linearRampToValueAtTime(0.08, t + pLen * 0.2);
+      pEnv.gain.exponentialRampToValueAtTime(0.001, t + pLen);
+      pOsc.connect(pEnv);
+      pEnv.connect(gain);
+      pOsc.start(t);
+      pOsc.stop(t + pLen + 0.01);
+    }
+    const next = 12 + Math.random() * 15;
+    interval = setTimeout(flyover, next * 1000);
+  }
+  return {
+    gain,
+    start() { flyover() },
+    stop() { clearTimeout(interval) }
+  };
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -619,6 +833,11 @@ const GENERATORS = {
   boat: createBoat,
   cat: createCat,
   dog: createDog,
+  rain: createRain,
+  lightning: createLightning,
+  police: createPolice,
+  medical: createMedical,
+  ufo: createUfo,
 };
 
 // --- UI ---
