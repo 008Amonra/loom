@@ -90,12 +90,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <header>
   <h1>Ambient Studio</h1>
-  <p class="tagline">Generative soundscape mixer — eight synthetic tracks, real-time control, export to file.</p>
+  <p class="tagline">Generative soundscape mixer — ten synthetic tracks, real-time control, export to file.</p>
 </header>
 
 <div class="study-note">
   <strong>Example Study: What an AI Agent Can Build in One Session.</strong><br>
-  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) in a single conversation. Eight parallel sound sources synthesized entirely with the Web Audio API — no samples, no external files, no dependencies. Volume sliders, mute buttons, presets, a randomizer, and a recording export function. The prompt was a short description of sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, animals, boats, monks.</em> All of it runs in your browser, zero install.<br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) in a single conversation. Ten parallel sound sources synthesized entirely with the Web Audio API — no samples, no external files, no dependencies. Volume sliders, mute buttons, presets, a randomizer, and a recording export function. The prompt was a short description of sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, animals, boats, monks.</em> All of it runs in your browser, zero install.<br>
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
@@ -150,13 +150,17 @@ const TRACK_DEFS = [
     desc:'Low sine drone with perfect fifth — deep chanting, long reverb' },
   { id:'boat',       icon:'&#x26F5;',  name:'Boat Horn',  color:'#66ccdd',
     desc:'Very low sine swell — distant harbor fog signal' },
+  { id:'cat',        icon:'&#x1F431;', name:'Cat',        color:'#ff9966',
+    desc:'Purring oscillator with occasional meow — warm, close' },
+  { id:'dog',        icon:'&#x1F436;', name:'Dog',        color:'#cc8844',
+    desc:'Short bark bursts — alert but calm, from a distance' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3 },
 };
 
 let ctx = null;
@@ -515,6 +519,95 @@ function createBoat() {
   return { gain, start() { horn() }, stop() { clearTimeout(interval) } };
 }
 
+function createCat() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.25;
+  let interval = null;
+  let purrInterval = null;
+  function meow() {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, now);
+    osc.frequency.linearRampToValueAtTime(600, now + 0.15);
+    osc.frequency.linearRampToValueAtTime(300, now + 0.4);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.2, now + 0.05);
+    env.gain.setValueAtTime(0.2, now + 0.3);
+    env.gain.linearRampToValueAtTime(0, now + 0.5);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + 0.55);
+    const next = 8 + Math.random() * 12;
+    interval = setTimeout(meow, next * 1000);
+  }
+  function purr() {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    const rate = 25 + Math.random() * 10;
+    osc.frequency.value = rate;
+    const modGain = ctx.createGain();
+    modGain.gain.value = 15;
+    const mod = ctx.createOscillator();
+    mod.frequency.value = rate * 0.5;
+    mod.connect(modGain);
+    modGain.connect(osc.frequency);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 120;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.08, now + 0.3);
+    env.gain.setValueAtTime(0.08, now + 1.5);
+    env.gain.linearRampToValueAtTime(0, now + 2.0);
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + 2.2);
+    mod.start(now);
+    mod.stop(now + 2.2);
+    const next = 1.0 + Math.random() * 2.0;
+    purrInterval = setTimeout(purr, next * 1000);
+  }
+  return { gain, start() { purr(); meow() }, stop() { clearTimeout(interval); clearTimeout(purrInterval) } };
+}
+
+function createDog() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.2;
+  let interval = null;
+  function bark() {
+    const now = ctx.currentTime;
+    const count = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < count; i++) {
+      const t = now + i * (0.25 + Math.random() * 0.2);
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(350 + Math.random() * 150, t);
+      osc.frequency.exponentialRampToValueAtTime(250 + Math.random() * 100, t + 0.08);
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.25, t + 0.015);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 800;
+      osc.connect(filter);
+      filter.connect(env);
+      env.connect(gain);
+      osc.start(t);
+      osc.stop(t + 0.15);
+    }
+    const next = 6 + Math.random() * 10;
+    interval = setTimeout(bark, next * 1000);
+  }
+  return { gain, start() { bark() }, stop() { clearTimeout(interval) } };
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -524,6 +617,8 @@ const GENERATORS = {
   birds: createBirds,
   monks: createMonks,
   boat: createBoat,
+  cat: createCat,
+  dog: createDog,
 };
 
 // --- UI ---
