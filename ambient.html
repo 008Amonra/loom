@@ -17,7 +17,7 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;backgroun
 .back{display:inline-block;color:#4488ff;text-decoration:none;font-size:0.82rem;letter-spacing:1px;margin-bottom:16px}
 .back:hover{text-decoration:underline}
 .art{border-radius:16px;margin:0 0 20px;overflow:hidden;border:1px solid #2a2a3a;background:#14141e;max-height:280px}
-.art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px}
+.art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px;filter:url(#wind)}
 
 header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222}
 h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00ff88,#00ccff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
@@ -78,6 +78,14 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .grid{grid-template-columns:1fr}
 }
 </style>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <filter id="wind">
+    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.04" numOctaves="2" result="noise" seed="3">
+      <animate attributeName="baseFrequency" values="0.008 0.04;0.012 0.055;0.008 0.04" dur="6s" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 </head>
 <body>
 <div class="wrap">
