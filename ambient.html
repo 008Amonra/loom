@@ -61,6 +61,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .slider-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
 .slider-wrap input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
 .slider-val{font-size:0.72rem;color:#666;min-width:26px;text-align:right;font-variant-numeric:tabular-nums}
+.pan-wrap{display:flex;align-items:center;gap:6px;margin-top:6px}
+.pan-wrap label{font-size:0.65rem;color:#555;min-width:16px;text-align:center}
+.pan-wrap input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:2px;background:#2a2a3a;outline:none}
+.pan-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#6644cc;cursor:pointer;border:none}
+.pan-wrap input[type="range"]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#6644cc;cursor:pointer;border:none}
+.pan-val{font-size:0.65rem;color:#555;min-width:22px;text-align:center}
 
 .rec-indicator{display:none;align-items:center;gap:8px;font-size:0.82rem;color:#cc3344}
 .rec-indicator.active{display:flex}
@@ -200,37 +206,37 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <script>
 const TRACK_DEFS = [
-  { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff',
+  { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff', defaultPan:0,
     desc:'Lowpass-filtered noise with slow LFO — open field, moving air' },
-  { id:'gravel',     icon:'&#x1F463;', name:'Gravel',     color:'#ccaa88',
+  { id:'gravel',     icon:'&#x1F463;', name:'Gravel',     color:'#ccaa88', defaultPan:0.3,
     desc:'Short bandpass noise bursts — footsteps on dry earth, scattered rhythm' },
-  { id:'glockchen',  icon:'&#x1F514;', name:'Glöckchen',  color:'#ffdd44',
+  { id:'glockchen',  icon:'&#x1F514;', name:'Glöckchen',  color:'#ffdd44', defaultPan:-0.4,
     desc:'Sine arpeggios at consonant intervals — distant little bells' },
-  { id:'voices',     icon:'&#x1F5E3;', name:'Voices',     color:'#cc88cc',
+  { id:'voices',     icon:'&#x1F5E3;', name:'Voices',     color:'#cc88cc', defaultPan:-0.2,
     desc:'Filtered noise with speech-rhythm amplitude modulation — vague distant conversation' },
-  { id:'car',        icon:'&#x1F697;', name:'Car',        color:'#88ddff',
+  { id:'car',        icon:'&#x1F697;', name:'Car',        color:'#88ddff', defaultPan:-0.6,
     desc:'Oscillator doppler sweep + road rumble — occasional pass-by' },
-  { id:'birds',      icon:'&#x1F426;', name:'Birds',      color:'#66dd88',
+  { id:'birds',      icon:'&#x1F426;', name:'Birds',      color:'#66dd88', defaultPan:0.5,
     desc:'FM synthesis chirps — randomized pitch, timing, and harmonics' },
-  { id:'monks',      icon:'&#x1F64F;', name:'Monks',      color:'#ffaa44',
+  { id:'monks',      icon:'&#x1F64F;', name:'Monks',      color:'#ffaa44', defaultPan:0,
     desc:'Low sine drone with perfect fifth — deep chanting, long reverb' },
-  { id:'boat',       icon:'&#x26F5;',  name:'Boat Horn',  color:'#66ccdd',
+  { id:'boat',       icon:'&#x26F5;',  name:'Boat Horn',  color:'#66ccdd', defaultPan:-0.3,
     desc:'Very low sine swell — distant harbor fog signal' },
-  { id:'cat',        icon:'&#x1F431;', name:'Cat',        color:'#ff9966',
+  { id:'cat',        icon:'&#x1F431;', name:'Cat',        color:'#ff9966', defaultPan:-0.7,
     desc:'Purring oscillator with occasional meow — warm, close' },
-  { id:'dog',        icon:'&#x1F436;', name:'Dog',        color:'#cc8844',
+  { id:'dog',        icon:'&#x1F436;', name:'Dog',        color:'#cc8844', defaultPan:0.6,
     desc:'Short bark bursts — alert but calm, from a distance' },
-  { id:'rain',       icon:'&#x1F327;', name:'Rain',       color:'#6699cc',
+  { id:'rain',       icon:'&#x1F327;', name:'Rain',       color:'#6699cc', defaultPan:0,
     desc:'Filtered noise with intensity variation — steady drizzle' },
-  { id:'lightning',  icon:'&#x26A1;',  name:'Lightning',  color:'#ffee44',
+  { id:'lightning',  icon:'&#x26A1;',  name:'Lightning',  color:'#ffee44', defaultPan:0.2,
     desc:'Sudden crack noise + low thunder rumble — nearby strike' },
-  { id:'police',     icon:'&#x1F6A8;', name:'Police',     color:'#ff4444',
+  { id:'police',     icon:'&#x1F6A8;', name:'Police',     color:'#ff4444', defaultPan:-0.3,
     desc:'Alternating high-low frequency siren — emergency approach' },
-  { id:'medical',    icon:'&#x1F691;', name:'Medical',    color:'#ee6644',
+  { id:'medical',    icon:'&#x1F691;', name:'Medical',    color:'#ee6644', defaultPan:0.4,
     desc:'Warbling rising siren — ambulance passing through' },
-  { id:'ufo',        icon:'&#x1F47D;', name:'UFO',        color:'#44ff88',
+  { id:'ufo',        icon:'&#x1F47D;', name:'UFO',        color:'#44ff88', defaultPan:0.7,
     desc:'Sci-fi sweep with scanning pulse — extraterrestrial flyover' },
-  { id:'synth',      icon:'&#x1F3B9;', name:'Synth Pad',  color:'#6644cc',
+  { id:'synth',      icon:'&#x1F3B9;', name:'Synth Pad',  color:'#6644cc', defaultPan:0,
     desc:'Deep detuned synth chords — slow progression, 2-3 notes, warm reverb' },
 ];
 
@@ -976,6 +982,12 @@ TRACK_DEFS.forEach(def => {
       <input type="range" min="0" max="1" step="0.01" value="0" id="slider-${def.id}">
       <span class="slider-val" id="val-${def.id}">0%</span>
     </div>
+    <div class="pan-wrap">
+      <label>L</label>
+      <input type="range" min="-1" max="1" step="0.05" value="${def.defaultPan||0}" id="pan-${def.id}">
+      <label>R</label>
+      <span class="pan-val" id="panVal-${def.id}">${def.defaultPan||0}</span>
+    </div>
   `;
   grid.appendChild(card);
 });
@@ -992,6 +1004,7 @@ TRACK_DEFS.forEach(def => {
 // --- Engine state ---
 let engines = {};
 let muted = {};
+let panners = {};
 
 TRACK_DEFS.forEach(def => { muted[def.id] = false });
 
@@ -999,6 +1012,12 @@ function setVolume(id, val) {
   if (engines[id] && engines[id].gain) {
     const muteFactor = muted[id] ? 0 : 1;
     engines[id].gain.gain.setTargetAtTime(val * muteFactor, ctx.currentTime, 0.05);
+  }
+}
+
+function setPan(id, val) {
+  if (panners[id]) {
+    panners[id].pan.setTargetAtTime(val, ctx.currentTime, 0.05);
   }
 }
 
@@ -1023,6 +1042,13 @@ TRACK_DEFS.forEach(def => {
       );
     }
   });
+  const panSlider = document.getElementById('pan-' + def.id);
+  const panVal = document.getElementById('panVal-' + def.id);
+  panSlider.addEventListener('input', () => {
+    const val = parseFloat(panSlider.value);
+    panVal.textContent = val > 0 ? 'R' + Math.round(val*100) : val < 0 ? 'L' + Math.round(Math.abs(val)*100) : 'C';
+    if (isPlaying) setPan(def.id, val);
+  });
 });
 
 function startAll() {
@@ -1031,9 +1057,13 @@ function startAll() {
   isPlaying = true;
   TRACK_DEFS.forEach(def => {
     const eng = GENERATORS[def.id]();
-    eng.gain.connect(masterGain);
+    const panner = ctx.createStereoPanner();
+    panner.pan.value = parseFloat(document.getElementById('pan-' + def.id).value) || 0;
+    eng.gain.connect(panner);
+    panner.connect(masterGain);
     eng.start();
     engines[def.id] = eng;
+    panners[def.id] = panner;
     const vol = parseFloat(sliders[def.id].value);
     const muteFactor = muted[def.id] ? 0 : 1;
     eng.gain.gain.setValueAtTime(vol * muteFactor, ctx.currentTime);
@@ -1051,8 +1081,12 @@ function stopAll() {
       engines[id].stop();
       try { engines[id].gain.disconnect(); } catch(e) {}
     }
+    if (panners[id]) {
+      try { panners[id].disconnect(); } catch(e) {}
+    }
   });
   engines = {};
+  panners = {};
   TRACK_DEFS.forEach(def => {
     document.getElementById('card-' + def.id).classList.remove('active');
   });
@@ -1157,7 +1191,13 @@ document.getElementById('presetSelect').addEventListener('change', e => {
 applyPreset('winter');
 
 // Update all displays
-TRACK_DEFS.forEach(def => updateSliderDisplay(def.id));
+TRACK_DEFS.forEach(def => {
+  updateSliderDisplay(def.id);
+  const panSlider = document.getElementById('pan-' + def.id);
+  const panVal = document.getElementById('panVal-' + def.id);
+  const val = parseFloat(panSlider.value);
+  panVal.textContent = val > 0 ? 'R' + Math.round(val*100) : val < 0 ? 'L' + Math.round(Math.abs(val)*100) : 'C';
+});
 
 // --- Noise Garden ---
 const ngQueue = [];
