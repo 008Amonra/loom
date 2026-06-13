@@ -1429,18 +1429,7 @@ async function ngWeather() {
   const lang = ngGetLang();
   const city = ngGetCity();
 
-  // 1) wttr.in (has CORS, free, no key)
-  try {
-    const resp = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`, { signal: AbortSignal.timeout(6000) });
-    if (resp.ok) {
-      const cc = (await resp.json()).current_condition[0];
-      const temp = cc.temp_C, desc = cc.weatherDesc[0].value.replace(/<[^>]+>/g,''), wind = cc.windspeedKmph;
-      if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad, Wind ${wind} km/h.`;
-      return `Weather check: ${city}: ${desc}, ${temp} degrees, wind ${wind} km/h.`;
-    }
-  } catch(e) {}
-
-  // 2) Open-Meteo fallback (free, no key, CORS-enabled)
+  // 1) Open-Meteo (correct geocoding, free, no key, CORS-enabled)
   try {
     const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`, { signal: AbortSignal.timeout(4000) });
     if (geo.ok) {
@@ -1460,6 +1449,18 @@ async function ngWeather() {
     }
   } catch(e) {}
 
+  // 2) wttr.in fallback (use explicit country for Swiss disambiguation)
+  try {
+    const q = city.includes(',') ? city : `${city},Switzerland`;
+    const resp = await fetch(`https://wttr.in/${encodeURIComponent(q)}?format=j1`, { signal: AbortSignal.timeout(6000) });
+    if (resp.ok) {
+      const cc = (await resp.json()).current_condition[0];
+      const temp = cc.temp_C, desc = cc.weatherDesc[0].value.replace(/<[^>]+>/g,''), wind = cc.windspeedKmph;
+      if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad, Wind ${wind} km/h.`;
+      return `Weather check: ${city}: ${desc}, ${temp} degrees, wind ${wind} km/h.`;
+    }
+  } catch(e) {}
+
   if (lang === 'de') return `Konnte Wetter für ${city} nicht abrufen. Schau aus dem Fenster.`;
   return `Could not fetch weather for ${city}. Look outside.`;
 }
@@ -1469,6 +1470,7 @@ async function ngWiki() {
   const apiLang = lang === 'de' ? 'de' : 'en';
   try {
     const resp = await fetch(`https://${apiLang}.wikipedia.org/api/rest_v1/page/random/summary`, { signal: AbortSignal.timeout(6000) });
+    if (!resp.ok) throw new Error('not ok');
     const data = await resp.json();
     const title = data.title;
     let extract = data.extract.replace(/<[^>]+>/g, '');
