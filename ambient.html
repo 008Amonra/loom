@@ -178,7 +178,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     </select></label>
     <label>Depth <input type="range" id="ngDepth" min="1" max="3" step="1" value="1">
       <span id="ngDepthVal" style="min-width:20px;font-size:0.75rem;color:#666">1</span></label>
-    <label>Proxy <input type="text" id="ngProxy" value="https://api.allorigins.win/raw?url=" style="width:180px"></label>
+    <label style="opacity:0.5;font-size:0.75rem">no proxy needed</label>
   </div>
 
   <div class="noise-buttons">
@@ -1253,70 +1253,102 @@ function ngGetDepth() {
   return parseInt(document.getElementById('ngDepth').value) || 1;
 }
 
-function ngGetProxy(url) {
-  const proxy = document.getElementById('ngProxy').value.trim();
-  return proxy ? proxy + encodeURIComponent(url) : url;
-}
-
 // --- Noise fetchers ---
 async function ngNews() {
   const lang = ngGetLang();
   const depth = ngGetDepth();
-  const feeds = lang === 'de'
-    ? ['https://news.google.com/rss?hl=de&gl=DE&ceid=DE:de', 'https://rss.dw.com/rdf/rss-de-world']
-    : ['https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', 'https://feeds.bbci.co.uk/news/rss.xml', 'https://rss.dw.com/rdf/rss-en-world'];
+  const oEn = ['Hey, did you hear this?', 'So get this:', 'Okay so apparently', 'Random thing:'];
+  const oDe = ['Hey, hast du das gehört?', 'Also stell dir vor:', 'Anscheinend', 'Zufälliges Ding:'];
+  const ouEn = ['Crazy world, right?', 'Anyway. That\'s the noise.', 'Just thought you should know.'];
+  const ouDe = ['Verrückte Welt, oder?', 'Jedenfalls. Das ist der Lärm.', 'Fand nur, du solltest es wissen.'];
+  const fmt = (t, s) => lang === 'de'
+    ? `${oDe[Math.floor(Math.random()*oDe.length)]} ${t}.${s?' '+s+'.':''} ${ouDe[Math.floor(Math.random()*ouDe.length)]}`
+    : `${oEn[Math.floor(Math.random()*oEn.length)]} ${t}.${s?' '+s+'.':''} ${ouEn[Math.floor(Math.random()*ouEn.length)]}`;
 
-  for (const url of feeds.sort(() => Math.random() - 0.5)) {
-    try {
-      const resp = await fetch(ngGetProxy(url), { signal: AbortSignal.timeout(8000) });
-      const xml = await resp.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(xml, 'text/xml');
-      const items = doc.querySelectorAll('item');
-      if (items.length === 0) continue;
-      const entry = items[Math.floor(Math.random() * Math.min(items.length, 15))];
-      const title = entry.querySelector('title')?.textContent?.replace(/<[^>]+>/g, '').trim();
-      const desc = entry.querySelector('description')?.textContent?.replace(/<[^>]+>/g, '').trim() || '';
-      if (!title || title.length < 10) continue;
-
-      const openersEn = ['Hey, did you hear this?', 'So get this:', 'Okay so apparently', 'Random thing:'];
-      const openersDe = ['Hey, hast du das gehört?', 'Also stell dir vor:', 'Anscheinend', 'Zufälliges Ding:'];
-      const outrosEn = ['Crazy world, right?', 'Anyway. That\'s the noise.', 'Just thought you should know.'];
-      const outrosDe = ['Verrückte Welt, oder?', 'Jedenfalls. Das ist der Lärm.', 'Fand nur, du solltest es wissen.'];
-
-      let snippet = '';
-      if (depth > 1 && desc && desc !== title) {
-        const sentences = desc.split(/[.!?]\s+/);
-        const take = Math.min(depth, sentences.length);
-        snippet = ' ' + sentences.slice(0, take).join('. ') + '.';
+  // 1) Wikipedia featured content (CORS-enabled, free, no key)
+  try {
+    const d = new Date(), y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+    const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/feed/featured/${y}/${m}/${day}`, { signal: AbortSignal.timeout(6000) });
+    if (resp.ok) {
+      const data = await resp.json();
+      let title = '', extract = '';
+      if (data.news?.length) {
+        const item = data.news[Math.floor(Math.random()*data.news.length)];
+        title = (item.story||'').replace(/<[^>]+>/g,'').trim();
       }
-
-      if (lang === 'de') {
-        return `${openersDe[Math.floor(Math.random()*openersDe.length)]} ${title}.${snippet} ${outrosDe[Math.floor(Math.random()*outrosDe.length)]}`;
+      if (!title && data.mostread?.articles?.length) {
+        const a = data.mostread.articles[Math.floor(Math.random()*Math.min(data.mostread.articles.length,20))];
+        title = (a.titles?.normalized||a.title||'').trim();
+        extract = (a.extract||'').replace(/<[^>]+>/g,'').trim();
       }
-      return `${openersEn[Math.floor(Math.random()*openersEn.length)]} ${title}.${snippet} ${outrosEn[Math.floor(Math.random()*outrosEn.length)]}`;
-    } catch(e) { continue; }
-  }
-  return 'Could not fetch news. Try again later.';
+      if (title.length > 5) {
+        let snippet = '';
+        if (depth > 1 && extract && extract !== title) {
+          const ss = extract.split(/[.!?]\s+/);
+          snippet = ss.slice(0, Math.min(depth, ss.length)).join('. ');
+        }
+        return fmt(title, snippet);
+      }
+    }
+  } catch(e) {}
+
+  // 2) Hacker News (Firebase, CORS-enabled, rock solid)
+  try {
+    const resp = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json', { signal: AbortSignal.timeout(5000) });
+    if (resp.ok) {
+      const ids = await resp.json();
+      const sr = await fetch(`https://hacker-news.firebaseio.com/v0/item/${ids[Math.floor(Math.random()*Math.min(ids.length,30))]}.json`, { signal: AbortSignal.timeout(5000) });
+      if (sr.ok) {
+        const item = await sr.json();
+        if (item?.title?.length > 5) return fmt(item.title, '');
+      }
+    }
+  } catch(e) {}
+
+  // 3) Hardcoded fallback
+  const fb = lang === 'de'
+    ? ['Forscher entdecken neue Erkenntnisse zum Klimawandel.', 'Tech-Konzern kündigt großen Durchbruch an.', 'Neue Studie zeigt Vorteile von Bewegung.', 'Astronomen entdecken ungewöhnliches Phänomen.']
+    : ['Scientists discover new insights into climate change.', 'Tech giant announces major breakthrough.', 'New study reveals health benefits of walking.', 'Astronomers spot unusual celestial phenomenon.'];
+  return fmt(fb[Math.floor(Math.random()*fb.length)], '');
 }
 
 async function ngWeather() {
   const lang = ngGetLang();
   const city = ngGetCity();
+
+  // 1) wttr.in (has CORS, free, no key)
   try {
     const resp = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`, { signal: AbortSignal.timeout(6000) });
-    const data = await resp.json();
-    const cc = data.current_condition[0];
-    const temp = cc.temp_C;
-    const desc = cc.weatherDesc[0].value.replace(/<[^>]+>/g, '');
-    const wind = cc.windspeedKmph;
-    if (lang === 'de') {
-      return `Das Wetter in ${city}: ${desc}, ${temp} Grad, Wind ${wind} Kilometer pro Stunde.`;
+    if (resp.ok) {
+      const cc = (await resp.json()).current_condition[0];
+      const temp = cc.temp_C, desc = cc.weatherDesc[0].value.replace(/<[^>]+>/g,''), wind = cc.windspeedKmph;
+      if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad, Wind ${wind} km/h.`;
+      return `Weather check: ${city}: ${desc}, ${temp} degrees, wind ${wind} km/h.`;
     }
-    return `Weather check: ${city}: ${desc}, ${temp} degrees, wind ${wind} km/h.`;
-  } catch(e) {
-    return lang === 'de' ? `Konnte Wetter für ${city} nicht abrufen.` : `Could not fetch weather for ${city}.`;
-  }
+  } catch(e) {}
+
+  // 2) Open-Meteo fallback (free, no key, CORS-enabled)
+  try {
+    const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`, { signal: AbortSignal.timeout(4000) });
+    if (geo.ok) {
+      const gd = await geo.json();
+      if (gd.results?.length) {
+        const {latitude,longitude} = gd.results[0];
+        const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`, { signal: AbortSignal.timeout(4000) });
+        if (w.ok) {
+          const wd = await w.json();
+          const temp = Math.round(wd.current_weather.temperature);
+          const wmo = {0:['Clear','Klar'],1:['Mainly clear','Meist klar'],2:['Partly cloudy','Teilweise bewölkt'],3:['Overcast','Bedeckt'],45:['Foggy','Neblig'],48:['Foggy','Neblig'],51:['Drizzle','Nieselregen'],61:['Rain','Regen'],71:['Snow','Schnee'],95:['Thunderstorm','Gewitter']};
+          const desc = (wmo[wd.current_weather.weathercode]||['Unknown','Unbekannt'])[lang==='de'?1:0];
+          if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad.`;
+          return `Weather check: ${city}: ${desc}, ${temp} degrees.`;
+        }
+      }
+    }
+  } catch(e) {}
+
+  if (lang === 'de') return `Konnte Wetter für ${city} nicht abrufen. Schau aus dem Fenster.`;
+  return `Could not fetch weather for ${city}. Look outside.`;
 }
 
 async function ngWiki() {
