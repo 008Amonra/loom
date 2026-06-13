@@ -101,6 +101,26 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .noise-btn.primary:hover{background:#22dd88}
 .noise-btn.active{background:#4488ff;border-color:#4488ff}
 .noise-btn.loading{opacity:0.6;pointer-events:none}
+.beat-sequencer{margin-top:24px;padding:24px;background:#0f0f1a;border:1px solid #2a2a3a;border-radius:16px}
+.beat-sequencer h2{font-family:'Cinzel',serif;font-size:1.3rem;margin-bottom:4px;color:#e0e0e8}
+.beat-sequencer .sub{color:#666;font-size:0.82rem;margin-bottom:16px}
+.beat-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;padding:12px;background:#14141e;border:1px solid #2a2a3a;border-radius:10px}
+.beat-controls label{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:#aaa}
+.beat-controls input[type="range"]{-webkit-appearance:none;appearance:none;width:80px;height:4px;border-radius:2px;background:#2a2a3a;outline:none}
+.beat-controls input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
+.beat-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
+.beat-row{display:flex;align-items:center;gap:4px}
+.beat-label{width:32px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:6px}
+.beat-steps{display:flex;gap:3px}
+.beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0}
+.beat-step:hover{border-color:#555}
+.beat-step.on.kick{background:#4488ff;border-color:#4488ff}
+.beat-step.on.hh{background:#66dd88;border-color:#66dd88}
+.beat-step.on.oh{background:#ff8844;border-color:#ff8844}
+.beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
+.beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
+.beat-nums{display:flex;gap:3px}
+.beat-num{width:24px;font-size:0.65rem;color:#444;text-align:center;flex-shrink:0}
 .noise-dj{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0a0a14;border:1px solid #1a1a2e;border-radius:8px;font-size:0.82rem;min-height:40px}
 .noise-dj .indicator{width:8px;height:8px;border-radius:50%;background:#333;flex-shrink:0}
 .noise-dj .indicator.speaking{background:#ff8844;animation:pulse 1s infinite}
@@ -108,6 +128,14 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .noise-dj .dj-label{color:#555;flex-shrink:0}
 .noise-dj .dj-text{color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .noise-dj .dj-queue{color:#555;flex-shrink:0;font-size:0.75rem}
+.noise-transcript{margin-top:10px;padding:8px 10px;background:#0a0a14;border:1px solid #1a1a2e;border-radius:8px;max-height:180px;overflow-y:auto}
+.noise-transcript .transcript-label{font-size:0.7rem;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.noise-transcript .transcript-list{display:flex;flex-direction:column;gap:3px}
+.tr-item{font-size:0.75rem;color:#888;display:flex;gap:6px;align-items:flex-start;padding:2px 0;border-bottom:1px solid #1a1a2e}
+.tr-item:last-child{border-bottom:none}
+.tr-time{color:#555;flex-shrink:0;font-size:0.65rem;min-width:50px}
+.tr-lang{color:#4488ff;flex-shrink:0;font-size:0.65rem;min-width:22px;text-transform:uppercase}
+.tr-text{color:#999;overflow:hidden;word-break:break-word}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -195,6 +223,28 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <span class="dj-label">DJ:</span>
     <span class="dj-text" id="ngDJText">Idle — click a source above</span>
     <span class="dj-queue" id="ngDJQueue"></span>
+  </div>
+  <div class="noise-transcript" id="ngTranscript">
+    <div class="transcript-label">Transcript:</div>
+    <div class="transcript-list" id="ngTranscriptList"></div>
+  </div>
+</div>
+
+<div class="beat-sequencer">
+  <h2>Beat Machine</h2>
+  <p class="sub">4-to-the-floor step sequencer — click cells to toggle</p>
+
+  <div class="beat-controls">
+    <button id="seqBtn" class="noise-btn">&#x25B6; Start</button>
+    <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
+      <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
+    <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
+      <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
+  </div>
+
+  <div class="beat-grid" id="beatGrid"></div>
+  <div class="beat-numbers">
+    <div class="beat-nums" id="beatNums"></div>
   </div>
 </div>
 
@@ -1205,6 +1255,8 @@ let ngSpeaking = false;
 const ngInd = document.getElementById('ngDJInd');
 const ngText = document.getElementById('ngDJText');
 const ngQueueEl = document.getElementById('ngDJQueue');
+const ngTranscriptList = document.getElementById('ngTranscriptList');
+const ngTranscript = [];
 
 function ngSpeak(text, lang) {
   ngQueue.push({ text, lang });
@@ -1228,9 +1280,16 @@ function ngProcessQueue() {
 
   const utter = new SpeechSynthesisUtterance(item.text);
   utter.lang = item.lang === 'de' ? 'de-DE' : 'en-US';
-  utter.rate = 0.92;
+  utter.rate = 0.78;
   utter.pitch = 1.0;
-  utter.onend = () => { setTimeout(ngProcessQueue, 300) };
+  utter.onend = () => {
+    ngTranscript.unshift({ text: item.text, lang: item.lang, time: new Date().toLocaleTimeString() });
+    if (ngTranscript.length > 10) ngTranscript.pop();
+    ngTranscriptList.innerHTML = ngTranscript.map(e =>
+      `<div class="tr-item"><span class="tr-time">${e.time}</span><span class="tr-lang">${e.lang}</span><span class="tr-text">${e.text}</span></div>`
+    ).join('');
+    setTimeout(ngProcessQueue, 300);
+  };
   utter.onerror = () => { setTimeout(ngProcessQueue, 300) };
   speechSynthesis.cancel();
   speechSynthesis.speak(utter);
@@ -1459,6 +1518,157 @@ document.getElementById('ngRandom').addEventListener('click', async () => {
   setTimeout(() => {
     document.getElementById('ngRandom').textContent = '\u{1F3B2} Make Some Noise';
   }, 2000);
+});
+
+// --- Beat Sequencer ---
+let seqPlaying = false;
+let seqStep = 0;
+let seqTimer = null;
+let seqGain = null;
+const seqPatterns = {
+  kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  hh:   [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  oh:   [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+};
+const seqRows = ['kick', 'hh', 'oh'];
+const seqColors = { kick:'#4488ff', hh:'#66dd88', oh:'#ff8844' };
+
+function seqBuildGrid() {
+  const grid = document.getElementById('beatGrid');
+  seqRows.forEach(row => {
+    const rdiv = document.createElement('div');
+    rdiv.className = 'beat-row';
+    rdiv.innerHTML = `<span class="beat-label">${row === 'kick' ? 'Kick' : row === 'hh' ? 'HH' : 'OH'}</span><div class="beat-steps" id="steps-${row}"></div>`;
+    const steps = rdiv.querySelector('.beat-steps');
+    for (let i = 0; i < 16; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'beat-step' + (seqPatterns[row][i] ? ' on ' + row : '');
+      btn.dataset.row = row;
+      btn.dataset.step = i;
+      btn.addEventListener('click', () => {
+        seqPatterns[row][i] = seqPatterns[row][i] ? 0 : 1;
+        btn.classList.toggle('on');
+        btn.classList.toggle(row);
+      });
+      steps.appendChild(btn);
+    }
+    grid.appendChild(rdiv);
+  });
+  // Beat numbers
+  const nums = document.getElementById('beatNums');
+  for (let i = 0; i < 16; i++) {
+    const n = document.createElement('span');
+    n.className = 'beat-num';
+    n.textContent = i % 4 === 0 ? (i / 4 + 1) : '\u00B7';
+    nums.appendChild(n);
+  }
+}
+seqBuildGrid();
+
+function seqPlayKick() {
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(120, now);
+  osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.7, now + 0.002);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+  osc.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.2);
+  const click = ctx.createOscillator();
+  click.type = 'sine';
+  click.frequency.value = 3000;
+  const ce = ctx.createGain();
+  ce.gain.setValueAtTime(0.12, now);
+  ce.gain.exponentialRampToValueAtTime(0.001, now + 0.004);
+  click.connect(ce);
+  ce.connect(seqGain);
+  click.start(now);
+  click.stop(now + 0.01);
+}
+
+function seqPlayHH() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.04);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 8000;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.001);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  src.connect(hp);
+  hp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.06);
+}
+
+function seqPlayOH() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.2);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 8000;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.2, now + 0.001);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+  src.connect(hp);
+  hp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.3);
+}
+
+function seqPlayStep() {
+  if (!ctx || !seqPlaying) return;
+  if (seqPatterns.kick[seqStep]) seqPlayKick();
+  if (seqPatterns.hh[seqStep]) seqPlayHH();
+  if (seqPatterns.oh[seqStep]) seqPlayOH();
+  document.querySelectorAll('.beat-step').forEach((el, i) => el.classList.toggle('active', i === seqStep));
+  seqStep = (seqStep + 1) % 16;
+  seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
+}
+
+function seqStart() {
+  if (!ctx) initAudio();
+  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(masterGain); }
+  seqPlaying = true;
+  seqStep = 0;
+  document.getElementById('seqBtn').textContent = '\u25A0 Stop';
+  document.getElementById('seqBtn').classList.add('active');
+  seqPlayStep();
+}
+
+function seqStop() {
+  seqPlaying = false;
+  clearTimeout(seqTimer);
+  document.querySelectorAll('.beat-step').forEach(el => el.classList.remove('active'));
+  document.getElementById('seqBtn').textContent = '\u25B6 Start';
+  document.getElementById('seqBtn').classList.remove('active');
+}
+
+document.getElementById('seqBtn').addEventListener('click', () => { seqPlaying ? seqStop() : seqStart(); });
+document.getElementById('seqBpm').addEventListener('input', function() {
+  document.getElementById('seqBpmVal').textContent = this.value;
+});
+document.getElementById('seqVol').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  document.getElementById('seqVolVal').textContent = Math.round(v * 100);
+  if (seqGain) seqGain.gain.value = v;
 });
 </script>
 </body>
