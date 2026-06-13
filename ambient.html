@@ -117,6 +117,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.kick{background:#4488ff;border-color:#4488ff}
 .beat-step.on.hh{background:#66dd88;border-color:#66dd88}
 .beat-step.on.oh{background:#ff8844;border-color:#ff8844}
+.beat-step.on.snare{background:#dd5566;border-color:#dd5566}
+.beat-step.on.conga{background:#cc8844;border-color:#cc8844}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
 .beat-nums{display:flex;gap:3px}
@@ -206,6 +208,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     </select></label>
     <label>Depth <input type="range" id="ngDepth" min="1" max="3" step="1" value="1">
       <span id="ngDepthVal" style="min-width:20px;font-size:0.75rem;color:#666">1</span></label>
+    <label>Vol <input type="range" id="ngVol" min="0" max="1" step="0.05" value="1">
+      <span id="ngVolVal" style="min-width:24px;font-size:0.75rem;color:#666">100</span></label>
     <label style="opacity:0.5;font-size:0.75rem">no proxy needed</label>
   </div>
 
@@ -245,6 +249,17 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <div class="beat-grid" id="beatGrid"></div>
   <div class="beat-numbers">
     <div class="beat-nums" id="beatNums"></div>
+  </div>
+</div>
+
+<div class="beat-sequencer">
+  <h2>Reverb / Hall</h2>
+  <p class="sub">Global reverb — adds space to tracks and beats</p>
+  <div class="beat-controls">
+    <label>Mix <input type="range" id="revMix" min="0" max="1" step="0.01" value="0.2">
+      <span id="revMixVal" style="min-width:28px;font-size:0.75rem;color:#666">20%</span></label>
+    <label>Decay <input type="range" id="revDecay" min="0.5" max="5" step="0.1" value="2">
+      <span id="revDecayVal" style="min-width:28px;font-size:0.75rem;color:#666">2s</span></label>
   </div>
 </div>
 
@@ -308,15 +323,53 @@ let recChunks = [];
 let recStartTime = 0;
 let recTimer = null;
 let recordedBlob = null;
+let reverbDry = null;
+let reverbWet = null;
+let reverbConvolver = null;
 
 function initAudio() {
   if (ctx) return;
   ctx = new (window.AudioContext || window.webkitAudioContext)();
   masterGain = ctx.createGain();
   masterGain.gain.value = 0.65;
-  masterGain.connect(ctx.destination);
   destNode = ctx.createMediaStreamDestination();
-  masterGain.connect(destNode);
+  initReverb();
+}
+
+function initReverb() {
+  reverbDry = ctx.createGain();
+  reverbWet = ctx.createGain();
+  reverbConvolver = ctx.createConvolver();
+  const reverbSum = ctx.createGain();
+  reverbSum.gain.value = 1;
+  updateReverbIR(2);
+  reverbDry.gain.value = 0.8;
+  reverbWet.gain.value = 0.2;
+  masterGain.connect(reverbDry);
+  masterGain.connect(reverbConvolver);
+  reverbConvolver.connect(reverbWet);
+  reverbDry.connect(reverbSum);
+  reverbWet.connect(reverbSum);
+  reverbSum.connect(ctx.destination);
+  reverbSum.connect(destNode);
+}
+
+function updateReverbIR(decay) {
+  const sr = ctx.sampleRate;
+  const len = Math.floor(sr * Math.min(decay, 8));
+  const buf = ctx.createBuffer(2, len, sr);
+  for (let ch = 0; ch < 2; ch++) {
+    const data = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4) * 0.5;
+    }
+  }
+  reverbConvolver.buffer = buf;
+}
+
+function updateReverbMix(wet) {
+  reverbDry.gain.value = 1 - wet;
+  reverbWet.gain.value = wet;
 }
 
 // --- Sound generators ---
@@ -1282,6 +1335,7 @@ function ngProcessQueue() {
   utter.lang = item.lang === 'de' ? 'de-DE' : 'en-US';
   utter.rate = 0.78;
   utter.pitch = 1.0;
+  utter.volume = ngVolume;
   utter.onend = () => {
     ngTranscript.unshift({ text: item.text, lang: item.lang, time: new Date().toLocaleTimeString() });
     if (ngTranscript.length > 10) ngTranscript.pop();
@@ -1484,8 +1538,13 @@ const ngFetchers = {
 };
 
 // --- Event handlers ---
+let ngVolume = 1;
 document.getElementById('ngDepth').addEventListener('input', function() {
   document.getElementById('ngDepthVal').textContent = this.value;
+});
+document.getElementById('ngVol').addEventListener('input', function() {
+  ngVolume = parseFloat(this.value);
+  document.getElementById('ngVolVal').textContent = Math.round(ngVolume * 100);
 });
 
 document.querySelectorAll('[data-noise]').forEach(btn => {
@@ -1526,19 +1585,22 @@ let seqStep = 0;
 let seqTimer = null;
 let seqGain = null;
 const seqPatterns = {
-  kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  hh:   [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-  oh:   [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
 };
-const seqRows = ['kick', 'hh', 'oh'];
-const seqColors = { kick:'#4488ff', hh:'#66dd88', oh:'#ff8844' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#cc8844' };
 
 function seqBuildGrid() {
   const grid = document.getElementById('beatGrid');
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    rdiv.innerHTML = `<span class="beat-label">${row === 'kick' ? 'Kick' : row === 'hh' ? 'HH' : 'OH'}</span><div class="beat-steps" id="steps-${row}"></div>`;
+    const label = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Conga' }[row] || row;
+    rdiv.innerHTML = `<span class="beat-label">${label}</span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
     for (let i = 0; i < 16; i++) {
       const btn = document.createElement('button');
@@ -1633,12 +1695,79 @@ function seqPlayOH() {
   src.stop(now + 0.3);
 }
 
+function seqPlaySnare() {
+  const now = ctx.currentTime, sr = ctx.sampleRate;
+  const osc = ctx.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(200, now);
+  osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.002);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+  osc.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.12);
+  const nlen = Math.floor(sr * 0.08);
+  const nbuf = ctx.createBuffer(1, nlen, sr);
+  const nd = nbuf.getChannelData(0);
+  for (let i = 0; i < nlen; i++) nd[i] = Math.random() * 2 - 1;
+  const nsrc = ctx.createBufferSource();
+  nsrc.buffer = nbuf;
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 1000;
+  const nenv = ctx.createGain();
+  nenv.gain.setValueAtTime(0, now);
+  nenv.gain.linearRampToValueAtTime(0.35, now + 0.001);
+  nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  nsrc.connect(hp);
+  hp.connect(nenv);
+  nenv.connect(seqGain);
+  nsrc.start(now);
+  nsrc.stop(now + 0.1);
+}
+
+function seqPlayConga() {
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(220, now);
+  osc.frequency.exponentialRampToValueAtTime(250, now + 0.02);
+  osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.002);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+  osc.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.35);
+  const osc2 = ctx.createOscillator();
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(440, now);
+  osc2.frequency.exponentialRampToValueAtTime(500, now + 0.02);
+  osc2.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+  const env2 = ctx.createGain();
+  env2.gain.setValueAtTime(0, now);
+  env2.gain.linearRampToValueAtTime(0.15, now + 0.002);
+  env2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+  osc2.connect(env2);
+  env2.connect(seqGain);
+  osc2.start(now);
+  osc2.stop(now + 0.25);
+}
+
 function seqPlayStep() {
   if (!ctx || !seqPlaying) return;
   if (seqPatterns.kick[seqStep]) seqPlayKick();
+  if (seqPatterns.snare[seqStep]) seqPlaySnare();
   if (seqPatterns.hh[seqStep]) seqPlayHH();
   if (seqPatterns.oh[seqStep]) seqPlayOH();
-  document.querySelectorAll('.beat-step').forEach((el, i) => el.classList.toggle('active', i === seqStep));
+  if (seqPatterns.conga[seqStep]) seqPlayConga();
+  document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
   seqStep = (seqStep + 1) % 16;
   seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
 }
@@ -1669,6 +1798,18 @@ document.getElementById('seqVol').addEventListener('input', function() {
   const v = parseFloat(this.value);
   document.getElementById('seqVolVal').textContent = Math.round(v * 100);
   if (seqGain) seqGain.gain.value = v;
+});
+
+// --- Reverb controls ---
+document.getElementById('revMix').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  document.getElementById('revMixVal').textContent = Math.round(v * 100) + '%';
+  if (ctx) updateReverbMix(v);
+});
+document.getElementById('revDecay').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  document.getElementById('revDecayVal').textContent = v.toFixed(1) + 's';
+  if (ctx) updateReverbIR(v);
 });
 </script>
 </body>
