@@ -306,13 +306,15 @@ const TRACK_DEFS = [
     desc:'Deep detuned synth chords — slow progression, 2-3 notes, warm reverb' },
   { id:'bell',       icon:'&#x1F515;', name:'Bell',       color:'#ffcc44', defaultPan:0.2,
     desc:'Resonant struck bell — inharmonic partials, slow decay, meditative' },
+  { id:'perc',       icon:'&#x1F3B6;', name:'Percussion', color:'#ddaa66', defaultPan:-0.3,
+    desc:'Ambient rimshots, hi-hat ticks, and soft tikititata patterns — gentle rhythm' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2 },
 };
 
 let ctx = null;
@@ -1088,6 +1090,80 @@ function createBell() {
   return { gain, start() { strike() }, stop() { clearTimeout(interval) } };
 }
 
+function createPerc() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  const sr = ctx.sampleRate;
+  let interval = null;
+  function noiseBurst(len, hpFreq, vol) {
+    const buf = ctx.createBuffer(1, Math.floor(sr * len), sr);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * vol;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = hpFreq;
+    const env = ctx.createGain();
+    env.gain.value = 1;
+    src.connect(filter);
+    filter.connect(env);
+    return { src, env };
+  }
+  function rimshot() {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(200, now);
+    osc.frequency.exponentialRampToValueAtTime(60, now + 0.08);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.4, now + 0.002);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + 0.15);
+    const nb = noiseBurst(0.04, 2000, 0.3);
+    nb.env.connect(gain);
+    nb.src.start(now);
+    nb.src.stop(now + 0.05);
+  }
+  function hihat() {
+    const now = ctx.currentTime;
+    const nb = noiseBurst(0.03, 8000, 0.2);
+    nb.env.gain.setValueAtTime(0, now);
+    nb.env.gain.linearRampToValueAtTime(0.25, now + 0.002);
+    nb.env.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    nb.env.connect(gain);
+    nb.src.start(now);
+    nb.src.stop(now + 0.07);
+  }
+  function tikititata() {
+    const now = ctx.currentTime;
+    const count = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < count; i++) {
+      const t = now + i * (0.08 + Math.random() * 0.06);
+      const nb = noiseBurst(0.015, 6000 + Math.random() * 2000, 0.1);
+      nb.env.gain.setValueAtTime(0, t);
+      nb.env.gain.linearRampToValueAtTime(0.15 + Math.random() * 0.1, t + 0.002);
+      nb.env.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      nb.env.connect(gain);
+      nb.src.start(t);
+      nb.src.stop(t + 0.05);
+    }
+  }
+  function tick() {
+    const r = Math.random();
+    if (r < 0.3) rimshot();
+    else if (r < 0.7) hihat();
+    else tikititata();
+    const pause = r < 0.3 ? 2 + Math.random() * 4 : r < 0.7 ? 1 + Math.random() * 2 : 3 + Math.random() * 3;
+    interval = setTimeout(tick, pause * 1000);
+  }
+  return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -1106,6 +1182,7 @@ const GENERATORS = {
   ufo: createUfo,
   synth: createSynth,
   bell: createBell,
+  perc: createPerc,
 };
 
 // --- UI ---
