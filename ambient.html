@@ -171,6 +171,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 <div class="controls">
   <button class="btn-start" id="btnStart">&#x25B6; Start</button>
   <button class="btn-stop" id="btnStop" style="display:none">&#x25A0; Stop</button>
+  <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnTest">Test Tone</button>
   <button class="btn-rand" id="btnRand">&#x1F3B2; Randomize</button>
   <span class="presets">
     <select id="presetSelect">
@@ -1254,6 +1255,22 @@ function downloadRecording() {
 // --- Event wiring ---
 document.getElementById('btnStart').addEventListener('click', startAll);
 document.getElementById('btnStop').addEventListener('click', stopAll);
+document.getElementById('btnTest').addEventListener('click', function() {
+  initAudio();
+  if (ctx.state === 'suspended') ctx.resume();
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = 440;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.01);
+  env.gain.linearRampToValueAtTime(0, now + 0.5);
+  osc.connect(env);
+  env.connect(masterGain);
+  osc.start(now);
+  osc.stop(now + 0.5);
+});
 document.getElementById('btnRand').addEventListener('click', randomize);
 document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
