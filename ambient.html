@@ -325,7 +325,7 @@ let recTimer = null;
 let recordedBlob = null;
 let reverbDry = null;
 let reverbWet = null;
-let reverbConvolver = null;
+let reverbFbs = [];
 let compressor = null;
 
 function initAudio() {
@@ -334,11 +334,11 @@ function initAudio() {
   masterGain = ctx.createGain();
   masterGain.gain.value = 0.65;
   compressor = ctx.createDynamicsCompressor();
-  compressor.threshold.value = -24;
-  compressor.knee.value = 12;
-  compressor.ratio.value = 6;
-  compressor.attack.value = 0.003;
-  compressor.release.value = 0.1;
+  compressor.threshold.value = -18;
+  compressor.knee.value = 18;
+  compressor.ratio.value = 4;
+  compressor.attack.value = 0.005;
+  compressor.release.value = 0.15;
   masterGain.connect(compressor);
   destNode = ctx.createMediaStreamDestination();
   initReverb();
@@ -347,36 +347,36 @@ function initAudio() {
 function initReverb() {
   reverbDry = ctx.createGain();
   reverbWet = ctx.createGain();
-  reverbConvolver = ctx.createConvolver();
   const reverbSum = ctx.createGain();
   reverbSum.gain.value = 1;
-  updateReverbIR(2);
-  reverbDry.gain.value = 0.8;
-  reverbWet.gain.value = 0.2;
+  reverbFbs = [];
+  const taps = [0.023, 0.031, 0.037, 0.045];
+  taps.forEach((t, i) => {
+    const del = ctx.createDelay(0.5);
+    del.delayTime.value = t;
+    const fb = ctx.createGain();
+    fb.gain.value = 0.5;
+    const mix = ctx.createGain();
+    mix.gain.value = 0.25;
+    compressor.connect(del);
+    del.connect(fb);
+    fb.connect(del);
+    del.connect(mix);
+    mix.connect(reverbWet);
+    reverbFbs.push(fb);
+  });
+  reverbDry.gain.value = 0.7;
+  reverbWet.gain.value = 0.3;
   compressor.connect(reverbDry);
-  compressor.connect(reverbConvolver);
-  reverbConvolver.connect(reverbWet);
   reverbDry.connect(reverbSum);
   reverbWet.connect(reverbSum);
   reverbSum.connect(ctx.destination);
   reverbSum.connect(destNode);
 }
 
-function updateReverbIR(decay) {
-  const sr = ctx.sampleRate;
-  const len = Math.floor(sr * Math.min(decay, 8));
-  const buf = ctx.createBuffer(2, len, sr);
-  let pink = 0;
-  for (let ch = 0; ch < 2; ch++) {
-    const data = buf.getChannelData(ch);
-    for (let i = 0; i < len; i++) {
-      const white = Math.random() * 2 - 1;
-      pink += (white - pink) * 0.15;
-      const t = i / len;
-      data[i] = pink * Math.pow(1 - t, 2) * Math.exp(-t * 5) * 0.6;
-    }
-  }
-  reverbConvolver.buffer = buf;
+function updateReverbDecay(decay) {
+  const fb = 0.3 + (Math.min(decay, 5) / 5) * 0.5;
+  reverbFbs.forEach((g, i) => { g.gain.value = fb * (1 - i * 0.06); });
 }
 
 function updateReverbMix(wet) {
@@ -1679,7 +1679,7 @@ function seqPlayHH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.3, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.6, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
   src.connect(hp);
   hp.connect(env);
@@ -1700,7 +1700,7 @@ function seqPlayOH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.2, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.4, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
   src.connect(hp);
   hp.connect(env);
@@ -1765,7 +1765,7 @@ function seqPlayConga() {
   osc2.frequency.exponentialRampToValueAtTime(200, now + 0.15);
   const env2 = ctx.createGain();
   env2.gain.setValueAtTime(0, now);
-  env2.gain.linearRampToValueAtTime(0.15, now + 0.008);
+  env2.gain.linearRampToValueAtTime(0.3, now + 0.008);
   env2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
   osc2.connect(env2);
   env2.connect(seqGain);
@@ -1823,7 +1823,7 @@ document.getElementById('revMix').addEventListener('input', function() {
 document.getElementById('revDecay').addEventListener('input', function() {
   const v = parseFloat(this.value);
   document.getElementById('revDecayVal').textContent = v.toFixed(1) + 's';
-  if (ctx) updateReverbIR(v);
+  if (ctx) updateReverbDecay(v);
 });
 </script>
 </body>
