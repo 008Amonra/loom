@@ -145,6 +145,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .noise-dj .dj-label{color:#555;flex-shrink:0}
 .noise-dj .dj-text{color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .noise-dj .dj-queue{color:#555;flex-shrink:0;font-size:0.75rem}
+.noise-dj .noise-mute{font-size:0.9rem;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border:none;border-radius:4px;cursor:pointer;margin-left:auto;flex-shrink:0;transition:all .15s;background:transparent;color:#555;line-height:1}
+.noise-dj .noise-mute:hover{background:#442222;color:#ff4444}
+.noise-dj .noise-mute.muted{color:#ff4444;background:#331111}
+.noise-dj.muted{opacity:0.4}
+.noise-dj.muted .noise-mute{opacity:1}
 .noise-transcript{margin-top:10px;padding:8px 10px;background:#0a0a14;border:1px solid #1a1a2e;border-radius:8px;max-height:180px;overflow-y:auto}
 .noise-transcript .transcript-label{font-size:0.7rem;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
 .noise-transcript .transcript-list{display:flex;flex-direction:column;gap:3px}
@@ -219,11 +224,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
   <div class="noise-settings">
     <label>City <input type="text" id="ngCity" value="Zurich" style="width:90px"></label>
-    <label>Lang <select id="ngLang">
-      <option value="random">Random</option>
-      <option value="en">English</option>
-      <option value="de">Deutsch</option>
-    </select></label>
+
     <label>Depth <input type="range" id="ngDepth" min="1" max="3" step="1" value="1">
       <span id="ngDepthVal" style="min-width:20px;font-size:0.75rem;color:#666">1</span></label>
     <label>Vol <input type="range" id="ngVol" min="0" max="1" step="0.05" value="1">
@@ -245,6 +246,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <span class="dj-label">DJ:</span>
     <span class="dj-text" id="ngDJText">Idle — click a source above</span>
     <span class="dj-queue" id="ngDJQueue"></span>
+    <button class="noise-mute" id="ngMuteBtn" title="Toggle speech on/off">&#x2715;</button>
   </div>
   <div class="noise-transcript" id="ngTranscript">
     <div class="transcript-label">Transcript:</div>
@@ -1650,6 +1652,10 @@ function ngSpeak(text, lang) {
 }
 
 function ngProcessQueue() {
+  if (ngMuted) {
+    ngSpeaking = false;
+    return;
+  }
   if (ngQueue.length === 0) {
     ngSpeaking = false;
     ngInd.className = 'indicator';
@@ -1664,10 +1670,13 @@ function ngProcessQueue() {
   ngText.textContent = item.text.slice(0, 80) + (item.text.length > 80 ? '...' : '');
 
   const utter = new SpeechSynthesisUtterance(item.text);
-  utter.lang = item.lang === 'de' ? 'de-DE' : 'en-US';
+  utter.lang = 'en-US';
   utter.rate = 0.78;
   utter.pitch = 1.0;
   utter.volume = ngVolume;
+  const voices = speechSynthesis.getVoices();
+  const lady = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria/i.test(v.name)) || voices.find(v => /google|microsoft/i.test(v.uri || v.name) && !/male|david|mark|james/i.test(v.name));
+  if (lady) utter.voice = lady;
   utter.onend = () => {
     ngTranscript.unshift({ text: item.text, lang: item.lang, time: new Date().toLocaleTimeString() });
     if (ngTranscript.length > 10) ngTranscript.pop();
@@ -1686,8 +1695,7 @@ function ngUpdateQueue() {
 }
 
 function ngGetLang() {
-  const sel = document.getElementById('ngLang').value;
-  return sel === 'random' ? (Math.random() < 0.5 ? 'en' : 'de') : sel;
+  return 'en';
 }
 
 function ngGetCity() {
@@ -1700,15 +1708,10 @@ function ngGetDepth() {
 
 // --- Noise fetchers ---
 async function ngNews() {
-  const lang = ngGetLang();
   const depth = ngGetDepth();
   const oEn = ['Hey, did you hear this?', 'So get this:', 'Okay so apparently', 'Random thing:'];
-  const oDe = ['Hey, hast du das gehört?', 'Also stell dir vor:', 'Anscheinend', 'Zufälliges Ding:'];
   const ouEn = ['Crazy world, right?', 'Anyway. That\'s the noise.', 'Just thought you should know.'];
-  const ouDe = ['Verrückte Welt, oder?', 'Jedenfalls. Das ist der Lärm.', 'Fand nur, du solltest es wissen.'];
-  const fmt = (t, s) => lang === 'de'
-    ? `${oDe[Math.floor(Math.random()*oDe.length)]} ${t}.${s?' '+s+'.':''} ${ouDe[Math.floor(Math.random()*ouDe.length)]}`
-    : `${oEn[Math.floor(Math.random()*oEn.length)]} ${t}.${s?' '+s+'.':''} ${ouEn[Math.floor(Math.random()*ouEn.length)]}`;
+  const fmt = (t, s) => `${oEn[Math.floor(Math.random()*oEn.length)]} ${t}.${s?' '+s+'.':''} ${ouEn[Math.floor(Math.random()*ouEn.length)]}`;
 
   // 1) Wikipedia featured content (CORS-enabled, free, no key)
   try {
@@ -1751,14 +1754,11 @@ async function ngNews() {
   } catch(e) {}
 
   // 3) Hardcoded fallback
-  const fb = lang === 'de'
-    ? ['Forscher entdecken neue Erkenntnisse zum Klimawandel.', 'Tech-Konzern kündigt großen Durchbruch an.', 'Neue Studie zeigt Vorteile von Bewegung.', 'Astronomen entdecken ungewöhnliches Phänomen.']
-    : ['Scientists discover new insights into climate change.', 'Tech giant announces major breakthrough.', 'New study reveals health benefits of walking.', 'Astronomers spot unusual celestial phenomenon.'];
+  const fb = ['Scientists discover new insights into climate change.', 'Tech giant announces major breakthrough.', 'New study reveals health benefits of walking.', 'Astronomers spot unusual celestial phenomenon.'];
   return fmt(fb[Math.floor(Math.random()*fb.length)], '');
 }
 
 async function ngWeather() {
-  const lang = ngGetLang();
   const city = ngGetCity();
 
   // 1) Open-Meteo (correct geocoding, free, no key, CORS-enabled)
@@ -1772,9 +1772,8 @@ async function ngWeather() {
         if (w.ok) {
           const wd = await w.json();
           const temp = Math.round(wd.current_weather.temperature);
-          const wmo = {0:['Clear','Klar'],1:['Mainly clear','Meist klar'],2:['Partly cloudy','Teilweise bewölkt'],3:['Overcast','Bedeckt'],45:['Foggy','Neblig'],48:['Foggy','Neblig'],51:['Drizzle','Nieselregen'],61:['Rain','Regen'],71:['Snow','Schnee'],95:['Thunderstorm','Gewitter']};
-          const desc = (wmo[wd.current_weather.weathercode]||['Unknown','Unbekannt'])[lang==='de'?1:0];
-          if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad.`;
+          const wmo = {0:'Clear',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Foggy',51:'Drizzle',61:'Rain',71:'Snow',95:'Thunderstorm'};
+          const desc = wmo[wd.current_weather.weathercode] || 'Unknown';
           return `Weather check: ${city}: ${desc}, ${temp} degrees.`;
         }
       }
@@ -1788,62 +1787,47 @@ async function ngWeather() {
     if (resp.ok) {
       const cc = (await resp.json()).current_condition[0];
       const temp = cc.temp_C, desc = cc.weatherDesc[0].value.replace(/<[^>]+>/g,''), wind = cc.windspeedKmph;
-      if (lang === 'de') return `Das Wetter in ${city}: ${desc}, ${temp} Grad, Wind ${wind} km/h.`;
       return `Weather check: ${city}: ${desc}, ${temp} degrees, wind ${wind} km/h.`;
     }
   } catch(e) {}
 
-  if (lang === 'de') return `Konnte Wetter für ${city} nicht abrufen. Schau aus dem Fenster.`;
   return `Could not fetch weather for ${city}. Look outside.`;
 }
 
 async function ngWiki() {
-  const lang = ngGetLang();
-  const apiLang = lang === 'de' ? 'de' : 'en';
   try {
-    const resp = await fetch(`https://${apiLang}.wikipedia.org/api/rest_v1/page/random/summary`, { signal: AbortSignal.timeout(6000) });
+    const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/random/summary`, { signal: AbortSignal.timeout(6000) });
     if (!resp.ok) throw new Error('not ok');
     const data = await resp.json();
     const title = data.title;
     let extract = data.extract.replace(/<[^>]+>/g, '');
     if (extract.length > 350) extract = extract.slice(0, extract.lastIndexOf(' ', 350)) + '.';
-    if (lang === 'de') {
-      return `Zufälliges Wiki-Wissen: ${title}. ${extract} Das war dein Fakt für heute.`;
-    }
     return `Random wiki fact: ${title}. ${extract} The more you know.`;
   } catch(e) {
-    return lang === 'de' ? 'Wikipedia gerade nicht erreichbar.' : 'Wikipedia not available right now.';
+    return 'Wikipedia not available right now.';
   }
 }
 
 async function ngQuote() {
-  const lang = ngGetLang();
   try {
     const resp = await fetch('https://api.quotable.io/random', { signal: AbortSignal.timeout(5000) });
     if (resp.ok) {
       const data = await resp.json();
       const quote = data.content.length > 250 ? data.content.slice(0, 250) + '...' : data.content;
-      if (lang === 'de') {
-        return `Ein Zitat von ${data.author}: ${quote}`;
-      }
       return `A quote by ${data.author}: ${quote}`;
     }
   } catch(e) {}
-  const fallback = lang === 'de'
-    ? ['Sei du selbst die Veränderung, die du dir wünschst für diese Welt. — Mahatma Gandhi', 'Der Weg ist das Ziel. — Konfuzius']
-    : ['The only way to do great work is to love what you do. — Steve Jobs', 'Be yourself; everyone else is already taken. — Oscar Wilde'];
+  const fallback = ['The only way to do great work is to love what you do. — Steve Jobs', 'Be yourself; everyone else is already taken. — Oscar Wilde'];
   return fallback[Math.floor(Math.random() * fallback.length)];
 }
 
 async function ngAstro() {
-  const lang = ngGetLang();
   const d = new Date();
   const diff = Math.floor((d - new Date(2000, 0, 6)) / 86400000);
   const phase = (diff % 29.530588853) / 29.530588853;
   const idx = Math.min(7, Math.floor(phase * 8));
   const moonEn = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
-  const moonDe = ['Neumond', 'zunehmender Sichelmond', 'erstes Viertel', 'zunehmender Mond', 'Vollmond', 'abnehmender Mond', 'letztes Viertel', 'abnehmender Sichelmond'];
-  const moon = lang === 'de' ? moonDe[idx] : moonEn[idx];
+  const moon = moonEn[idx];
 
   let planets = '';
   try {
@@ -1852,14 +1836,11 @@ async function ngAstro() {
       const data = await resp.json();
       const visible = (data.data || []).filter(p => p.visible).slice(0, 3).map(p => p.name);
       if (visible.length) {
-        planets = lang === 'de' ? ` Sichtbare Planeten: ${visible.join(', ')}.` : ` Visible planets: ${visible.join(', ')}.`;
+        planets = ` Visible planets: ${visible.join(', ')}.`;
       }
     }
   } catch(e) {}
 
-  if (lang === 'de') {
-    return `Heute in ${ngGetCity()}: Der Mond ist ${moon}.${planets} Klare Nacht.`;
-  }
   return `Tonight over ${ngGetCity()}: ${moon}.${planets} Clear skies.`;
 }
 
@@ -1872,13 +1853,32 @@ const ngFetchers = {
 };
 
 // --- Event handlers ---
-let ngVolume = 1;
+let ngVolume = 0.5;
+let ngMuted = false;
 document.getElementById('ngDepth').addEventListener('input', function() {
   document.getElementById('ngDepthVal').textContent = this.value;
 });
 document.getElementById('ngVol').addEventListener('input', function() {
   ngVolume = parseFloat(this.value);
   document.getElementById('ngVolVal').textContent = Math.round(ngVolume * 100);
+});
+document.getElementById('ngVol').value = '0.5';
+document.getElementById('ngVolVal').textContent = '50';
+
+document.getElementById('ngMuteBtn').addEventListener('click', function() {
+  ngMuted = !ngMuted;
+  this.classList.toggle('muted', ngMuted);
+  document.getElementById('ngDJ').classList.toggle('muted', ngMuted);
+  if (ngMuted) {
+    speechSynthesis.cancel();
+    ngSpeaking = false;
+    ngQueue = [];
+    ngUpdateQueue();
+    document.getElementById('ngDJInd').className = 'indicator';
+    document.getElementById('ngDJText').textContent = 'Muted — click ✕ to enable';
+  } else {
+    document.getElementById('ngDJText').textContent = 'Idle — click a source above';
+  }
 });
 
 document.querySelectorAll('[data-noise]').forEach(btn => {
