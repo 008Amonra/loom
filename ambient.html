@@ -34,6 +34,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .btn-stop:hover{background:#dd5555}
 .btn-rand{background:#2a2a3a;color:#e0e0e8}
 .btn-rand:hover{background:#3a3a4a}
+.btn-morph{background:#2a2a3a;color:#66dd88;font-size:0.8rem;padding:4px 10px;border:1px solid #448855;cursor:pointer;transition:all 0.2s}
+.btn-morph:hover{background:#3a3a4a;border-color:#66dd88}
+.morph-label{color:#66dd88;font-size:0.78rem;margin-left:2px;min-width:100px;display:inline-block}
 .btn-rec{background:#cc3344;color:#fff}
 .btn-rec:hover{background:#dd4455}
 .btn-rec.active{animation:pulse 1s infinite}
@@ -173,6 +176,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <button class="btn-stop" id="btnStop" style="display:none">&#x25A0; Stop</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnTest">Test Tone</button>
   <button class="btn-rand" id="btnRand">&#x1F3B2; Randomize</button>
+  <button class="btn-morph" id="btnMorph">&#x25B6; Morph</button>
+  <span class="morph-label" id="morphLabel"></span>
   <span class="presets">
     <select id="presetSelect">
       <option value="custom">Custom</option>
@@ -308,13 +313,15 @@ const TRACK_DEFS = [
     desc:'Resonant struck bell — inharmonic partials, slow decay, meditative' },
   { id:'perc',       icon:'&#x1F3B6;', name:'Percussion', color:'#ddaa66', defaultPan:-0.3,
     desc:'Ambient rimshots, hi-hat ticks, and soft tikititata patterns — gentle rhythm' },
+  { id:'melody',     icon:'&#x1F3B5;', name:'Melody',     color:'#88dd88', defaultPan:0,
+    desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2 },
 };
 
 let ctx = null;
@@ -1191,6 +1198,95 @@ function createPerc() {
   return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
 }
 
+function createMelody() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00];
+  let interval = null;
+  let noteIndex = Math.floor(Math.random() * 5);
+  function playNote() {
+    const now = ctx.currentTime;
+    const freq = pentatonic[noteIndex % pentatonic.length];
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 1.5;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.15, now + 0.1);
+    env.gain.setValueAtTime(0.15, now + 2.0);
+    env.gain.linearRampToValueAtTime(0, now + 3.5);
+    const env2 = ctx.createGain();
+    env2.gain.setValueAtTime(0, now);
+    env2.gain.linearRampToValueAtTime(0.08, now + 0.1);
+    env2.gain.setValueAtTime(0.08, now + 2.0);
+    env2.gain.linearRampToValueAtTime(0, now + 3.5);
+    osc.connect(env);
+    osc2.connect(env2);
+    env.connect(gain);
+    env2.connect(gain);
+    osc.start(now);
+    osc2.stop(now + 3.7);
+    osc2.start(now);
+    osc2.stop(now + 3.7);
+    osc.stop(now + 3.7);
+    noteIndex = (noteIndex + 1 + Math.floor(Math.random() * 2)) % pentatonic.length;
+    const next = 2.0 + Math.random() * 2.5;
+    interval = setTimeout(playNote, next * 1000);
+  }
+  return { gain, start() { playNote() }, stop() { clearTimeout(interval) } };
+}
+
+// --- Auto-Morphing ---
+let morphActive = false;
+let morphInterval = null;
+let morphRetarget = null;
+let morphTarget = null;
+let morphTargetName = '';
+
+function startMorph() {
+  if (morphActive) return;
+  morphActive = true;
+  const presetNames = Object.keys(PRESETS);
+  function pickTarget() {
+    morphTargetName = presetNames[Math.floor(Math.random() * presetNames.length)];
+    morphTarget = PRESETS[morphTargetName];
+    const el = document.getElementById('morphLabel');
+    if (el) el.textContent = '→ ' + morphTargetName;
+  }
+  pickTarget();
+  morphInterval = setInterval(() => {
+    if (!morphTarget) return;
+    for (const [id, targetVal] of Object.entries(morphTarget)) {
+      const slider = sliders[id];
+      if (slider) {
+        const cur = parseFloat(slider.value);
+        const diff = targetVal - cur;
+        if (Math.abs(diff) > 0.003) {
+          const nv = cur + diff * 0.03;
+          slider.value = nv;
+          updateSliderDisplay(id);
+          if (isPlaying) setVolume(id, nv);
+        }
+      }
+    }
+  }, 200);
+  morphRetarget = setInterval(pickTarget, (3 + Math.random() * 2) * 60000);
+  document.getElementById('btnMorph').textContent = '⏸ Morph';
+}
+
+function stopMorph() {
+  morphActive = false;
+  if (morphInterval) { clearInterval(morphInterval); morphInterval = null; }
+  if (morphRetarget) { clearInterval(morphRetarget); morphRetarget = null; }
+  morphTarget = null;
+  const el = document.getElementById('morphLabel');
+  if (el) el.textContent = '';
+  document.getElementById('btnMorph').textContent = '▶ Morph';
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -1210,6 +1306,7 @@ const GENERATORS = {
   synth: createSynth,
   bell: createBell,
   perc: createPerc,
+  melody: createMelody,
 };
 
 // --- UI ---
@@ -1448,13 +1545,16 @@ function testTone() {
 }
 document.getElementById('btnTest').addEventListener('click', testTone);
 document.getElementById('btnRand').addEventListener('click', randomize);
+document.getElementById('btnMorph').addEventListener('click', () => {
+  if (morphActive) stopMorph(); else startMorph();
+});
 document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
 });
 document.getElementById('btnDl').addEventListener('click', downloadRecording);
 
 document.getElementById('presetSelect').addEventListener('change', e => {
-  if (e.target.value !== 'custom') applyPreset(e.target.value);
+  if (e.target.value !== 'custom') { applyPreset(e.target.value); if (morphActive) stopMorph(); }
 });
 
 // Init sliders with a gentle default
