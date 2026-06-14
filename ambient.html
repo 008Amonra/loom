@@ -340,33 +340,22 @@ function initReverb() {
   reverbWet = ctx.createGain();
   const reverbSum = ctx.createGain();
   reverbSum.gain.value = 1;
-  reverbFbs = [];
   const hp = ctx.createBiquadFilter();
   hp.type = 'highpass';
   hp.frequency.value = 300;
   masterGain.connect(hp);
-  const taps = [0.035, 0.047, 0.061, 0.079];
-  taps.forEach((t, i) => {
+  const times = [0.025, 0.037, 0.049, 0.063, 0.079, 0.097, 0.117, 0.139];
+  for (let i = 0; i < times.length; i++) {
     const del = ctx.createDelay(0.5);
-    del.delayTime.value = t;
-    const damp = ctx.createBiquadFilter();
-    damp.type = 'lowpass';
-    damp.frequency.value = 1500;
-    damp.Q.value = 0.5;
-    const fb = ctx.createGain();
-    fb.gain.value = 0.35;
-    const mix = ctx.createGain();
-    mix.gain.value = 0.25;
+    del.delayTime.value = times[i];
+    const tap = ctx.createGain();
+    tap.gain.value = 0.3 * Math.pow(0.6, i);
     hp.connect(del);
-    del.connect(damp);
-    damp.connect(fb);
-    fb.connect(del);
-    del.connect(mix);
-    mix.connect(reverbWet);
-    reverbFbs.push(fb);
-  });
+    del.connect(tap);
+    tap.connect(reverbWet);
+  }
   reverbDry.gain.value = 0.8;
-  reverbWet.gain.value = 0.2;
+  reverbWet.gain.value = 0.3;
   masterGain.connect(reverbDry);
   reverbDry.connect(reverbSum);
   reverbWet.connect(reverbSum);
@@ -375,8 +364,6 @@ function initReverb() {
 }
 
 function updateReverbDecay(decay) {
-  const fb = 0.2 + (Math.min(decay, 5) / 5) * 0.55;
-  reverbFbs.forEach((g, i) => { g.gain.value = fb * (1 - i * 0.06); });
 }
 
 function updateReverbMix(wet) {
