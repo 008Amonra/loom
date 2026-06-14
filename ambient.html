@@ -1129,9 +1129,9 @@ TRACK_DEFS.forEach(def => {
   });
 });
 
-function startAll() {
+async function startAll() {
   initAudio();
-  if (ctx.state === 'suspended') ctx.resume();
+  if (ctx.state === 'suspended') await ctx.resume();
   isPlaying = true;
   TRACK_DEFS.forEach(def => {
     const eng = GENERATORS[def.id]();
@@ -1255,23 +1255,25 @@ function downloadRecording() {
 // --- Event wiring ---
 document.getElementById('btnStart').addEventListener('click', startAll);
 document.getElementById('btnStop').addEventListener('click', stopAll);
-document.getElementById('btnTest').addEventListener('click', function() {
+function testTone() {
   initAudio();
-  if (ctx.state === 'suspended') { ctx.resume(); console.log('resumed context'); }
-  const now = ctx.currentTime;
-  console.log('test tone at', now, 'state:', ctx.state);
-  const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.value = 440;
-  const env = ctx.createGain();
-  env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.3, now + 0.01);
-  env.gain.linearRampToValueAtTime(0, now + 0.5);
-  osc.connect(env);
-  env.connect(ctx.destination);
-  osc.start(now);
-  osc.stop(now + 0.5);
-});
+  ctx.resume().then(() => {
+    console.log('context state after resume:', ctx.state);
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 440;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.3, now + 0.01);
+    env.gain.linearRampToValueAtTime(0, now + 0.5);
+    osc.connect(env);
+    env.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.5);
+  }).catch(e => console.error('resume failed:', e));
+}
+document.getElementById('btnTest').addEventListener('click', testTone);
 document.getElementById('btnRand').addEventListener('click', randomize);
 document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
@@ -1766,9 +1768,9 @@ function seqPlayStep() {
   seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
 }
 
-function seqStart() {
+async function seqStart() {
   if (!ctx) initAudio();
-  if (ctx.state === 'suspended') ctx.resume();
+  if (ctx.state === 'suspended') await ctx.resume();
   if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(masterGain); }
   seqPlaying = true;
   seqStep = 0;
