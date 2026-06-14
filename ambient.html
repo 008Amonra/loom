@@ -313,7 +313,7 @@ const TRACK_DEFS = [
 const PRESETS = {
   winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15 },
   harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:0 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15 },
   full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2 },
 };
 
@@ -712,11 +712,44 @@ function createBoat() {
   return { gain, start() { horn() }, stop() { clearTimeout(interval) } };
 }
 
+const sampleCache = {};
+async function loadSample(url) {
+  if (sampleCache[url]) return sampleCache[url];
+  const resp = await fetch(url);
+  const buf = await resp.arrayBuffer();
+  const audioBuf = await ctx.decodeAudioData(buf);
+  sampleCache[url] = audioBuf;
+  return audioBuf;
+}
+
 function createCat() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.25;
+  gain.gain.value = 0.2;
   let interval = null;
-  let purrInterval = null;
+  let sampleNodes = null;
+  let running = false;
+  async function startSample() {
+    try {
+      const buf = await loadSample('mixkit-big-wild-cat-long-purr-96.wav');
+      if (!running) return;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      const modGain = ctx.createGain();
+      modGain.gain.value = 0.35;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.12;
+      const lfoAmp = ctx.createGain();
+      lfoAmp.gain.value = 0.04;
+      lfo.connect(lfoAmp);
+      lfoAmp.connect(modGain.gain);
+      src.connect(modGain);
+      modGain.connect(gain);
+      src.start();
+      lfo.start();
+      sampleNodes = { src, lfo };
+    } catch (e) {}
+  }
   function meow() {
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
@@ -733,49 +766,43 @@ function createCat() {
     env.connect(gain);
     osc.start(now);
     osc.stop(now + 0.55);
-    const next = 8 + Math.random() * 12;
+    const next = 10 + Math.random() * 14;
     interval = setTimeout(meow, next * 1000);
   }
-  function purr() {
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    const rate = 25 + Math.random() * 10;
-    osc.frequency.value = rate;
-    const modGain = ctx.createGain();
-    modGain.gain.value = 15;
-    const mod = ctx.createOscillator();
-    mod.frequency.value = rate * 0.5;
-    mod.connect(modGain);
-    modGain.connect(osc.frequency);
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 120;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.08, now + 0.3);
-    env.gain.setValueAtTime(0.08, now + 1.5);
-    env.gain.linearRampToValueAtTime(0, now + 2.0);
-    osc.connect(filter);
-    filter.connect(env);
-    env.connect(gain);
-    osc.start(now);
-    osc.stop(now + 2.2);
-    mod.start(now);
-    mod.stop(now + 2.2);
-    const next = 1.0 + Math.random() * 2.0;
-    purrInterval = setTimeout(purr, next * 1000);
-  }
-  return { gain, start() { purr(); meow() }, stop() { clearTimeout(interval); clearTimeout(purrInterval) } };
+  return { gain, start() { running = true; startSample(); meow(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { sampleNodes.src.stop(); sampleNodes.lfo.stop(); } catch(e) {} } } };
 }
 
 function createDog() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.2;
+  gain.gain.value = 0.15;
   let interval = null;
+  let sampleNodes = null;
+  let running = false;
+  async function startSample() {
+    try {
+      const buf = await loadSample('mixkit-medium-size-dog-walking-pant-58.wav');
+      if (!running) return;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      const modGain = ctx.createGain();
+      modGain.gain.value = 0.3;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.2;
+      const lfoAmp = ctx.createGain();
+      lfoAmp.gain.value = 0.05;
+      lfo.connect(lfoAmp);
+      lfoAmp.connect(modGain.gain);
+      src.connect(modGain);
+      modGain.connect(gain);
+      src.start();
+      lfo.start();
+      sampleNodes = { src, lfo };
+    } catch (e) {}
+  }
   function bark() {
     const now = ctx.currentTime;
-    const count = 1 + Math.floor(Math.random() * 3);
+    const count = 1 + Math.floor(Math.random() * 2);
     for (let i = 0; i < count; i++) {
       const t = now + i * (0.25 + Math.random() * 0.2);
       const osc = ctx.createOscillator();
@@ -784,7 +811,7 @@ function createDog() {
       osc.frequency.exponentialRampToValueAtTime(250 + Math.random() * 100, t + 0.08);
       const env = ctx.createGain();
       env.gain.setValueAtTime(0, t);
-      env.gain.linearRampToValueAtTime(0.25, t + 0.015);
+      env.gain.linearRampToValueAtTime(0.2, t + 0.015);
       env.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
@@ -795,10 +822,10 @@ function createDog() {
       osc.start(t);
       osc.stop(t + 0.15);
     }
-    const next = 6 + Math.random() * 10;
+    const next = 20 + Math.random() * 20;
     interval = setTimeout(bark, next * 1000);
   }
-  return { gain, start() { bark() }, stop() { clearTimeout(interval) } };
+  return { gain, start() { running = true; startSample(); bark(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { sampleNodes.src.stop(); sampleNodes.lfo.stop(); } catch(e) {} } } };
 }
 
 function createRain() {
@@ -1085,14 +1112,14 @@ function createBell() {
       osc.start(now);
       osc.stop(now + p.decay + 0.1);
     });
-    interval = setTimeout(strike, 3000 + Math.random() * 5000);
+    interval = setTimeout(strike, 2000 + Math.random() * 3000);
   }
   return { gain, start() { strike() }, stop() { clearTimeout(interval) } };
 }
 
 function createPerc() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.3;
+  gain.gain.value = 0.25;
   const sr = ctx.sampleRate;
   let interval = null;
   function noiseBurst(len, hpFreq, vol) {
@@ -1155,10 +1182,10 @@ function createPerc() {
   }
   function tick() {
     const r = Math.random();
-    if (r < 0.3) rimshot();
+    if (r < 0.25) rimshot();
     else if (r < 0.7) hihat();
     else tikititata();
-    const pause = r < 0.3 ? 2 + Math.random() * 4 : r < 0.7 ? 1 + Math.random() * 2 : 3 + Math.random() * 3;
+    const pause = r < 0.25 ? 3 + Math.random() * 4 : r < 0.7 ? 0.8 + Math.random() * 1.5 : 3 + Math.random() * 3;
     interval = setTimeout(tick, pause * 1000);
   }
   return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
