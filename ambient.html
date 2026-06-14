@@ -326,12 +326,20 @@ let recordedBlob = null;
 let reverbDry = null;
 let reverbWet = null;
 let reverbConvolver = null;
+let compressor = null;
 
 function initAudio() {
   if (ctx) return;
   ctx = new (window.AudioContext || window.webkitAudioContext)();
   masterGain = ctx.createGain();
   masterGain.gain.value = 0.65;
+  compressor = ctx.createDynamicsCompressor();
+  compressor.threshold.value = -24;
+  compressor.knee.value = 12;
+  compressor.ratio.value = 6;
+  compressor.attack.value = 0.003;
+  compressor.release.value = 0.1;
+  masterGain.connect(compressor);
   destNode = ctx.createMediaStreamDestination();
   initReverb();
 }
@@ -345,8 +353,8 @@ function initReverb() {
   updateReverbIR(2);
   reverbDry.gain.value = 0.8;
   reverbWet.gain.value = 0.2;
-  masterGain.connect(reverbDry);
-  masterGain.connect(reverbConvolver);
+  compressor.connect(reverbDry);
+  compressor.connect(reverbConvolver);
   reverbConvolver.connect(reverbWet);
   reverbDry.connect(reverbSum);
   reverbWet.connect(reverbSum);
@@ -358,10 +366,14 @@ function updateReverbIR(decay) {
   const sr = ctx.sampleRate;
   const len = Math.floor(sr * Math.min(decay, 8));
   const buf = ctx.createBuffer(2, len, sr);
+  let pink = 0;
   for (let ch = 0; ch < 2; ch++) {
     const data = buf.getChannelData(ch);
     for (let i = 0; i < len; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4) * 0.5;
+      const white = Math.random() * 2 - 1;
+      pink += (white - pink) * 0.15;
+      const t = i / len;
+      data[i] = pink * Math.pow(1 - t, 2) * Math.exp(-t * 5) * 0.6;
     }
   }
   reverbConvolver.buffer = buf;
@@ -1637,7 +1649,7 @@ function seqPlayKick() {
   osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.7, now + 0.002);
+  env.gain.linearRampToValueAtTime(0.7, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
   osc.connect(env);
   env.connect(seqGain);
@@ -1648,7 +1660,7 @@ function seqPlayKick() {
   click.frequency.value = 3000;
   const ce = ctx.createGain();
   ce.gain.setValueAtTime(0.12, now);
-  ce.gain.exponentialRampToValueAtTime(0.001, now + 0.004);
+  ce.gain.exponentialRampToValueAtTime(0.001, now + 0.008);
   click.connect(ce);
   ce.connect(seqGain);
   click.start(now);
@@ -1667,7 +1679,7 @@ function seqPlayHH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.3, now + 0.001);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
   src.connect(hp);
   hp.connect(env);
@@ -1688,7 +1700,7 @@ function seqPlayOH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.2, now + 0.001);
+  env.gain.linearRampToValueAtTime(0.2, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
   src.connect(hp);
   hp.connect(env);
@@ -1705,7 +1717,7 @@ function seqPlaySnare() {
   osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.002);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
   osc.connect(env);
   env.connect(seqGain);
@@ -1722,7 +1734,7 @@ function seqPlaySnare() {
   hp.frequency.value = 1000;
   const nenv = ctx.createGain();
   nenv.gain.setValueAtTime(0, now);
-  nenv.gain.linearRampToValueAtTime(0.35, now + 0.001);
+  nenv.gain.linearRampToValueAtTime(0.35, now + 0.005);
   nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
   nsrc.connect(hp);
   hp.connect(nenv);
@@ -1740,7 +1752,7 @@ function seqPlayConga() {
   osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.002);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
   osc.connect(env);
   env.connect(seqGain);
@@ -1753,7 +1765,7 @@ function seqPlayConga() {
   osc2.frequency.exponentialRampToValueAtTime(200, now + 0.15);
   const env2 = ctx.createGain();
   env2.gain.setValueAtTime(0, now);
-  env2.gain.linearRampToValueAtTime(0.15, now + 0.002);
+  env2.gain.linearRampToValueAtTime(0.15, now + 0.008);
   env2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
   osc2.connect(env2);
   env2.connect(seqGain);
