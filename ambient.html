@@ -326,6 +326,7 @@ let recTimer = null;
 let recordedBlob = null;
 let reverbDry = null;
 let reverbWet = null;
+let audioOut = null;
 
 function initAudio() {
   if (ctx) return;
@@ -1263,20 +1264,44 @@ function downloadRecording() {
 document.getElementById('btnStart').addEventListener('click', startAll);
 document.getElementById('btnStop').addEventListener('click', stopAll);
 function testTone() {
+  // Approach 1: audio element with raw PCM WAV blob
+  const sr = 48000, freq = 440, dur = 0.5, len = sr * dur;
+  const buf = new ArrayBuffer(44 + len * 2);
+  const w = new DataView(buf);
+  const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) w.setUint8(off + i, s.charCodeAt(i)); };
+  writeStr(0, 'RIFF'); w.setUint32(4, 36 + len * 2, true); writeStr(8, 'WAVE');
+  writeStr(12, 'fmt '); w.setUint32(16, 16, true);
+  w.setUint16(20, 1, true); w.setUint16(22, 1, true);
+  w.setUint32(24, sr, true); w.setUint32(28, sr * 2, true);
+  w.setUint16(32, 2, true); w.setUint16(34, 16, true);
+  writeStr(36, 'data'); w.setUint32(40, len * 2, true);
+  for (let i = 0; i < len; i++) {
+    const s = Math.sin(2 * Math.PI * freq * i / sr) * 0.5 * (1 - i / len);
+    w.setInt16(44 + i * 2, s * 32767, true);
+  }
+  const blob = new Blob([buf], { type: 'audio/wav' });
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement('audio');
+  el.src = url;
+  el.volume = 0.5;
+  el.play().then(() => console.log('WAV test: playing')).catch(e => console.error('WAV test failed:', e));
+  setTimeout(() => { el.pause(); el.src = ''; URL.revokeObjectURL(url); }, 1000);
+
+  // Approach 2: also try Web Audio API
   initAudio();
   const osc = ctx.createOscillator();
   osc.type = 'sine';
-  osc.frequency.value = 440;
+  osc.frequency.value = 880;
   const env = ctx.createGain();
   env.gain.value = 0;
   osc.connect(env);
   env.connect(ctx.destination);
   osc.start();
   ctx.resume().then(() => {
-    console.log('test tone: ctx.state =', ctx.state, 'ctx.currentTime =', ctx.currentTime);
     const t = ctx.currentTime;
+    console.log('Web Audio: ctx.state =', ctx.state, 't =', t);
     env.gain.setValueAtTime(0, t);
-    env.gain.linearRampToValueAtTime(0.5, t + 0.02);
+    env.gain.linearRampToValueAtTime(0.3, t + 0.02);
     env.gain.linearRampToValueAtTime(0, t + 0.5);
     setTimeout(() => { try { osc.stop(); } catch(e) {} }, 1000);
   }).catch(e => console.error('resume failed:', e));
