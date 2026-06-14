@@ -1257,8 +1257,9 @@ document.getElementById('btnStart').addEventListener('click', startAll);
 document.getElementById('btnStop').addEventListener('click', stopAll);
 document.getElementById('btnTest').addEventListener('click', function() {
   initAudio();
-  if (ctx.state === 'suspended') ctx.resume();
+  if (ctx.state === 'suspended') { ctx.resume(); console.log('resumed context'); }
   const now = ctx.currentTime;
+  console.log('test tone at', now, 'state:', ctx.state);
   const osc = ctx.createOscillator();
   osc.type = 'sine';
   osc.frequency.value = 440;
@@ -1267,7 +1268,7 @@ document.getElementById('btnTest').addEventListener('click', function() {
   env.gain.linearRampToValueAtTime(0.3, now + 0.01);
   env.gain.linearRampToValueAtTime(0, now + 0.5);
   osc.connect(env);
-  env.connect(masterGain);
+  env.connect(ctx.destination);
   osc.start(now);
   osc.stop(now + 0.5);
 });
