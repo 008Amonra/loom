@@ -332,13 +332,13 @@ function initAudio() {
   if (ctx) return;
   ctx = new (window.AudioContext || window.webkitAudioContext)();
   masterGain = ctx.createGain();
-  masterGain.gain.value = 0.65;
+  masterGain.gain.value = 0.5;
   compressor = ctx.createDynamicsCompressor();
-  compressor.threshold.value = -18;
-  compressor.knee.value = 18;
-  compressor.ratio.value = 4;
-  compressor.attack.value = 0.005;
-  compressor.release.value = 0.15;
+  compressor.threshold.value = -12;
+  compressor.knee.value = 24;
+  compressor.ratio.value = 3;
+  compressor.attack.value = 0.008;
+  compressor.release.value = 0.2;
   masterGain.connect(compressor);
   destNode = ctx.createMediaStreamDestination();
   initReverb();
@@ -350,23 +350,33 @@ function initReverb() {
   const reverbSum = ctx.createGain();
   reverbSum.gain.value = 1;
   reverbFbs = [];
-  const taps = [0.023, 0.031, 0.037, 0.045];
+  // Highpass to cut sub-bass buildup in feedback loops
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 300;
+  compressor.connect(hp);
+  const taps = [0.035, 0.047, 0.061, 0.079];
   taps.forEach((t, i) => {
     const del = ctx.createDelay(0.5);
     del.delayTime.value = t;
+    const damp = ctx.createBiquadFilter();
+    damp.type = 'lowpass';
+    damp.frequency.value = 1500;
+    damp.Q.value = 0.5;
     const fb = ctx.createGain();
-    fb.gain.value = 0.5;
+    fb.gain.value = 0.35;
     const mix = ctx.createGain();
     mix.gain.value = 0.25;
-    compressor.connect(del);
-    del.connect(fb);
+    hp.connect(del);
+    del.connect(damp);
+    damp.connect(fb);
     fb.connect(del);
     del.connect(mix);
     mix.connect(reverbWet);
     reverbFbs.push(fb);
   });
-  reverbDry.gain.value = 0.7;
-  reverbWet.gain.value = 0.3;
+  reverbDry.gain.value = 0.8;
+  reverbWet.gain.value = 0.15;
   compressor.connect(reverbDry);
   reverbDry.connect(reverbSum);
   reverbWet.connect(reverbSum);
@@ -375,7 +385,7 @@ function initReverb() {
 }
 
 function updateReverbDecay(decay) {
-  const fb = 0.3 + (Math.min(decay, 5) / 5) * 0.5;
+  const fb = 0.2 + (Math.min(decay, 5) / 5) * 0.55;
   reverbFbs.forEach((g, i) => { g.gain.value = fb * (1 - i * 0.06); });
 }
 
@@ -1649,7 +1659,7 @@ function seqPlayKick() {
   osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.7, now + 0.008);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
   osc.connect(env);
   env.connect(seqGain);
@@ -1659,7 +1669,7 @@ function seqPlayKick() {
   click.type = 'sine';
   click.frequency.value = 3000;
   const ce = ctx.createGain();
-  ce.gain.setValueAtTime(0.12, now);
+  ce.gain.setValueAtTime(0.08, now);
   ce.gain.exponentialRampToValueAtTime(0.001, now + 0.008);
   click.connect(ce);
   ce.connect(seqGain);
@@ -1679,7 +1689,7 @@ function seqPlayHH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.6, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.5, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
   src.connect(hp);
   hp.connect(env);
@@ -1700,7 +1710,7 @@ function seqPlayOH() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.4, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
   src.connect(hp);
   hp.connect(env);
@@ -1717,7 +1727,7 @@ function seqPlaySnare() {
   osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
+  env.gain.linearRampToValueAtTime(0.35, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
   osc.connect(env);
   env.connect(seqGain);
@@ -1734,7 +1744,7 @@ function seqPlaySnare() {
   hp.frequency.value = 1000;
   const nenv = ctx.createGain();
   nenv.gain.setValueAtTime(0, now);
-  nenv.gain.linearRampToValueAtTime(0.35, now + 0.005);
+  nenv.gain.linearRampToValueAtTime(0.25, now + 0.005);
   nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
   nsrc.connect(hp);
   hp.connect(nenv);
@@ -1752,7 +1762,7 @@ function seqPlayConga() {
   osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
+  env.gain.linearRampToValueAtTime(0.35, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
   osc.connect(env);
   env.connect(seqGain);
@@ -1765,7 +1775,7 @@ function seqPlayConga() {
   osc2.frequency.exponentialRampToValueAtTime(200, now + 0.15);
   const env2 = ctx.createGain();
   env2.gain.setValueAtTime(0, now);
-  env2.gain.linearRampToValueAtTime(0.3, now + 0.008);
+  env2.gain.linearRampToValueAtTime(0.2, now + 0.008);
   env2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
   osc2.connect(env2);
   env2.connect(seqGain);
@@ -1788,7 +1798,7 @@ function seqPlayStep() {
 
 function seqStart() {
   if (!ctx) initAudio();
-  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(masterGain); }
+  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.4; seqGain.connect(masterGain); }
   seqPlaying = true;
   seqStep = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
