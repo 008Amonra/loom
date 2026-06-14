@@ -339,6 +339,7 @@ function initAudio() {
 function initReverb() {
   masterGain.connect(ctx.destination);
   masterGain.connect(destNode);
+  console.log('initReverb: masterGain.gain =', masterGain.gain.value, 'ctx.state =', ctx.state);
 }
 
 function updateReverbDecay(decay) {
@@ -1134,18 +1135,24 @@ async function startAll() {
   if (ctx.state === 'suspended') await ctx.resume();
   isPlaying = true;
   TRACK_DEFS.forEach(def => {
-    const eng = GENERATORS[def.id]();
-    const panner = ctx.createStereoPanner();
-    panner.pan.value = parseFloat(document.getElementById('pan-' + def.id).value) || 0;
-    eng.gain.connect(panner);
-    panner.connect(masterGain);
-    eng.start();
-    engines[def.id] = eng;
-    panners[def.id] = panner;
-    const vol = parseFloat(sliders[def.id].value);
-    const muteFactor = muted[def.id] ? 0 : 1;
-    eng.gain.gain.setValueAtTime(vol * muteFactor, ctx.currentTime);
-    document.getElementById('card-' + def.id).classList.add('active');
+    try {
+      console.log('starting generator:', def.id);
+      const eng = GENERATORS[def.id]();
+      const panner = ctx.createStereoPanner();
+      panner.pan.value = parseFloat(document.getElementById('pan-' + def.id).value) || 0;
+      eng.gain.connect(panner);
+      panner.connect(masterGain);
+      eng.start();
+      engines[def.id] = eng;
+      panners[def.id] = panner;
+      const vol = parseFloat(sliders[def.id].value);
+      const muteFactor = muted[def.id] ? 0 : 1;
+      eng.gain.gain.setValueAtTime(vol * muteFactor, ctx.currentTime);
+      document.getElementById('card-' + def.id).classList.add('active');
+      console.log('started:', def.id);
+    } catch(e) {
+      console.error('FAILED generator:', def.id, e);
+    }
   });
   document.getElementById('btnStart').style.display = 'none';
   document.getElementById('btnStop').style.display = '';
@@ -1258,7 +1265,6 @@ document.getElementById('btnStop').addEventListener('click', stopAll);
 function testTone() {
   initAudio();
   ctx.resume().then(() => {
-    console.log('context state after resume:', ctx.state);
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     osc.type = 'sine';
@@ -1268,7 +1274,7 @@ function testTone() {
     env.gain.linearRampToValueAtTime(0.3, now + 0.01);
     env.gain.linearRampToValueAtTime(0, now + 0.5);
     osc.connect(env);
-    env.connect(ctx.destination);
+    env.connect(masterGain);
     osc.start(now);
     osc.stop(now + 0.5);
   }).catch(e => console.error('resume failed:', e));
