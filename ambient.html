@@ -336,39 +336,14 @@ function initAudio() {
 }
 
 function initReverb() {
-  reverbDry = ctx.createGain();
-  reverbWet = ctx.createGain();
-  const reverbSum = ctx.createGain();
-  reverbSum.gain.value = 1;
-  const hp = ctx.createBiquadFilter();
-  hp.type = 'highpass';
-  hp.frequency.value = 300;
-  masterGain.connect(hp);
-  const times = [0.025, 0.037, 0.049, 0.063, 0.079, 0.097, 0.117, 0.139];
-  for (let i = 0; i < times.length; i++) {
-    const del = ctx.createDelay(0.5);
-    del.delayTime.value = times[i];
-    const tap = ctx.createGain();
-    tap.gain.value = 0.3 * Math.pow(0.6, i);
-    hp.connect(del);
-    del.connect(tap);
-    tap.connect(reverbWet);
-  }
-  reverbDry.gain.value = 0.8;
-  reverbWet.gain.value = 0.3;
-  masterGain.connect(reverbDry);
-  reverbDry.connect(reverbSum);
-  reverbWet.connect(reverbSum);
-  reverbSum.connect(ctx.destination);
-  reverbSum.connect(destNode);
+  masterGain.connect(ctx.destination);
+  masterGain.connect(destNode);
 }
 
 function updateReverbDecay(decay) {
 }
 
 function updateReverbMix(wet) {
-  reverbDry.gain.value = 1 - wet;
-  reverbWet.gain.value = wet;
 }
 
 // --- Sound generators ---
@@ -1775,6 +1750,7 @@ function seqPlayStep() {
 
 function seqStart() {
   if (!ctx) initAudio();
+  if (ctx.state === 'suspended') ctx.resume();
   if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(masterGain); }
   seqPlaying = true;
   seqStep = 0;
