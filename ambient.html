@@ -115,7 +115,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-row{display:flex;align-items:center;gap:4px}
 .beat-label{width:32px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:6px}
 .beat-steps{display:flex;gap:3px}
-.beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0}
+.beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0;font-size:0.5rem;font-family:inherit;color:#555}
 .beat-step:hover{border-color:#555}
 .beat-step.on.kick{background:#4488ff;border-color:#4488ff}
 .beat-step.on.hh{background:#66dd88;border-color:#66dd88}
@@ -130,7 +130,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-gate{background:#2a2a3a;color:#ff8844;font-size:0.75rem;padding:3px 10px;border:1px solid #884422;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-gate:hover{background:#3a3a4a}
 .seq-gate.on{background:#884422;color:#ffaa66;border-color:#ff8844}
+.seq-surprise{background:#2a2a3a;color:#dd88ff;font-size:0.75rem;padding:3px 10px;border:1px solid #8844aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
+.seq-surprise:hover{background:#3a3a4a;border-color:#aa66cc}
+.seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
 .beat-step.on.melody{font-size:0.55rem;line-height:24px;text-align:center;color:#1a1a2e;font-weight:700}
+.beat-step[data-row="melody"]{color:#445544}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
 .beat-nums{display:flex;gap:3px}
 .beat-num{width:24px;font-size:0.65rem;color:#444;text-align:center;flex-shrink:0}
@@ -259,6 +263,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
       <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
     <button id="btnGate44" class="seq-gate" title="Silence every 4th beat (trance drop)">4/4 Gate</button>
+    <button id="btnSurprise" class="seq-surprise" title="Random delay then 2 min 4/4 beat">&#x1F3B2; Surprise</button>
   </div>
 
   <div class="beat-grid" id="beatGrid"></div>
@@ -324,13 +329,15 @@ const TRACK_DEFS = [
     desc:'Ambient rimshots, hi-hat ticks, and soft tikititata patterns — gentle rhythm' },
   { id:'melody',     icon:'&#x1F3B5;', name:'Melody',     color:'#88dd88', defaultPan:0,
     desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
+  { id:'tambourine', icon:'&#x1F3BA;', name:'Tambourine', color:'#ddbb44', defaultPan:0.4,
+    desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2 },
 };
 
 let ctx = null;
@@ -1296,6 +1303,47 @@ function stopMorph() {
   document.getElementById('btnMorph').textContent = '▶ Morph';
 }
 
+function createTambourine() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.25;
+  let interval = null;
+  function shake() {
+    const now = ctx.currentTime;
+    const count = 4 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < count; i++) {
+      const t = now + i * (0.02 + Math.random() * 0.03);
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 5000 + Math.random() * 7000;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.15 + Math.random() * 0.15, t + 0.002);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.03 + Math.random() * 0.04);
+      osc.connect(env);
+      env.connect(gain);
+      osc.start(t);
+      osc.stop(t + 0.08);
+    }
+    if (Math.random() < 0.2) {
+      const t = now + count * 0.03 + 0.1 + Math.random() * 0.2;
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 8000 + Math.random() * 4000;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.1, t + 0.002);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      osc.connect(env);
+      env.connect(gain);
+      osc.start(t);
+      osc.stop(t + 0.07);
+    }
+    const next = 2 + Math.random() * 4;
+    interval = setTimeout(shake, next * 1000);
+  }
+  return { gain, start() { shake() }, stop() { clearTimeout(interval) } };
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -1316,6 +1364,7 @@ const GENERATORS = {
   bell: createBell,
   perc: createPerc,
   melody: createMelody,
+  tambourine: createTambourine,
 };
 
 // --- UI ---
@@ -1862,6 +1911,8 @@ let seqPlaying = false;
 let seqStep = 0;
 let seqTimer = null;
 let seqGain = null;
+let beatSurpriseTimer = null;
+let beatSurpriseStop = null;
 const seqPatterns = {
   kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
   snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
@@ -2107,6 +2158,27 @@ function seqStop() {
   document.getElementById('seqBtn').classList.remove('active');
 }
 
+function startBeatSurprise() {
+  if (beatSurpriseTimer) return;
+  const delay = 15 + Math.random() * 45;
+  document.getElementById('statusText').textContent = 'Beat surprise in ' + Math.round(delay) + 's...';
+  document.getElementById('btnSurprise').classList.add('armed');
+  beatSurpriseTimer = setTimeout(() => {
+    seqPatterns.kick = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
+    if (!seqPlaying) seqStart();
+    document.getElementById('statusText').textContent = 'Beat surprise! 2 min 4/4';
+    document.getElementById('btnSurprise').classList.remove('armed');
+    if (beatSurpriseStop) clearTimeout(beatSurpriseStop);
+    beatSurpriseStop = setTimeout(() => {
+      if (seqPlaying) seqStop();
+      document.getElementById('statusText').textContent = 'Beat surprise finished — click again';
+      beatSurpriseTimer = null;
+      beatSurpriseStop = null;
+    }, 120000);
+    beatSurpriseTimer = null;
+  }, delay * 1000);
+}
+
 document.getElementById('seqBtn').addEventListener('click', () => { seqPlaying ? seqStop() : seqStart(); });
 document.getElementById('seqBpm').addEventListener('input', function() {
   document.getElementById('seqBpmVal').textContent = this.value;
@@ -2120,6 +2192,7 @@ document.getElementById('btnGate44').addEventListener('click', function() {
   seqGate44 = !seqGate44;
   this.classList.toggle('on');
 });
+document.getElementById('btnSurprise').addEventListener('click', startBeatSurprise);
 
 // --- Reverb controls ---
 document.getElementById('revMix').addEventListener('input', function() {
