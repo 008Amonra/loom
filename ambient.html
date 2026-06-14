@@ -114,7 +114,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
 .beat-row{display:flex;align-items:center;gap:4px}
 .beat-label{width:32px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:6px}
-.beat-steps{display:flex;gap:3px}
+.beat-steps{display:grid;grid-template-columns:repeat(16,24px);gap:3px}
 .beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0;font-size:0.5rem;font-family:inherit;color:#555}
 .beat-step:hover{border-color:#555}
 .beat-step.on.kick{background:#4488ff;border-color:#4488ff}
@@ -285,6 +285,13 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
+   <span class="pp-icon">
+     <svg viewBox="0 0 52 32" width="36" height="22" style="vertical-align:middle;margin-left:8px">
+       <rect width="52" height="32" rx="4" fill="#003087"/>
+       <text x="8" y="23" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="20" fill="#ffffff">P</text>
+       <text x="22" y="23" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="20" fill="#009cde">P</text>
+     </svg>
+   </span>
 </div>
 
 </div>
@@ -1914,17 +1921,17 @@ let seqGain = null;
 let beatSurpriseTimer = null;
 let beatSurpriseStop = null;
 const seqPatterns = {
-  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  melody:[1,0,0,0, 0,1,0,0, 1,0,0,0, 0,0,0,1],
+  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  melody:[1,0,0,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
 };
 const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody'];
 const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#cc8844', melody:'#88dd88' };
 const seqMuted = {};
-const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
+const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C','C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
 const SEQ_MUTE = 'seqMute';
 function seqToggleMute(row) {
   seqMuted[row] = !seqMuted[row];
@@ -1932,7 +1939,7 @@ function seqToggleMute(row) {
   if (el) el.classList.toggle('muted');
 }
 let seqGate44 = false;
-const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53];
+const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53];
 
 function seqBuildGrid() {
   const grid = document.getElementById('beatGrid');
@@ -1943,7 +1950,7 @@ function seqBuildGrid() {
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 32; i++) {
       const btn = document.createElement('button');
       const extra = row === 'melody' ? ` data-note="${seqNoteNames[i]}"` : '';
       btn.className = 'beat-step' + (seqPatterns[row][i] ? ' on ' + row : '');
@@ -1961,7 +1968,7 @@ function seqBuildGrid() {
   });
   // Beat numbers
   const nums = document.getElementById('beatNums');
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 32; i++) {
     const n = document.createElement('span');
     n.className = 'beat-num';
     n.textContent = i % 4 === 0 ? (i / 4 + 1) : '\u00B7';
@@ -2126,7 +2133,7 @@ function seqPlayMelody() {
 
 function seqPlayStep() {
   if (!ctx || !seqPlaying) return;
-  const noKick = seqGate44 && seqStep >= 12;
+  const noKick = seqGate44 && (seqStep % 16 >= 12);
   if (!noKick && seqPatterns.kick[seqStep] && !seqMuted.kick) seqPlayKick();
   if (seqPatterns.snare[seqStep] && !seqMuted.snare) seqPlaySnare();
   if (seqPatterns.hh[seqStep] && !seqMuted.hh) seqPlayHH();
@@ -2135,7 +2142,7 @@ function seqPlayStep() {
   if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody();
   document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
   document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
-  seqStep = (seqStep + 1) % 16;
+  seqStep = (seqStep + 1) % 32;
   seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
 }
 
