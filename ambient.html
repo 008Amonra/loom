@@ -1266,17 +1266,22 @@ function testTone() {
   initAudio();
   ctx.resume().then(() => {
     const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = 440;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.3, now + 0.01);
-    env.gain.linearRampToValueAtTime(0, now + 0.5);
-    osc.connect(env);
-    env.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + 0.5);
+    // Re-connect masterGain to destination after resume (diagnostic)
+    try { masterGain.disconnect(ctx.destination); } catch(e) {}
+    masterGain.connect(ctx.destination);
+    console.log('masterGain outputs after reconnect:', masterGain.numberOfOutputs);
+    // Osc A — through masterGain (440Hz)
+    const a = ctx.createOscillator(); a.type='sine'; a.frequency.value=440;
+    const ea = ctx.createGain();
+    ea.gain.setValueAtTime(0,now); ea.gain.linearRampToValueAtTime(0.3,now+0.01); ea.gain.linearRampToValueAtTime(0,now+0.5);
+    a.connect(ea); ea.connect(masterGain);
+    a.start(now); a.stop(now+0.5);
+    // Osc B — direct to destination (660Hz, delayed)
+    const b = ctx.createOscillator(); b.type='sine'; b.frequency.value=660;
+    const eb = ctx.createGain();
+    eb.gain.setValueAtTime(0,now+0.3); eb.gain.linearRampToValueAtTime(0.15,now+0.31); eb.gain.linearRampToValueAtTime(0,now+0.8);
+    b.connect(eb); eb.connect(ctx.destination);
+    b.start(now+0.3); b.stop(now+0.8);
   }).catch(e => console.error('resume failed:', e));
 }
 document.getElementById('btnTest').addEventListener('click', testTone);
