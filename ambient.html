@@ -1264,20 +1264,21 @@ document.getElementById('btnStart').addEventListener('click', startAll);
 document.getElementById('btnStop').addEventListener('click', stopAll);
 function testTone() {
   initAudio();
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = 440;
+  const env = ctx.createGain();
+  env.gain.value = 0;
+  osc.connect(env);
+  env.connect(ctx.destination);
+  osc.start();
   ctx.resume().then(() => {
-    const now = ctx.currentTime;
-    console.log('test tone: ctx.state =', ctx.state);
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = 440;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.5, now + 0.01);
-    env.gain.linearRampToValueAtTime(0, now + 0.5);
-    osc.connect(env);
-    env.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.5);
+    console.log('test tone: ctx.state =', ctx.state, 'ctx.currentTime =', ctx.currentTime);
+    const t = ctx.currentTime;
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.5, t + 0.02);
+    env.gain.linearRampToValueAtTime(0, t + 0.5);
+    setTimeout(() => { try { osc.stop(); } catch(e) {} }, 1000);
   }).catch(e => console.error('resume failed:', e));
 }
 document.getElementById('btnTest').addEventListener('click', testTone);
