@@ -306,6 +306,15 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </div>
 </div>
 
+<div class="beat-sequencer">
+  <h2>Master</h2>
+  <p class="sub">Global ceiling — everything stays below this level</p>
+  <div class="beat-controls">
+    <label>Limit <input type="range" id="limitSlider" min="0" max="1" step="0.01" value="0">
+      <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
+  </div>
+</div>
+
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
    <span class="pp-icon">
@@ -430,6 +439,8 @@ let recordedBlob = null;
 let reverbDry = null;
 let reverbWet = null;
 let reverbConvolver = null;
+let reverbSum = null;
+let limiterNode = null;
 let audioOut = null;
 
 function initAudio() {
@@ -439,13 +450,39 @@ function initAudio() {
   masterGain.gain.value = 0.65;
   destNode = ctx.createMediaStreamDestination();
   initReverb();
+  initLimiter();
+}
+
+function setLimit(v) {
+  if (!limiterNode) return;
+  if (v <= 0) {
+    limiterNode.threshold.value = 0;
+  } else {
+    const db = -40 * v;
+    limiterNode.threshold.value = Math.max(-40, Math.min(0, db));
+  }
+}
+
+function initLimiter() {
+  if (limiterNode) return;
+  limiterNode = ctx.createDynamicsCompressor();
+  limiterNode.threshold.value = 0;
+  limiterNode.knee.value = 0;
+  limiterNode.ratio.value = 20;
+  limiterNode.attack.value = 0.003;
+  limiterNode.release.value = 0.05;
+  try { reverbSum.disconnect(ctx.destination); } catch(e) {}
+  try { reverbSum.disconnect(destNode); } catch(e) {}
+  reverbSum.connect(limiterNode);
+  limiterNode.connect(ctx.destination);
+  limiterNode.connect(destNode);
 }
 
 function initReverb() {
   reverbDry = ctx.createGain();
   reverbWet = ctx.createGain();
   reverbConvolver = ctx.createConvolver();
-  const reverbSum = ctx.createGain();
+  reverbSum = ctx.createGain();
   reverbSum.gain.value = 1;
   updateReverbIR(2);
   reverbDry.gain.value = 0.8;
@@ -1349,7 +1386,9 @@ function startMorph() {
     if (el) el.textContent = '→ ' + morphTargetName;
   }
   pickTarget();
+  let morphTick = 0;
   morphInterval = setInterval(() => {
+    morphTick++;
     if (!morphTarget) return;
     for (const [id, targetVal] of Object.entries(morphTarget)) {
       const slider = sliders[id];
@@ -1364,6 +1403,18 @@ function startMorph() {
         }
       }
     }
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    TRACK_DEFS.forEach((def, i) => {
+      if (!panners[def.id]) return;
+      const basePan = parseFloat(document.getElementById('pan-' + def.id).value);
+      const wobble = Math.sin(t / 12 + i * 1.3) * 0.12;
+      panners[def.id].pan.setTargetAtTime(
+        Math.max(-1, Math.min(1, basePan + wobble)), t, 0.15
+      );
+    });
+    const reverbMod = Math.sin(t / 8) * 0.08 + 0.2;
+    updateReverbMix(Math.max(0.05, Math.min(0.5, reverbMod)));
   }, 200);
   morphRetarget = setInterval(pickTarget, (3 + Math.random() * 2) * 60000);
   document.getElementById('btnMorph').textContent = '⏸ Morph';
@@ -1377,6 +1428,7 @@ function stopMorph() {
   const el = document.getElementById('morphLabel');
   if (el) el.textContent = '';
   document.getElementById('btnMorph').textContent = '▶ Morph';
+  if (ctx) updateReverbMix(parseFloat(document.getElementById('revMix').value));
 }
 
 function createTambourine() {
@@ -2327,6 +2379,13 @@ document.getElementById('revDecay').addEventListener('input', function() {
   const v = parseFloat(this.value);
   document.getElementById('revDecayVal').textContent = v.toFixed(1) + 's';
   if (ctx) updateReverbIR(v);
+});
+
+// --- Master controls ---
+document.getElementById('limitSlider').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  setLimit(v);
+  document.getElementById('limitVal').textContent = v <= 0 ? 'Off' : Math.round(v * 40) + 'dB';
 });
 </script>
 </body>
