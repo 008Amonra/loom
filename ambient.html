@@ -132,6 +132,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-gate{background:#2a2a3a;color:#ff8844;font-size:0.75rem;padding:3px 10px;border:1px solid #884422;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-gate:hover{background:#3a3a4a}
 .seq-gate.on{background:#884422;color:#ffaa66;border-color:#ff8844}
+.seq-auto{background:#2a2a3a;color:#66dd88;font-size:0.75rem;padding:3px 10px;border:1px solid #448855;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
+.seq-auto:hover{background:#3a3a4a}
+.seq-auto.on{background:#336633;color:#88ffaa;border-color:#66dd88}
 .seq-surprise{background:#2a2a3a;color:#dd88ff;font-size:0.75rem;padding:3px 10px;border:1px solid #8844aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-surprise:hover{background:#3a3a4a;border-color:#aa66cc}
 .seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
@@ -504,10 +507,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </div>
   <div class="beat-controls">
     <button id="seqBtn" class="noise-btn">&#x25B6; Start</button>
+    <button id="btnAutoRenew" class="seq-auto on" title="Auto-restart after stop">Auto</button>
     <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
       <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
     <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
       <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
+    <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
     <button id="btnGate44" class="seq-gate" title="Silence every 4th beat (trance drop)">4/4 Gate</button>
     <button id="btnSurprise" class="seq-surprise" title="Random delay then 2 min 4/4 beat">&#x1F3B2; Surprise</button>
   </div>
@@ -2356,6 +2361,8 @@ const seqPatterns = {
 const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody'];
 const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#cc8844', melody:'#88dd88' };
 const seqMuted = {};
+let seqAutoRestart = true;
+let seqRenewTimer = null;
 const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C','C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
 const SEQ_MUTE = 'seqMute';
 function seqToggleMute(row) {
@@ -2407,6 +2414,52 @@ function seqBuildGrid() {
 }
 seqBuildGrid();
 
+function seqRandomize() {
+  seqRows.forEach(row => {
+    const pat = [];
+    for (let i = 0; i < 32; i++) {
+      let on = 0;
+      switch (row) {
+        case 'kick':
+          if (i % 4 === 0 && Math.random() < 0.8) on = 1;
+          else if (Math.random() < 0.12) on = 1;
+          break;
+        case 'snare':
+          if ((i % 8 === 4 || i % 8 === 12) && Math.random() < 0.85) on = 1;
+          else if (Math.random() < 0.08) on = 1;
+          break;
+        case 'hh':
+          if (Math.random() < 0.55) on = 1;
+          break;
+        case 'oh':
+          if (Math.random() < 0.04 + (i % 4 === 0 ? 0.06 : 0)) on = 1;
+          break;
+        case 'conga':
+          if (Math.random() < 0.15 + (i % 2 === 0 ? 0.1 : 0)) on = 1;
+          break;
+        case 'melody':
+          if (Math.random() < 0.12) on = 1;
+          break;
+      }
+      pat.push(on);
+    }
+    if (row === 'kick') pat[0] = 1;
+    if (row === 'snare' && !pat.some(x => x)) pat[4] = 1;
+    seqPatterns[row] = pat;
+  });
+  seqUpdateGrid();
+}
+function seqUpdateGrid() {
+  seqRows.forEach(row => {
+    for (let i = 0; i < 32; i++) {
+      const btn = document.querySelector('.beat-step[data-row="' + row + '"][data-step="' + i + '"]');
+      if (!btn) continue;
+      const isOn = seqPatterns[row][i];
+      btn.classList.toggle('on', isOn);
+      btn.classList.toggle(row, isOn);
+    }
+  });
+}
 function seqPlayKick() {
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -2575,6 +2628,7 @@ async function seqStart() {
   if (!ctx) initAudio();
   if (ctx.state === 'suspended') await ctx.resume();
   if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(masterGain); }
+  clearTimeout(seqRenewTimer);
   seqPlaying = true;
   seqStep = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
@@ -2588,6 +2642,15 @@ function seqStop() {
   document.querySelectorAll('.beat-step').forEach(el => el.classList.remove('active'));
   document.getElementById('seqBtn').textContent = '\u25B6 Start';
   document.getElementById('seqBtn').classList.remove('active');
+  scheduleSeqRenew();
+}
+function scheduleSeqRenew() {
+  clearTimeout(seqRenewTimer);
+  if (!seqAutoRestart) return;
+  const delay = 8000 + Math.random() * 15000;
+  seqRenewTimer = setTimeout(() => {
+    if (!seqPlaying) seqStart();
+  }, delay);
 }
 
 function startBeatSurprise() {
@@ -2625,6 +2688,12 @@ document.getElementById('btnGate44').addEventListener('click', function() {
   this.classList.toggle('on');
 });
 document.getElementById('btnSurprise').addEventListener('click', startBeatSurprise);
+document.getElementById('btnRandSeq').addEventListener('click', seqRandomize);
+document.getElementById('btnAutoRenew').addEventListener('click', function() {
+  seqAutoRestart = !seqAutoRestart;
+  this.classList.toggle('on');
+  if (!seqAutoRestart) clearTimeout(seqRenewTimer);
+});
 
 // --- Reverb controls ---
 document.getElementById('revMix').addEventListener('input', function() {
