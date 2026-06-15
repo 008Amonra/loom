@@ -589,7 +589,7 @@ window._kokoroSpeak = async function(text) {
       if (d) d.className = 'dot loading';
       if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
       _kokoroInit = (async () => {
-        const timeout = new Promise(function(_, reject) { setTimeout(function() { reject(new Error('Download timed out (>90s)')); }, 90000); });
+        const timeout = new Promise(function(_, reject) { setTimeout(function() { reject(new Error('Download timed out (>240s)')); }, 240000); });
         try {
           _kokoro = await Promise.race([
             KokoroTTS.from_pretrained(
