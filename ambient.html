@@ -186,8 +186,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   min-width: 290px;
   animation: panelFloat 3s ease-in-out infinite;
 }
+.floating-panel {
+  transform: scale(0.8);
+}
 .floating-panel.dragging {
   animation: none;
+  transform: scale(0.8);
   box-shadow: 0 12px 48px rgba(0,0,0,0.7), 0 0 30px rgba(80,180,255,0.1);
   transition: none;
 }
@@ -233,8 +237,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 #panel-reverb { bottom: 100px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); top: auto; }
 
 @keyframes panelFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%, 100% { transform: scale(0.8) translateY(0); }
+  50% { transform: scale(0.8) translateY(-5px); }
 }
 
 @media (max-width: 840px) {
@@ -318,7 +322,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 }
 @keyframes popIn {
   0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 1; }
 }
 
 /* Glassball */
@@ -380,6 +384,14 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   0%, 100% { box-shadow: 0 0 15px rgba(80,255,200,0.08), 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
   50% { box-shadow: 0 0 35px rgba(80,255,200,0.25), 0 0 15px rgba(80,255,200,0.12), 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
 }
+
+/* Loading overlay */
+.loading-overlay{position:fixed;inset:0;z-index:200;background:rgba(13,13,20,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease}
+.loading-overlay.hidden{opacity:0;pointer-events:none}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.05);border-top-color:#00ff88;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:24px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay h2{font-family:'Cinzel',serif;font-size:1.5rem;background:linear-gradient(135deg,#00ff88,#00ccff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.loading-overlay p{color:#666;font-size:.85rem}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -402,6 +414,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </script>
 </head>
 <body>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <h2>Ambient Studio</h2>
+  <p id="loadingStatus">Initializing…</p>
+</div>
 <div class="wrap">
 
 <a class="back" href="https://008amonra.github.io/loom/agent-services.html">AgentServices</a>
@@ -2378,7 +2395,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle', melody:'Melody' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -2904,6 +2921,30 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   document.addEventListener('touchmove', moveDrag, { passive: false });
   document.addEventListener('mouseup', endDrag);
   document.addEventListener('touchend', endDrag);
+})();
+
+// --- Loading overlay ---
+(function() {
+  var overlay = document.getElementById('loadingOverlay');
+  var st = document.getElementById('loadingStatus');
+  if (!overlay) return;
+  var steps = [
+    { t: 800, msg: 'Loading Audio…' },
+    { t: 2000, msg: 'Loading TTS model…' },
+    { t: 4000, msg: 'Almost ready…' },
+  ];
+  steps.forEach(function(s) { setTimeout(function() { if (st) st.textContent = s.msg; }, s.t); });
+  var check = setInterval(function() {
+    if (typeof window._kokoroReady === 'function' && window._kokoroReady()) {
+      clearInterval(check);
+      overlay.classList.add('hidden');
+    }
+  }, 300);
+  setTimeout(function() {
+    clearInterval(check);
+    if (st) st.textContent = 'Ready';
+    overlay.classList.add('hidden');
+  }, 7000);
 })();
 
 // --- First visit: minimize all panels, pulse glassballs ---
