@@ -166,6 +166,88 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .kokoro-status .dot.ready{background:#66dd88}
 .kokoro-status .dot.error{background:#dd4444}
 .kokoro-status .kokoro-label{color:#4488ff;opacity:0.7;font-weight:600}
+
+/* Floating draggable panels */
+.floating-panel {
+  position: fixed;
+  z-index: 100;
+  padding: 20px;
+  background: rgba(15,15,26,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(100,200,255,0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(80,180,255,0.05);
+  min-width: 290px;
+  animation: panelFloat 3s ease-in-out infinite;
+}
+.floating-panel.dragging {
+  animation: none;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.7), 0 0 30px rgba(80,180,255,0.1);
+  transition: none;
+}
+.floating-panel .panel-header {
+  cursor: grab;
+  user-select: none;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.floating-panel .panel-header:active {
+  cursor: grabbing;
+}
+.floating-panel .panel-header h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  margin: 0;
+  color: #e0e0e8;
+}
+.floating-panel .panel-header .drag-dots {
+  color: #444;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  margin-left: auto;
+  pointer-events: none;
+}
+.floating-panel .panel-section {
+  margin-bottom: 12px;
+}
+.floating-panel .panel-section:last-child {
+  margin-bottom: 0;
+}
+.floating-panel .sub {
+  color: #666;
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+}
+#panel-noise { top: 180px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); }
+#panel-beats { bottom: 100px; left: max(20px, calc((100vw - 960px) / 2)); top: auto; }
+#panel-reverb { bottom: 100px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); top: auto; }
+
+@keyframes panelFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@media (max-width: 840px) {
+  .floating-panel {
+    position: static !important;
+    animation: none !important;
+    margin-top: 24px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #0f0f1a;
+    box-shadow: none;
+    border: 1px solid #2a2a3a;
+    min-width: 0;
+  }
+  .floating-panel .panel-header {
+    cursor: default;
+  }
+}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -237,8 +319,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="grid" id="trackGrid"></div>
 
-<div class="noise-garden">
-  <h2>Noise Garden</h2>
+<div class="noise-garden floating-panel" id="panel-noise">
+  <div class="panel-header">
+    <h2>Noise Garden</h2>
+    <span class="drag-dots">⠿</span>
+  </div>
   <p class="sub">Casual spoken chatter — news, weather, random facts. The DJ prevents overlapping voices.</p>
 
   <div class="noise-settings">
@@ -278,7 +363,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </div>
 </div>
 
-<div class="beat-sequencer">
+<div class="beat-sequencer floating-panel" id="panel-beats">
+  <div class="panel-header">
+    <h2>Beat Machine</h2>
+    <span class="drag-dots">⠿</span>
+  </div>
   <div class="beat-controls">
     <button id="seqBtn" class="noise-btn">&#x25B6; Start</button>
     <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
@@ -295,23 +384,26 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </div>
 </div>
 
-<div class="beat-sequencer">
-  <h2>Reverb / Hall</h2>
-  <p class="sub">Global reverb — adds space to tracks and beats</p>
-  <div class="beat-controls">
-    <label>Mix <input type="range" id="revMix" min="0" max="1" step="0.01" value="0.2">
-      <span id="revMixVal" style="min-width:28px;font-size:0.75rem;color:#666">20%</span></label>
-    <label>Decay <input type="range" id="revDecay" min="0.5" max="5" step="0.1" value="2">
-      <span id="revDecayVal" style="min-width:28px;font-size:0.75rem;color:#666">2s</span></label>
+<div class="floating-panel" id="panel-reverb">
+  <div class="panel-header">
+    <h2>Space &amp; Ceiling</h2>
+    <span class="drag-dots">⠿</span>
   </div>
-</div>
-
-<div class="beat-sequencer">
-  <h2>Master</h2>
-  <p class="sub">Global ceiling — everything stays below this level</p>
-  <div class="beat-controls">
-    <label>Limit <input type="range" id="limitSlider" min="0" max="1" step="0.01" value="0">
-      <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
+  <div class="panel-section">
+    <p class="sub">Global reverb — adds space to tracks and beats</p>
+    <div class="beat-controls">
+      <label>Mix <input type="range" id="revMix" min="0" max="1" step="0.01" value="0.2">
+        <span id="revMixVal" style="min-width:28px;font-size:0.75rem;color:#666">20%</span></label>
+      <label>Decay <input type="range" id="revDecay" min="0.5" max="5" step="0.1" value="2">
+        <span id="revDecayVal" style="min-width:28px;font-size:0.75rem;color:#666">2s</span></label>
+    </div>
+  </div>
+  <div class="panel-section" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)">
+    <p class="sub">Global ceiling — everything stays below this level</p>
+    <div class="beat-controls">
+      <label>Limit <input type="range" id="limitSlider" min="0" max="1" step="0.01" value="0">
+        <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
+    </div>
   </div>
 </div>
 
@@ -2387,6 +2479,79 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   setLimit(v);
   document.getElementById('limitVal').textContent = v <= 0 ? 'Off' : Math.round(v * 40) + 'dB';
 });
+
+// --- Floating panel drag ---
+(function() {
+  let dragTarget = null;
+  let offX = 0, offY = 0;
+
+  function startDrag(e, panel) {
+    if (window.innerWidth < 840) return;
+    const t = e.target;
+    if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'BUTTON' || t.tagName === 'A' || t.tagName === 'TEXTAREA') return;
+    dragTarget = panel;
+    const rect = panel.getBoundingClientRect();
+    const cx = e.clientX || (e.touches && e.touches[0].clientX);
+    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    if (cx == null) return;
+    offX = cx - rect.left;
+    offY = cy - rect.top;
+    panel.classList.add('dragging');
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!dragTarget) return;
+    const cx = e.clientX || (e.touches && e.touches[0].clientX);
+    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    if (cx == null) return;
+    const mw = window.innerWidth;
+    const mh = window.innerHeight;
+    const pw = dragTarget.offsetWidth;
+    const ph = dragTarget.offsetHeight;
+    dragTarget.style.left = Math.max(0, Math.min(cx - offX, mw - pw)) + 'px';
+    dragTarget.style.top = Math.max(0, Math.min(cy - offY, mh - ph)) + 'px';
+    dragTarget.style.right = 'auto';
+    dragTarget.style.bottom = 'auto';
+    e.preventDefault();
+  }
+
+  function endDrag() {
+    if (dragTarget) {
+      dragTarget.classList.remove('dragging');
+      const id = dragTarget.id;
+      if (id) {
+        try { localStorage.setItem('panel-pos-' + id, JSON.stringify({ left: dragTarget.style.left, top: dragTarget.style.top })); } catch(e) {}
+      }
+      dragTarget = null;
+    }
+  }
+
+  document.querySelectorAll('.floating-panel').forEach(function(panel) {
+    var handle = panel.querySelector('.panel-header');
+    if (!handle) return;
+    handle.addEventListener('mousedown', function(e) { startDrag(e, panel); });
+    handle.addEventListener('touchstart', function(e) { startDrag(e, panel); }, { passive: false });
+    var id = panel.id;
+    if (id) {
+      try {
+        var saved = localStorage.getItem('panel-pos-' + id);
+        if (saved) {
+          var pos = JSON.parse(saved);
+          panel.style.left = pos.left;
+          panel.style.top = pos.top;
+          panel.style.right = 'auto';
+          panel.style.bottom = 'auto';
+        }
+      } catch(e) {}
+    }
+  });
+
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('touchmove', moveDrag, { passive: false });
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('touchend', endDrag);
+})();
 </script>
 </body>
 </html>
