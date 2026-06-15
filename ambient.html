@@ -246,8 +246,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
     <label>Depth <input type="range" id="ngDepth" min="1" max="3" step="1" value="1">
       <span id="ngDepthVal" style="min-width:20px;font-size:0.75rem;color:#666">1</span></label>
-    <label>Vol <input type="range" id="ngVol" min="0" max="1" step="0.05" value="1">
-      <span id="ngVolVal" style="min-width:24px;font-size:0.75rem;color:#666">100</span></label>
+    <label>TTS Vol <input type="range" id="ngVol" min="0" max="1" step="0.05" value="0.5">
+      <span id="ngVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
     <label style="opacity:0.5;font-size:0.75rem">no proxy needed</label>
   </div>
 
@@ -1719,19 +1719,16 @@ function ngSpeak(text, lang) {
 }
 
 let kokoroLP = null;
-let kokoroGainNode = null;
 
 function kokoroInitAudioChain() {
   if (kokoroLP) return;
   initAudio();
+  initTtsGain();
   kokoroLP = ctx.createBiquadFilter();
   kokoroLP.type = 'lowpass';
   kokoroLP.frequency.value = 2200;
   kokoroLP.Q.value = 1.2;
-  kokoroGainNode = ctx.createGain();
-  kokoroGainNode.gain.value = ngVolume * 0.6;
-  kokoroLP.connect(kokoroGainNode);
-  kokoroGainNode.connect(masterGain);
+  kokoroLP.connect(ttsGainNode);
 }
 
 async function ngSpeakKokoro(text) {
@@ -1781,12 +1778,12 @@ function ngProcessQueue() {
     if (ok) { done(); return; }
     const utter = new SpeechSynthesisUtterance(item.text);
     utter.lang = 'en-US';
-    utter.rate = 0.5;
-    utter.pitch = 0.85;
-    utter.volume = Math.min(ngVolume, 0.35);
+    utter.rate = 0.6;
+    utter.pitch = 1.0;
+    utter.volume = ngVolume;
     const voices = speechSynthesis.getVoices();
-    const lady = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria/i.test(v.name));
-    if (lady) utter.voice = lady;
+    const preferred = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria|google.*english/i.test(v.name));
+    if (preferred) utter.voice = preferred;
     utter.onend = done;
     utter.onerror = done;
     speechSynthesis.cancel();
@@ -1959,16 +1956,28 @@ const ngFetchers = {
 // --- Event handlers ---
 let ngVolume = 0.5;
 let ngMuted = false;
+let ttsGainNode = null;
+
+function initTtsGain() {
+  if (ttsGainNode) return;
+  initAudio();
+  ttsGainNode = ctx.createGain();
+  ttsGainNode.gain.value = ngVolume;
+  ttsGainNode.connect(masterGain);
+}
+
+function setTtsVolume(v) {
+  ngVolume = v;
+  if (ttsGainNode) ttsGainNode.gain.value = v;
+}
+
 document.getElementById('ngDepth').addEventListener('input', function() {
   document.getElementById('ngDepthVal').textContent = this.value;
 });
 document.getElementById('ngVol').addEventListener('input', function() {
-  ngVolume = parseFloat(this.value);
+  setTtsVolume(parseFloat(this.value));
   document.getElementById('ngVolVal').textContent = Math.round(ngVolume * 100);
-  if (kokoroGainNode) kokoroGainNode.gain.value = ngVolume * 0.6;
 });
-document.getElementById('ngVol').value = '0.5';
-document.getElementById('ngVolVal').textContent = '50';
 
 document.getElementById('ngMuteBtn').addEventListener('click', function() {
   ngMuted = !ngMuted;
@@ -1990,6 +1999,7 @@ document.querySelectorAll('[data-noise]').forEach(btn => {
   btn.addEventListener('click', async () => {
     const type = btn.dataset.noise;
     btn.classList.add('loading');
+    initTtsGain();
     try {
       const text = await ngFetchers[type]();
       ngSpeak(text, ngGetLang());
@@ -2006,6 +2016,7 @@ document.getElementById('ngRandom').addEventListener('click', async () => {
   const btn = document.querySelector(`[data-noise="${pick}"]`);
   if (btn) btn.classList.add('loading');
   document.getElementById('ngRandom').textContent = '\u{1F3B2} ' + pick.charAt(0).toUpperCase() + pick.slice(1);
+  initTtsGain();
   try {
     const text = await ngFetchers[pick]();
     ngSpeak(text, ngGetLang());
