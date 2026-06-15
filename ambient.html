@@ -166,6 +166,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .kokoro-status .dot.ready{background:#66dd88}
 .kokoro-status .dot.error{background:#dd4444}
 .kokoro-status .kokoro-label{color:#4488ff;opacity:0.7;font-weight:600}
+.kokoro-retry{background:none;border:1px solid #555;color:#aaa;font-size:0.65rem;padding:1px 8px;border-radius:4px;cursor:pointer;font-family:inherit;margin-left:4px;transition:all .15s}
+.kokoro-retry:hover{background:#2a2a3a;color:#fff;border-color:#888}
 
 /* Floating draggable panels */
 .floating-panel {
@@ -366,6 +368,15 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
+.glassball.first-visit {
+  animation: pulseGlow 2s ease-in-out infinite !important;
+  border-color: rgba(100,255,200,0.25);
+  box-shadow: 0 0 25px rgba(80,255,200,0.15), 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(80,255,200,0.08), 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
+  50% { box-shadow: 0 0 35px rgba(80,255,200,0.25), 0 0 15px rgba(80,255,200,0.12), 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
+}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -555,6 +566,13 @@ import { KokoroTTS } from 'kokoro-js';
 
 let _kokoro = null;
 let _kokoroInit = null;
+let _kokoroFailed = false;
+
+window._kokoroPreload = function() {
+  if (!_kokoroInit && !_kokoroFailed) {
+    window._kokoroSpeak('').catch(function(){});
+  }
+};
 
 window._kokoroSpeak = async function(text) {
   if (!_kokoro) {
@@ -566,18 +584,23 @@ window._kokoroSpeak = async function(text) {
       if (d) d.className = 'dot loading';
       if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
       _kokoroInit = (async () => {
+        const timeout = new Promise(function(_, reject) { setTimeout(function() { reject(new Error('Download timed out (>90s)')); }, 90000); });
         try {
-          _kokoro = await KokoroTTS.from_pretrained(
-            'onnx-community/Kokoro-82M-v1.0-ONNX',
-            { dtype: 'q8', device: 'wasm' }
-          );
+          _kokoro = await Promise.race([
+            KokoroTTS.from_pretrained(
+              'onnx-community/Kokoro-82M-v1.0-ONNX',
+              { dtype: 'q8', device: 'wasm' }
+            ),
+            timeout
+          ]);
           if (d) d.className = 'dot ready';
           if (m) m.textContent = 'Kokoro TTS ready';
           return _kokoro;
         } catch (err) {
           console.error('Kokoro init failed:', err);
+          _kokoroFailed = true;
           if (d) d.className = 'dot error';
-          if (m) m.textContent = 'Kokoro unavailable, using browser speech';
+          if (m) m.innerHTML = 'Kokoro unavailable <button class="kokoro-retry" onclick="window._kokoroRetry()">retry</button>';
           return null;
         }
       })();
@@ -585,6 +608,7 @@ window._kokoroSpeak = async function(text) {
     _kokoro = await _kokoroInit;
   }
   if (!_kokoro) return null;
+  if (!text) return true;
   try {
     const result = await _kokoro.generate(text, { voice: 'af_heart' });
     return result;
@@ -592,6 +616,17 @@ window._kokoroSpeak = async function(text) {
     console.error('Kokoro generate failed:', err);
     return null;
   }
+};
+
+window._kokoroRetry = function() {
+  _kokoro = null;
+  _kokoroInit = null;
+  _kokoroFailed = false;
+  const d = document.getElementById('kokoroDot');
+  const m = document.getElementById('kokoroMsg');
+  if (d) d.className = 'dot loading';
+  if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
+  window._kokoroSpeak('').catch(function(){});
 };
 
 window._kokoroReady = function() { return !!_kokoro; };
@@ -2755,6 +2790,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
     ball.addEventListener('touchstart', function(e) { startDrag(e, ball); }, { passive: false });
 
     ball.addEventListener('click', function(e) {
+      ball.classList.remove('first-visit');
       var panel = document.getElementById(ball.dataset.panel);
       if (!panel) return;
       var br = ball.getBoundingClientRect();
@@ -2803,6 +2839,34 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   document.addEventListener('mouseup', endDrag);
   document.addEventListener('touchend', endDrag);
 })();
+
+// --- First visit: minimize all panels, pulse glassballs ---
+(function() {
+  if (localStorage.getItem('panel-init-v1')) return;
+  localStorage.setItem('panel-init-v1', '1');
+  // Small delay so panels have rendered
+  setTimeout(function() {
+    document.querySelectorAll('.floating-panel').forEach(function(panel) {
+      if (panel.classList.contains('minimizing')) return;
+      var ball = document.querySelector('.glassball[data-panel="' + panel.id + '"]');
+      if (!ball) return;
+      var rect = panel.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      ball.style.left = rect.left + 'px';
+      ball.style.top = rect.top + 'px';
+      ball.style.right = 'auto';
+      ball.style.bottom = 'auto';
+      ball.style.display = 'flex';
+      ball.classList.add('first-visit');
+      panel.classList.add('minimizing');
+    });
+  }, 100);
+})();
+
+// --- Pre-warm Kokoro TTS ---
+if (typeof window._kokoroPreload === 'function') {
+  setTimeout(window._kokoroPreload, 2000);
+}
 </script>
 </body>
 </html>
