@@ -123,7 +123,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.hh{background:#66dd88;border-color:#66dd88}
 .beat-step.on.oh{background:#ff8844;border-color:#ff8844}
 .beat-step.on.snare{background:#dd5566;border-color:#dd5566}
-.beat-step.on.conga{background:#cc8844;border-color:#cc8844}
+.beat-step.on.conga{background:#88aacc;border-color:#88aacc}
 .beat-step.on.melody{background:#88dd88;border-color:#88dd88}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
@@ -2359,7 +2359,7 @@ const seqPatterns = {
   melody:[1,0,0,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
 };
 const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#cc8844', melody:'#88dd88' };
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -2378,7 +2378,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Conga', melody:'Melody' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle', melody:'Melody' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -2564,32 +2564,29 @@ function seqPlaySnare() {
 
 function seqPlayConga() {
   const now = ctx.currentTime;
+  const freq = 6000 + Math.random() * 2000;
   const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(220, now);
-  osc.frequency.exponentialRampToValueAtTime(250, now + 0.02);
-  osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
-  env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.002);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
   osc.connect(env);
   env.connect(seqGain);
   osc.start(now);
-  osc.stop(now + 0.35);
+  osc.stop(now + 0.8);
   const osc2 = ctx.createOscillator();
   osc2.type = 'sine';
-  osc2.frequency.setValueAtTime(440, now);
-  osc2.frequency.exponentialRampToValueAtTime(500, now + 0.02);
-  osc2.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+  osc2.frequency.value = freq * 2.76;
   const env2 = ctx.createGain();
   env2.gain.setValueAtTime(0, now);
-  env2.gain.linearRampToValueAtTime(0.2, now + 0.008);
-  env2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+  env2.gain.linearRampToValueAtTime(0.08, now + 0.002);
+  env2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
   osc2.connect(env2);
   env2.connect(seqGain);
   osc2.start(now);
-  osc2.stop(now + 0.25);
+  osc2.stop(now + 0.5);
 }
 
 function seqPlayMelody() {
