@@ -247,6 +247,124 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .floating-panel .panel-header {
     cursor: default;
   }
+  .glassball { display: none !important; }
+  .minimize-btn { display: none; }
+  .resize-handle { display: none; }
+}
+
+/* Minimize button */
+.minimize-btn {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+  font-family: inherit;
+  margin-left: auto;
+}
+.minimize-btn:hover {
+  color: #ccc;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+  opacity: 0.25;
+  transition: opacity 0.2s;
+  pointer-events: auto;
+  z-index: 2;
+}
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid #666;
+  border-bottom: 2px solid #666;
+  border-radius: 0 0 2px 0;
+}
+.floating-panel:hover .resize-handle { opacity: 0.6; }
+.resize-handle:hover { opacity: 1 !important; }
+
+/* Minimize/restore transitions */
+.floating-panel {
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.floating-panel.minimizing {
+  transform: scale(0) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+  animation: none !important;
+}
+.floating-panel.restoring {
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Glassball */
+.glassball {
+  position: fixed;
+  z-index: 110;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.1) 0%, rgba(15,15,26,0.85) 60%, rgba(10,10,18,0.95) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(100,200,255,0.12);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 12px rgba(80,180,255,0.04);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8fffd9;
+  text-shadow: 0 0 8px rgba(0,255,200,0.15);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+  animation: ballFloat 4s ease-in-out infinite;
+  user-select: none;
+  overflow: hidden;
+}
+.glassball::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.glassball:hover {
+  transform: scale(1.2);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 25px rgba(80,180,255,0.1);
+  border-color: rgba(100,200,255,0.2);
+  animation: none;
+}
+.glassball:active {
+  transform: scale(0.92);
+}
+@keyframes ballFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
@@ -319,9 +437,10 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="grid" id="trackGrid"></div>
 
-<div class="noise-garden floating-panel" id="panel-noise">
+  <div class="noise-garden floating-panel" id="panel-noise">
   <div class="panel-header">
     <h2>Noise Garden</h2>
+    <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
   <p class="sub">Casual spoken chatter — news, weather, random facts. The DJ prevents overlapping voices.</p>
@@ -361,11 +480,15 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <div class="transcript-label">Transcript:</div>
     <div class="transcript-list" id="ngTranscriptList"></div>
   </div>
+  <div class="resize-handle"></div>
 </div>
 
-<div class="beat-sequencer floating-panel" id="panel-beats">
+<div class="glassball" data-panel="panel-noise" title="Noise Garden">NG</div>
+
+  <div class="beat-sequencer floating-panel" id="panel-beats">
   <div class="panel-header">
     <h2>Beat Machine</h2>
+    <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
   <div class="beat-controls">
@@ -382,11 +505,15 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <div class="beat-numbers">
     <div class="beat-nums" id="beatNums"></div>
   </div>
+  <div class="resize-handle"></div>
 </div>
 
-<div class="floating-panel" id="panel-reverb">
+<div class="glassball" data-panel="panel-beats" title="Beat Machine">BM</div>
+
+  <div class="floating-panel" id="panel-reverb">
   <div class="panel-header">
     <h2>Space &amp; Ceiling</h2>
+    <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
   <div class="panel-section">
@@ -405,7 +532,10 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
         <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
     </div>
   </div>
+  <div class="resize-handle"></div>
 </div>
+
+<div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
@@ -2480,58 +2610,124 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   document.getElementById('limitVal').textContent = v <= 0 ? 'Off' : Math.round(v * 40) + 'dB';
 });
 
-// --- Floating panel drag ---
+// --- Floating panel drag, minimize, resize ---
 (function() {
-  let dragTarget = null;
-  let offX = 0, offY = 0;
+  var dragTarget = null;
+  var offX = 0, offY = 0;
+  var startW = 0, startH = 0;
+  var isResizing = false;
 
-  function startDrag(e, panel) {
+  function startDrag(e, el) {
     if (window.innerWidth < 840) return;
-    const t = e.target;
+    var t = e.target;
     if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'BUTTON' || t.tagName === 'A' || t.tagName === 'TEXTAREA') return;
-    dragTarget = panel;
-    const rect = panel.getBoundingClientRect();
-    const cx = e.clientX || (e.touches && e.touches[0].clientX);
-    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    dragTarget = el;
+    var rect = el.getBoundingClientRect();
+    var cx = e.clientX || (e.touches && e.touches[0].clientX);
+    var cy = e.clientY || (e.touches && e.touches[0].clientY);
     if (cx == null) return;
     offX = cx - rect.left;
     offY = cy - rect.top;
+    el.classList.add('dragging');
+    e.preventDefault();
+  }
+
+  function startResize(e, panel) {
+    if (window.innerWidth < 840) return;
+    isResizing = true;
+    dragTarget = panel;
+    startW = panel.offsetWidth;
+    startH = panel.offsetHeight;
+    offX = e.clientX || (e.touches && e.touches[0].clientX);
+    offY = e.clientY || (e.touches && e.touches[0].clientY);
     panel.classList.add('dragging');
     e.preventDefault();
+    e.stopPropagation();
   }
 
   function moveDrag(e) {
     if (!dragTarget) return;
-    const cx = e.clientX || (e.touches && e.touches[0].clientX);
-    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    var cx = e.clientX || (e.touches && e.touches[0].clientX);
+    var cy = e.clientY || (e.touches && e.touches[0].clientY);
     if (cx == null) return;
-    const mw = window.innerWidth;
-    const mh = window.innerHeight;
-    const pw = dragTarget.offsetWidth;
-    const ph = dragTarget.offsetHeight;
-    dragTarget.style.left = Math.max(0, Math.min(cx - offX, mw - pw)) + 'px';
-    dragTarget.style.top = Math.max(0, Math.min(cy - offY, mh - ph)) + 'px';
+
+    if (isResizing) {
+      var dw = cx - offX;
+      var dh = cy - offY;
+      dragTarget.style.width = Math.max(240, startW + dw) + 'px';
+      dragTarget.style.height = Math.max(100, startH + dh) + 'px';
+    } else {
+      var mw = window.innerWidth;
+      var mh = window.innerHeight;
+      var pw = dragTarget.offsetWidth;
+      var ph = dragTarget.offsetHeight;
+      dragTarget.style.left = Math.max(0, Math.min(cx - offX, mw - pw)) + 'px';
+      dragTarget.style.top = Math.max(0, Math.min(cy - offY, mh - ph)) + 'px';
+    }
     dragTarget.style.right = 'auto';
     dragTarget.style.bottom = 'auto';
     e.preventDefault();
   }
 
-  function endDrag() {
-    if (dragTarget) {
-      dragTarget.classList.remove('dragging');
-      const id = dragTarget.id;
-      if (id) {
-        try { localStorage.setItem('panel-pos-' + id, JSON.stringify({ left: dragTarget.style.left, top: dragTarget.style.top })); } catch(e) {}
-      }
-      dragTarget = null;
-    }
+  function savePos(id) {
+    if (!id) return;
+    try { localStorage.setItem('panel-pos-' + id, JSON.stringify({ left: dragTarget.style.left, top: dragTarget.style.top })); } catch(e) {}
   }
 
+  function endDrag() {
+    if (!dragTarget) return;
+    dragTarget.classList.remove('dragging');
+    var id = dragTarget.id;
+    if (id && !isResizing) savePos(id);
+    if (id && isResizing) {
+      try { localStorage.setItem('panel-size-' + id, JSON.stringify({ w: dragTarget.style.width, h: dragTarget.style.height })); } catch(e) {}
+    }
+    if (dragTarget.classList.contains('glassball')) {
+      var pid = dragTarget.dataset.panel;
+      if (pid) {
+        try { localStorage.setItem('panel-pos-glass-' + pid, JSON.stringify({ left: dragTarget.style.left, top: dragTarget.style.top })); } catch(e) {}
+      }
+    }
+    dragTarget = null;
+    isResizing = false;
+  }
+
+  // --- Floating panels ---
   document.querySelectorAll('.floating-panel').forEach(function(panel) {
     var handle = panel.querySelector('.panel-header');
     if (!handle) return;
     handle.addEventListener('mousedown', function(e) { startDrag(e, panel); });
     handle.addEventListener('touchstart', function(e) { startDrag(e, panel); }, { passive: false });
+
+    // Resize handle
+    var rh = panel.querySelector('.resize-handle');
+    if (rh) {
+      rh.addEventListener('mousedown', function(e) { startResize(e, panel); });
+      rh.addEventListener('touchstart', function(e) { startResize(e, panel); }, { passive: false });
+    }
+
+    // Minimize
+    var minBtn = panel.querySelector('.minimize-btn');
+    if (minBtn) {
+      minBtn.addEventListener('click', function(e) {
+        var ball = document.querySelector('.glassball[data-panel="' + panel.id + '"]');
+        if (!ball) return;
+        var r = panel.getBoundingClientRect();
+        ball.style.left = r.left + 'px';
+        ball.style.top = r.top + 'px';
+        ball.style.right = 'auto';
+        ball.style.bottom = 'auto';
+        ball.style.display = 'flex';
+        ball.style.animation = 'none';
+        ball.offsetHeight; // force reflow
+        ball.style.animation = '';
+        panel.classList.add('minimizing');
+        try { localStorage.setItem('panel-min-' + panel.id, '1'); } catch(e2) {}
+        e.stopPropagation();
+      });
+    }
+
+    // Restore saved position
     var id = panel.id;
     if (id) {
       try {
@@ -2542,6 +2738,61 @@ document.getElementById('limitSlider').addEventListener('input', function() {
           panel.style.top = pos.top;
           panel.style.right = 'auto';
           panel.style.bottom = 'auto';
+        }
+        var size = localStorage.getItem('panel-size-' + id);
+        if (size) {
+          var s = JSON.parse(size);
+          if (s.w) panel.style.width = s.w;
+          if (s.h) panel.style.height = s.h;
+        }
+      } catch(e) {}
+    }
+  });
+
+  // --- Glassballs ---
+  document.querySelectorAll('.glassball').forEach(function(ball) {
+    ball.addEventListener('mousedown', function(e) { startDrag(e, ball); });
+    ball.addEventListener('touchstart', function(e) { startDrag(e, ball); }, { passive: false });
+
+    ball.addEventListener('click', function(e) {
+      var panel = document.getElementById(ball.dataset.panel);
+      if (!panel) return;
+      var br = ball.getBoundingClientRect();
+
+      // Use saved glassball position if available, else ball's current position
+      var pid = ball.dataset.panel;
+      var savedGB = localStorage.getItem('panel-pos-glass-' + pid);
+      if (savedGB) {
+        try { var p = JSON.parse(savedGB); panel.style.left = p.left; panel.style.top = p.top; panel.style.right = 'auto'; panel.style.bottom = 'auto'; } catch(e3) {}
+      } else {
+        panel.style.left = br.left + 'px';
+        panel.style.top = br.top + 'px';
+        panel.style.right = 'auto';
+        panel.style.bottom = 'auto';
+      }
+
+      panel.classList.remove('minimizing');
+      panel.classList.add('restoring');
+      ball.style.display = 'none';
+      try { localStorage.setItem('panel-min-' + pid, '0'); } catch(e4) {}
+      panel.addEventListener('animationend', function handler() {
+        panel.classList.remove('restoring');
+        panel.removeEventListener('animationend', handler);
+      }, { once: true });
+      e.stopPropagation();
+    });
+
+    // Restore glassball position
+    var pid = ball.dataset.panel;
+    if (pid) {
+      try {
+        var savedGB = localStorage.getItem('panel-pos-glass-' + pid);
+        if (savedGB) {
+          var p = JSON.parse(savedGB);
+          ball.style.left = p.left;
+          ball.style.top = p.top;
+          ball.style.right = 'auto';
+          ball.style.bottom = 'auto';
         }
       } catch(e) {}
     }
