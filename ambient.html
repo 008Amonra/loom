@@ -85,6 +85,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .wrap{padding:20px 16px 60px}
   h1{font-size:1.4rem}
   .grid{grid-template-columns:1fr}
+  .beat-grid{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .beat-numbers{overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 
 /* Noise Garden */
@@ -114,7 +116,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
 .beat-row{display:flex;align-items:center;gap:4px}
 .beat-label{width:32px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:6px}
-.beat-steps{display:grid;grid-template-columns:repeat(16,24px);gap:3px}
+.beat-steps{display:grid;grid-template-columns:repeat(32,24px);gap:3px}
 .beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0;font-size:0.5rem;font-family:inherit;color:#555}
 .beat-step:hover{border-color:#555}
 .beat-step.on.kick{background:#4488ff;border-color:#4488ff}
@@ -158,6 +160,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .tr-time{color:#555;flex-shrink:0;font-size:0.65rem;min-width:50px}
 .tr-lang{color:#4488ff;flex-shrink:0;font-size:0.65rem;min-width:22px;text-transform:uppercase}
 .tr-text{color:#999;overflow:hidden;word-break:break-word}
+.kokoro-status{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#555;margin-top:8px;min-height:20px}
+.kokoro-status .dot{width:6px;height:6px;border-radius:50%;background:#333;flex-shrink:0}
+.kokoro-status .dot.loading{background:#ff8844;animation:pulse 1s infinite}
+.kokoro-status .dot.ready{background:#66dd88}
+.kokoro-status .dot.error{background:#dd4444}
+.kokoro-status .kokoro-label{color:#4488ff;opacity:0.7;font-weight:600}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -167,6 +175,17 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>
+<script type="importmap">
+{
+  "imports": {
+    "kokoro-js": "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.js",
+    "@huggingface/transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/dist/transformers.js",
+    "phonemizer": "https://cdn.jsdelivr.net/npm/phonemizer@1.2.1/dist/phonemizer.js",
+    "path": "data:text/javascript,export default {}",
+    "fs/promises": "data:text/javascript,export default {}"
+  }
+}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -232,6 +251,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <label style="opacity:0.5;font-size:0.75rem">no proxy needed</label>
   </div>
 
+  <div class="kokoro-status" id="kokoroStatus">
+    <span class="dot" id="kokoroDot"></span>
+    <span id="kokoroMsg">Kokoro TTS loading…</span>
+  </div>
+
   <div class="noise-buttons">
     <button class="noise-btn" data-noise="news">&#x1F4F0; News</button>
     <button class="noise-btn" data-noise="weather">&#x26C5; Weather</button>
@@ -255,9 +279,6 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </div>
 
 <div class="beat-sequencer">
-  <h2>Beat Machine</h2>
-  <p class="sub">4-to-the-floor step sequencer — click cells to toggle</p>
-
   <div class="beat-controls">
     <button id="seqBtn" class="noise-btn">&#x25B6; Start</button>
     <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
@@ -298,6 +319,52 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 </div>
 
+<script type="module">
+import { KokoroTTS } from 'kokoro-js';
+
+let _kokoro = null;
+let _kokoroInit = null;
+
+window._kokoroSpeak = async function(text) {
+  if (!_kokoro) {
+    if (!_kokoroInit) {
+      const s = document.getElementById('kokoroStatus');
+      const d = document.getElementById('kokoroDot');
+      const m = document.getElementById('kokoroMsg');
+      if (s) s.style.display = 'flex';
+      if (d) d.className = 'dot loading';
+      if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
+      _kokoroInit = (async () => {
+        try {
+          _kokoro = await KokoroTTS.from_pretrained(
+            'onnx-community/Kokoro-82M-v1.0-ONNX',
+            { dtype: 'q8', device: 'wasm' }
+          );
+          if (d) d.className = 'dot ready';
+          if (m) m.textContent = 'Kokoro TTS ready';
+          return _kokoro;
+        } catch (err) {
+          console.error('Kokoro init failed:', err);
+          if (d) d.className = 'dot error';
+          if (m) m.textContent = 'Kokoro unavailable, using browser speech';
+          return null;
+        }
+      })();
+    }
+    _kokoro = await _kokoroInit;
+  }
+  if (!_kokoro) return null;
+  try {
+    const result = await _kokoro.generate(text, { voice: 'af_heart' });
+    return result;
+  } catch (err) {
+    console.error('Kokoro generate failed:', err);
+    return null;
+  }
+};
+
+window._kokoroReady = function() { return !!_kokoro; };
+</script>
 <script>
 const TRACK_DEFS = [
   { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff', defaultPan:0,
@@ -1651,6 +1718,38 @@ function ngSpeak(text, lang) {
   if (!ngSpeaking) ngProcessQueue();
 }
 
+let kokoroLP = null;
+let kokoroGainNode = null;
+
+function kokoroInitAudioChain() {
+  if (kokoroLP) return;
+  initAudio();
+  kokoroLP = ctx.createBiquadFilter();
+  kokoroLP.type = 'lowpass';
+  kokoroLP.frequency.value = 2200;
+  kokoroLP.Q.value = 1.2;
+  kokoroGainNode = ctx.createGain();
+  kokoroGainNode.gain.value = ngVolume * 0.6;
+  kokoroLP.connect(kokoroGainNode);
+  kokoroGainNode.connect(masterGain);
+}
+
+async function ngSpeakKokoro(text) {
+  const result = await window._kokoroSpeak(text);
+  if (!result) return false;
+  const audioData = result.audio;
+  const sr = result.sampling_rate || 24000;
+  kokoroInitAudioChain();
+  if (ctx.state === 'suspended') await ctx.resume();
+  const buf = ctx.createBuffer(1, audioData.length, sr);
+  buf.getChannelData(0).set(audioData);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(kokoroLP);
+  src.start();
+  return new Promise(resolve => { src.onended = resolve; });
+}
+
 function ngProcessQueue() {
   if (ngMuted) {
     ngSpeaking = false;
@@ -1669,25 +1768,30 @@ function ngProcessQueue() {
   ngInd.className = 'indicator speaking';
   ngText.textContent = item.text.slice(0, 80) + (item.text.length > 80 ? '...' : '');
 
-  const utter = new SpeechSynthesisUtterance(item.text);
-  utter.lang = 'en-US';
-  utter.rate = 0.78;
-  utter.pitch = 1.0;
-  utter.volume = ngVolume;
-  const voices = speechSynthesis.getVoices();
-  const lady = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria/i.test(v.name)) || voices.find(v => /google|microsoft/i.test(v.uri || v.name) && !/male|david|mark|james/i.test(v.name));
-  if (lady) utter.voice = lady;
-  utter.onend = () => {
-    ngTranscript.unshift({ text: item.text, lang: item.lang, time: new Date().toLocaleTimeString() });
+  const done = () => {
+    ngTranscript.unshift({ text: item.text, lang: 'en', time: new Date().toLocaleTimeString() });
     if (ngTranscript.length > 10) ngTranscript.pop();
     ngTranscriptList.innerHTML = ngTranscript.map(e =>
       `<div class="tr-item"><span class="tr-time">${e.time}</span><span class="tr-lang">${e.lang}</span><span class="tr-text">${e.text}</span></div>`
     ).join('');
-    setTimeout(ngProcessQueue, 300);
+    setTimeout(ngProcessQueue, 400);
   };
-  utter.onerror = () => { setTimeout(ngProcessQueue, 300) };
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
+
+  ngSpeakKokoro(item.text).then(ok => {
+    if (ok) { done(); return; }
+    const utter = new SpeechSynthesisUtterance(item.text);
+    utter.lang = 'en-US';
+    utter.rate = 0.5;
+    utter.pitch = 0.85;
+    utter.volume = Math.min(ngVolume, 0.35);
+    const voices = speechSynthesis.getVoices();
+    const lady = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria/i.test(v.name));
+    if (lady) utter.voice = lady;
+    utter.onend = done;
+    utter.onerror = done;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  });
 }
 
 function ngUpdateQueue() {
@@ -1861,6 +1965,7 @@ document.getElementById('ngDepth').addEventListener('input', function() {
 document.getElementById('ngVol').addEventListener('input', function() {
   ngVolume = parseFloat(this.value);
   document.getElementById('ngVolVal').textContent = Math.round(ngVolume * 100);
+  if (kokoroGainNode) kokoroGainNode.gain.value = ngVolume * 0.6;
 });
 document.getElementById('ngVol').value = '0.5';
 document.getElementById('ngVolVal').textContent = '50';
