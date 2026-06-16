@@ -509,7 +509,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="study-note">
   <strong>Example Study: What an AI Agent Can Build in a Few Sessions.</strong><br>
-  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Twenty-two parallel sound sources — eighteen synthesized with the Web Audio API, plus four slots where you can drop your own audio files. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Twenty-five parallel sound sources — twenty-one synthesized with the Web Audio API, plus four slots where you can drop your own audio files. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
@@ -708,6 +708,8 @@ const TRACK_DEFS = [
     desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
   { id:'tambourine', icon:'&#x1F3BA;', name:'Tambourine', color:'#ddbb44', defaultPan:0.4,
     desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
+  { id:'tb303',      icon:'&#x1F50A;', name:'TB-303',      color:'#ff6644', defaultPan: -0.3,
+    desc:'Acid bassline with resonant filter sweeps — squelchy, sequenced, blues-scale steps' },
   { id:'sample1',    icon:'&#x1F4E4;', name:'Sample 1',    color:'#aa88dd', defaultPan:0,
     desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
   { id:'sample2',    icon:'&#x1F4E5;', name:'Sample 2',    color:'#aa88dd', defaultPan:0,
@@ -719,10 +721,10 @@ const TRACK_DEFS = [
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, sample1:0, sample2:0, sample3:0, sample4:0 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, sample1:0, sample2:0, sample3:0, sample4:0 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, sample1:0, sample2:0, sample3:0, sample4:0 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, sample1:0, sample2:0, sample3:0, sample4:0 },
 };
 
 let ctx = null;
@@ -1772,6 +1774,64 @@ function createTambourine() {
   return { gain, start() { shake() }, stop() { clearTimeout(interval) } };
 }
 
+// --- TB-303 Acid Bassline ---
+function createTB303() {
+  const outputGain = ctx.createGain();
+  outputGain.gain.value = 0.45;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 250;
+  filter.Q.value = 8;
+  filter.connect(outputGain);
+  const modAmount = ctx.createGain();
+  modAmount.gain.value = 1800;
+  modAmount.connect(filter.frequency);
+  const filterEnv = ctx.createGain();
+  filterEnv.connect(modAmount);
+  let interval = null;
+  let step = 0;
+  const blues = [45, 48, 50, 51, 53, 55, 57, 60, 62, 63, 65, 67];
+  function playNote() {
+    const now = ctx.currentTime;
+    const bpm = 100 + Math.random() * 30;
+    const beat16 = 60 / bpm / 4;
+    const hit = step % 4 === 0 ? 0.9 : 0.3 + Math.random() * 0.3;
+    if (Math.random() < hit) {
+      const note = blues[Math.floor(Math.random() * blues.length)];
+      const freq = 440 * Math.pow(2, (note - 69) / 12);
+      const accent = Math.random() < 0.2;
+      const osc = ctx.createOscillator();
+      osc.type = Math.random() < 0.65 ? 'sawtooth' : 'square';
+      osc.frequency.setValueAtTime(freq, now);
+      if (Math.random() < 0.12) {
+        const n2 = blues[Math.floor(Math.random() * blues.length)];
+        osc.frequency.linearRampToValueAtTime(440 * Math.pow(2, (n2 - 69) / 12), now + beat16 * 2);
+      }
+      const volEnv = ctx.createGain();
+      const vol = accent ? 0.7 : 0.25 + Math.random() * 0.25;
+      volEnv.gain.setValueAtTime(0, now);
+      volEnv.gain.linearRampToValueAtTime(vol, now + 0.003);
+      volEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.2 + Math.random() * 0.2);
+      osc.connect(volEnv);
+      volEnv.connect(filter);
+      filterEnv.gain.cancelScheduledValues(now);
+      filterEnv.gain.setValueAtTime(0, now);
+      filterEnv.gain.linearRampToValueAtTime(accent ? 0.95 : 0.4 + Math.random() * 0.4, now + 0.015);
+      filterEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.12 + Math.random() * 0.1);
+      if (accent) {
+        filter.Q.setValueAtTime(8, now);
+        filter.Q.linearRampToValueAtTime(14, now + 0.05);
+        filter.Q.exponentialRampToValueAtTime(8, now + 0.2);
+      }
+      osc.start(now);
+      osc.stop(now + beat16 * 2);
+    }
+    step = (step + 1) % 16;
+    interval = setTimeout(playNote, beat16 * 1000);
+  }
+  return { gain: outputGain, start() { playNote() }, stop() { clearTimeout(interval) } };
+}
+
 // --- User sample tracks ---
 const sampleBuffers = {};
 
@@ -1820,6 +1880,7 @@ const GENERATORS = {
   perc: createPerc,
   melody: createMelody,
   tambourine: createTambourine,
+  tb303: createTB303,
   sample1: () => createSample('sample1'),
   sample2: () => createSample('sample2'),
   sample3: () => createSample('sample3'),
