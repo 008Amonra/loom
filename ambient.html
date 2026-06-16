@@ -645,7 +645,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </div>
 
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
-<div class="glassball pp-ball" id="ppBall" title="Support us" style="background:#003087;border-color:#003087;font-size:1.1rem;font-weight:900;color:#fff;font-family:Arial,sans-serif;cursor:pointer">P</div>
+<div class="glassball pp-ball" id="ppBall" title="Support us" style="display:flex;background:#003087;border-color:#003087;font-size:1.1rem;font-weight:900;color:#fff;font-family:Arial,sans-serif;cursor:pointer">P</div>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
@@ -2783,7 +2783,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
       try { localStorage.setItem('panel-size-' + id, JSON.stringify({ w: dragTarget.style.width, h: dragTarget.style.height })); } catch(e) {}
     }
     if (dragTarget.classList.contains('glassball')) {
-      var pid = dragTarget.dataset.panel;
+      var pid = dragTarget.dataset.panel || dragTarget.id;
       if (pid) {
         try { localStorage.setItem('panel-pos-glass-' + pid, JSON.stringify({ left: dragTarget.style.left, top: dragTarget.style.top })); } catch(e) {}
       }
@@ -2907,7 +2907,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
     });
 
     // Restore glassball position
-    var pid = ball.dataset.panel;
+    var pid = ball.dataset.panel || ball.id;
     if (pid) {
       try {
         var savedGB = localStorage.getItem('panel-pos-glass-' + pid);
