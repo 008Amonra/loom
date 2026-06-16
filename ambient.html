@@ -116,8 +116,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
 .beat-row{display:flex;align-items:center;gap:4px}
 .beat-label{width:32px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:6px}
-.beat-steps{display:grid;grid-template-columns:repeat(32,24px);gap:3px}
-.beat-step{width:24px;height:24px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0;font-size:0.5rem;font-family:inherit;color:#555}
+.beat-steps{display:grid;grid-template-columns:repeat(16,28px);gap:3px}
+.beat-step{width:28px;height:28px;border-radius:4px;border:1px solid #2a2a3a;background:#1a1a2e;cursor:pointer;transition:all .1s;padding:0;font-size:0.65rem;font-family:inherit;color:#555}
 .beat-step:hover{border-color:#555}
 .beat-step.on.kick{background:#4488ff;border-color:#4488ff}
 .beat-step.on.hh{background:#66dd88;border-color:#66dd88}
@@ -138,11 +138,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-surprise{background:#2a2a3a;color:#dd88ff;font-size:0.75rem;padding:3px 10px;border:1px solid #8844aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-surprise:hover{background:#3a3a4a;border-color:#aa66cc}
 .seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
-.beat-step.on.melody{font-size:0.55rem;line-height:24px;text-align:center;color:#1a1a2e;font-weight:700}
+.beat-step.on.melody{font-size:0.65rem;line-height:28px;text-align:center;color:#1a1a2e;font-weight:700}
 .beat-step[data-row="melody"]{color:#445544}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
 .beat-nums{display:flex;gap:3px}
-.beat-num{width:24px;font-size:0.65rem;color:#444;text-align:center;flex-shrink:0}
+.beat-num{width:28px;font-size:0.65rem;color:#444;text-align:center;flex-shrink:0}
 .noise-dj{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0a0a14;border:1px solid #1a1a2e;border-radius:8px;font-size:0.82rem;min-height:40px}
 .noise-dj .indicator{width:8px;height:8px;border-radius:50%;background:#333;flex-shrink:0}
 .noise-dj .indicator.speaking{background:#ff8844;animation:pulse 1s infinite}
@@ -258,6 +258,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   }
   .glassball { display: none !important; }
   .minimize-btn { display: none; }
+  .embed-switch { display: none; }
   .resize-handle { display: none; }
 }
 
@@ -278,6 +279,85 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .minimize-btn:hover {
   color: #ccc;
   background: rgba(255,255,255,0.06);
+}
+
+.embed-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: #666;
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  font-family: inherit;
+  border: 1px solid transparent;
+  background: none;
+  line-height: 1;
+  margin-left: auto;
+}
+.embed-switch:hover {
+  color: #aaa;
+  background: rgba(255,255,255,0.04);
+  border-color: #333;
+}
+.embed-switch .track {
+  position: relative;
+  width: 24px;
+  height: 12px;
+  border-radius: 6px;
+  background: #2a2a3a;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.embed-switch .track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+  transition: transform 0.2s, background 0.2s;
+}
+.embed-switch.embedded .track {
+  background: #1a3a5a;
+}
+.embed-switch.embedded .track::after {
+  transform: translateX(12px);
+  background: #4488ff;
+}
+.embed-switch .label-on,
+.embed-switch .label-off {
+  transition: color 0.2s;
+}
+.embed-switch .label-off { color: #666; }
+.embed-switch .label-on { color: #333; }
+.embed-switch.embedded .label-off { color: #333; }
+.embed-switch.embedded .label-on { color: #4488ff; }
+
+.floating-panel.embedded {
+  position: static !important;
+  animation: none !important;
+  margin-top: 24px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: #0f0f1a;
+  box-shadow: none;
+  border: 1px solid #2a2a3a;
+  min-width: 0;
+  transform: none !important;
+}
+.floating-panel.embedded .panel-header {
+  cursor: default;
+}
+.floating-panel.embedded .minimize-btn,
+.floating-panel.embedded .resize-handle,
+.floating-panel.embedded .drag-dots {
+  display: none;
 }
 
 /* Resize handle */
@@ -471,6 +551,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <div class="noise-garden floating-panel" id="panel-noise">
   <div class="panel-header">
     <h2>Noise Garden</h2>
+    <button class="embed-switch" title="Toggle float/embed">
+      <span class="label-on">Float</span>
+      <span class="track"></span>
+      <span class="label-off">Embed</span>
+    </button>
     <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
@@ -519,6 +604,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <div class="beat-sequencer floating-panel" id="panel-beats">
   <div class="panel-header">
     <h2>Beat Machine</h2>
+    <button class="embed-switch" title="Toggle float/embed">
+      <span class="label-on">Float</span>
+      <span class="track"></span>
+      <span class="label-off">Embed</span>
+    </button>
     <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
@@ -546,6 +636,11 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <div class="floating-panel" id="panel-reverb">
   <div class="panel-header">
     <h2>Space &amp; Ceiling</h2>
+    <button class="embed-switch" title="Toggle float/embed">
+      <span class="label-on">Float</span>
+      <span class="track"></span>
+      <span class="label-off">Embed</span>
+    </button>
     <button class="minimize-btn" title="Minimize to glassball">─</button>
     <span class="drag-dots">⠿</span>
   </div>
@@ -2368,19 +2463,19 @@ let seqGain = null;
 let beatSurpriseTimer = null;
 let beatSurpriseStop = null;
 const seqPatterns = {
-  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  melody:[1,0,0,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  melody:[1,0,0,0, 0,1,0,0, 0,0,0,0, 1,0,0,0],
 };
 const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody'];
 const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
-const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C','C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
+const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
 const SEQ_MUTE = 'seqMute';
 function seqToggleMute(row) {
   seqMuted[row] = !seqMuted[row];
@@ -2388,7 +2483,7 @@ function seqToggleMute(row) {
   if (el) el.classList.toggle('muted');
 }
 let seqGate44 = false;
-const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53];
+const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53];
 
 function seqBuildGrid() {
   const grid = document.getElementById('beatGrid');
@@ -2399,7 +2494,7 @@ function seqBuildGrid() {
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 16; i++) {
       const btn = document.createElement('button');
       const extra = row === 'melody' ? ` data-note="${seqNoteNames[i]}"` : '';
       btn.className = 'beat-step' + (seqPatterns[row][i] ? ' on ' + row : '');
@@ -2417,7 +2512,7 @@ function seqBuildGrid() {
   });
   // Beat numbers
   const nums = document.getElementById('beatNums');
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 16; i++) {
     const n = document.createElement('span');
     n.className = 'beat-num';
     n.textContent = i % 4 === 0 ? (i / 4 + 1) : '\u00B7';
@@ -2434,28 +2529,31 @@ seqBuildGrid();
 function seqRandomize() {
   seqRows.forEach(row => {
     const pat = [];
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 16; i++) {
       let on = 0;
       switch (row) {
         case 'kick':
-          if (i % 4 === 0 && Math.random() < 0.8) on = 1;
-          else if (Math.random() < 0.12) on = 1;
+          if (i % 4 === 0 && Math.random() < 0.85) on = 1;
+          else if (i % 4 === 2 && Math.random() < 0.3) on = 1;
           break;
         case 'snare':
-          if ((i % 8 === 4 || i % 8 === 12) && Math.random() < 0.85) on = 1;
-          else if (Math.random() < 0.08) on = 1;
+          if (i % 8 === 4 && Math.random() < 0.9) on = 1;
+          else if (Math.random() < 0.06) on = 1;
           break;
         case 'hh':
-          if (Math.random() < 0.55) on = 1;
+          if (i % 2 === 1 && Math.random() < 0.35) on = 1;
+          else if (i % 4 === 0 && Math.random() < 0.2) on = 1;
           break;
         case 'oh':
-          if (Math.random() < 0.04 + (i % 4 === 0 ? 0.06 : 0)) on = 1;
+          if (i % 8 === 0 && Math.random() < 0.3) on = 1;
+          else if (Math.random() < 0.03) on = 1;
           break;
         case 'conga':
-          if (Math.random() < 0.15 + (i % 2 === 0 ? 0.1 : 0)) on = 1;
+          if (i % 4 === 1 && Math.random() < 0.35) on = 1;
+          else if (i % 4 === 3 && Math.random() < 0.2) on = 1;
           break;
         case 'melody':
-          if (Math.random() < 0.12) on = 1;
+          if (Math.random() < 0.1) on = 1;
           break;
       }
       pat.push(on);
@@ -2468,7 +2566,7 @@ function seqRandomize() {
 }
 function seqUpdateGrid() {
   seqRows.forEach(row => {
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 16; i++) {
       const btn = document.querySelector('.beat-step[data-row="' + row + '"][data-step="' + i + '"]');
       if (!btn) continue;
       const isOn = seqPatterns[row][i];
@@ -2634,7 +2732,7 @@ function seqPlayStep() {
   if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody();
   document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
   document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
-  seqStep = (seqStep + 1) % 32;
+  seqStep = (seqStep + 1) % 16;
   seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
 }
 
@@ -2844,6 +2942,28 @@ document.getElementById('limitSlider').addEventListener('input', function() {
         e.stopPropagation();
       });
     }
+
+    // Embed toggle
+    var embedBtn = panel.querySelector('.embed-switch');
+    if (embedBtn) {
+      embedBtn.addEventListener('click', function(e) {
+        panel.classList.toggle('embedded');
+        embedBtn.classList.toggle('embedded');
+        try { localStorage.setItem('panel-embed-' + panel.id, panel.classList.contains('embedded') ? '1' : '0'); } catch(e3) {}
+        e.stopPropagation();
+      });
+    }
+
+    // Restore embedded state
+    (function(pid) {
+      try {
+        if (localStorage.getItem('panel-embed-' + pid) === '1') {
+          panel.classList.add('embedded');
+          var eb = panel.querySelector('.embed-switch');
+          if (eb) eb.classList.add('embedded');
+        }
+      } catch(e) {}
+    })(panel.id);
 
     // Restore saved position
     var id = panel.id;
