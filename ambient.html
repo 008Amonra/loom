@@ -163,14 +163,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .tr-time{color:#555;flex-shrink:0;font-size:0.65rem;min-width:50px}
 .tr-lang{color:#4488ff;flex-shrink:0;font-size:0.65rem;min-width:22px;text-transform:uppercase}
 .tr-text{color:#999;overflow:hidden;word-break:break-word}
-.kokoro-status{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#555;margin-top:8px;min-height:20px}
-.kokoro-status .dot{width:6px;height:6px;border-radius:50%;background:#333;flex-shrink:0}
-.kokoro-status .dot.loading{background:#ff8844;animation:pulse 1s infinite}
-.kokoro-status .dot.ready{background:#66dd88}
-.kokoro-status .dot.error{background:#dd4444}
-.kokoro-status .kokoro-label{color:#4488ff;opacity:0.7;font-weight:600}
-.kokoro-retry{background:none;border:1px solid #555;color:#aaa;font-size:0.65rem;padding:1px 8px;border-radius:4px;cursor:pointer;font-family:inherit;margin-left:4px;transition:all .15s}
-.kokoro-retry:hover{background:#2a2a3a;color:#fff;border-color:#888}
+.tts-status{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#555;margin-top:8px}
+.tts-status .dot{width:6px;height:6px;border-radius:50%;background:#66dd88;flex-shrink:0}
 
 /* Floating draggable panels */
 .floating-panel {
@@ -481,17 +475,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>
-<script type="importmap">
-{
-  "imports": {
-    "kokoro-js": "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.js",
-    "@huggingface/transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/dist/transformers.js",
-    "phonemizer": "https://cdn.jsdelivr.net/npm/phonemizer@1.2.1/dist/phonemizer.js",
-    "path": "data:text/javascript,export default {}",
-    "fs/promises": "data:text/javascript,export default {}"
-  }
-}
-</script>
+
 </head>
 <body>
 <div class="loading-overlay" id="loadingOverlay">
@@ -571,10 +555,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <label style="opacity:0.5;font-size:0.75rem">no proxy needed</label>
   </div>
 
-  <div class="kokoro-status" id="kokoroStatus">
-    <span class="dot" id="kokoroDot"></span>
-    <span id="kokoroMsg">Kokoro TTS loading…</span>
-  </div>
+  <div class="tts-status"><span class="dot"></span> TTS: browser voice</div>
 
   <div class="noise-buttons">
     <button class="noise-btn" data-noise="news">&#x1F4F0; News</button>
@@ -664,90 +645,15 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </div>
 
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
+<div class="glassball pp-ball" id="ppBall" title="Support us" style="background:#003087;border-color:#003087;font-size:1.1rem;font-weight:900;color:#fff;font-family:Arial,sans-serif;cursor:pointer">P</div>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
-   <span class="pp-icon">
-     <svg viewBox="0 0 52 32" width="36" height="22" style="vertical-align:middle;margin-left:8px">
-       <rect width="52" height="32" rx="4" fill="#003087"/>
-       <text x="8" y="23" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="20" fill="#ffffff">P</text>
-       <text x="22" y="23" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="20" fill="#009cde">P</text>
-     </svg>
-   </span>
 </div>
 
 </div>
 
-<script type="module">
-import { KokoroTTS } from 'kokoro-js';
 
-let _kokoro = null;
-let _kokoroInit = null;
-let _kokoroFailed = false;
-
-window._kokoroPreload = function() {
-  if (!_kokoroInit && !_kokoroFailed) {
-    window._kokoroSpeak('').catch(function(){});
-  }
-};
-
-window._kokoroSpeak = async function(text) {
-  if (!_kokoro) {
-    if (!_kokoroInit) {
-      const s = document.getElementById('kokoroStatus');
-      const d = document.getElementById('kokoroDot');
-      const m = document.getElementById('kokoroMsg');
-      if (s) s.style.display = 'flex';
-      if (d) d.className = 'dot loading';
-      if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
-      _kokoroInit = (async () => {
-        const timeout = new Promise(function(_, reject) { setTimeout(function() { reject(new Error('Download timed out (>240s)')); }, 240000); });
-        try {
-          _kokoro = await Promise.race([
-            KokoroTTS.from_pretrained(
-              'onnx-community/Kokoro-82M-v1.0-ONNX',
-              { dtype: 'q8', device: 'wasm' }
-            ),
-            timeout
-          ]);
-          if (d) d.className = 'dot ready';
-          if (m) m.textContent = 'Kokoro TTS ready';
-          return _kokoro;
-        } catch (err) {
-          console.error('Kokoro init failed:', err);
-          _kokoroFailed = true;
-          if (d) d.className = 'dot error';
-          if (m) m.innerHTML = 'Kokoro unavailable <button class="kokoro-retry" onclick="window._kokoroRetry()">retry</button>';
-          return null;
-        }
-      })();
-    }
-    _kokoro = await _kokoroInit;
-  }
-  if (!_kokoro) return null;
-  if (!text) return true;
-  try {
-    const result = await _kokoro.generate(text, { voice: 'af_heart' });
-    return result;
-  } catch (err) {
-    console.error('Kokoro generate failed:', err);
-    return null;
-  }
-};
-
-window._kokoroRetry = function() {
-  _kokoro = null;
-  _kokoroInit = null;
-  _kokoroFailed = false;
-  const d = document.getElementById('kokoroDot');
-  const m = document.getElementById('kokoroMsg');
-  if (d) d.className = 'dot loading';
-  if (m) m.textContent = 'Downloading Kokoro TTS model (~150MB)…';
-  window._kokoroSpeak('').catch(function(){});
-};
-
-window._kokoroReady = function() { return !!_kokoro; };
-</script>
 <script>
 const TRACK_DEFS = [
   { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff', defaultPan:0,
@@ -2144,33 +2050,22 @@ function ngSpeak(text, lang) {
   if (!ngSpeaking) ngProcessQueue();
 }
 
-let kokoroLP = null;
-
-function kokoroInitAudioChain() {
-  if (kokoroLP) return;
-  initAudio();
-  initTtsGain();
-  kokoroLP = ctx.createBiquadFilter();
-  kokoroLP.type = 'lowpass';
-  kokoroLP.frequency.value = 2200;
-  kokoroLP.Q.value = 1.2;
-  kokoroLP.connect(ttsGainNode);
-}
-
-async function ngSpeakKokoro(text) {
-  const result = await window._kokoroSpeak(text);
-  if (!result) return false;
-  const audioData = result.audio;
-  const sr = result.sampling_rate || 24000;
-  kokoroInitAudioChain();
-  if (ctx.state === 'suspended') await ctx.resume();
-  const buf = ctx.createBuffer(1, audioData.length, sr);
-  buf.getChannelData(0).set(audioData);
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  src.connect(kokoroLP);
-  src.start();
-  return new Promise(resolve => { src.onended = resolve; });
+function ngSpeakKokoro(text) {
+  return new Promise(function(resolve) {
+    if (!window.speechSynthesis) { resolve(false); return; }
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 0.6;
+    utter.pitch = 1.0;
+    utter.volume = parseFloat(document.getElementById('ngVol').value) || 0.5;
+    var voices = speechSynthesis.getVoices();
+    var preferred = voices && voices.find ? voices.find(function(v) { return /female|zira|hazel|samantha|karen|susan|victoria|google.*english/i.test(v.name); }) : null;
+    if (preferred) utter.voice = preferred;
+    utter.onend = function() { resolve(true); };
+    utter.onerror = function() { resolve(false); };
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  });
 }
 
 function ngProcessQueue() {
@@ -2200,20 +2095,9 @@ function ngProcessQueue() {
     setTimeout(ngProcessQueue, 400);
   };
 
-  ngSpeakKokoro(item.text).then(ok => {
+  ngSpeakKokoro(item.text).then(function(ok) {
     if (ok) { done(); return; }
-    const utter = new SpeechSynthesisUtterance(item.text);
-    utter.lang = 'en-US';
-    utter.rate = 0.6;
-    utter.pitch = 1.0;
-    utter.volume = ngVolume;
-    const voices = speechSynthesis.getVoices();
-    const preferred = voices.find(v => /female|zira|hazel|samantha|karen|susan|victoria|google.*english/i.test(v.name));
-    if (preferred) utter.voice = preferred;
-    utter.onend = done;
-    utter.onerror = done;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+    done();
   });
 }
 
@@ -2994,6 +2878,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
 
     ball.addEventListener('click', function(e) {
       ball.classList.remove('first-visit');
+      if (ball.id === 'ppBall') { window.open('https://www.paypal.com/ncp/payment/MU5Q6SR4ACAAU', '_blank'); return; }
       var panel = document.getElementById(ball.dataset.panel);
       if (!panel) return;
       var br = ball.getBoundingClientRect();
@@ -3049,22 +2934,14 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   var st = document.getElementById('loadingStatus');
   if (!overlay) return;
   var steps = [
-    { t: 800, msg: 'Loading Audio…' },
-    { t: 2000, msg: 'Loading TTS model…' },
-    { t: 4000, msg: 'Almost ready…' },
+    { t: 500, msg: 'Loading Audio…' },
+    { t: 1500, msg: 'Almost ready…' },
   ];
   steps.forEach(function(s) { setTimeout(function() { if (st) st.textContent = s.msg; }, s.t); });
-  var check = setInterval(function() {
-    if (typeof window._kokoroReady === 'function' && window._kokoroReady()) {
-      clearInterval(check);
-      overlay.classList.add('hidden');
-    }
-  }, 300);
   setTimeout(function() {
-    clearInterval(check);
     if (st) st.textContent = 'Ready';
     overlay.classList.add('hidden');
-  }, 7000);
+  }, 3000);
 })();
 
 // --- First visit: minimize all panels, pulse glassballs ---
@@ -3090,10 +2967,6 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   }, 100);
 })();
 
-// --- Pre-warm Kokoro TTS ---
-if (typeof window._kokoroPreload === 'function') {
-  setTimeout(window._kokoroPreload, 2000);
-}
 </script>
 </body>
 </html>
