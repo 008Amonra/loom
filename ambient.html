@@ -75,6 +75,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .pan-wrap input[type="range"]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#6644cc;cursor:pointer;border:none}
 .pan-val{font-size:0.65rem;color:#555;min-width:22px;text-align:center}
 
+.sample-ui{display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid #222}
+.sample-btn{background:#2a2a4a;border:1px solid #555;color:#bbb;font-size:0.65rem;padding:3px 8px;border-radius:5px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.sample-btn:hover{background:#3a3a5a;border-color:#888;color:#fff}
+.sample-btn.loaded{background:#448844;border-color:#66aa66;color:#fff}
+.sample-name{font-size:0.65rem;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+
 .rec-indicator{display:none;align-items:center;gap:8px;font-size:0.82rem;color:#cc3344}
 .rec-indicator.active{display:flex}
 .rec-dot{width:8px;height:8px;border-radius:50%;background:#cc3344;animation:pulse 1s infinite}
@@ -702,13 +708,21 @@ const TRACK_DEFS = [
     desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
   { id:'tambourine', icon:'&#x1F3BA;', name:'Tambourine', color:'#ddbb44', defaultPan:0.4,
     desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
+  { id:'sample1',    icon:'&#x1F4E4;', name:'Sample 1',    color:'#aa88dd', defaultPan:0,
+    desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
+  { id:'sample2',    icon:'&#x1F4E5;', name:'Sample 2',    color:'#aa88dd', defaultPan:0,
+    desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
+  { id:'sample3',    icon:'&#x1F3B5;', name:'Sample 3',    color:'#aa88dd', defaultPan:0,
+    desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
+  { id:'sample4',    icon:'&#x1F3A7;', name:'Sample 4',    color:'#aa88dd', defaultPan:0,
+    desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, sample1:0, sample2:0, sample3:0, sample4:0 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, sample1:0, sample2:0, sample3:0, sample4:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, sample1:0, sample2:0, sample3:0, sample4:0 },
 };
 
 let ctx = null;
@@ -1758,6 +1772,33 @@ function createTambourine() {
   return { gain, start() { shake() }, stop() { clearTimeout(interval) } };
 }
 
+// --- User sample tracks ---
+const sampleBuffers = {};
+
+function createSample(id) {
+  const gain = ctx.createGain();
+  gain.gain.value = 1;
+  let sourceNode = null;
+  return {
+    gain,
+    start() {
+      if (!sampleBuffers[id]) return;
+      sourceNode = ctx.createBufferSource();
+      sourceNode.buffer = sampleBuffers[id];
+      sourceNode.loop = true;
+      sourceNode.connect(gain);
+      sourceNode.start();
+    },
+    stop() {
+      if (sourceNode) {
+        try { sourceNode.stop(); } catch(e) {}
+        try { sourceNode.disconnect(); } catch(e) {}
+        sourceNode = null;
+      }
+    }
+  };
+}
+
 const GENERATORS = {
   wind: createWind,
   gravel: createGravel,
@@ -1779,6 +1820,10 @@ const GENERATORS = {
   perc: createPerc,
   melody: createMelody,
   tambourine: createTambourine,
+  sample1: () => createSample('sample1'),
+  sample2: () => createSample('sample2'),
+  sample3: () => createSample('sample3'),
+  sample4: () => createSample('sample4'),
 };
 
 // --- UI ---
@@ -1787,6 +1832,7 @@ TRACK_DEFS.forEach(def => {
   const card = document.createElement('div');
   card.className = 'track-card';
   card.id = 'card-' + def.id;
+  const isSample = def.id.startsWith('sample');
   card.innerHTML = `
     <div class="track-header">
       <span class="track-icon">${def.icon}</span>
@@ -1803,8 +1849,42 @@ TRACK_DEFS.forEach(def => {
       <label>R</label>
       <span class="pan-val" id="panVal-${def.id}">${def.defaultPan||0}</span>
     </div>
+    ${isSample ? `
+    <div class="sample-ui">
+      <button class="sample-btn" id="sampleBtn-${def.id}">Upload</button>
+      <span class="sample-name" id="sampleName-${def.id}">none</span>
+      <input type="file" accept="audio/*" id="fileInput-${def.id}" hidden>
+    </div>` : ''}
   `;
   grid.appendChild(card);
+  if (isSample) {
+    const btn = document.getElementById('sampleBtn-' + def.id);
+    const input = document.getElementById('fileInput-' + def.id);
+    const nameSpan = document.getElementById('sampleName-' + def.id);
+    btn.addEventListener('click', () => input.click());
+    input.addEventListener('change', function() {
+      if (!this.files || !this.files[0]) return;
+      initAudio();
+      const file = this.files[0];
+      nameSpan.textContent = file.name.length > 28 ? file.name.slice(0, 25) + '...' : file.name;
+      btn.classList.add('loaded');
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        ctx.decodeAudioData(e.target.result).then(buf => {
+          sampleBuffers[def.id] = buf;
+          if (engines[def.id]) {
+            engines[def.id].stop();
+            engines[def.id].start();
+          }
+        }).catch(err => {
+          console.error('decode failed for', def.id, err);
+          nameSpan.textContent = '[decode error]';
+          btn.classList.remove('loaded');
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
 });
 
 const sliders = {};
