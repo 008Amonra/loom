@@ -250,7 +250,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .floating-panel .panel-header {
     cursor: default;
   }
-  .glassball { display: none !important; }
+  .glassball:not(#ppBall) { display: none !important; }
+  #ppBall { display: flex !important; }
   .minimize-btn { display: none; }
   .embed-switch { display: none; }
   .resize-handle { display: none; }
@@ -645,7 +646,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </div>
 
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
-<div class="glassball pp-ball" id="ppBall" title="Support us" style="display:flex;background:#003087;border-color:#003087;font-size:1.1rem;font-weight:900;color:#fff;font-family:Arial,sans-serif;cursor:pointer">P</div>
+<div class="glassball pp-ball" id="ppBall" title="Support us" style="display:flex;background:#003087;border-color:#003087;font-size:1.1rem;font-weight:900;color:#fff;font-family:Arial,sans-serif;cursor:pointer;bottom:30px;right:30px;top:auto;left:auto">P</div>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
