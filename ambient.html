@@ -2050,10 +2050,6 @@ function startRecording() {
     document.getElementById('recTime').textContent = Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0');
   }, 200);
   document.getElementById('statusText').textContent = 'Recording';
-  // Auto-stop after 60s
-  setTimeout(() => {
-    if (isRecording) stopRecording();
-  }, 60000);
 }
 
 function stopRecording() {
