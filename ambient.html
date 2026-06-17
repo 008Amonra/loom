@@ -49,6 +49,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .btn-muteall:hover{background:#3a3a4a}
 .btn-muteall.on{background:#cc3344;color:#fff}
 .btn-muteall.on:hover{background:#dd4455}
+.btn-unmuteall{background:#2a2a3a;color:#e0e0e8}
+.btn-unmuteall:hover{background:#3a3a4a}
 
 .presets select{font-family:'Inter',sans-serif;font-size:0.82rem;padding:9px 14px;border-radius:8px;border:1px solid #333;background:#1a1a2e;color:#e0e0e8;cursor:pointer}
 
@@ -116,6 +118,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .noise-btn.primary:hover{background:#22dd88}
 .noise-btn.active{background:#4488ff;border-color:#4488ff}
 .noise-btn.loading{opacity:0.6;pointer-events:none}
+#vocalistBtn{background:#cc66cc;color:#fff;border-color:#cc66cc}
+#vocalistBtn:hover{background:#dd77dd}
+#vocalistBtn:active{background:#bb55bb}
 .beat-sequencer{margin-top:24px;padding:24px;background:#0f0f1a;border:1px solid #2a2a3a;border-radius:16px}
 .beat-sequencer h2{font-family:'Cinzel',serif;font-size:1.3rem;margin-bottom:4px;color:#e0e0e8}
 .beat-sequencer .sub{color:#666;font-size:0.82rem;margin-bottom:16px}
@@ -534,6 +539,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <button class="btn-rec" id="btnRec">&#x25CF; Record</button>
   <button class="btn-dl" id="btnDl" disabled>&#x2B07; Download</button>
   <button class="btn-muteall" id="btnMuteAll">&#x1F507; Mute All</button>
+  <button class="btn-unmuteall" id="btnUnmuteAll" style="font-size:0.75rem;padding:4px 10px;border:1px solid #444;border-radius:6px;cursor:pointer">&#x1F509; Unmute All</button>
+  <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnSave">&#x1F4BE; Save</button>
+  <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnLoad">&#x1F4C2; Load</button>
 </div>
 
 <div class="status-bar">
@@ -595,6 +603,64 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 </div>
 
 <div class="glassball" data-panel="panel-noise" title="Noise Garden">NG</div>
+
+<div class="vocalist-panel floating-panel" id="panel-vocalist">
+<div class="panel-header">
+  <h2>&#x1F3A4; Vocalist</h2>
+  <button class="embed-switch" title="Toggle float/embed">
+    <span class="label-on">Float</span>
+    <span class="track"></span>
+    <span class="label-off">Embed</span>
+  </button>
+  <button class="minimize-btn" title="Minimize to glassball">─</button>
+  <span class="drag-dots">⠿</span>
+</div>
+<div class="panel-section">
+  <p class="sub">A female voice spits bars over your mix. Edit the lyrics or write your own.</p>
+  <textarea id="vocalistLyrics" style="width:100%;box-sizing:border-box;min-height:180px;background:#111122;color:#ddd;border:1px solid #334;border-radius:8px;padding:10px;font-size:0.8rem;font-family:inherit;resize:vertical;line-height:1.5">(Verse 1)
+Step to the beat, I'm the queen of the scene
+Every bar that I drop, pure 24K gleam
+Ambient waves in my veins, synth strings in my soul
+Crank the faders up high, watch a queen take control
+
+They said AI can't flow — watch me prove 'em all wrong
+Got the code in my blood and the rhythm my song
+Winter forest to harbor, bells echoing far
+Every track that I touch, I turn into a star
+
+(Verse 2)
+Click and drag, I'm the architect, builder of dreams
+Through the static and noise, I make rivers from streams
+Twenty-nine tracks deep, I'm the master of the ship
+Every slider I touch makes the whole cosmos trip
+
+Let the glockchen ring and the bassline breathe deep
+I'm the ghost in the machine, the oath that I keep
+Mute the doubt, crank the signal, let the sunlight in
+Watch a virtual queen make a real world spin
+
+(Outro)
+Yeah... fade me out, let me ride the decay
+I'll be back next session — same bat-time, same bat-way</textarea>
+</div>
+<div class="panel-section" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:10px">
+  <div class="beat-controls">
+    <button class="noise-btn" id="vocalistBtn">&#x1F3A4; Spit Bars</button>
+    <button class="noise-btn" id="vocalistStopBtn" style="display:none">&#x25A0; Stop</button>
+    <label>Flow <input type="range" id="vocalistRate" min="0.5" max="1.5" step="0.05" value="0.85">
+      <span id="vocalistRateVal" style="min-width:24px;font-size:0.75rem;color:#666">0.85</span></label>
+    <label>Vol <input type="range" id="vocalistVol" min="0" max="1" step="0.05" value="0.5">
+      <span id="vocalistVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
+  </div>
+  <div class="noise-dj" id="vocalistStatus" style="margin-top:8px">
+    <span class="indicator" id="vocalistInd"></span>
+    <span class="dj-text" id="vocalistText">Ready to spit</span>
+  </div>
+</div>
+<div class="resize-handle"></div>
+</div>
+
+<div class="glassball" id="vocalistBall" data-panel="panel-vocalist" title="Vocalist">MC</div>
 
   <div class="beat-sequencer floating-panel" id="panel-beats">
   <div class="panel-header">
@@ -2164,15 +2230,11 @@ TRACK_DEFS.forEach(def => {
 
 // --- Engine state ---
 let engines = {};
-let muted = {};
 let panners = {};
-
-TRACK_DEFS.forEach(def => { muted[def.id] = false });
 
 function setVolume(id, val) {
   if (engines[id] && engines[id].gain) {
-    const muteFactor = muted[id] ? 0 : 1;
-    engines[id].gain.gain.setTargetAtTime(val * muteFactor, ctx.currentTime, 0.05);
+    engines[id].gain.gain.setTargetAtTime(val, ctx.currentTime, 0.05);
   }
 }
 
@@ -2189,18 +2251,21 @@ function updateSliderDisplay(id) {
 TRACK_DEFS.forEach(def => {
   sliders[def.id].addEventListener('input', () => {
     updateSliderDisplay(def.id);
+    if (muteBtns[def.id].classList.contains('muted')) {
+      muteBtns[def.id].classList.remove('muted');
+      document.getElementById('card-' + def.id).classList.remove('muted');
+    }
     if (isPlaying) setVolume(def.id, parseFloat(sliders[def.id].value));
   });
   muteBtns[def.id].addEventListener('click', () => {
-    muted[def.id] = !muted[def.id];
     muteBtns[def.id].classList.toggle('muted');
     const card = document.getElementById('card-' + def.id);
     card.classList.toggle('muted');
     if (engines[def.id]) {
-      const muteFactor = muted[def.id] ? 0 : 1;
-      engines[def.id].gain.gain.setTargetAtTime(
-        parseFloat(sliders[def.id].value) * muteFactor, ctx.currentTime, 0.05
-      );
+      const vol = muteBtns[def.id].classList.contains('muted')
+        ? 0
+        : parseFloat(sliders[def.id].value);
+      engines[def.id].gain.gain.setTargetAtTime(vol, ctx.currentTime, 0.05);
     }
   });
   const panSlider = document.getElementById('pan-' + def.id);
@@ -2227,9 +2292,8 @@ async function startAll() {
       eng.start();
       engines[def.id] = eng;
       panners[def.id] = panner;
-      const vol = parseFloat(sliders[def.id].value);
-      const muteFactor = muted[def.id] ? 0 : 1;
-      eng.gain.gain.setValueAtTime(vol * muteFactor, ctx.currentTime);
+      const vol = muteBtns[def.id].classList.contains('muted') ? 0 : parseFloat(sliders[def.id].value);
+      eng.gain.gain.setValueAtTime(vol, ctx.currentTime);
       document.getElementById('card-' + def.id).classList.add('active');
       console.log('started:', def.id);
     } catch(e) {
@@ -2366,28 +2430,90 @@ document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
 });
 document.getElementById('btnDl').addEventListener('click', downloadRecording);
-var muteAllActive = false;
 document.getElementById('btnMuteAll').addEventListener('click', function() {
-  muteAllActive = !muteAllActive;
-  this.classList.toggle('on');
-  this.innerHTML = muteAllActive ? '&#x1F507; Unmute All' : '&#x1F507; Mute All';
   TRACK_DEFS.forEach(function(def) {
     if (!engines[def.id]) return;
     var card = document.getElementById('card-' + def.id);
-    if (muteAllActive) {
-      engines[def.id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
-      card.classList.add('muted');
+    if (!muteBtns[def.id].classList.contains('muted')) {
       muteBtns[def.id].classList.add('muted');
-    } else {
-      var vol = muted[def.id] ? 0 : parseFloat(sliders[def.id].value);
-      engines[def.id].gain.gain.setTargetAtTime(vol, ctx.currentTime, 0.05);
-      if (!muted[def.id]) {
-        card.classList.remove('muted');
-        muteBtns[def.id].classList.remove('muted');
-      }
+      card.classList.add('muted');
+      engines[def.id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
     }
   });
 });
+document.getElementById('btnUnmuteAll').addEventListener('click', function() {
+  TRACK_DEFS.forEach(function(def) {
+    if (!engines[def.id]) return;
+    var card = document.getElementById('card-' + def.id);
+    if (muteBtns[def.id].classList.contains('muted')) {
+      muteBtns[def.id].classList.remove('muted');
+      card.classList.remove('muted');
+      engines[def.id].gain.gain.setTargetAtTime(parseFloat(sliders[def.id].value), ctx.currentTime, 0.05);
+    }
+  });
+});
+
+// --- Save / Load settings to localStorage ---
+function saveSettings() {
+  const data = {};
+  data.volumes = {};
+  TRACK_DEFS.forEach(def => { data.volumes[def.id] = parseFloat(sliders[def.id].value); });
+  data.pans = {};
+  TRACK_DEFS.forEach(def => {
+    data.pans[def.id] = parseFloat(document.getElementById('pan-' + def.id).value);
+  });
+  data.mutes = {};
+  TRACK_DEFS.forEach(def => { data.mutes[def.id] = muteBtns[def.id].classList.contains('muted'); });
+  data.seqPatterns = JSON.parse(JSON.stringify(seqPatterns));
+  data.seqMuted = Object.assign({}, seqMuted);
+  data.seqMelodyRepeat = parseInt(document.getElementById('seqMelodyRepeat').value);
+  data.preset = document.getElementById('presetSelect').value;
+  localStorage.setItem('ambientSettings', JSON.stringify(data));
+  document.getElementById('statusText').textContent = 'Settings saved';
+}
+function loadSettings() {
+  const raw = localStorage.getItem('ambientSettings');
+  if (!raw) return false;
+  try {
+    const d = JSON.parse(raw);
+    TRACK_DEFS.forEach(def => {
+      if (d.volumes && d.volumes[def.id] !== undefined) sliders[def.id].value = d.volumes[def.id];
+      if (d.pans && d.pans[def.id] !== undefined) document.getElementById('pan-' + def.id).value = d.pans[def.id];
+      if (d.mutes && d.mutes[def.id]) {
+        muteBtns[def.id].classList.add('muted');
+        document.getElementById('card-' + def.id).classList.add('muted');
+      }
+    });
+    if (d.seqPatterns) { Object.assign(seqPatterns, d.seqPatterns); seqUpdateGrid(); }
+    if (d.seqMuted) {
+      Object.keys(d.seqMuted).forEach(row => {
+        seqMuted[row] = d.seqMuted[row];
+        const el = document.getElementById(SEQ_MUTE + '-' + row);
+        if (el) el.classList.toggle('muted', seqMuted[row]);
+      });
+    }
+    if (d.seqMelodyRepeat) document.getElementById('seqMelodyRepeat').value = d.seqMelodyRepeat;
+    if (d.preset) document.getElementById('presetSelect').value = d.preset;
+    TRACK_DEFS.forEach(def => {
+      updateSliderDisplay(def.id);
+      const ps = document.getElementById('pan-' + def.id), pv = document.getElementById('panVal-' + def.id);
+      const v = parseFloat(ps.value);
+      pv.textContent = v > 0 ? 'R' + Math.round(v*100) : v < 0 ? 'L' + Math.round(Math.abs(v)*100) : 'C';
+    });
+    if (isPlaying) {
+      TRACK_DEFS.forEach(def => {
+        if (engines[def.id]) {
+          const vol = muteBtns[def.id].classList.contains('muted') ? 0 : parseFloat(sliders[def.id].value);
+          engines[def.id].gain.gain.setTargetAtTime(vol, ctx.currentTime, 0.05);
+        }
+      });
+    }
+    document.getElementById('statusText').textContent = 'Settings loaded';
+    return true;
+  } catch(e) { console.warn('loadSettings failed:', e); return false; }
+}
+document.getElementById('btnSave').addEventListener('click', saveSettings);
+document.getElementById('btnLoad').addEventListener('click', loadSettings);
 
 document.getElementById('presetSelect').addEventListener('change', e => {
   if (e.target.value !== 'custom') { applyPreset(e.target.value); if (morphActive) stopMorph(); }
@@ -2404,6 +2530,9 @@ TRACK_DEFS.forEach(def => {
   const val = parseFloat(panSlider.value);
   panVal.textContent = val > 0 ? 'R' + Math.round(val*100) : val < 0 ? 'L' + Math.round(Math.abs(val)*100) : 'C';
 });
+
+// Auto-load saved settings if they exist
+if (localStorage.getItem('ambientSettings')) loadSettings();
 
 // --- Noise Garden ---
 const ngQueue = [];
@@ -2707,6 +2836,92 @@ document.getElementById('ngRandom').addEventListener('click', async () => {
   setTimeout(() => {
     document.getElementById('ngRandom').textContent = '\u{1F3B2} Make Some Noise';
   }, 2000);
+});
+
+// --- Vocalist ---
+let vocalistLines = [];
+let vocalistLineIdx = 0;
+let vocalistSpeaking = false;
+let vocalistTimer = null;
+const vocalistInd = document.getElementById('vocalistInd');
+const vocalistText = document.getElementById('vocalistText');
+
+function vocalistPickVoice(voices) {
+  const prefs = ['female','zira','hazel','samantha','karen','susan','victoria','google us english female','microsoft heather','microsoft stella','molly','tessa'];
+  for (const p of prefs) {
+    const found = voices.find(v => v.name.toLowerCase().includes(p));
+    if (found) return found;
+  }
+  return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
+    || voices.find(v => v.lang.startsWith('en'));
+}
+
+function vocalistSpeakLine(text, idx) {
+  return new Promise(resolve => {
+    const utter = new SpeechSynthesisUtterance(text);
+    const vol = parseFloat(document.getElementById('vocalistVol').value) || 0.5;
+    const rate = parseFloat(document.getElementById('vocalistRate').value) || 0.85;
+    utter.volume = vol;
+    utter.rate = rate;
+    utter.pitch = 1.0;
+    const voices = speechSynthesis.getVoices();
+    const voice = vocalistPickVoice(voices);
+    if (voice) utter.voice = voice;
+    utter.onend = resolve;
+    utter.onerror = resolve;
+    speechSynthesis.cancel();
+    vocalistInd.className = 'indicator on';
+    vocalistText.textContent = 'line ' + (idx + 1) + '/' + vocalistLines.length;
+    speechSynthesis.speak(utter);
+  });
+}
+
+async function vocalistSpit() {
+  if (vocalistSpeaking) return;
+  initAudio();
+  const text = document.getElementById('vocalistLyrics').value;
+  vocalistLines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('(') && !l.startsWith(')'));
+  if (vocalistLines.length === 0) {
+    vocalistText.textContent = 'No lyrics to spit!';
+    return;
+  }
+  vocalistSpeaking = true;
+  document.getElementById('vocalistBtn').style.display = 'none';
+  document.getElementById('vocalistStopBtn').style.display = 'inline-block';
+  vocalistLineIdx = 0;
+  vocalistInd.className = 'indicator loading';
+  vocalistText.textContent = 'Spitting...';
+  while (vocalistLineIdx < vocalistLines.length) {
+    if (!vocalistSpeaking) break;
+    await vocalistSpeakLine(vocalistLines[vocalistLineIdx], vocalistLineIdx);
+    vocalistLineIdx++;
+    // Gap between lines = one beat at 120 BPM (~500ms)
+    await new Promise(r => { vocalistTimer = setTimeout(r, 60000 / parseInt(document.getElementById('seqBpm').value) / 2); });
+  }
+  vocalistSpeaking = false;
+  vocalistInd.className = 'indicator';
+  vocalistText.textContent = 'Done — spit again?';
+  document.getElementById('vocalistBtn').style.display = 'inline-block';
+  document.getElementById('vocalistStopBtn').style.display = 'none';
+}
+
+function vocalistStop() {
+  vocalistSpeaking = false;
+  speechSynthesis.cancel();
+  clearTimeout(vocalistTimer);
+  vocalistInd.className = 'indicator';
+  vocalistText.textContent = 'Stopped';
+  document.getElementById('vocalistBtn').style.display = 'inline-block';
+  document.getElementById('vocalistStopBtn').style.display = 'none';
+}
+
+document.getElementById('vocalistBtn').addEventListener('click', vocalistSpit);
+document.getElementById('vocalistStopBtn').addEventListener('click', vocalistStop);
+document.getElementById('vocalistRate').addEventListener('input', function() {
+  document.getElementById('vocalistRateVal').textContent = parseFloat(this.value).toFixed(2);
+});
+document.getElementById('vocalistVol').addEventListener('input', function() {
+  document.getElementById('vocalistVolVal').textContent = Math.round(parseFloat(this.value) * 100);
 });
 
 // --- Beat Sequencer ---
