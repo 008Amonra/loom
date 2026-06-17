@@ -148,6 +148,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-surprise{background:#2a2a3a;color:#dd88ff;font-size:0.75rem;padding:3px 10px;border:1px solid #8844aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-surprise:hover{background:#3a3a4a;border-color:#aa66cc}
 .seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
+.seq-repeat{background:#2a2a3a;color:#88dd88;font-size:0.75rem;padding:3px 8px;border:1px solid #448855;cursor:pointer;border-radius:6px;font-family:inherit}
+.seq-repeat:hover{background:#3a3a4a;border-color:#66dd88}
 .beat-step.on.melody{font-size:0.65rem;line-height:28px;text-align:center;color:#1a1a2e;font-weight:700}
 .beat-step[data-row="melody"]{color:#445544}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
@@ -612,6 +614,12 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
       <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
     <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
       <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
+    <label>Repeat <select id="seqMelodyRepeat" class="seq-repeat">
+      <option value="1">×1</option>
+      <option value="2">×2</option>
+      <option value="4" selected>×4</option>
+      <option value="8">×8</option>
+    </select></label>
     <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
     <button id="btnGate44" class="seq-gate" title="Silence every 4th beat (trance drop)">4/4 Gate</button>
     <button id="btnSurprise" class="seq-surprise" title="Random delay then 2 min 4/4 beat">&#x1F3B2; Surprise</button>
@@ -2950,21 +2958,29 @@ function seqPlayConga() {
   osc2.stop(now + 0.5);
 }
 
-function seqPlayMelody() {
+function seqPlayMelody(repeat) {
+  repeat = repeat || 1;
   const now = ctx.currentTime;
-  const freq = pentatonicFreqs[seqStep];
-  const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  const env = ctx.createGain();
-  env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.12, now + 0.015);
-  env.gain.setValueAtTime(0.1, now + 0.3);
-  env.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-  osc.connect(env);
-  env.connect(seqGain);
-  osc.start(now);
-  osc.stop(now + 0.55);
+  const bpm = parseInt(document.getElementById('seqBpm').value);
+  const spacing = 60 / bpm / 8;
+  for (let r = 0; r < repeat; r++) {
+    const t = now + r * spacing;
+    const freq = pentatonicFreqs[seqStep];
+    const vel = 1 - r * 0.15;
+    if (vel <= 0) break;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.12 * vel, t + 0.015);
+    env.gain.setValueAtTime(0.1 * vel, t + 0.3);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+    osc.connect(env);
+    env.connect(seqGain);
+    osc.start(t);
+    osc.stop(t + 0.55);
+  }
 }
 
 function seqPlayStep() {
@@ -2975,7 +2991,7 @@ function seqPlayStep() {
   if (seqPatterns.hh[seqStep] && !seqMuted.hh) seqPlayHH();
   if (seqPatterns.oh[seqStep] && !seqMuted.oh) seqPlayOH();
   if (seqPatterns.conga[seqStep] && !seqMuted.conga) seqPlayConga();
-  if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody();
+  if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody(parseInt(document.getElementById('seqMelodyRepeat').value));
   document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
   document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
   seqStep = (seqStep + 1) % 16;
