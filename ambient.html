@@ -2938,9 +2938,10 @@ const seqPatterns = {
   oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
   conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
   melody:[1,0,0,0, 0,1,0,0, 0,0,0,0, 1,0,0,0],
+  bass:  [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody', 'bass'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88', bass:'#aa44ff' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -2959,7 +2960,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody', bass:'Bass' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -3024,11 +3025,16 @@ function seqRandomize() {
         case 'melody':
           if (Math.random() < 0.1) on = 1;
           break;
+        case 'bass':
+          if (i % 8 === 0 && Math.random() < 0.6) on = 1;
+          else if (i % 4 === 2 && Math.random() < 0.25) on = 1;
+          break;
       }
       pat.push(on);
     }
     if (row === 'kick') pat[0] = 1;
     if (row === 'snare' && !pat.some(x => x)) pat[4] = 1;
+    if (row === 'bass' && !pat.some(x => x)) pat[0] = 1;
     seqPatterns[row] = pat;
   });
   seqUpdateGrid();
@@ -3046,28 +3052,46 @@ function seqUpdateGrid() {
 }
 function seqPlayKick() {
   const now = ctx.currentTime;
+  // Main thump
   const osc = ctx.createOscillator();
   osc.type = 'sine';
-  osc.frequency.setValueAtTime(120, now);
-  osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
+  osc.frequency.setValueAtTime(80, now);
+  osc.frequency.exponentialRampToValueAtTime(25, now + 0.25);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.7, now + 0.008);
-  env.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+  env.gain.linearRampToValueAtTime(0.9, now + 0.005);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
   osc.connect(env);
+  // Sub oscillator one octave down
+  const sub = ctx.createOscillator();
+  sub.type = 'sine';
+  sub.frequency.setValueAtTime(40, now);
+  sub.frequency.exponentialRampToValueAtTime(12, now + 0.3);
+  const subEnv = ctx.createGain();
+  subEnv.gain.setValueAtTime(0, now);
+  subEnv.gain.linearRampToValueAtTime(0.6, now + 0.008);
+  subEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  sub.connect(subEnv);
+  subEnv.connect(env);
   env.connect(seqGain);
   osc.start(now);
-  osc.stop(now + 0.2);
-  const click = ctx.createOscillator();
-  click.type = 'sine';
-  click.frequency.value = 3000;
-  const ce = ctx.createGain();
-  ce.gain.setValueAtTime(0.12, now);
-  ce.gain.exponentialRampToValueAtTime(0.001, now + 0.008);
-  click.connect(ce);
-  ce.connect(seqGain);
-  click.start(now);
-  click.stop(now + 0.01);
+  osc.stop(now + 0.5);
+  sub.start(now);
+  sub.stop(now + 0.65);
+  // Noise click for attack
+  const sr = ctx.sampleRate, nlen = Math.floor(sr * 0.015);
+  const nbuf = ctx.createBuffer(1, nlen, sr);
+  const nd = nbuf.getChannelData(0);
+  for (let i = 0; i < nlen; i++) nd[i] = Math.random() * 2 - 1;
+  const nsrc = ctx.createBufferSource();
+  nsrc.buffer = nbuf;
+  const nenv = ctx.createGain();
+  nenv.gain.setValueAtTime(0.15, now);
+  nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+  nsrc.connect(nenv);
+  nenv.connect(seqGain);
+  nsrc.start(now);
+  nsrc.stop(now + 0.02);
 }
 
 function seqPlayHH() {
@@ -3197,6 +3221,29 @@ function seqPlayMelody(repeat) {
     osc.stop(t + 0.55);
   }
 }
+let bassNoteIdx = 0;
+const bassNotes = [41.2, 55.0, 61.7]; // E1, A1, B1
+function seqPlayBass() {
+  const now = ctx.currentTime;
+  const freq = bassNotes[bassNoteIdx % 3];
+  bassNoteIdx++;
+  const osc = ctx.createOscillator();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(freq, now);
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'lowpass';
+  flt.frequency.value = 350;
+  flt.Q.value = 2;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.25, now + 0.01);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+  osc.connect(flt);
+  flt.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.35);
+}
 
 function seqPlayStep() {
   if (!ctx || !seqPlaying) return;
@@ -3207,6 +3254,7 @@ function seqPlayStep() {
   if (seqPatterns.oh[seqStep] && !seqMuted.oh) seqPlayOH();
   if (seqPatterns.conga[seqStep] && !seqMuted.conga) seqPlayConga();
   if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody(parseInt(document.getElementById('seqMelodyRepeat').value));
+  if (seqPatterns.bass[seqStep] && !seqMuted.bass) seqPlayBass();
   document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
   document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
   seqStep = (seqStep + 1) % 16;
@@ -3220,6 +3268,7 @@ async function seqStart() {
   clearTimeout(seqRenewTimer);
   seqPlaying = true;
   seqStep = 0;
+  bassNoteIdx = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
   document.getElementById('seqBtn').classList.add('active');
   seqPlayStep();
