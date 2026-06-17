@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ambient Studio — 45DGOF8</title>
-<meta name="description" content="Generative soundscape mixer. Fifteen synthesis tracks, volume sliders, presets, randomizer, and record-to-file export. Built entirely with Web Audio API.">
+<meta name="description" content="Generative soundscape mixer. Thirty parallel sound sources, beat machine with piano chords and bassline, volume sliders, presets, Auto DJ, and record-to-file export. Built entirely with Web Audio API.">
 <link rel="canonical" href="https://45dgof8.com/ambient.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,6 +141,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.conga{background:#88aacc;border-color:#88aacc}
 .beat-step.on.melody{background:#88dd88;border-color:#88dd88}
 .beat-step.on.bass{background:#aa44ff;border-color:#aa44ff}
+.beat-step.on.piano{background:#ffaa44;border-color:#ffaa44}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
 .seq-mute:hover{color:#aaa;background:#1a1a2e}
@@ -517,7 +518,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="study-note">
   <strong>Example Study: What an AI Agent Can Build in a Few Sessions.</strong><br>
-  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Twenty-nine parallel sound sources — twenty-five synthesized with the Web Audio API, plus four slots where you can drop your own audio files. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Thirty parallel sound sources — twenty-five synthesized with the Web Audio API, plus four slots where you can drop your own audio files, plus a beat machine with eight tracks. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
@@ -526,8 +527,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <button class="btn-stop" id="btnStop" style="display:none">&#x25A0; Stop</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnTest">Test Tone</button>
   <button class="btn-rand" id="btnRand">&#x1F3B2; Randomize</button>
-  <button class="btn-morph" id="btnMorph">&#x25B6; Morph</button>
-  <span class="morph-label" id="morphLabel"></span>
+  <button class="btn-morph" id="btnAutoDJ">&#x25B6; Auto DJ</button>
+  <span class="morph-label" id="djLabel" style="min-width:160px"></span>
   <span class="presets">
     <select id="presetSelect">
       <option value="custom">Custom</option>
@@ -635,7 +636,7 @@ Through the static and noise, I make rivers from streams
 Twenty-nine tracks deep, I'm the master of the ship
 Every slider I touch makes the whole cosmos trip
 
-Let the glockchen ring and the bassline breathe deep
+Let the music box tinkle and the bassline breathe deep
 I'm the ghost in the machine, the oath that I keep
 Mute the doubt, crank the signal, let the sunlight in
 Watch a virtual queen make a real world spin
@@ -696,6 +697,20 @@ I'll be back next session — same bat-time, same bat-way</textarea>
   <div class="beat-numbers">
     <div class="beat-nums" id="beatNums"></div>
   </div>
+  <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)">
+    <p class="sub" style="margin-bottom:6px">🎧 Auto DJ — slowly morphs between scenes</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <label style="font-size:0.75rem;color:#aaa;display:flex;align-items:center;gap:5px">
+        Transition <span style="color:#4488ff;font-weight:600" id="djTransitVal">60</span>s
+        <input type="range" id="djTransit" min="15" max="300" value="60" style="width:60px;height:4px;border-radius:2px;background:#2a2a3a;-webkit-appearance:none;outline:none">
+      </label>
+      <label style="font-size:0.75rem;color:#aaa;display:flex;align-items:center;gap:5px">
+        Hold <span style="color:#66dd88;font-weight:600" id="djHoldVal">120</span>s
+        <input type="range" id="djHold" min="15" max="600" value="120" style="width:60px;height:4px;border-radius:2px;background:#2a2a3a;-webkit-appearance:none;outline:none">
+      </label>
+      <span style="font-size:0.75rem;color:#555" id="djSceneDisplay">—</span>
+    </div>
+  </div>
   <div class="resize-handle"></div>
 </div>
 
@@ -745,10 +760,10 @@ I'll be back next session — same bat-time, same bat-way</textarea>
 const TRACK_DEFS = [
   { id:'wind',       icon:'&#x1F4A8;', name:'Wind',       color:'#88ccff', defaultPan:0,
     desc:'Lowpass-filtered noise with slow LFO — open field, moving air' },
-  { id:'gravel',     icon:'&#x1F463;', name:'Gravel',     color:'#ccaa88', defaultPan:0.3,
-    desc:'Short bandpass noise bursts — footsteps on dry earth, scattered rhythm' },
-  { id:'glockchen',  icon:'&#x1F514;', name:'Glöckchen',  color:'#ffdd44', defaultPan:-0.4,
-    desc:'Sine arpeggios at consonant intervals — distant little bells' },
+  { id:'shaker',    icon:'&#x1F941;', name:'Shaker',     color:'#ddbb88', defaultPan:0.3,
+    desc:'Highpass noise bursts at 90-180 BPM — cabasa / maraca pattern, dry and rhythmic' },
+  { id:'musicbox',  icon:'&#x1F3B5;', name:'Music Box',  color:'#ffcc88', defaultPan:-0.2,
+    desc:'Random major-scale notes through a tinny bandpass — delicate mechanical melody' },
   { id:'voices',     icon:'&#x1F5E3;', name:'Voices',     color:'#cc88cc', defaultPan:-0.2,
     desc:'Filtered noise with speech-rhythm amplitude modulation — vague distant conversation' },
   { id:'car',        icon:'&#x1F697;', name:'Car',        color:'#88ddff', defaultPan:-0.6,
@@ -785,12 +800,12 @@ const TRACK_DEFS = [
     desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
   { id:'tb303',      icon:'&#x1F50A;', name:'TB-303',         color:'#ff6644', defaultPan: -0.3,
     desc:'Acid bassline with resonant filter sweeps — squelchy, sequenced, blues-scale steps' },
-  { id:'arpeggiator',icon:'&#x1F3BC;', name:'Arpeggiator',    color:'#44ddff', defaultPan:0,
-    desc:'Step-sequenced note patterns — up/down/random arpeggios over shifting chords' },
+  { id:'wobble',     icon:'&#x3030;&#xFE0F;', name:'Wobble Bass', color:'#66ff44', defaultPan:0,
+    desc:'Saw wave through LFO-modulated lowpass — 2-5Hz filter sweep, dubstep-style growl' },
   { id:'kick808',    icon:'&#x1F941;', name:'808 Kick',       color:'#ff8844', defaultPan:0,
     desc:'Deep sub-bass thump with exponential frequency sweep — every 2-4 bars' },
-  { id:'harmonica',  icon:'&#x1F390;', name:'Glass Harmonica',color:'#88ddff', defaultPan:0.2,
-    desc:'Detuned sine shimmers with slow tremolo — fragile, cathedral-like, ethereal' },
+  { id:'subbass',    icon:'&#x1F50A;', name:'Sub Bass',       color:'#4444cc', defaultPan:0,
+    desc:'Continuous low sine drone at 25-40Hz with gentle pitch drift — foundation rumble' },
   { id:'ocean',      icon:'&#x1F30A;', name:'Ocean Waves',    color:'#4488cc', defaultPan:0,
     desc:'Layered pink noise with slow amplitude LFO — rising and falling surf' },
   { id:'sample1',    icon:'&#x1F4E4;', name:'Sample 1',    color:'#aa88dd', defaultPan:0,
@@ -804,10 +819,10 @@ const TRACK_DEFS = [
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, arpeggiator:0, kick808:0, harmonica:0, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, arpeggiator:0, kick808:0, harmonica:0, ocean:.4, sample1:0, sample2:0, sample3:0, sample4:0 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, arpeggiator:0, kick808:0, harmonica:.25, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, arpeggiator:.3, kick808:.25, harmonica:.25, ocean:.35, sample1:0, sample2:0, sample3:0, sample4:0 },
+  winter:    { wind:.7, shaker:.15, musicbox:.3,  voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, wobble:0, kick808:0, subbass:.2, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  harbor:    { wind:.4, shaker:.2,  musicbox:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, wobble:0, kick808:0, subbass:0, ocean:.4, sample1:0, sample2:0, sample3:0, sample4:0 },
+  monastery: { wind:.5, shaker:0,   musicbox:.35, voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, wobble:0, kick808:0, subbass:.15, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  full:      { wind:.6, shaker:.35, musicbox:.4,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, wobble:.35, kick808:.25, subbass:.3, ocean:.35, sample1:0, sample2:0, sample3:0, sample4:0 },
 };
 
 let ctx = null;
@@ -927,77 +942,66 @@ function createWind() {
   return { src, lfo, filter, gain, start:() => src.start(), stop:() => { try{src.stop()}catch(e){} lfo.stop() } };
 }
 
-function createGravel() {
-  const sr = ctx.sampleRate;
+function createShaker() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.6;
+  gain.gain.value = 0.35;
   let interval = null;
-  function step() {
-    const len = Math.floor(sr * (0.04 + Math.random() * 0.06));
+  function shake() {
+    const now = ctx.currentTime;
+    const sr = ctx.sampleRate;
+    const len = Math.floor(sr * (0.02 + Math.random() * 0.03));
     const buf = ctx.createBuffer(1, len, sr);
     const d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.6;
     const src = ctx.createBufferSource();
     src.buffer = buf;
     const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 1500 + Math.random() * 1500;
-    filter.Q.value = 1.5;
+    filter.type = 'highpass';
+    filter.frequency.value = 4000 + Math.random() * 3000;
+    filter.Q.value = 0.5;
     const env = ctx.createGain();
-    env.gain.value = 0.3 + Math.random() * 0.5;
-    env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + len / sr);
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.5, now + 0.002);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
     src.connect(filter);
     filter.connect(env);
     env.connect(gain);
-    src.start();
-    src.stop(ctx.currentTime + len / sr + 0.01);
-    const next = 0.3 + Math.random() * 1.2;
-    interval = setTimeout(step, next * 1000);
+    src.start(now);
+    src.stop(now + 0.05);
+    const next = 0.06 + Math.random() * 0.12;
+    interval = setTimeout(shake, next * 1000);
   }
-  return {
-    gain,
-    start() { step() },
-    stop() { clearTimeout(interval) },
-  };
+  return { gain, start() { shake() }, stop() { clearTimeout(interval) } };
 }
 
-function createGlockchen() {
+function createMusicBox() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.4;
-  const notes = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+  gain.gain.value = 0.3;
+  const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.5];
   let interval = null;
-  function ring() {
+  function plink() {
     const now = ctx.currentTime;
     const freq = notes[Math.floor(Math.random() * notes.length)];
     const osc = ctx.createOscillator();
     osc.type = 'sine';
     osc.frequency.value = freq;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = freq;
+    filter.Q.value = 5;
     const env = ctx.createGain();
     env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.5, now + 0.005);
-    env.gain.exponentialRampToValueAtTime(0.001, now + 1.2 + Math.random() * 1.0);
-    osc.connect(env);
+    env.gain.linearRampToValueAtTime(0.35, now + 0.003);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+    osc.connect(filter);
+    filter.connect(env);
     env.connect(gain);
     osc.start(now);
-    osc.stop(now + 2.2);
-    // Second harmonic for richness
-    if (Math.random() > 0.4) {
-      const osc2 = ctx.createOscillator();
-      osc2.type = 'sine';
-      osc2.frequency.value = freq * 0.5;
-      const env2 = ctx.createGain();
-      env2.gain.setValueAtTime(0, now);
-      env2.gain.linearRampToValueAtTime(0.15, now + 0.01);
-      env2.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
-      osc2.connect(env2);
-      env2.connect(gain);
-      osc2.start(now);
-      osc2.stop(now + 1.6);
-    }
-    const next = 0.8 + Math.random() * 2.0;
-    interval = setTimeout(ring, next * 1000);
+    osc.stop(now + 0.7);
+    const next = 1.0 + Math.random() * 3.0;
+    interval = setTimeout(plink, next * 1000);
   }
-  return { gain, start() { ring() }, stop() { clearTimeout(interval) } };
+  return { gain, start() { plink() }, stop() { clearTimeout(interval) } };
 }
 
 function createVoices() {
@@ -1753,66 +1757,114 @@ function createMelody() {
   return { gain, start() { playNote() }, stop() { clearTimeout(interval) } };
 }
 
-// --- Auto-Morphing ---
-let morphActive = false;
-let morphInterval = null;
-let morphRetarget = null;
-let morphTarget = null;
-let morphTargetName = '';
+// --- Auto DJ ---
+let djActive = false;
+let djInterval = null;
+let djRetarget = null;
+let djTarget = null;
+let djTargetName = '';
+let djFromName = '';
+let djTransitionSteps = 0;
+let djStep = 0;
+let djFromVolumes = {};
 
-function startMorph() {
-  if (morphActive) return;
-  morphActive = true;
+function djUpdateDisplay() {
+  const el = document.getElementById('djSceneDisplay');
+  if (!el) return;
+  if (!djActive) { el.textContent = '—'; return; }
+  el.textContent = djFromName + ' → ' + djTargetName;
+}
+
+function djUpdateLabel() {
+  const el = document.getElementById('djLabel');
+  if (el && djActive) el.textContent = '🎧 → ' + djTargetName;
+}
+
+function startAutoDJ() {
+  if (djActive) return;
+  const transitEl = document.getElementById('djTransit');
+  const holdEl = document.getElementById('djHold');
+  const transitS = transitEl ? parseFloat(transitEl.value) : 60;
+  const holdS = holdEl ? parseFloat(holdEl.value) : 120;
+  djTransitionSteps = Math.max(5, Math.round(transitS / 0.2));
+
+  djActive = true;
   const presetNames = Object.keys(PRESETS);
-  function pickTarget() {
-    morphTargetName = presetNames[Math.floor(Math.random() * presetNames.length)];
-    morphTarget = PRESETS[morphTargetName];
-    const el = document.getElementById('morphLabel');
-    if (el) el.textContent = '→ ' + morphTargetName;
+
+  function pickTarget(fromName) {
+    djFromName = fromName || djFromName || 'current';
+    let name;
+    do {
+      name = presetNames[Math.floor(Math.random() * presetNames.length)];
+    } while (presetNames.length > 1 && name === djFromName);
+    djTargetName = name;
+    djTarget = PRESETS[djTargetName];
+    djStep = 0;
+    djFromVolumes = {};
+    TRACK_DEFS.forEach(def => {
+      djFromVolumes[def.id] = parseFloat(sliders[def.id].value);
+    });
+    djUpdateLabel();
+    djUpdateDisplay();
+    // randomize beat pattern on scene change
+    seqRandomize();
   }
-  pickTarget();
-  let morphTick = 0;
-  morphInterval = setInterval(() => {
-    morphTick++;
-    if (!morphTarget) return;
-    for (const [id, targetVal] of Object.entries(morphTarget)) {
+
+  // snapshot current as starting point
+  TRACK_DEFS.forEach(def => {
+    djFromVolumes[def.id] = parseFloat(sliders[def.id].value);
+  });
+  pickTarget('current');
+
+  djInterval = setInterval(() => {
+    if (!djTarget) return;
+    djStep++;
+    const t = djStep / djTransitionSteps;
+    const ease = t < 1 ? t * t * (3 - 2 * t) : 1; // smoothstep
+    for (const [id, targetVal] of Object.entries(djTarget)) {
       const slider = sliders[id];
       if (slider) {
-        const cur = parseFloat(slider.value);
-        const diff = targetVal - cur;
-        if (Math.abs(diff) > 0.003) {
-          const nv = cur + diff * 0.03;
-          slider.value = nv;
-          updateSliderDisplay(id);
-          if (isPlaying) setVolume(id, nv);
-        }
+        const from = djFromVolumes[id] !== undefined ? djFromVolumes[id] : 0;
+        const nv = from + (targetVal - from) * Math.min(ease, 1);
+        slider.value = nv;
+        updateSliderDisplay(id);
+        if (isPlaying) setVolume(id, nv);
+      }
+    }
+    if (ease >= 1) {
+      // transition complete — reset from for next morph
+      for (const [id, targetVal] of Object.entries(djTarget)) {
+        djFromVolumes[id] = targetVal;
       }
     }
     if (!ctx) return;
-    const t = ctx.currentTime;
+    const t2 = ctx.currentTime;
     TRACK_DEFS.forEach((def, i) => {
       if (!panners[def.id]) return;
       const basePan = parseFloat(document.getElementById('pan-' + def.id).value);
-      const wobble = Math.sin(t / 12 + i * 1.3) * 0.12;
+      const wobble = Math.sin(t2 / 12 + i * 1.3) * 0.12;
       panners[def.id].pan.setTargetAtTime(
-        Math.max(-1, Math.min(1, basePan + wobble)), t, 0.15
+        Math.max(-1, Math.min(1, basePan + wobble)), t2, 0.15
       );
     });
-    const reverbMod = Math.sin(t / 8) * 0.08 + 0.2;
+    const reverbMod = Math.sin(t2 / 8) * 0.08 + 0.2;
     updateReverbMix(Math.max(0.05, Math.min(0.5, reverbMod)));
   }, 200);
-  morphRetarget = setInterval(pickTarget, (3 + Math.random() * 2) * 60000);
-  document.getElementById('btnMorph').textContent = '⏸ Morph';
+
+  const holdMs = holdS * 1000;
+  djRetarget = setInterval(() => pickTarget(djTargetName), Math.max(holdMs, 5000));
+  document.getElementById('btnAutoDJ').textContent = '⏸ Auto DJ';
 }
 
-function stopMorph() {
-  morphActive = false;
-  if (morphInterval) { clearInterval(morphInterval); morphInterval = null; }
-  if (morphRetarget) { clearInterval(morphRetarget); morphRetarget = null; }
-  morphTarget = null;
-  const el = document.getElementById('morphLabel');
-  if (el) el.textContent = '';
-  document.getElementById('btnMorph').textContent = '▶ Morph';
+function stopAutoDJ() {
+  djActive = false;
+  if (djInterval) { clearInterval(djInterval); djInterval = null; }
+  if (djRetarget) { clearInterval(djRetarget); djRetarget = null; }
+  djTarget = null;
+  const label = document.getElementById('djLabel');
+  if (label) label.textContent = '';
+  document.getElementById('btnAutoDJ').textContent = '▶ Auto DJ';
+  document.getElementById('djSceneDisplay').textContent = '—';
   if (ctx) updateReverbMix(parseFloat(document.getElementById('revMix').value));
 }
 
@@ -1915,57 +1967,52 @@ function createTB303() {
   return { gain: outputGain, start() { playNote() }, stop() { clearTimeout(interval) } };
 }
 
-// --- Arpeggiator ---
-function createArpeggiator() {
+// --- Wobble Bass ---
+// --- Wobble Bass ---
+function createWobble() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.35;
+  gain.gain.value = 0.4;
   let interval = null;
-  let step = 0;
-  const chords = [
-    [60, 64, 67, 71],
-    [57, 60, 64, 67],
-    [62, 65, 69, 72],
-    [67, 71, 74, 79],
-    [65, 69, 72, 76],
-  ];
-  const patterns = [
-    [0, 1, 2, 3, 2, 1],
-    [0, 1, 2, 3, 3, 2, 1, 0],
-    [0, 0, 1, 1, 2, 2, 3, 3],
-    [0, 2, 1, 3, 2, 0, 1, 3],
-  ];
-  let chordIdx = 0;
-  let patIdx = 0;
-  let patStep = 0;
-  function tick() {
+  let lfo = null;
+  let osc = null;
+  function startWobble() {
     const now = ctx.currentTime;
-    const bpm = 80 + Math.random() * 40;
-    const noteLen = 60 / bpm / 4;
-    if (step % 32 === 0) {
-      chordIdx = (chordIdx + 1) % chords.length;
-      patIdx = Math.floor(Math.random() * patterns.length);
-      patStep = 0;
-    }
-    const chord = chords[chordIdx];
-    const pattern = patterns[patIdx];
-    const midi = chord[pattern[patStep % pattern.length]];
-    const freq = 440 * Math.pow(2, (midi - 69) / 12);
-    const osc = ctx.createOscillator();
-    osc.type = 'triangle';
-    osc.frequency.value = freq;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.3, now + 0.005);
-    env.gain.exponentialRampToValueAtTime(0.001, now + noteLen * 0.8);
-    osc.connect(env);
-    env.connect(gain);
+    osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 55 + Math.random() * 55;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 6;
+    lfo = ctx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 2 + Math.random() * 3;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 600;
+    lfo.connect(lfoGain);
+    lfoGain.connect(filter.frequency);
+    lfo.start();
+    osc.connect(filter);
+    filter.connect(gain);
     osc.start(now);
-    osc.stop(now + noteLen);
-    patStep++;
-    step++;
-    interval = setTimeout(tick, noteLen * 1000);
+    interval = setInterval(() => {
+      if (Math.random() < 0.2) {
+        osc.frequency.setTargetAtTime(55 + Math.random() * 55, ctx.currentTime, 0.3);
+      }
+      if (Math.random() < 0.15) {
+        lfo.frequency.setTargetAtTime(1 + Math.random() * 4, ctx.currentTime, 0.5);
+      }
+    }, 2000);
   }
-  return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
+  return {
+    gain,
+    start() { startWobble() },
+    stop() {
+      clearInterval(interval);
+      if (lfo) { try { lfo.stop() } catch(e) {} }
+      if (osc) { try { osc.stop() } catch(e) {} }
+    }
+  };
 }
 
 // --- 808 Kick ---
@@ -2007,43 +2054,30 @@ function createKick808() {
   return { gain, start() { kick() }, stop() { clearTimeout(interval) } };
 }
 
-// --- Glass Harmonica ---
-function createHarmonica() {
+// --- Sub Bass ---
+function createSubBass() {
   const gain = ctx.createGain();
-  gain.gain.value = 0.3;
-  let running = false;
-  function shimmer() {
-    if (!running) return;
-    const now = ctx.currentTime;
-    const baseFreq = 600 + Math.random() * 800;
-    const harmonics = [1, 1.5, 2, 2.5, 3, 4];
-    const numNotes = 3 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < numNotes; i++) {
-      const h = harmonics[Math.floor(Math.random() * harmonics.length)];
-      const freq = baseFreq * h + (Math.random() - 0.5) * 3;
-      const dur = 2 + Math.random() * 3;
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      const env = ctx.createGain();
-      const vol = 0.05 + Math.random() * 0.1;
-      env.gain.setValueAtTime(0, now);
-      env.gain.linearRampToValueAtTime(vol, now + 0.3 + Math.random() * 0.5);
-      env.gain.linearRampToValueAtTime(vol * 0.6, now + dur * 0.3);
-      env.gain.exponentialRampToValueAtTime(0.001, now + dur);
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 2 + Math.random() * 3;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0.3;
-      lfo.connect(lfoGain);
-      lfoGain.connect(env.gain);
-      osc.connect(env);
-      env.connect(gain);
-      osc.start(now);
-      osc.stop(now + dur + 0.1);
-      lfo.start(now);
-      lfo.stop(now + dur + 0.1);
-    }
+  gain.gain.value = 0.4;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = 32.7;
+  const lfo = ctx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.05;
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 3;
+  lfo.connect(lfoGain);
+  lfoGain.connect(osc.frequency);
+  lfo.start();
+  osc.connect(gain);
+  osc.start();
+  return {
+    gain,
+    start() {},
+    stop() { try { osc.stop() } catch(e) {} try { lfo.stop() } catch(e) {} }
+  };
+}
     setTimeout(shimmer, 3000 + Math.random() * 2000);
   }
   return { gain, start() { running = true; shimmer(); }, stop() { running = false; } };
@@ -2129,8 +2163,8 @@ function createSample(id) {
 
 const GENERATORS = {
   wind: createWind,
-  gravel: createGravel,
-  glockchen: createGlockchen,
+  shaker: createShaker,
+  musicbox: createMusicBox,
   voices: createVoices,
   car: createCar,
   birds: createBirds,
@@ -2149,9 +2183,9 @@ const GENERATORS = {
   melody: createMelody,
   tambourine: createTambourine,
   tb303: createTB303,
-  arpeggiator: createArpeggiator,
+  wobble: createWobble,
   kick808: createKick808,
-  harmonica: createHarmonica,
+  subbass: createSubBass,
   ocean: createOcean,
   sample1: () => createSample('sample1'),
   sample2: () => createSample('sample2'),
@@ -2424,8 +2458,8 @@ function testTone() {
 }
 document.getElementById('btnTest').addEventListener('click', testTone);
 document.getElementById('btnRand').addEventListener('click', randomize);
-document.getElementById('btnMorph').addEventListener('click', () => {
-  if (morphActive) stopMorph(); else startMorph();
+document.getElementById('btnAutoDJ').addEventListener('click', () => {
+  if (djActive) stopAutoDJ(); else startAutoDJ();
 });
 document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
@@ -2469,6 +2503,8 @@ function saveSettings() {
   data.seqMuted = Object.assign({}, seqMuted);
   data.seqMelodyRepeat = parseInt(document.getElementById('seqMelodyRepeat').value);
   data.preset = document.getElementById('presetSelect').value;
+  data.djTransit = parseFloat(document.getElementById('djTransit').value);
+  data.djHold = parseFloat(document.getElementById('djHold').value);
   localStorage.setItem('ambientSettings', JSON.stringify(data));
   document.getElementById('statusText').textContent = 'Settings saved';
 }
@@ -2495,6 +2531,8 @@ function loadSettings() {
     }
     if (d.seqMelodyRepeat) document.getElementById('seqMelodyRepeat').value = d.seqMelodyRepeat;
     if (d.preset) document.getElementById('presetSelect').value = d.preset;
+    if (d.djTransit) { document.getElementById('djTransit').value = d.djTransit; document.getElementById('djTransitVal').textContent = d.djTransit; }
+    if (d.djHold) { document.getElementById('djHold').value = d.djHold; document.getElementById('djHoldVal').textContent = d.djHold; }
     TRACK_DEFS.forEach(def => {
       updateSliderDisplay(def.id);
       const ps = document.getElementById('pan-' + def.id), pv = document.getElementById('panVal-' + def.id);
@@ -2517,7 +2555,7 @@ document.getElementById('btnSave').addEventListener('click', saveSettings);
 document.getElementById('btnLoad').addEventListener('click', loadSettings);
 
 document.getElementById('presetSelect').addEventListener('change', e => {
-  if (e.target.value !== 'custom') { applyPreset(e.target.value); if (morphActive) stopMorph(); }
+  if (e.target.value !== 'custom') { applyPreset(e.target.value); if (djActive) stopAutoDJ(); }
 });
 
 // Init sliders with a gentle default
@@ -2940,9 +2978,10 @@ const seqPatterns = {
   conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
   melody:[1,0,0,0, 0,1,0,0, 0,0,0,0, 1,0,0,0],
   bass:  [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
+  piano: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody', 'bass'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88', bass:'#aa44ff' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody', 'bass', 'piano'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88', bass:'#aa44ff', piano:'#ffaa44' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -2961,7 +3000,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody', bass:'Bass' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody', bass:'Bass', piano:'Piano' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -2973,6 +3012,7 @@ function seqBuildGrid() {
       btn.dataset.step = i;
       if (row === 'melody') btn.textContent = seqNoteNames[i];
     if (row === 'bass') btn.textContent = ['E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1'][i];
+    if (row === 'piano') btn.textContent = ['Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm'][i];
       btn.addEventListener('click', () => {
         seqPatterns[row][i] = seqPatterns[row][i] ? 0 : 1;
         btn.classList.toggle('on');
@@ -3030,6 +3070,10 @@ function seqRandomize() {
         case 'bass':
           if (i % 8 === 0 && Math.random() < 0.6) on = 1;
           else if (i % 4 === 2 && Math.random() < 0.25) on = 1;
+          break;
+        case 'piano':
+          if (i % 8 === 4 && Math.random() < 0.6) on = 1;
+          else if (i % 16 === 12 && Math.random() < 0.4) on = 1;
           break;
       }
       pat.push(on);
@@ -3246,6 +3290,38 @@ function seqPlayBass() {
   osc.start(now);
   osc.stop(now + 0.35);
 }
+let pianoChordIdx = 0;
+const pianoChords = [
+  [174.61, 207.65, 261.63], // Fm  (F3, Ab3, C4)
+  [155.56, 196.00, 233.08], // Eb  (Eb3, G3, Bb3)
+  [130.81, 155.56, 196.00], // Cm  (C3, Eb3, G3)
+];
+function seqPlayPiano() {
+  const now = ctx.currentTime;
+  const chord = pianoChords[pianoChordIdx % 3];
+  pianoChordIdx++;
+  chord.forEach(freq => {
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 2;
+    osc2.detune.value = 3;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.18, now + 0.006);
+    env.gain.setValueAtTime(0.14, now + 0.05);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+    osc2.connect(env);
+    osc.connect(env);
+    env.connect(seqGain);
+    osc.start(now);
+    osc.stop(now + 1.1);
+    osc2.start(now);
+    osc2.stop(now + 1.1);
+  });
+}
 
 function seqPlayStep() {
   if (!ctx || !seqPlaying) return;
@@ -3271,6 +3347,7 @@ async function seqStart() {
   seqPlaying = true;
   seqStep = 0;
   bassNoteIdx = 0;
+  pianoChordIdx = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
   document.getElementById('seqBtn').classList.add('active');
   seqPlayStep();
@@ -3317,6 +3394,12 @@ function startBeatSurprise() {
 document.getElementById('seqBtn').addEventListener('click', () => { seqPlaying ? seqStop() : seqStart(); });
 document.getElementById('seqBpm').addEventListener('input', function() {
   document.getElementById('seqBpmVal').textContent = this.value;
+});
+document.getElementById('djTransit').addEventListener('input', function() {
+  document.getElementById('djTransitVal').textContent = this.value;
+});
+document.getElementById('djHold').addEventListener('input', function() {
+  document.getElementById('djHoldVal').textContent = this.value;
 });
 document.getElementById('seqVol').addEventListener('input', function() {
   const v = parseFloat(this.value);
