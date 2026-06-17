@@ -2078,10 +2078,6 @@ function createSubBass() {
     stop() { try { osc.stop() } catch(e) {} try { lfo.stop() } catch(e) {} }
   };
 }
-    setTimeout(shimmer, 3000 + Math.random() * 2000);
-  }
-  return { gain, start() { running = true; shimmer(); }, stop() { running = false; } };
-}
 
 // --- Ocean Waves ---
 function createOcean() {
