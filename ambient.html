@@ -2373,7 +2373,7 @@ function startRecording() {
   isRecording = true;
   recStartTime = Date.now();
   document.getElementById('btnRec').classList.add('active');
-  document.getElementById('btnRec').disabled = true;
+  document.getElementById('btnRec').innerHTML = '&#x25A0; Stop';
   document.getElementById('recIndicator').classList.add('active');
   recTimer = setInterval(() => {
     const sec = Math.floor((Date.now() - recStartTime) / 1000);
@@ -2387,7 +2387,7 @@ function stopRecording() {
   isRecording = false;
   mediaRecorder.stop();
   document.getElementById('btnRec').classList.remove('active');
-  document.getElementById('btnRec').disabled = false;
+  document.getElementById('btnRec').innerHTML = '&#x25CF; Record';
   document.getElementById('statusText').textContent = 'Recording stopped';
 }
 
