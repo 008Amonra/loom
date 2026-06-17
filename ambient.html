@@ -587,6 +587,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
     <button class="noise-btn" data-noise="wiki">&#x1F4D6; Wikipedia</button>
     <button class="noise-btn" data-noise="quote">&#x275D; Quote</button>
     <button class="noise-btn" data-noise="astro">&#x1F30C; Astro</button>
+    <button class="noise-btn" data-noise="ikigai">&#x1F3AF; Ikigai</button>
     <button class="noise-btn primary" id="ngRandom">&#x1F3B2; Make Some Noise</button>
   </div>
 
@@ -2789,12 +2790,30 @@ async function ngAstro() {
   return `Tonight over ${ngGetCity()}: ${moon}.${planets} Clear skies.`;
 }
 
+const ikigaiPrompts = [
+  'Ikigai reflection. What activity makes you lose track of time completely?',
+  'Ikigai asks: what does the world need that you enjoy giving?',
+  'Think of a moment you felt fully alive. What were you doing? Who were you with?',
+  'Your ikigai lives where passion, mission, vocation, and profession overlap. Which of these four feels most distant right now?',
+  'If money were not a concern, what would your perfect Tuesday look like?',
+  'What did you love doing as a child that you have not done in years?',
+  'Ikigai is not a single destination. It is a direction you walk daily. What is one small step you could take today?',
+  'Name one person whose life you have made better. How did that feel?',
+  'What would you regret not having tried five years from now?',
+  'Your strengths are clues to your ikigai. What comes easily to you that others struggle with?',
+];
+
+function ngIkigai() {
+  return ikigaiPrompts[Math.floor(Math.random() * ikigaiPrompts.length)];
+}
+
 const ngFetchers = {
   news: ngNews,
   weather: ngWeather,
   wiki: ngWiki,
   quote: ngQuote,
   astro: ngAstro,
+  ikigai: ngIkigai,
 };
 
 // --- Event handlers ---
@@ -2855,7 +2874,7 @@ document.querySelectorAll('[data-noise]').forEach(btn => {
 });
 
 document.getElementById('ngRandom').addEventListener('click', async () => {
-  const types = ['news', 'weather', 'wiki', 'quote', 'astro'];
+  const types = ['news', 'weather', 'wiki', 'quote', 'astro', 'ikigai'];
   const pick = types[Math.floor(Math.random() * types.length)];
   const btn = document.querySelector(`[data-noise="${pick}"]`);
   if (btn) btn.classList.add('loading');
