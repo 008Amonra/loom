@@ -509,7 +509,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 <div class="study-note">
   <strong>Example Study: What an AI Agent Can Build in a Few Sessions.</strong><br>
-  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Twenty-five parallel sound sources — twenty-one synthesized with the Web Audio API, plus four slots where you can drop your own audio files. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
+  This page was designed and coded by <strong>opencode</strong> (an AI coding agent) across a handful of sessions. Twenty-nine parallel sound sources — twenty-five synthesized with the Web Audio API, plus four slots where you can drop your own audio files. Volume sliders, mute buttons, presets, a randomizer, and recording export. The core prompt was a short description of ambient sounds: <em>winter forest, distant chatter, car melodies, bells, gravel, cat, dog, boats, monks, rain, birds.</em> All of it runs in your browser, zero install.<br>
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
@@ -708,8 +708,16 @@ const TRACK_DEFS = [
     desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
   { id:'tambourine', icon:'&#x1F3BA;', name:'Tambourine', color:'#ddbb44', defaultPan:0.4,
     desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
-  { id:'tb303',      icon:'&#x1F50A;', name:'TB-303',      color:'#ff6644', defaultPan: -0.3,
+  { id:'tb303',      icon:'&#x1F50A;', name:'TB-303',         color:'#ff6644', defaultPan: -0.3,
     desc:'Acid bassline with resonant filter sweeps — squelchy, sequenced, blues-scale steps' },
+  { id:'arpeggiator',icon:'&#x1F3BC;', name:'Arpeggiator',    color:'#44ddff', defaultPan:0,
+    desc:'Step-sequenced note patterns — up/down/random arpeggios over shifting chords' },
+  { id:'kick808',    icon:'&#x1F941;', name:'808 Kick',       color:'#ff8844', defaultPan:0,
+    desc:'Deep sub-bass thump with exponential frequency sweep — every 2-4 bars' },
+  { id:'harmonica',  icon:'&#x1F390;', name:'Glass Harmonica',color:'#88ddff', defaultPan:0.2,
+    desc:'Detuned sine shimmers with slow tremolo — fragile, cathedral-like, ethereal' },
+  { id:'ocean',      icon:'&#x1F30A;', name:'Ocean Waves',    color:'#4488cc', defaultPan:0,
+    desc:'Layered pink noise with slow amplitude LFO — rising and falling surf' },
   { id:'sample1',    icon:'&#x1F4E4;', name:'Sample 1',    color:'#aa88dd', defaultPan:0,
     desc:'Drop your own audio file — loops seamlessly, mix with the scene' },
   { id:'sample2',    icon:'&#x1F4E5;', name:'Sample 2',    color:'#aa88dd', defaultPan:0,
@@ -721,10 +729,10 @@ const TRACK_DEFS = [
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, sample1:0, sample2:0, sample3:0, sample4:0 },
+  winter:    { wind:.7, gravel:.5, glockchen:.35, voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, arpeggiator:0, kick808:0, harmonica:0, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  harbor:    { wind:.4, gravel:.15,glockchen:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, arpeggiator:0, kick808:0, harmonica:0, ocean:.4, sample1:0, sample2:0, sample3:0, sample4:0 },
+  monastery: { wind:.5, gravel:.1, glockchen:.4,  voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, arpeggiator:0, kick808:0, harmonica:.25, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  full:      { wind:.6, gravel:.4, glockchen:.5,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, arpeggiator:.3, kick808:.25, harmonica:.25, ocean:.35, sample1:0, sample2:0, sample3:0, sample4:0 },
 };
 
 let ctx = null;
@@ -1832,6 +1840,191 @@ function createTB303() {
   return { gain: outputGain, start() { playNote() }, stop() { clearTimeout(interval) } };
 }
 
+// --- Arpeggiator ---
+function createArpeggiator() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.35;
+  let interval = null;
+  let step = 0;
+  const chords = [
+    [60, 64, 67, 71],
+    [57, 60, 64, 67],
+    [62, 65, 69, 72],
+    [67, 71, 74, 79],
+    [65, 69, 72, 76],
+  ];
+  const patterns = [
+    [0, 1, 2, 3, 2, 1],
+    [0, 1, 2, 3, 3, 2, 1, 0],
+    [0, 0, 1, 1, 2, 2, 3, 3],
+    [0, 2, 1, 3, 2, 0, 1, 3],
+  ];
+  let chordIdx = 0;
+  let patIdx = 0;
+  let patStep = 0;
+  function tick() {
+    const now = ctx.currentTime;
+    const bpm = 80 + Math.random() * 40;
+    const noteLen = 60 / bpm / 4;
+    if (step % 32 === 0) {
+      chordIdx = (chordIdx + 1) % chords.length;
+      patIdx = Math.floor(Math.random() * patterns.length);
+      patStep = 0;
+    }
+    const chord = chords[chordIdx];
+    const pattern = patterns[patIdx];
+    const midi = chord[pattern[patStep % pattern.length]];
+    const freq = 440 * Math.pow(2, (midi - 69) / 12);
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.3, now + 0.005);
+    env.gain.exponentialRampToValueAtTime(0.001, now + noteLen * 0.8);
+    osc.connect(env);
+    env.connect(gain);
+    osc.start(now);
+    osc.stop(now + noteLen);
+    patStep++;
+    step++;
+    interval = setTimeout(tick, noteLen * 1000);
+  }
+  return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
+}
+
+// --- 808 Kick ---
+function createKick808() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.5;
+  let interval = null;
+  function kick() {
+    const now = ctx.currentTime;
+    const dur = 0.2 + Math.random() * 0.1;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(35, now + dur);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(1, now + 0.002);
+    env.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    const clickBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.02), ctx.sampleRate);
+    const cd = clickBuf.getChannelData(0);
+    for (let i = 0; i < cd.length; i++) cd[i] = (Math.random() * 2 - 1) * (1 - i / cd.length);
+    const click = ctx.createBufferSource();
+    click.buffer = clickBuf;
+    const clickEnv = ctx.createGain();
+    clickEnv.gain.setValueAtTime(0.3, now);
+    clickEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
+    osc.connect(env);
+    env.connect(gain);
+    click.connect(clickEnv);
+    clickEnv.connect(gain);
+    osc.start(now);
+    osc.stop(now + dur);
+    click.start(now);
+    click.stop(now + 0.02);
+    const bpm = 90 + Math.random() * 30;
+    const beats = 2 + Math.floor(Math.random() * 3);
+    interval = setTimeout(kick, (60 / bpm) * beats * 1000);
+  }
+  return { gain, start() { kick() }, stop() { clearTimeout(interval) } };
+}
+
+// --- Glass Harmonica ---
+function createHarmonica() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.3;
+  let running = false;
+  function shimmer() {
+    if (!running) return;
+    const now = ctx.currentTime;
+    const baseFreq = 600 + Math.random() * 800;
+    const harmonics = [1, 1.5, 2, 2.5, 3, 4];
+    const numNotes = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < numNotes; i++) {
+      const h = harmonics[Math.floor(Math.random() * harmonics.length)];
+      const freq = baseFreq * h + (Math.random() - 0.5) * 3;
+      const dur = 2 + Math.random() * 3;
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const env = ctx.createGain();
+      const vol = 0.05 + Math.random() * 0.1;
+      env.gain.setValueAtTime(0, now);
+      env.gain.linearRampToValueAtTime(vol, now + 0.3 + Math.random() * 0.5);
+      env.gain.linearRampToValueAtTime(vol * 0.6, now + dur * 0.3);
+      env.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 2 + Math.random() * 3;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 0.3;
+      lfo.connect(lfoGain);
+      lfoGain.connect(env.gain);
+      osc.connect(env);
+      env.connect(gain);
+      osc.start(now);
+      osc.stop(now + dur + 0.1);
+      lfo.start(now);
+      lfo.stop(now + dur + 0.1);
+    }
+    setTimeout(shimmer, 3000 + Math.random() * 2000);
+  }
+  return { gain, start() { running = true; shimmer(); }, stop() { running = false; } };
+}
+
+// --- Ocean Waves ---
+function createOcean() {
+  const gain = ctx.createGain();
+  gain.gain.value = 0.45;
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.value = 0.5;
+  const sr = ctx.sampleRate;
+  const bufLen = sr * 2;
+  const buf = ctx.createBuffer(1, bufLen, sr);
+  const data = buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for (let i = 0; i < bufLen; i++) {
+    const w = Math.random() * 2 - 1;
+    b0 = 0.99886*b0 + w*0.0555179;
+    b1 = 0.99332*b1 + w*0.0750759;
+    b2 = 0.96900*b2 + w*0.1538520;
+    b3 = 0.86650*b3 + w*0.3104856;
+    b4 = 0.55000*b4 + w*0.5329522;
+    b5 = -0.7616*b5 - w*0.0168980;
+    data[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362) * 0.11;
+    b6 = w * 0.115926;
+  }
+  const noise = ctx.createBufferSource();
+  noise.buffer = buf;
+  noise.loop = true;
+  const lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 200;
+  lp.Q.value = 0.5;
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 800;
+  bp.Q.value = 0.3;
+  const lfo = ctx.createOscillator();
+  lfo.frequency.value = 0.05 + Math.random() * 0.03;
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 0.4;
+  lfo.connect(lfoGain);
+  lfoGain.connect(noiseGain.gain);
+  noise.connect(lp);
+  noise.connect(bp);
+  lp.connect(noiseGain);
+  bp.connect(noiseGain);
+  noiseGain.connect(gain);
+  return {
+    gain,
+    start() { lfo.start(); noise.start(); },
+    stop() { try { lfo.stop(); } catch(e) {} try { noise.stop(); } catch(e) {} }
+  };
+}
+
 // --- User sample tracks ---
 const sampleBuffers = {};
 
@@ -1881,6 +2074,10 @@ const GENERATORS = {
   melody: createMelody,
   tambourine: createTambourine,
   tb303: createTB303,
+  arpeggiator: createArpeggiator,
+  kick808: createKick808,
+  harmonica: createHarmonica,
+  ocean: createOcean,
   sample1: () => createSample('sample1'),
   sample2: () => createSample('sample2'),
   sample3: () => createSample('sample3'),
