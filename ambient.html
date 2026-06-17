@@ -140,6 +140,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.snare{background:#dd5566;border-color:#dd5566}
 .beat-step.on.conga{background:#88aacc;border-color:#88aacc}
 .beat-step.on.melody{background:#88dd88;border-color:#88dd88}
+.beat-step.on.bass{background:#aa44ff;border-color:#aa44ff}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
 .seq-mute:hover{color:#aaa;background:#1a1a2e}
@@ -2971,6 +2972,7 @@ function seqBuildGrid() {
       btn.dataset.row = row;
       btn.dataset.step = i;
       if (row === 'melody') btn.textContent = seqNoteNames[i];
+    if (row === 'bass') btn.textContent = ['E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1'][i];
       btn.addEventListener('click', () => {
         seqPatterns[row][i] = seqPatterns[row][i] ? 0 : 1;
         btn.classList.toggle('on');
