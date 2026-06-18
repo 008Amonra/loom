@@ -155,6 +155,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-surprise{background:#2a2a3a;color:#dd88ff;font-size:0.75rem;padding:3px 10px;border:1px solid #8844aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-surprise:hover{background:#3a3a4a;border-color:#aa66cc}
 .seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
+.seq-break{background:#2a2a3a;color:#ff8844;font-size:0.75rem;padding:3px 10px;border:1px solid #cc6633;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
+.seq-break:hover{background:#3a3a3a;border-color:#ff8844}
 .seq-repeat{background:#2a2a3a;color:#88dd88;font-size:0.75rem;padding:3px 8px;border:1px solid #448855;cursor:pointer;border-radius:6px;font-family:inherit}
 .seq-repeat:hover{background:#3a3a4a;border-color:#66dd88}
 .beat-step.on.melody{font-size:0.65rem;line-height:28px;text-align:center;color:#1a1a2e;font-weight:700}
@@ -737,6 +739,7 @@ I'll be back next session — same bat-time, same bat-way</textarea>
     </select></label>
     <button id="btnPianoRoll" class="btn-piano" title="Toggle piano roll note editor">&#x1F3B9; PR</button>
     <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
+    <button class="seq-break" id="btnBreak">&#x1F3B6; Break</button>
     <button id="btnGate44" class="seq-gate" title="Silence every 4th beat (trance drop)">4/4 Gate</button>
     <button id="btnSurprise" class="seq-surprise" title="Random delay then 2 min 4/4 beat">&#x1F3B2; Surprise</button>
   </div>
@@ -3276,6 +3279,14 @@ function seqBuildPianoRoll() {
         const pos = seqPianoRoll[idx].indexOf(name);
         if (pos >= 0) { seqPianoRoll[idx].splice(pos, 1); cell.classList.remove('on'); }
         else { seqPianoRoll[idx].push(name); cell.classList.add('on'); }
+        if (ctx) {
+          const f = PIANO_FREQ_MAP[name];
+          if (f) {
+            const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+            const g = ctx.createGain(); g.gain.setValueAtTime(0.08, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            o.connect(g); g.connect(seqGain); o.start(); o.stop(ctx.currentTime + 0.25);
+          }
+        }
       })(i));
       table.appendChild(cell);
     }
@@ -3347,6 +3358,18 @@ function seqRandomize() {
     seqPatterns[row] = pat;
   });
   seqUpdateGrid();
+}
+function seqBreakbeat() {
+  seqPatterns.kick  = [1,0,0,1, 0,1,0,1, 0,1,1,0, 0,1,0,0];
+  seqPatterns.snare = [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
+  seqPatterns.hh    = [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1];
+  seqPatterns.oh    = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.conga = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.melody= [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.bass  = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.piano = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
+  seqUpdateGrid();
+  document.getElementById('presetSelect').value = 'custom';
 }
 function seqUpdateGrid() {
   seqRows.forEach(row => {
@@ -3685,6 +3708,7 @@ document.getElementById('btnGate44').addEventListener('click', function() {
 });
 document.getElementById('btnSurprise').addEventListener('click', startBeatSurprise);
 document.getElementById('btnRandSeq').addEventListener('click', seqRandomize);
+document.getElementById('btnBreak').addEventListener('click', seqBreakbeat);
 document.getElementById('btnAutoRenew').addEventListener('click', function() {
   seqAutoRestart = !seqAutoRestart;
   this.classList.toggle('on');
