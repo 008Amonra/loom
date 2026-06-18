@@ -2740,7 +2740,7 @@ function updateTrackOverview() {
     pill.style.background = def.color + '22';
     pill.style.borderColor = def.color + '44';
     pill.style.color = def.color;
-    pill.textContent = def.icon + (muted ? ' ✕' : ' ✓');
+    pill.innerHTML = def.icon + (muted ? ' ✕' : ' ✓');
     pill.title = def.name + (muted ? ' (muted)' : '');
     pill.addEventListener('click', () => {
       setMuteState(def.id, !muteBtns[def.id].classList.contains('muted'));
