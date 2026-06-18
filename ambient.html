@@ -11,8 +11,135 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;background:radial-gradient(ellipse at top,rgba(0,255,136,.02),transparent 60%),radial-gradient(ellipse at bottom,rgba(0,204,255,.02),transparent 60%),#0d0d14}
-.wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px}
+body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0e0e8;line-height:1.6;background:
+  radial-gradient(ellipse at 15% 20%, rgba(180,120,40,0.06), transparent 50%),
+  radial-gradient(ellipse at 85% 70%, rgba(140,80,30,0.06), transparent 50%),
+  radial-gradient(ellipse at 50% 50%, rgba(200,160,80,0.03), transparent 60%),
+  repeating-linear-gradient(90deg, rgba(160,120,60,0.03) 0px, rgba(160,120,60,0.03) 1px, transparent 1px, transparent 40px),
+  repeating-linear-gradient(0deg, rgba(160,120,60,0.02) 0px, rgba(160,120,60,0.02) 1px, transparent 1px, transparent 40px),
+  radial-gradient(2px 2px at 20% 30%, rgba(100,90,80,0.1), transparent 2px),
+  radial-gradient(2px 2px at 75% 25%, rgba(100,90,80,0.08), transparent 2px),
+  radial-gradient(2px 2px at 60% 80%, rgba(100,90,80,0.1), transparent 2px),
+  radial-gradient(2px 2px at 30% 65%, rgba(100,90,80,0.07), transparent 2px),
+  radial-gradient(2px 2px at 90% 40%, rgba(100,90,80,0.09), transparent 2px),
+  radial-gradient(2px 2px at 10% 80%, rgba(100,90,80,0.08), transparent 2px),
+  radial-gradient(2px 2px at 55% 15%, rgba(100,90,80,0.06), transparent 2px),
+  linear-gradient(135deg, #1e1610 0%, #2d2118 25%, #3d2e1e 50%, #2a1f15 75%, #1a1410 100%)}
+.wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px;position:relative;z-index:1}
+
+/* ── Steampunk gears ── */
+.steam-gear{position:fixed;border-radius:50%;pointer-events:none;z-index:0;border:2px solid rgba(184,134,11,0.08);opacity:0.6}
+.steam-gear::before{content:'';position:absolute;inset:25%;border-radius:50%;border:1.5px solid rgba(184,134,11,0.06)}
+.steam-gear::after{content:'';position:absolute;inset:42%;border-radius:50%;background:rgba(184,134,11,0.05)}
+.sg1{width:140px;height:140px;top:5%;left:2%;animation:spinCw 40s linear infinite}
+.sg2{width:90px;height:90px;bottom:20%;right:3%;animation:spinCcw 30s linear infinite}
+.sg3{width:70px;height:70px;top:45%;right:5%;animation:spinCw 25s linear infinite}
+.sg4{width:110px;height:110px;bottom:10%;left:5%;animation:spinCcw 35s linear infinite}
+@keyframes spinCw{to{transform:rotate(360deg)}}
+@keyframes spinCcw{to{transform:rotate(-360deg)}}
+
+/* ── Steampunk gear teeth effect (notched border) ── */
+.steam-gear::after{content:'';position:absolute;inset:42%;border-radius:50%;background:rgba(184,134,11,0.05)}
+.sg1::before,.sg3::before{border-style:dashed}
+.sg2::before,.sg4::before{border-style:dotted}
+
+/* ── Brass frame around PayPal ── */
+#paypal-container-MU5Q6SR4ACAAU {
+  position: fixed;
+  bottom: 24px;
+  right: calc(24px + 3cm);
+  z-index: 110;
+  transform: scale(0.5);
+  transform-origin: bottom right;
+  padding: 18px 24px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(40,30,20,0.9), rgba(20,15,10,0.95));
+  border: 3px solid #8b7355;
+  border-radius: 60% 60% 50% 50% / 40% 40% 60% 60%;
+  box-shadow:
+    0 0 0 1px #5a4a35,
+    0 0 0 4px #2a2018,
+    0 0 0 5px #6b5a45,
+    0 0 30px rgba(200,160,60,0.08),
+    inset 0 0 20px rgba(180,140,60,0.06),
+    inset 0 0 0 1px rgba(200,170,80,0.1);
+  animation: brassPulse 4s ease-in-out infinite;
+}
+@keyframes brassPulse {
+  0%, 100% { box-shadow: 0 0 0 1px #5a4a35, 0 0 0 4px #2a2018, 0 0 0 5px #6b5a45, 0 0 30px rgba(200,160,60,0.08), inset 0 0 20px rgba(180,140,60,0.06); }
+  50% { box-shadow: 0 0 0 1px #6b5a45, 0 0 0 4px #3a2820, 0 0 0 5px #7b6a55, 0 0 40px rgba(200,160,60,0.12), inset 0 0 25px rgba(180,140,60,0.08); }
+}
+
+/* ── Rivet dots on the frame ── */
+#paypal-container-MU5Q6SR4ACAAU::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  background:
+    radial-gradient(3px 3px at 20% 15%, rgba(180,160,120,0.4), transparent 3px),
+    radial-gradient(3px 3px at 80% 15%, rgba(180,160,120,0.4), transparent 3px),
+    radial-gradient(3px 3px at 20% 85%, rgba(180,160,120,0.4), transparent 3px),
+    radial-gradient(3px 3px at 80% 85%, rgba(180,160,120,0.4), transparent 3px);
+  pointer-events: none;
+}
+
+/* ── Candle holder ── */
+.candle-wrap {
+  position: fixed;
+  bottom: 64px;
+  right: calc(100px + 3cm);
+  z-index: 109;
+  pointer-events: none;
+}
+.candle-holder {
+  width: 18px;
+  height: 10px;
+  margin: 0 auto 4px;
+  background: linear-gradient(180deg, #8b7355, #6b5a45);
+  border-radius: 3px 3px 4px 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.candle-body {
+  width: 8px;
+  height: 24px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #e8d8b0 0%, #c8b890 30%, #e0d0a8 60%, #b8a880 100%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset -2px 0 4px rgba(0,0,0,0.1);
+  position: relative;
+}
+.candle-wick {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 1px;
+  height: 3px;
+  background: #444;
+  transform: translateX(-50%);
+}
+.candle-flame {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 6px;
+  height: 10px;
+  margin-left: -3px;
+  background: radial-gradient(ellipse at 50% 100%, #ffdd44 0%, #ff8822 40%, #ff4400 70%, transparent 100%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flicker 0.3s ease-in-out infinite alternate;
+  box-shadow: 0 0 20px rgba(255,150,40,0.3), 0 0 40px rgba(255,100,20,0.1);
+}
+@keyframes flicker {
+  0% { transform: scaleY(1) translateX(0); opacity: 0.9; }
+  25% { transform: scaleY(1.08) translateX(0.5px); opacity: 1; }
+  50% { transform: scaleY(0.95) translateX(-0.3px); opacity: 0.85; }
+  75% { transform: scaleY(1.05) translateX(0.3px); opacity: 0.95; }
+  100% { transform: scaleY(1) translateX(0); opacity: 0.9; }
+}
+
+/* ── Steampunk accent border on header ── */
+header{border-bottom:1px solid #5a4a35}
+header::after{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,#8b7355,transparent);margin-top:-1px}
 
 .back{display:inline-block;color:#555;text-decoration:none;font-size:0.65rem;letter-spacing:0;margin-bottom:16px;opacity:0.6}
 .back:hover{text-decoration:underline}
@@ -20,7 +147,7 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;backgroun
 .art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px;filter:url(#wind)}
 
 header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222}
-h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00ff88,#00ccff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#d4a847,#b89060,#8b7355);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;text-shadow:0 0 30px rgba(180,140,60,0.15)}
 .tagline{color:#888;font-size:0.9rem;max-width:600px;margin:0 auto}
 
 .study-note{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.82rem;color:#aaa;line-height:1.5}
@@ -90,8 +217,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 .status-bar{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:#555;padding:4px 0}
 
-.footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.82rem;border-top:1px solid #222;margin-top:40px}
-.footer a{color:#4488ff}
+.footer{text-align:center;padding:40px 0 0;color:#6b5a45;font-size:0.82rem;border-top:1px solid #5a4a35;margin-top:40px}
+.footer::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,#8b7355,transparent);margin-bottom:20px}
+.footer a{color:#b89060}.footer a:hover{color:#d4a847}
 
 @media(max-width:640px){
   .wrap{padding:20px 16px 60px}
@@ -99,6 +227,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .grid{grid-template-columns:1fr}
   .beat-grid{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .beat-numbers{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .candle-wrap{display:none}
+  #paypal-container-MU5Q6SR4ACAAU{bottom:12px;right:12px;padding:12px 18px;border-radius:10px;transform:scale(0.35);box-shadow:0 0 0 1px #5a4a35,0 0 0 3px #2a2018}
+  #paypal-container-MU5Q6SR4ACAAU::before{display:none}
 }
 
 /* Noise Garden */
@@ -549,6 +680,17 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <h2>Ambient Studio</h2>
   <p id="loadingStatus">Initializing…</p>
 </div>
+<div class="steam-gear sg1"></div>
+<div class="steam-gear sg2"></div>
+<div class="steam-gear sg3"></div>
+<div class="steam-gear sg4"></div>
+<div class="candle-wrap">
+  <div class="candle-holder"></div>
+  <div class="candle-body">
+    <div class="candle-wick"></div>
+    <div class="candle-flame"></div>
+  </div>
+</div>
 <div class="wrap">
 
 <a class="back" href="https://008amonra.github.io/loom/agent-services.html">AgentServices</a>
@@ -807,7 +949,7 @@ I'll be back next session — same bat-time, same bat-way</textarea>
 </div>
 
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
-<div id="paypal-container-MU5Q6SR4ACAAU" style="position:fixed;bottom:24px;right:calc(24px + 3cm);z-index:110;transform:scale(0.5);transform-origin:bottom right"></div>
+<div id="paypal-container-MU5Q6SR4ACAAU"></div>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
@@ -2294,7 +2436,7 @@ TRACK_DEFS.forEach(def => {
     </div>
     <div class="filter-wrap">
       <label title="Lowpass cutoff">&#x1F50A;</label>
-      <input type="range" min="0" max="1" step="0.01" value="1" id="filter-${def.id}">
+      <input type="range" min="0" max="1" step="0.01" value="0.5" id="filter-${def.id}">
       <span class="slider-val" id="filterVal-${def.id}" style="min-width:32px">20k</span>
     </div>
     ${isSample ? `
