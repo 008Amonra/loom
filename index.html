@@ -72,6 +72,11 @@
 
   .disclaimer{font-size:0.8rem;color:#555;margin-top:24px;padding:12px;border:1px solid #2a2a2a;border-radius:8px}
 
+  .intro-btn-muted:hover{border-color:#d4a847 !important;color:#d4a847 !important;background:#2a2018 !important}
+  .intro-btn-playing{border-color:#44cc66 !important;color:#44cc66 !important;background:#1a2a1a !important;animation:btnPulse 0.8s ease-in-out infinite}
+  .intro-btn-playing:hover{border-color:#66ee88 !important;color:#66ee88 !important}
+  @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(68,204,102,0.3)}50%{box-shadow:0 0 12px 4px rgba(68,204,102,0.15)}}
+
   @media(max-width:640px){
     body{padding:1rem;font-size:15px}
     h1{font-size:1.5rem}
@@ -94,8 +99,15 @@
   <span class="hat-brim">Agent Services</span>
   <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
   <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
-  <a href="/chat.html" style="display:inline-block;margin-top:16px;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+    <a href="/chat.html" style="display:inline-block;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
+    <button id="introPlayBtn" class="intro-btn-muted" title="Unmute intro" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:2px solid #8b7355;border-radius:8px;background:#1e1610;color:#b89060;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:all .2s">
+      <span id="introIcon">🔇</span>
+      <span id="introLabel">Unmute</span>
+    </button>
+  </div>
 </div>
+<audio id="introAudio" src="assets/intro.mp3" preload="auto"></audio>
 
 <!-- About -->
 <div class="card" style="border-color:#2a3a2a;background:#0e0e14">
@@ -351,6 +363,38 @@ document.querySelectorAll('.qbtn').forEach(btn => {
 </div>
 <!-- close .wrap -->
 
+<script>
+// --- Intro audio player ---
+(function(){
+  const btn = document.getElementById('introPlayBtn');
+  const aud = document.getElementById('introAudio');
+  const icon = document.getElementById('introIcon');
+  const label = document.getElementById('introLabel');
+  if (!btn || !aud) return;
+  aud.volume = 0.7;
+  function setMuted() {
+    btn.className = 'intro-btn-muted';
+    icon.textContent = '\uD83D\uDD07';
+    label.textContent = 'Unmute';
+  }
+  function setPlaying() {
+    btn.className = 'intro-btn-playing';
+    icon.textContent = '\uD83D\uDD0A';
+    label.textContent = 'Playing...';
+  }
+  aud.addEventListener('ended', setMuted);
+  btn.addEventListener('click', function(){
+    if (aud.paused) {
+      aud.currentTime = 0;
+      aud.play().then(setPlaying).catch(function(){});
+    } else {
+      aud.pause();
+      aud.currentTime = 0;
+      setMuted();
+    }
+  });
+})();
+</script>
 <script>
 // --- Offer counter: tell me to decrement this when a slot is claimed ---
 let offerSlots = 3;
