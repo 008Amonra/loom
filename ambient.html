@@ -905,7 +905,7 @@ function initAudio() {
   if (ctx) return;
   ctx = new (window.AudioContext || window.webkitAudioContext)();
   masterGain = ctx.createGain();
-  masterGain.gain.value = 0.65;
+  masterGain.gain.value = 0.5;
   destNode = ctx.createMediaStreamDestination();
   initReverb();
   initLimiter();
