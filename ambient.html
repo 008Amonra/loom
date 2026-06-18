@@ -2512,7 +2512,8 @@ function randomize() {
 
 // --- Recording ---
 function startRecording() {
-  if (!isPlaying || isRecording) return;
+  if (isRecording) return;
+  if (!isPlaying) startAll();
   recChunks = [];
   const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus'
     : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm'
