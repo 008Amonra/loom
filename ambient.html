@@ -1149,8 +1149,8 @@ function initAudio() {
   destNode = ctx.createMediaStreamDestination();
   initReverb();
   initLimiter();
-  initEq();
   initDSP();
+  initEq();
   seqBus = ctx.createGain();
   seqBus.gain.value = 1;
   seqBus.connect(reverbSum);
