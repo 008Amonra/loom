@@ -157,7 +157,8 @@ header::after{content:'';display:block;height:2px;background:linear-gradient(90d
 .back{display:inline-block;color:#555;text-decoration:none;font-size:0.65rem;letter-spacing:0;margin-bottom:16px;opacity:0.6}
 .back:hover{text-decoration:underline}
 .art{border-radius:16px;margin:0 0 20px;overflow:hidden;border:1px solid #2a2a3a;background:#14141e;max-height:280px}
-.art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px;filter:url(#wind)}
+.art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px;filter:url(#wind);cursor:zoom-in}
+.art img:fullscreen{max-height:none;object-fit:contain;cursor:zoom-out}
 
 header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222}
 h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#d4a847,#b89060,#8b7355);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;text-shadow:0 0 30px rgba(180,140,60,0.15)}
@@ -4513,6 +4514,15 @@ document.getElementById('limitSlider').addEventListener('input', function() {
     btn.textContent = '\u{1F3A4} Rap Demo';
   });
 })();
+
+// ── Artwork fullscreen ──
+document.querySelector('.art img')?.addEventListener('click', function() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    this.requestFullscreen();
+  }
+});
 
 </script>
 </body>
