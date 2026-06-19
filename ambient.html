@@ -43,6 +43,19 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0
 .sg1::before,.sg3::before{border-style:dashed}
 .sg2::before,.sg4::before{border-style:dotted}
 
+/* ── DSP panel ── */
+#panel-dsp { top: 60px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); }
+#panel-dsp .sub { color:#b080d0; }
+#panel-dsp .dsp-slider label { font-size:0.72rem; color:#888; display:flex; align-items:center; gap:6px; }
+#panel-dsp .dsp-slider label span:first-child { min-width:60px; }
+#panel-dsp .dsp-slider input[type="range"] { flex:1; }
+#panel-dsp .dsp-slider .dsp-val { min-width:36px; font-size:0.7rem; color:#666; text-align:right; }
+#panel-dsp .dsp-bypass { margin-top:8px; display:flex; align-items:center; gap:8px; }
+#panel-dsp .dsp-bypass button { font-size:0.72rem; padding:4px 12px; border-radius:6px; border:none; cursor:pointer; }
+#panel-dsp .dsp-bypass .btn-bypass-off { background:#2a2a3a; color:#e0e0e8; }
+#panel-dsp .dsp-bypass .btn-bypass-on { background:#884466; color:#e0b0d0; }
+.dsp-glassball { background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.1) 0%, rgba(25,10,30,0.85) 60%, rgba(15,8,20,0.95) 100%) !important; border-color: rgba(180,80,200,0.15) !important; color: #d0a0e0 !important; text-shadow: 0 0 8px rgba(180,80,200,0.15) !important; }
+
 /* ── Brass frame around PayPal ── */
 #paypal-container-MU5Q6SR4ACAAU {
   position: fixed;
@@ -732,6 +745,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <button class="btn-dl" id="btnDl" disabled>&#x2B07; Download</button>
   <button class="btn-muteall" id="btnMuteAll">&#x1F507; Mute All</button>
   <button class="btn-unmuteall" id="btnUnmuteAll" style="font-size:0.75rem;padding:4px 10px;border:1px solid #444;border-radius:6px;cursor:pointer">&#x1F509; Unmute All</button>
+  <button id="btnRapDemo" style="font-size:0.75rem;padding:4px 10px;background:#662244;color:#e0b0d0;border:none;border-radius:6px;cursor:pointer;transition:all .15s">&#x1F3A4; Rap Demo</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnSave">&#x1F4BE; Save</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnLoad">&#x1F4C2; Load</button>
 </div>
@@ -971,6 +985,56 @@ I'll be back next session — same bat-time, same bat-way</textarea>
 </div>
 
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling + EQ">SC</div>
+
+<div class="glassball dsp-glassball" data-panel="panel-dsp" title="DSP">DSP</div>
+
+<div class="floating-panel" id="panel-dsp">
+<div class="panel-header">
+  <h2>Digital Signal Processor</h2>
+  <button class="embed-switch" title="Toggle float/embed">
+    <span class="label-on">Float</span>
+    <span class="track"></span>
+    <span class="label-off">Embed</span>
+  </button>
+  <button class="minimize-btn" title="Minimize to glassball">─</button>
+  <span class="drag-dots">⠿</span>
+</div>
+<div class="panel-section">
+  <p class="sub">The ultimate fantasy console — surround simulation for those of us with one speaker, or none at all.</p>
+
+  <div class="dsp-slider">
+    <label><span>Width</span>
+      <input type="range" id="dspWidth" min="0" max="2" step="0.01" value="1">
+      <span class="dsp-val" id="dspWidthVal">100%</span>
+    </label>
+  </div>
+  <div class="dsp-slider">
+    <label><span>Space</span>
+      <input type="range" id="dspSpace" min="0" max="1" step="0.01" value="0">
+      <span class="dsp-val" id="dspSpaceVal">0%</span>
+    </label>
+  </div>
+  <div class="dsp-slider">
+    <label><span>Bass Mono</span>
+      <input type="range" id="dspBassMono" min="20" max="500" step="1" value="150">
+      <span class="dsp-val" id="dspBassMonoVal">150Hz</span>
+    </label>
+  </div>
+  <div class="dsp-slider">
+    <label><span>Crossfeed</span>
+      <input type="range" id="dspCrossfeed" min="0" max="1" step="0.01" value="0">
+      <span class="dsp-val" id="dspCrossfeedVal">0%</span>
+    </label>
+  </div>
+
+  <div class="dsp-bypass">
+    <span style="font-size:0.72rem;color:#666">Bypass</span>
+    <button id="dspBypassBtn" class="btn-bypass-off">Off</button>
+  </div>
+</div>
+<div class="resize-handle"></div>
+</div>
+
 <div id="paypal-container-MU5Q6SR4ACAAU"></div>
 
 <div class="footer">
@@ -1067,6 +1131,14 @@ let reverbConvolver = null;
 let reverbSum = null;
 let limiterNode = null;
 let eqBassNode = null, eqMidNode = null, eqTrebleNode = null;
+
+// DSP nodes
+let dspInput = null, dspOutput = null;
+let dspProcessGain = null, dspDirectGain = null;
+let dspBmSplitter = null, dspBmMerger = null, dspBmLpfL = null, dspBmLpfR = null, dspBmWet = null, dspBmDry = null;
+let dspWidSplitter = null, dspWidMerger = null, dspWidM = null, dspWidS = null, dspWidInv = null, dspWidInv2 = null;
+let dspSpSplitter = null, dspSpMerger = null, dspSpDryL = null, dspSpDryR = null, dspSpDiff = null, dspSpDelay = null, dspSpLpf = null, dspSpMix = null, dspSpInv2 = null;
+let dspCfSplitter = null, dspCfMerger = null, dspCfDelayL = null, dspCfDelayR = null, dspCfGainL = null, dspCfGainR = null;
 let audioOut = null;
 
 function initAudio() {
@@ -1078,6 +1150,7 @@ function initAudio() {
   initReverb();
   initLimiter();
   initEq();
+  initDSP();
   seqBus = ctx.createGain();
   seqBus.gain.value = 1;
   seqBus.connect(reverbSum);
@@ -1102,7 +1175,151 @@ function initEq() {
   reverbSum.connect(eqBassNode);
   eqBassNode.connect(eqMidNode);
   eqMidNode.connect(eqTrebleNode);
-  eqTrebleNode.connect(limiterNode);
+  eqTrebleNode.connect(dspInput);
+  dspOutput.connect(limiterNode);
+}
+
+function initDSP() {
+  if (dspInput) return;
+
+  dspInput = ctx.createGain();
+  dspOutput = ctx.createGain();
+  dspProcessGain = ctx.createGain();
+  dspProcessGain.gain.value = 1;
+  dspDirectGain = ctx.createGain();
+  dspDirectGain.gain.value = 0;
+
+  // Stage 1: Bass Mono — lowpass summed to mono
+  dspBmSplitter = ctx.createChannelSplitter(2);
+  dspBmMerger = ctx.createChannelMerger(2);
+  dspBmLpfL = ctx.createBiquadFilter();
+  dspBmLpfL.type = 'lowpass';
+  dspBmLpfL.frequency.value = 150;
+  dspBmLpfR = ctx.createBiquadFilter();
+  dspBmLpfR.type = 'lowpass';
+  dspBmLpfR.frequency.value = 150;
+  dspBmWet = ctx.createGain();
+  dspBmWet.gain.value = 0;
+  dspBmDry = ctx.createGain();
+  dspBmDry.gain.value = 1;
+
+  dspInput.connect(dspBmSplitter);
+  dspBmSplitter.connect(dspBmLpfL, 0);
+  dspBmSplitter.connect(dspBmLpfR, 1);
+  dspBmLpfL.connect(dspBmWet);
+  dspBmLpfR.connect(dspBmWet);
+  dspBmSplitter.connect(dspBmDry, 0);
+  dspBmSplitter.connect(dspBmDry, 1);
+  dspBmDry.connect(dspBmMerger, 0, 0);
+  dspBmDry.connect(dspBmMerger, 0, 1);
+  dspBmWet.connect(dspBmMerger, 0, 0);
+  dspBmWet.connect(dspBmMerger, 0, 1);
+
+  // Stage 2: Stereo Width — Mid/Side processing
+  dspWidSplitter = ctx.createChannelSplitter(2);
+  dspWidMerger = ctx.createChannelMerger(2);
+  dspWidM = ctx.createGain();
+  dspWidM.gain.value = 0.5;
+  dspWidS = ctx.createGain();
+  dspWidS.gain.value = 0.5;
+  dspWidInv = ctx.createGain();
+  dspWidInv.gain.value = -1;
+  dspWidInv2 = ctx.createGain();
+  dspWidInv2.gain.value = -1;
+
+  dspBmMerger.connect(dspWidSplitter);
+  dspWidSplitter.connect(dspWidM, 0);
+  dspWidSplitter.connect(dspWidM, 1);
+  dspWidSplitter.connect(dspWidS, 0);
+  dspWidSplitter.connect(dspWidInv, 1);
+  dspWidInv.connect(dspWidS);
+  dspWidM.connect(dspWidMerger, 0, 0);
+  dspWidM.connect(dspWidMerger, 0, 1);
+  dspWidS.connect(dspWidMerger, 0, 0);
+  dspWidS.connect(dspWidInv2);
+  dspWidInv2.connect(dspWidMerger, 0, 1);
+
+  // Stage 3: Space — surround ambience from L-R diff
+  dspSpSplitter = ctx.createChannelSplitter(2);
+  dspSpMerger = ctx.createChannelMerger(2);
+  dspSpDryL = ctx.createGain();
+  dspSpDryR = ctx.createGain();
+  dspSpDryL.gain.value = 1;
+  dspSpDryR.gain.value = 1;
+  dspSpDiff = ctx.createGain();
+  dspSpDiff.gain.value = 1;
+  var spInv = ctx.createGain(); spInv.gain.value = -1;
+  dspSpDelay = ctx.createDelay(0.1);
+  dspSpDelay.delayTime.value = 0.03;
+  dspSpLpf = ctx.createBiquadFilter();
+  dspSpLpf.type = 'lowpass';
+  dspSpLpf.frequency.value = 7000;
+  dspSpMix = ctx.createGain();
+  dspSpMix.gain.value = 0;
+  dspSpInv2 = ctx.createGain();
+  dspSpInv2.gain.value = -1;
+
+  dspWidMerger.connect(dspSpSplitter);
+  dspSpSplitter.connect(dspSpDryL, 0);
+  dspSpSplitter.connect(dspSpDryR, 1);
+  dspSpSplitter.connect(dspSpDiff, 0);
+  dspSpSplitter.connect(spInv, 1);
+  spInv.connect(dspSpDiff);
+  dspSpDiff.connect(dspSpDelay);
+  dspSpDelay.connect(dspSpLpf);
+  dspSpLpf.connect(dspSpMix);
+  dspSpDryL.connect(dspSpMerger, 0, 0);
+  dspSpDryR.connect(dspSpMerger, 0, 1);
+  dspSpMix.connect(dspSpMerger, 0, 0);
+  dspSpMix.connect(dspSpInv2);
+  dspSpInv2.connect(dspSpMerger, 0, 1);
+
+  // Stage 4: Crossfeed — headphone spatialization
+  dspCfSplitter = ctx.createChannelSplitter(2);
+  dspCfMerger = ctx.createChannelMerger(2);
+  dspCfDelayL = ctx.createDelay(0.01);
+  dspCfDelayL.delayTime.value = 0.0008;
+  dspCfDelayR = ctx.createDelay(0.01);
+  dspCfDelayR.delayTime.value = 0.0005;
+  dspCfGainL = ctx.createGain();
+  dspCfGainL.gain.value = 0;
+  dspCfGainR = ctx.createGain();
+  dspCfGainR.gain.value = 0;
+
+  dspSpMerger.connect(dspCfSplitter);
+  dspCfSplitter.connect(dspCfMerger, 0, 0);
+  dspCfSplitter.connect(dspCfMerger, 1, 1);
+  dspCfSplitter.connect(dspCfDelayL, 0);
+  dspCfDelayL.connect(dspCfGainL);
+  dspCfGainL.connect(dspCfMerger, 0, 1);
+  dspCfSplitter.connect(dspCfDelayR, 1);
+  dspCfDelayR.connect(dspCfGainR);
+  dspCfGainR.connect(dspCfMerger, 0, 0);
+
+  // Bypass routing
+  dspInput.connect(dspDirectGain);
+  dspDirectGain.connect(dspOutput);
+  dspCfMerger.connect(dspProcessGain);
+  dspProcessGain.connect(dspOutput);
+
+  // Set initial DSP slider values
+  updateDSP();
+}
+
+function updateDSP() {
+  var w = parseFloat(document.getElementById('dspWidth').value);
+  dspWidS.gain.setTargetAtTime(w * 0.5, ctx.currentTime, 0.02);
+
+  var bm = parseFloat(document.getElementById('dspBassMono').value);
+  dspBmLpfL.frequency.setTargetAtTime(bm, ctx.currentTime, 0.02);
+  dspBmLpfR.frequency.setTargetAtTime(bm, ctx.currentTime, 0.02);
+
+  var sp = parseFloat(document.getElementById('dspSpace').value);
+  dspSpMix.gain.setTargetAtTime(sp * 0.5, ctx.currentTime, 0.02);
+
+  var cf = parseFloat(document.getElementById('dspCrossfeed').value);
+  dspCfGainL.gain.setTargetAtTime(cf * 0.25, ctx.currentTime, 0.02);
+  dspCfGainR.gain.setTargetAtTime(cf * 0.25, ctx.currentTime, 0.02);
 }
 
 function setLimit(v) {
@@ -2821,6 +3038,13 @@ function saveSettings() {
   data.djTransit = parseFloat(document.getElementById('djTransit').value);
   data.djHold = parseFloat(document.getElementById('djHold').value);
   data.eq = { bass: parseFloat(document.getElementById('eqBass').value), mid: parseFloat(document.getElementById('eqMid').value), treble: parseFloat(document.getElementById('eqTreble').value) };
+  data.dsp = {
+    width: parseFloat(document.getElementById('dspWidth').value),
+    space: parseFloat(document.getElementById('dspSpace').value),
+    bassMono: parseFloat(document.getElementById('dspBassMono').value),
+    crossfeed: parseFloat(document.getElementById('dspCrossfeed').value),
+    bypass: document.getElementById('dspBypassBtn').textContent === 'On'
+  };
   localStorage.setItem('ambientSettings', JSON.stringify(data));
   document.getElementById('statusText').textContent = 'Settings saved';
 }
@@ -2871,6 +3095,22 @@ function loadSettings() {
         }
       });
     }
+    if (d.dsp) {
+      if (d.dsp.width !== undefined) document.getElementById('dspWidth').value = d.dsp.width;
+      if (d.dsp.space !== undefined) document.getElementById('dspSpace').value = d.dsp.space;
+      if (d.dsp.bassMono !== undefined) document.getElementById('dspBassMono').value = d.dsp.bassMono;
+      if (d.dsp.crossfeed !== undefined) document.getElementById('dspCrossfeed').value = d.dsp.crossfeed;
+      document.getElementById('dspWidthVal').textContent = Math.round(d.dsp.width * 100) + '%';
+      document.getElementById('dspSpaceVal').textContent = Math.round(d.dsp.space * 100) + '%';
+      var bm = d.dsp.bassMono || 150;
+      document.getElementById('dspBassMonoVal').textContent = bm >= 1000 ? (bm/1000).toFixed(1)+'k' : Math.round(bm) + 'Hz';
+      document.getElementById('dspCrossfeedVal').textContent = Math.round(d.dsp.crossfeed * 100) + '%';
+      if (d.dsp.bypass) {
+        var btn = document.getElementById('dspBypassBtn');
+        btn.textContent = 'On';
+        btn.className = 'btn-bypass-on';
+      }
+    }
     TRACK_DEFS.forEach(def => {
       updateSliderDisplay(def.id);
       const ps = document.getElementById('pan-' + def.id), pv = document.getElementById('panVal-' + def.id);
@@ -2891,6 +3131,7 @@ function loadSettings() {
       if (eqBassNode) eqBassNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqBass').value)*12), ctx.currentTime, 0.05);
       if (eqMidNode) eqMidNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqMid').value)*12), ctx.currentTime, 0.05);
       if (eqTrebleNode) eqTrebleNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqTreble').value)*12), ctx.currentTime, 0.05);
+      if (dspInput) updateDSP();
     }
     document.getElementById('statusText').textContent = 'Settings loaded';
     if (typeof updateTrackOverview === 'function') updateTrackOverview();
@@ -3939,6 +4180,29 @@ document.getElementById('revDecay').addEventListener('input', function() {
   if (ctx) updateReverbIR(v);
 });
 
+// --- DSP controls ---
+['dspWidth','dspSpace','dspBassMono','dspCrossfeed'].forEach(function(id) {
+  var slider = document.getElementById(id);
+  var display = document.getElementById(id + 'Val');
+  slider.addEventListener('input', function() {
+    var v = parseFloat(this.value);
+    if (id === 'dspWidth') display.textContent = Math.round(v * 100) + '%';
+    else if (id === 'dspSpace') display.textContent = Math.round(v * 100) + '%';
+    else if (id === 'dspBassMono') display.textContent = v >= 1000 ? (v/1000).toFixed(1)+'k' : Math.round(v) + 'Hz';
+    else if (id === 'dspCrossfeed') display.textContent = Math.round(v * 100) + '%';
+    if (ctx && dspInput) updateDSP();
+  });
+});
+document.getElementById('dspBypassBtn').addEventListener('click', function() {
+  var on = this.textContent === 'Off';
+  this.textContent = on ? 'On' : 'Off';
+  this.className = on ? 'btn-bypass-on' : 'btn-bypass-off';
+  if (dspProcessGain && dspDirectGain) {
+    dspProcessGain.gain.value = on ? 0 : 1;
+    dspDirectGain.gain.value = on ? 1 : 0;
+  }
+});
+
 // --- Master controls ---
 document.getElementById('limitSlider').addEventListener('input', function() {
   const v = parseFloat(this.value);
@@ -4220,6 +4484,34 @@ document.getElementById('limitSlider').addEventListener('input', function() {
       panel.classList.add('minimizing');
     });
   }, 100);
+})();
+
+// ── Rap Demo ──
+(() => {
+  const btn = document.getElementById('btnRapDemo');
+  const audio = document.createElement('audio');
+  audio.src = 'assets/let-me-assist-you.mp3';
+  audio.preload = 'auto';
+  document.body.appendChild(audio);
+
+  btn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.currentTime = 0;
+      audio.play();
+      btn.style.background = '#884466';
+      btn.textContent = '\u{1F3A4} Playing...';
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      btn.style.background = '#662244';
+      btn.textContent = '\u{1F3A4} Rap Demo';
+    }
+  });
+
+  audio.addEventListener('ended', () => {
+    btn.style.background = '#662244';
+    btn.textContent = '\u{1F3A4} Rap Demo';
+  });
 })();
 
 </script>
