@@ -947,10 +947,30 @@ I'll be back next session — same bat-time, same bat-way</textarea>
         <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
     </div>
   </div>
+  <div class="panel-section" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)">
+    <p class="sub">Master EQ — shape the overall tone</p>
+    <div class="eq-controls" style="display:flex;flex-direction:column;gap:6px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#888">
+        <span style="min-width:32px">Bass</span>
+        <input type="range" min="-1" max="1" step="0.01" value="0" id="eqBass" style="flex:1">
+        <span id="eqBassVal" style="min-width:36px;font-size:0.7rem;color:#666;text-align:right">0dB</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#888">
+        <span style="min-width:32px">Mid</span>
+        <input type="range" min="-1" max="1" step="0.01" value="0" id="eqMid" style="flex:1">
+        <span id="eqMidVal" style="min-width:36px;font-size:0.7rem;color:#666;text-align:right">0dB</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#888">
+        <span style="min-width:32px">Treble</span>
+        <input type="range" min="-1" max="1" step="0.01" value="0" id="eqTreble" style="flex:1">
+        <span id="eqTrebleVal" style="min-width:36px;font-size:0.7rem;color:#666;text-align:right">0dB</span>
+      </label>
+    </div>
+  </div>
   <div class="resize-handle"></div>
 </div>
 
-<div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling">SC</div>
+<div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling + EQ">SC</div>
 <div id="paypal-container-MU5Q6SR4ACAAU"></div>
 
 <div class="footer">
@@ -1046,6 +1066,7 @@ let reverbWet = null;
 let reverbConvolver = null;
 let reverbSum = null;
 let limiterNode = null;
+let eqBassNode = null, eqMidNode = null, eqTrebleNode = null;
 let audioOut = null;
 
 function initAudio() {
@@ -1056,9 +1077,32 @@ function initAudio() {
   destNode = ctx.createMediaStreamDestination();
   initReverb();
   initLimiter();
+  initEq();
   seqBus = ctx.createGain();
   seqBus.gain.value = 1;
   seqBus.connect(reverbSum);
+}
+
+function initEq() {
+  if (eqBassNode) return;
+  eqBassNode = ctx.createBiquadFilter();
+  eqBassNode.type = 'lowshelf';
+  eqBassNode.frequency.value = 200;
+  eqBassNode.gain.value = 0;
+  eqMidNode = ctx.createBiquadFilter();
+  eqMidNode.type = 'peaking';
+  eqMidNode.frequency.value = 2000;
+  eqMidNode.Q.value = 0.7;
+  eqMidNode.gain.value = 0;
+  eqTrebleNode = ctx.createBiquadFilter();
+  eqTrebleNode.type = 'highshelf';
+  eqTrebleNode.frequency.value = 5000;
+  eqTrebleNode.gain.value = 0;
+  try { reverbSum.disconnect(limiterNode); } catch(e) {}
+  reverbSum.connect(eqBassNode);
+  eqBassNode.connect(eqMidNode);
+  eqMidNode.connect(eqTrebleNode);
+  eqTrebleNode.connect(limiterNode);
 }
 
 function setLimit(v) {
@@ -2521,25 +2565,6 @@ TRACK_DEFS.forEach(def => {
     }
     if (isPlaying) setVolume(def.id, parseFloat(sliders[def.id].value));
   });
-  function setMuteState(id, muted) {
-    const card = document.getElementById('card-' + id);
-    if (muted) {
-      muteBtns[id].classList.add('muted');
-      muteR_Btns[id].classList.remove('on');
-      muteR_Btns[id].classList.add('off');
-      muteR_Btns[id].textContent = '\u2715';
-      card.classList.add('muted');
-      if (engines[id]) engines[id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
-    } else {
-      muteBtns[id].classList.remove('muted');
-      muteR_Btns[id].classList.remove('off');
-      muteR_Btns[id].classList.add('on');
-      muteR_Btns[id].textContent = '\u2713';
-      card.classList.remove('muted');
-      if (engines[id]) engines[id].gain.gain.setTargetAtTime(parseFloat(sliders[id].value), ctx.currentTime, 0.05);
-    }
-    if (typeof updateTrackOverview === 'function') updateTrackOverview();
-  }
   muteBtns[def.id].addEventListener('click', () => {
     setMuteState(def.id, !muteBtns[def.id].classList.contains('muted'));
   });
@@ -2566,6 +2591,26 @@ TRACK_DEFS.forEach(def => {
     if (filters[def.id]) filters[def.id].frequency.setTargetAtTime(20 * Math.pow(1000, v), ctx.currentTime, 0.05);
   });
 });
+
+function setMuteState(id, muted) {
+  const card = document.getElementById('card-' + id);
+  if (muted) {
+    muteBtns[id].classList.add('muted');
+    muteR_Btns[id].classList.remove('on');
+    muteR_Btns[id].classList.add('off');
+    muteR_Btns[id].textContent = '\u2715';
+    card.classList.add('muted');
+    if (engines[id]) engines[id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
+  } else {
+    muteBtns[id].classList.remove('muted');
+    muteR_Btns[id].classList.remove('off');
+    muteR_Btns[id].classList.add('on');
+    muteR_Btns[id].textContent = '\u2713';
+    card.classList.remove('muted');
+    if (engines[id]) engines[id].gain.gain.setTargetAtTime(parseFloat(sliders[id].value), ctx.currentTime, 0.05);
+  }
+  if (typeof updateTrackOverview === 'function') updateTrackOverview();
+}
 
 async function startAll() {
   initAudio();
@@ -2775,6 +2820,7 @@ function saveSettings() {
   data.preset = document.getElementById('presetSelect').value;
   data.djTransit = parseFloat(document.getElementById('djTransit').value);
   data.djHold = parseFloat(document.getElementById('djHold').value);
+  data.eq = { bass: parseFloat(document.getElementById('eqBass').value), mid: parseFloat(document.getElementById('eqMid').value), treble: parseFloat(document.getElementById('eqTreble').value) };
   localStorage.setItem('ambientSettings', JSON.stringify(data));
   document.getElementById('statusText').textContent = 'Settings saved';
 }
@@ -2815,6 +2861,16 @@ function loadSettings() {
     if (d.preset) document.getElementById('presetSelect').value = d.preset;
     if (d.djTransit) { document.getElementById('djTransit').value = d.djTransit; document.getElementById('djTransitVal').textContent = d.djTransit; }
     if (d.djHold) { document.getElementById('djHold').value = d.djHold; document.getElementById('djHoldVal').textContent = d.djHold; }
+    if (d.eq) {
+      ['Bass','Mid','Treble'].forEach(function(band) {
+        var key = band.toLowerCase();
+        if (d.eq[key] !== undefined) {
+          document.getElementById('eq'+band).value = d.eq[key];
+          var db = Math.round(d.eq[key] * 12);
+          document.getElementById('eq'+band+'Val').textContent = (db>0?'+':'') + db + 'dB';
+        }
+      });
+    }
     TRACK_DEFS.forEach(def => {
       updateSliderDisplay(def.id);
       const ps = document.getElementById('pan-' + def.id), pv = document.getElementById('panVal-' + def.id);
@@ -2832,6 +2888,9 @@ function loadSettings() {
           filters[def.id].frequency.setTargetAtTime(20 * Math.pow(1000, fv), ctx.currentTime, 0.05);
         }
       });
+      if (eqBassNode) eqBassNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqBass').value)*12), ctx.currentTime, 0.05);
+      if (eqMidNode) eqMidNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqMid').value)*12), ctx.currentTime, 0.05);
+      if (eqTrebleNode) eqTrebleNode.gain.setTargetAtTime(Math.round(parseFloat(document.getElementById('eqTreble').value)*12), ctx.currentTime, 0.05);
     }
     document.getElementById('statusText').textContent = 'Settings loaded';
     if (typeof updateTrackOverview === 'function') updateTrackOverview();
@@ -3885,6 +3944,18 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   const v = parseFloat(this.value);
   setLimit(v);
   document.getElementById('limitVal').textContent = v <= 0 ? 'Off' : Math.round(v * 40) + 'dB';
+});
+
+['Bass','Mid','Treble'].forEach(function(band) {
+  var slider = document.getElementById('eq' + band);
+  var display = document.getElementById('eq' + band + 'Val');
+  slider.addEventListener('input', function() {
+    var v = parseFloat(this.value);
+    var db = Math.round(v * 12);
+    display.textContent = (db > 0 ? '+' : '') + db + 'dB';
+    var node = band === 'Bass' ? eqBassNode : band === 'Mid' ? eqMidNode : eqTrebleNode;
+    if (node) node.gain.setTargetAtTime(db, ctx.currentTime, 0.05);
+  });
 });
 
 // --- Floating panel drag, minimize, resize ---
