@@ -153,6 +153,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .study-note{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.82rem;color:#aaa;line-height:1.5}
 .study-note strong{color:#ddd}
 
+.hint-onboard{text-align:center;font-size:0.8rem;color:#888;margin-bottom:8px;transition:opacity .6s;height:20px;line-height:20px}.hint-onboard.hidden{opacity:0;pointer-events:none}
 .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;padding:12px;background:#14141e;border:1px solid #2a2a3a;border-radius:12px}
 .controls button{font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;padding:9px 18px;border:none;border-radius:8px;cursor:pointer;transition:all .15s}
 .btn-start{background:#00cc77;color:#0a0a0a}
@@ -710,6 +711,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <span style="color:#555">— Built for 45DGOF8 as a demonstration of agentic engineering.</span>
 </div>
 
+<div class="hint-onboard" id="hintOnboard">Turn up sliders or click a preset for instant atmosphere</div>
 <div class="controls">
   <button class="btn-start" id="btnStart">&#x25B6; Start</button>
   <button class="btn-stop" id="btnStop" style="display:none">&#x25A0; Stop</button>
@@ -2512,6 +2514,7 @@ function updateSliderDisplay(id) {
 
 TRACK_DEFS.forEach(def => {
   sliders[def.id].addEventListener('input', () => {
+    document.getElementById('hintOnboard').classList.add('hidden');
     updateSliderDisplay(def.id);
     if (muteBtns[def.id].classList.contains('muted')) {
       setMuteState(def.id, false);
@@ -2568,6 +2571,9 @@ async function startAll() {
   initAudio();
   if (ctx.state === 'suspended') await ctx.resume();
   isPlaying = true;
+  var allZero = TRACK_DEFS.every(function(d){return parseFloat(sliders[d.id].value)===0});
+  if (allZero) applyPreset('full');
+  document.getElementById('hintOnboard').classList.add('hidden');
   TRACK_DEFS.forEach(def => {
     try {
       console.log('starting generator:', def.id);
@@ -2722,8 +2728,9 @@ function testTone() {
   if (ctx.state === 'suspended') ctx.resume();
 }
 document.getElementById('btnTest').addEventListener('click', testTone);
-document.getElementById('btnRand').addEventListener('click', randomize);
+document.getElementById('btnRand').addEventListener('click', function(){randomize();document.getElementById('hintOnboard').classList.add('hidden');});
 document.getElementById('btnAutoDJ').addEventListener('click', () => {
+  document.getElementById('hintOnboard').classList.add('hidden');
   if (djActive) stopAutoDJ(); else startAutoDJ();
 });
 document.getElementById('btnRec').addEventListener('click', () => {
@@ -2836,6 +2843,7 @@ document.getElementById('btnLoad').addEventListener('click', loadSettings);
 
 document.getElementById('presetSelect').addEventListener('change', e => {
   if (e.target.value !== 'custom') { applyPreset(e.target.value); if (djActive) stopAutoDJ(); }
+  document.getElementById('hintOnboard').classList.add('hidden');
 });
 
 // Init sliders with a gentle default
