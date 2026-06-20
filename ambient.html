@@ -289,6 +289,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.piano{background:#ffaa44;border-color:#ffaa44}
 .beat-step.on.oxygene{background:#ff8844;border-color:#ff8844}
 .beat-step.on.equinoxe{background:#cc66ff;border-color:#cc66ff}
+.beat-step.on.beam{background:#88ddff;border-color:#88ddff}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
 .seq-mute:hover{color:#aaa;background:#1a1a2e}
@@ -3748,9 +3749,10 @@ const seqPatterns = {
   piano:   [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
   oxygene: [0,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,1],
   equinoxe:[0,0,0,0, 0,1,0,0, 0,0,0,0, 0,0,0,0],
+  beam:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano', 'oxygene', 'equinoxe'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44', oxygene:'#ff8844', equinoxe:'#cc66ff' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano', 'oxygene', 'equinoxe', 'beam'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44', oxygene:'#ff8844', equinoxe:'#cc66ff', beam:'#88ddff' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -3782,7 +3784,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe', beam:'Beam' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -3908,12 +3910,6 @@ function seqRandomize() {
           if (i % 8 === 4 && Math.random() < 0.6) on = 1;
           else if (i % 16 === 12 && Math.random() < 0.4) on = 1;
           break;
-        case 'oxygene':
-          if (i % 8 === 7 && Math.random() < 0.4) on = 1;
-          break;
-        case 'equinoxe':
-          if (i % 8 === 5 && Math.random() < 0.3) on = 1;
-          break;
       }
       pat.push(on);
     }
@@ -3933,6 +3929,7 @@ function seqBreakbeat() {
   seqPatterns.piano   = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
   seqPatterns.oxygene = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   seqPatterns.equinoxe= [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.beam   = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   seqUpdateGrid();
   document.getElementById('presetSelect').value = 'custom';
 }
@@ -4137,28 +4134,35 @@ function seqPlayOxygene() {
   const chord = oxygeneChords[oxygeneChordIdx % oxygeneChords.length];
   oxygeneChordIdx++;
   chord.forEach((freq, i) => {
-    for (let v = 0; v < 3; v++) {
-      const osc = ctx.createOscillator();
-      osc.type = 'sawtooth';
-      osc.frequency.value = freq;
-      osc.detune.value = (v - 1) * 5;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(150, now);
-      filter.frequency.linearRampToValueAtTime(1000, now + 0.4);
-      filter.Q.value = 2;
-      const vca = ctx.createGain();
-      const stagger = i * 0.06;
-      vca.gain.setValueAtTime(0, now + stagger);
-      vca.gain.linearRampToValueAtTime(0.03, now + stagger + 0.15);
-      vca.gain.setValueAtTime(0.03, now + 0.8);
-      vca.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-      osc.connect(filter);
-      filter.connect(vca);
-      vca.connect(seqGain);
-      osc.start(now + stagger);
-      osc.stop(now + 1.3);
-    }
+    const stagger = i * 0.08;
+    const t = now + stagger;
+    const tri = ctx.createOscillator();
+    tri.type = 'triangle';
+    tri.frequency.value = freq;
+    const vib = ctx.createOscillator();
+    vib.type = 'sine';
+    vib.frequency.value = 4 + Math.random() * 2;
+    const vibGain = ctx.createGain();
+    vibGain.gain.value = freq * 0.008;
+    vib.connect(vibGain);
+    vibGain.connect(tri.frequency);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(300, t);
+    filter.frequency.linearRampToValueAtTime(800, t + 0.5);
+    filter.Q.value = 8;
+    const vca = ctx.createGain();
+    vca.gain.setValueAtTime(0, t);
+    vca.gain.linearRampToValueAtTime(0.035, t + 0.2);
+    vca.gain.setValueAtTime(0.035, t + 0.7);
+    vca.gain.exponentialRampToValueAtTime(0.001, t + 1.3);
+    tri.connect(filter);
+    filter.connect(vca);
+    vca.connect(seqGain);
+    tri.start(t);
+    tri.stop(t + 1.4);
+    vib.start(t);
+    vib.stop(t + 1.4);
   });
 }
 
@@ -4174,33 +4178,82 @@ function seqPlayEquinoxe() {
   const chord = equinoxeChords[equinoxeChordIdx % equinoxeChords.length];
   equinoxeChordIdx++;
   chord.forEach((freq, i) => {
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.value = freq;
-    osc.detune.value = (Math.random() - 0.5) * 8;
-    const sub = ctx.createOscillator();
-    sub.type = 'triangle';
-    sub.frequency.value = freq;
-    sub.detune.value = (Math.random() - 0.5) * 5;
+    const stagger = i * 0.04;
+    const t = now + stagger;
+    const shimmer = ctx.createOscillator();
+    shimmer.type = 'sine';
+    shimmer.frequency.value = freq * 4;
+    shimmer.detune.value = (Math.random() - 0.5) * 12;
+    const shimmer2 = ctx.createOscillator();
+    shimmer2.type = 'sine';
+    shimmer2.frequency.value = freq * 4.02;
+    shimmer2.detune.value = (Math.random() - 0.5) * 10;
+    const tremolo = ctx.createOscillator();
+    tremolo.type = 'sine';
+    tremolo.frequency.value = 6 + Math.random() * 3;
+    const tremGain = ctx.createGain();
+    tremGain.gain.value = 0.4;
+    tremolo.connect(tremGain);
+    const ampGate = ctx.createGain();
+    ampGate.gain.setValueAtTime(0, t);
+    ampGate.gain.linearRampToValueAtTime(0.03, t + 0.05);
+    ampGate.gain.setValueAtTime(0.03, t + 0.15);
+    ampGate.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+    tremGain.connect(ampGate.gain);
+    shimmer.connect(ampGate);
+    shimmer2.connect(ampGate);
+    ampGate.connect(seqGain);
+    shimmer.start(t);
+    shimmer.stop(t + 0.9);
+    shimmer2.start(t);
+    shimmer2.stop(t + 0.9);
+    tremolo.start(t);
+    tremolo.stop(t + 0.9);
+  });
+}
+
+const beamChords = [
+  [261.63, 329.63, 392.00],
+  [220.00, 277.18, 329.63],
+  [293.66, 369.99, 440.00],
+  [196.00, 261.63, 311.13],
+];
+let beamChordIdx = 0;
+function seqPlayBeam() {
+  const now = ctx.currentTime;
+  const chord = beamChords[beamChordIdx % beamChords.length];
+  beamChordIdx++;
+  chord.forEach((freq, i) => {
+    const stagger = i * 0.05;
+    const t = now + stagger;
+    const lead = ctx.createOscillator();
+    lead.type = 'sawtooth';
+    lead.frequency.value = freq;
+    const thick = ctx.createOscillator();
+    thick.type = 'square';
+    thick.frequency.value = freq * 0.5;
+    thick.detune.value = 7;
     const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(250, now);
-    filter.frequency.linearRampToValueAtTime(1400, now + 0.6);
-    filter.Q.value = 4;
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(200, t);
+    filter.frequency.linearRampToValueAtTime(1800, t + 0.3);
+    filter.frequency.setValueAtTime(1800, t + 1.2);
+    filter.frequency.linearRampToValueAtTime(400, t + 1.8);
+    filter.Q.value = 3;
     const vca = ctx.createGain();
-    const stagger = i * 0.08;
-    vca.gain.setValueAtTime(0, now + stagger);
-    vca.gain.linearRampToValueAtTime(0.025, now + stagger + 0.2);
-    vca.gain.setValueAtTime(0.025, now + 1.0);
-    vca.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
-    osc.connect(filter);
-    sub.connect(filter);
+    vca.gain.setValueAtTime(0, t);
+    vca.gain.linearRampToValueAtTime(0.04, t + 0.04);
+    vca.gain.setValueAtTime(0.04, t + 0.8);
+    vca.gain.linearRampToValueAtTime(0.025, t + 1.2);
+    vca.gain.exponentialRampToValueAtTime(0.001, t + 2.0);
+    lead.connect(filter);
+    thick.connect(filter);
     filter.connect(vca);
     vca.connect(seqGain);
-    osc.start(now + stagger);
-    osc.stop(now + 1.6);
-    sub.start(now + stagger);
-    sub.stop(now + 1.6);
+    lead.start(t);
+    lead.stop(t + 2.1);
+    thick.start(t);
+    thick.stop(t + 2.1);
   });
 }
 
@@ -4225,6 +4278,7 @@ function seqPlayStep() {
   if (seqPatterns.bass[seqStep] && !seqMuted.bass) seqPlayBass();
   if (seqPatterns.oxygene[seqStep] && !seqMuted.oxygene) seqPlayOxygene();
   if (seqPatterns.equinoxe[seqStep] && !seqMuted.equinoxe) seqPlayEquinoxe();
+  if (seqPatterns.beam[seqStep] && !seqMuted.beam) seqPlayBeam();
   seqBeatEls.forEach(el => el.classList.remove('active'));
   seqBeatEls.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active'));
   seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
@@ -4245,6 +4299,7 @@ async function seqStart() {
   pianoChordIdx = 0;
   oxygeneChordIdx = 0;
   equinoxeChordIdx = 0;
+  beamChordIdx = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
   document.getElementById('seqBtn').classList.add('active');
   seqPlayStep();
