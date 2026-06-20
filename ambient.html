@@ -3011,8 +3011,6 @@ async function startAll() {
   initAudio();
   if (ctx.state === 'suspended') await ctx.resume();
   isPlaying = true;
-  var allZero = TRACK_DEFS.every(function(d){return parseFloat(sliders[d.id].value)===0});
-  if (allZero) applyPreset('full');
   document.getElementById('hintOnboard').classList.add('hidden');
   TRACK_DEFS.forEach(def => {
     try {
@@ -3798,6 +3796,7 @@ let seqPlaying = false;
 let seqStep = 0;
 let seqTimer = null;
 let seqGain = null;
+let seqBeatEls = null, seqPrCells = null;
 let beatSurpriseTimer = null;
 let beatSurpriseStop = null;
 const BANKS = [
@@ -3861,13 +3860,12 @@ const PIANO_FREQ_MAP = Object.fromEntries(PIANO_NOTES.map(n => [n.n, n.f]));
 const PIANO_NAMES = PIANO_NOTES.map(n => n.n);
 let seqPianoRoll = Array.from({length: 16}, () => []);
 let seqPianoActive = false;
-seqBuildPianoRoll();
+let seqPianoBuilt = false;
 if (localStorage.getItem('ambientSettings')) loadSettings();
 
 function seqBuildGrid() {
   const grid = document.getElementById('beatGrid');
   grid.innerHTML = '';
-  // Bank toggles
   const bankBar = document.createElement('div');
   bankBar.className = 'bank-bar';
   BANKS.forEach(b => {
@@ -3884,7 +3882,6 @@ function seqBuildGrid() {
     bankBar.appendChild(cb);
   });
   grid.appendChild(bankBar);
-  // Track rows
   const activeRows = getActiveRows();
   activeRows.forEach(row => {
     const rdiv = document.createElement('div');
@@ -3918,7 +3915,6 @@ function seqBuildGrid() {
     }
     grid.appendChild(rdiv);
   });
-  // Beat numbers
   const nums = document.getElementById('beatNums');
   nums.innerHTML = '';
   for (let i = 0; i < 16; i++) {
@@ -3927,7 +3923,6 @@ function seqBuildGrid() {
     n.textContent = i % 4 === 0 ? (i / 4 + 1) : '\u00B7';
     nums.appendChild(n);
   }
-  // Wire up mute buttons
   activeRows.forEach(row => {
     const el = document.getElementById(SEQ_MUTE + '-' + row);
     if (el) el.addEventListener('click', () => seqToggleMute(row));
@@ -3945,6 +3940,13 @@ function seqToggleBank(bankId) {
   seqBuildGrid();
 }
 seqBuildGrid();
+
+function seqPianoToggle() {
+  if (!seqPianoBuilt) { seqBuildPianoRoll(); seqPianoBuilt = true; }
+  seqPianoActive = !seqPianoActive;
+  document.getElementById('btnPianoRoll').classList.toggle('active', seqPianoActive);
+  document.getElementById('pianoRollWrap').classList.toggle('open', seqPianoActive);
+}
 
 function seqBuildPianoRoll() {
   const table = document.getElementById('pianoRollTable');
@@ -3998,12 +4000,6 @@ function seqUpdatePianoRoll() {
 function seqPianoClear() {
   seqPianoRoll = Array.from({length: 16}, () => []);
   seqUpdatePianoRoll();
-}
-
-function seqPianoToggle() {
-  seqPianoActive = !seqPianoActive;
-  document.getElementById('btnPianoRoll').classList.toggle('active', seqPianoActive);
-  document.getElementById('pianoRollWrap').classList.toggle('open', seqPianoActive);
 }
 
 function seqRandomize() {
@@ -4580,8 +4576,6 @@ function seqPlayVibes() {
   tremolo.stop(now + 1.6);
 }
 
-let seqBeatEls = null, seqPrCells = null;
-
 function seqCacheDOM() {
   seqBeatEls = Array.from(document.querySelectorAll('.beat-step'));
   seqPrCells = Array.from(document.querySelectorAll('#pianoRollTable .pr-cell'));
@@ -4981,15 +4975,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   var overlay = document.getElementById('loadingOverlay');
   var st = document.getElementById('loadingStatus');
   if (!overlay) return;
-  var steps = [
-    { t: 500, msg: 'Loading Audio…' },
-    { t: 1500, msg: 'Almost ready…' },
-  ];
-  steps.forEach(function(s) { setTimeout(function() { if (st) st.textContent = s.msg; }, s.t); });
-  setTimeout(function() {
-    if (st) st.textContent = 'Ready';
-    overlay.classList.add('hidden');
-  }, 3000);
+  overlay.classList.add('hidden');
 })();
 
 // --- Init PayPal hosted button ---
