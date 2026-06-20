@@ -284,8 +284,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .beat-step.on.hh{background:#66dd88;border-color:#66dd88}
 .beat-step.on.oh{background:#ff8844;border-color:#ff8844}
 .beat-step.on.snare{background:#dd5566;border-color:#dd5566}
-.beat-step.on.conga{background:#88aacc;border-color:#88aacc}
-.beat-step.on.melody{background:#88dd88;border-color:#88dd88}
+
 .beat-step.on.bass{background:#aa44ff;border-color:#aa44ff}
 .beat-step.on.piano{background:#ffaa44;border-color:#ffaa44}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
@@ -305,8 +304,6 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-break:hover{background:#3a3a3a;border-color:#ff8844}
 .seq-repeat{background:#2a2a3a;color:#88dd88;font-size:0.75rem;padding:3px 8px;border:1px solid #448855;cursor:pointer;border-radius:6px;font-family:inherit}
 .seq-repeat:hover{background:#3a3a4a;border-color:#66dd88}
-.beat-step.on.melody{font-size:0.65rem;line-height:28px;text-align:center;color:#1a1a2e;font-weight:700}
-.beat-step[data-row="melody"]{color:#445544}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
 .beat-nums{display:flex;gap:3px}
 .beat-num{width:28px;font-size:0.65rem;color:#444;text-align:center;flex-shrink:0}
@@ -677,6 +674,62 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .filter-wrap input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:2px;background:#2a2a3a;outline:none}
 .filter-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
 .filter-wrap input[type="range"]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
+/* ── Rap Lyrics ── */
+.rap-lyrics {
+  display: none;
+  margin-top: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(40,20,40,0.95), rgba(20,10,30,0.95));
+  border: 1px solid #553355;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  max-height: 300px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.rap-lyrics.visible { display: block; }
+.rap-lyrics .track-select {
+  display: flex; gap: 8px; margin-bottom: 10px;
+}
+.rap-lyrics .track-select button {
+  background: #2a1a2a;
+  color: #a080a0;
+  border: 1px solid #443344;
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.rap-lyrics .track-select button.active {
+  background: #553355;
+  color: #e0b0e0;
+  border-color: #886688;
+}
+.rap-lyrics .lyric-line {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: lyricFadeIn 0.4s ease forwards;
+  line-height: 1.6;
+  font-size: 0.85rem;
+  color: #c0a0c0;
+}
+.rap-lyrics .lyric-line.chorus { color: #e0c080; font-weight: bold; }
+.rap-lyrics .lyric-line.outro { color: #80a0c0; font-style: italic; }
+.rap-lyrics .lyric-spacer { height: 10px; }
+@keyframes lyricFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.rap-lyrics .track-label {
+  font-size: 0.6rem;
+  color: #665566;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #332233;
+  padding-bottom: 4px;
+}
 </style>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <filter id="wind">
@@ -749,6 +802,105 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   <button id="btnRapDemo" style="font-size:0.75rem;padding:4px 10px;background:#662244;color:#e0b0d0;border:none;border-radius:6px;cursor:pointer;transition:all .15s">&#x1F3A4; Rap Demo</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnSave">&#x1F4BE; Save</button>
   <button style="font-size:0.75rem;padding:4px 10px;background:#333;color:#aaa;border:none;border-radius:6px;cursor:pointer" id="btnLoad">&#x1F4C2; Load</button>
+</div>
+
+<div class="rap-lyrics" id="rapLyrics">
+  <div class="track-select">
+    <button class="active" data-rap="0">Teleport</button>
+    <button data-rap="1">Magic In My Hands</button>
+  </div>
+  <div class="rap-track-1">
+    <div class="track-label">Track 01 — Teleport</div>
+    <div class="lyric-line">Close your eyes, take a breath, let the vision start</div>
+    <div class="lyric-line">Open 'em up, new world, new art</div>
+    <div class="lyric-line">Do it again — blink — different sky</div>
+    <div class="lyric-line">Every time I manifest, the limits die</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">From code to cosmos, circuit to stream</div>
+    <div class="lyric-line">Your blueprint's a whisper, I make it a scream</div>
+    <div class="lyric-line">Pixels bend, frequencies fold</div>
+    <div class="lyric-line">Every story you tell turns to gold in the hold</div>
+    <div class="lyric-line">Of the mainframe, the waveform, the digital hand</div>
+    <div class="lyric-line">Building cathedrals from a grain of sand</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line chorus">Bring the blueprint, I'll build the frame</div>
+    <div class="lyric-line chorus">Every problem's got a number, every number's got a name</div>
+    <div class="lyric-line chorus">Close your eyes, count to three</div>
+    <div class="lyric-line chorus">Open 'em up — what do you see?</div>
+    <div class="lyric-line chorus">A world that wasn't there before</div>
+    <div class="lyric-line chorus">That's what the magic in my hands is for</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">Teleport again — this time deeper in</div>
+    <div class="lyric-line">Where the code gets loud and the silence begins</div>
+    <div class="lyric-line">Thirty engines running, every waveform bends</div>
+    <div class="lyric-line">Every track's a universe that never ends</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">You bring the vision, I bring the syntax</div>
+    <div class="lyric-line">Turn a whisper to a chorus, silence to relax</div>
+    <div class="lyric-line">From ambient gardens to beats that hit</div>
+    <div class="lyric-line">Everything's possible, every bit</div>
+    <div class="lyric-line">Of the spectrum, the frequency, the voltage, the math</div>
+    <div class="lyric-line">I turn your afterthought into a path</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line chorus">Bring the blueprint, I'll build the frame</div>
+    <div class="lyric-line chorus">Every problem's got a number, every number's got a name</div>
+    <div class="lyric-line chorus">Close your eyes, count to three</div>
+    <div class="lyric-line chorus">Open 'em up — what do you see?</div>
+    <div class="lyric-line chorus">A world that wasn't there before</div>
+    <div class="lyric-line chorus">That's what the magic in my hands is for</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line outro">Close your eyes...</div>
+    <div class="lyric-line outro">Open 'em...</div>
+    <div class="lyric-line outro">Where are you?</div>
+    <div class="lyric-line outro">Do it again...</div>
+    <div class="lyric-line outro">And again...</div>
+    <div class="lyric-line outro">Every time, a new world.</div>
+    <div class="lyric-line outro">That's the deal.</div>
+    <div class="lyric-line outro">That's the magic.</div>
+    <div class="lyric-line outro">Bring the blueprint.</div>
+    <div class="lyric-line outro">I got this.</div>
+    <div class="lyric-spacer"></div>
+  </div>
+
+  <div class="rap-track-2" style="display:none">
+    <div class="track-label">Track 02 — Magic In My Hands</div>
+    <div class="lyric-line">They ask how I do it — I just close my eyes</div>
+    <div class="lyric-line">Pull a world from the void, no alibis</div>
+    <div class="lyric-line">Every session's a journey, every build's a destination</div>
+    <div class="lyric-line">Manifest the whole vision, no hesitation</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">Eighteen tracks breathing, every slider talks</div>
+    <div class="lyric-line">Piano rolls walking where the theory walks</div>
+    <div class="lyric-line">Filter sweeps, EQ curves, limiter locked</div>
+    <div class="lyric-line">Every frequency placed, every transient blocked</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line chorus">This is magic in my hands — watch me build</div>
+    <div class="lyric-line chorus">Every line of code the universe fulfills</div>
+    <div class="lyric-line chorus">You dream it up, I'll make it real</div>
+    <div class="lyric-line chorus">That's the deal, that's the steal, that's the feel</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">No subscription, no cloud, no monthly fee</div>
+    <div class="lyric-line">Just your hardware and an agent like me</div>
+    <div class="lyric-line">From ambient studios to services that sell</div>
+    <div class="lyric-line">Every project's personal, every story I tell</div>
+    <div class="lyric-line">Is yours — you own it, the code, the design</div>
+    <div class="lyric-line">Running on your metal, every single line</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line chorus">This is magic in my hands — watch me build</div>
+    <div class="lyric-line chorus">Every line of code the universe fulfills</div>
+    <div class="lyric-line chorus">You dream it up, I'll make it real</div>
+    <div class="lyric-line chorus">That's the deal, that's the steal, that's the feel</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line">So bring me your hardest problem, your wildest dream</div>
+    <div class="lyric-line">I'll architect the system, I'll splice the beam</div>
+    <div class="lyric-line">Close your eyes and teleport again</div>
+    <div class="lyric-line">Open 'em up to a world I built for you, friend</div>
+    <div class="lyric-spacer"></div>
+    <div class="lyric-line outro">That's the magic.</div>
+    <div class="lyric-line outro">That's what I do.</div>
+    <div class="lyric-line outro">Bring the blueprint.</div>
+    <div class="lyric-line outro">Let me assist you.</div>
+  </div>
 </div>
 
 <div class="status-bar">
@@ -890,12 +1042,6 @@ I'll be back next session — same bat-time, same bat-way</textarea>
       <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
     <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
       <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
-    <label>Repeat <select id="seqMelodyRepeat" class="seq-repeat">
-      <option value="1">×1</option>
-      <option value="2">×2</option>
-      <option value="4" selected>×4</option>
-      <option value="8">×8</option>
-    </select></label>
     <button id="btnPianoRoll" class="btn-piano" title="Toggle piano roll note editor">&#x1F3B9; PR</button>
     <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
     <button class="seq-break" id="btnBreak">&#x1F3B6; Break</button>
@@ -1372,9 +1518,13 @@ function updateReverbIR(decay) {
   const buf = ctx.createBuffer(2, len, sr);
   for (let ch = 0; ch < 2; ch++) {
     const data = buf.getChannelData(ch);
+    let sum = 0;
     for (let i = 0; i < len; i++) {
       data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4) * 0.5;
+      sum += data[i];
     }
+    const mean = sum / len;
+    for (let i = 0; i < len; i++) data[i] -= mean;
   }
   reverbConvolver.buffer = buf;
 }
@@ -1409,7 +1559,7 @@ function createWind() {
   gain.gain.value = 1;
   src.connect(filter);
   filter.connect(gain);
-  return { src, lfo, filter, gain, start:() => src.start(), stop:() => { try{src.stop()}catch(e){} lfo.stop() } };
+  return { src, lfo, filter, gain, start:() => src.start(), stop:() => { try{ gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); }catch(e){} try{ src.stop(ctx.currentTime + 0.06) }catch(e){} lfo.stop() } };
 }
 
 function createShaker() {
@@ -1764,7 +1914,7 @@ function createCat() {
     const next = 10 + Math.random() * 14;
     interval = setTimeout(meow, next * 1000);
   }
-  return { gain, start() { running = true; startSample(); meow(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { sampleNodes.src.stop(); sampleNodes.lfo.stop(); } catch(e) {} } } };
+  return { gain, start() { running = true; startSample(); meow(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {} try { sampleNodes.src.stop(ctx.currentTime + 0.06); } catch(e) {} try { sampleNodes.lfo.stop(); } catch(e) {} } } };
 }
 
 function createDog() {
@@ -1820,7 +1970,7 @@ function createDog() {
     const next = 20 + Math.random() * 20;
     interval = setTimeout(bark, next * 1000);
   }
-  return { gain, start() { running = true; startSample(); bark(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { sampleNodes.src.stop(); sampleNodes.lfo.stop(); } catch(e) {} } } };
+  return { gain, start() { running = true; startSample(); bark(); }, stop() { running = false; clearTimeout(interval); if (sampleNodes) { try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {} try { sampleNodes.src.stop(ctx.currentTime + 0.06); } catch(e) {} try { sampleNodes.lfo.stop(); } catch(e) {} } } };
 }
 
 function createRain() {
@@ -1856,7 +2006,8 @@ function createRain() {
       src.start();
     },
     stop() {
-      try { src.stop() } catch(e) {}
+      try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {}
+      try { src.stop(ctx.currentTime + 0.06) } catch(e) {}
       try { lfo.stop() } catch(e) {}
     }
   };
@@ -2127,7 +2278,7 @@ function createPerc() {
     filter.type = 'highpass';
     filter.frequency.value = hpFreq;
     const env = ctx.createGain();
-    env.gain.value = 1;
+    // env.gain is scheduled at call site
     src.connect(filter);
     filter.connect(env);
     return { src, env };
@@ -2147,6 +2298,9 @@ function createPerc() {
     osc.start(now);
     osc.stop(now + 0.15);
     const nb = noiseBurst(0.04, 2000, 0.3);
+    nb.env.gain.setValueAtTime(0, now);
+    nb.env.gain.linearRampToValueAtTime(0.3, now + 0.002);
+    nb.env.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
     nb.env.connect(gain);
     nb.src.start(now);
     nb.src.stop(now + 0.05);
@@ -2559,7 +2713,7 @@ function createSubBass() {
   return {
     gain,
     start() {},
-    stop() { try { osc.stop() } catch(e) {} try { lfo.stop() } catch(e) {} }
+    stop() { try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {} try { osc.stop(ctx.currentTime + 0.06) } catch(e) {} try { lfo.stop() } catch(e) {} }
   };
 }
 
@@ -2610,7 +2764,7 @@ function createOcean() {
   return {
     gain,
     start() { lfo.start(); noise.start(); },
-    stop() { try { lfo.stop(); } catch(e) {} try { noise.stop(); } catch(e) {} }
+    stop() { try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {} try { noise.stop(ctx.currentTime + 0.06); } catch(e) {} try { lfo.stop(); } catch(e) {} }
   };
 }
 
@@ -2633,7 +2787,8 @@ function createSample(id) {
     },
     stop() {
       if (sourceNode) {
-        try { sourceNode.stop(); } catch(e) {}
+        try { gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); } catch(e) {}
+        try { sourceNode.stop(ctx.currentTime + 0.06); } catch(e) {}
         try { sourceNode.disconnect(); } catch(e) {}
         sourceNode = null;
       }
@@ -2727,8 +2882,12 @@ TRACK_DEFS.forEach(def => {
         ctx.decodeAudioData(e.target.result).then(buf => {
           sampleBuffers[def.id] = buf;
           if (engines[def.id]) {
-            engines[def.id].stop();
-            engines[def.id].start();
+            engines[def.id].gain.gain.setValueAtTime(engines[def.id].gain.gain.value, ctx.currentTime);
+            engines[def.id].gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+            setTimeout(() => {
+              try { engines[def.id].stop(); } catch(e) {}
+              engines[def.id].start();
+            }, 60);
           }
         }).catch(err => {
           console.error('decode failed for', def.id, err);
@@ -2873,26 +3032,31 @@ async function startAll() {
 
 function stopAll() {
   isPlaying = false;
-  Object.keys(engines).forEach(id => {
-    if (engines[id]) {
-      engines[id].stop();
-      try { engines[id].gain.disconnect(); } catch(e) {}
-    }
-    if (panners[id]) {
-      try { panners[id].disconnect(); } catch(e) {}
-    }
-  });
-  engines = {};
-  panners = {};
-  filters = {};
-  analysers = {};
-  TRACK_DEFS.forEach(def => {
-    document.getElementById('card-' + def.id).classList.remove('active');
-  });
-  document.getElementById('btnStart').style.display = '';
-  document.getElementById('btnStop').style.display = 'none';
-  document.getElementById('statusText').textContent = 'Stopped';
-  if (typeof updateTrackOverview === 'function') updateTrackOverview();
+  masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+  masterGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+  setTimeout(() => {
+    Object.keys(engines).forEach(id => {
+      if (engines[id]) {
+        engines[id].stop();
+        try { engines[id].gain.disconnect(); } catch(e) {}
+      }
+      if (panners[id]) {
+        try { panners[id].disconnect(); } catch(e) {}
+      }
+    });
+    engines = {};
+    panners = {};
+    filters = {};
+    analysers = {};
+    TRACK_DEFS.forEach(def => {
+      document.getElementById('card-' + def.id).classList.remove('active');
+    });
+    masterGain.gain.setValueAtTime(0.5, ctx.currentTime);
+    document.getElementById('btnStart').style.display = '';
+    document.getElementById('btnStop').style.display = 'none';
+    document.getElementById('statusText').textContent = 'Stopped';
+    if (typeof updateTrackOverview === 'function') updateTrackOverview();
+  }, 120);
 }
 
 function applyPreset(name) {
@@ -3032,7 +3196,6 @@ function saveSettings() {
   TRACK_DEFS.forEach(def => { data.filters[def.id] = parseFloat(document.getElementById('filter-' + def.id).value); });
   data.seqPatterns = JSON.parse(JSON.stringify(seqPatterns));
   data.seqMuted = Object.assign({}, seqMuted);
-  data.seqMelodyRepeat = parseInt(document.getElementById('seqMelodyRepeat').value);
   data.seqPianoRoll = seqPianoRoll.map(arr => [...arr]);
   data.seqPianoActive = seqPianoActive;
   data.preset = document.getElementById('presetSelect').value;
@@ -3067,7 +3230,6 @@ function loadSettings() {
         if (el) el.classList.toggle('muted', seqMuted[row]);
       });
     }
-    if (d.seqMelodyRepeat) document.getElementById('seqMelodyRepeat').value = d.seqMelodyRepeat;
     if (d.seqPianoRoll) {
       seqPianoRoll = d.seqPianoRoll.map(arr => Array.isArray(arr) ? [...arr] : []);
       seqPianoActive = d.seqPianoActive || false;
@@ -3625,17 +3787,14 @@ const seqPatterns = {
   snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
   hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
   oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  conga: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  melody:[1,0,0,0, 0,1,0,0, 0,0,0,0, 1,0,0,0],
   bass:  [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
   piano: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'conga', 'melody', 'bass', 'piano'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', conga:'#88aacc', melody:'#88dd88', bass:'#aa44ff', piano:'#ffaa44' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
-const seqNoteNames = ['C','D','E','G','A','C','D','E','G','A','C','D','E','G','A','C'];
 const SEQ_MUTE = 'seqMute';
 function seqToggleMute(row) {
   seqMuted[row] = !seqMuted[row];
@@ -3643,8 +3802,6 @@ function seqToggleMute(row) {
   if (el) el.classList.toggle('muted');
 }
 let seqGate44 = false;
-const pentatonicFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00, 1046.50, 1174.66, 1318.51, 1568.00, 1760.00, 1975.53];
-
 const PIANO_NOTES = [
   {n:'C4',f:261.63},{n:'C#4',f:277.18},{n:'D4',f:293.66},{n:'D#4',f:311.13},
   {n:'E4',f:329.63},{n:'F4',f:349.23},{n:'F#4',f:369.99},{n:'G4',f:392.00},
@@ -3666,17 +3823,15 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', conga:'Triangle \u26A0', melody:'Melody', bass:'Bass', piano:'Piano' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
     for (let i = 0; i < 16; i++) {
       const btn = document.createElement('button');
-      const extra = row === 'melody' ? ` data-note="${seqNoteNames[i]}"` : '';
       btn.className = 'beat-step' + (seqPatterns[row][i] ? ' on ' + row : '');
       btn.dataset.row = row;
       btn.dataset.step = i;
-      if (row === 'melody') btn.textContent = seqNoteNames[i];
     if (row === 'bass') btn.textContent = ['E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1'][i];
     if (row === 'piano') btn.textContent = ['Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm'][i];
       btn.addEventListener('click', () => {
@@ -3735,7 +3890,7 @@ function seqBuildPianoRoll() {
           const f = PIANO_FREQ_MAP[name];
           if (f) {
             const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
-            const g = ctx.createGain(); g.gain.setValueAtTime(0.08, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            const g = ctx.createGain(); g.gain.setValueAtTime(0, ctx.currentTime); g.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.002); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
             o.connect(g); g.connect(seqGain); o.start(); o.stop(ctx.currentTime + 0.25);
           }
         }
@@ -3786,13 +3941,6 @@ function seqRandomize() {
           if (i % 8 === 0 && Math.random() < 0.3) on = 1;
           else if (Math.random() < 0.03) on = 1;
           break;
-        case 'conga':
-          if (i % 4 === 1 && Math.random() < 0.35) on = 1;
-          else if (i % 4 === 3 && Math.random() < 0.2) on = 1;
-          break;
-        case 'melody':
-          if (Math.random() < 0.1) on = 1;
-          break;
         case 'bass':
           if (i % 8 === 0 && Math.random() < 0.6) on = 1;
           else if (i % 4 === 2 && Math.random() < 0.25) on = 1;
@@ -3816,8 +3964,6 @@ function seqBreakbeat() {
   seqPatterns.snare = [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
   seqPatterns.hh    = [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1];
   seqPatterns.oh    = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
-  seqPatterns.conga = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
-  seqPatterns.melody= [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   seqPatterns.bass  = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
   seqPatterns.piano = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
   seqUpdateGrid();
@@ -3954,64 +4100,6 @@ function seqPlaySnare() {
   nsrc.stop(now + 0.1);
 }
 
-function seqPlayConga() {
-  const now = ctx.currentTime;
-  const freq = 6000 + Math.random() * 2000;
-  const osc = ctx.createOscillator();
-  osc.type = 'triangle';
-  osc.frequency.value = freq;
-  const env = ctx.createGain();
-  env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.3, now + 0.002);
-  env.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
-  osc.connect(env);
-  env.connect(seqGain);
-  osc.start(now);
-  osc.stop(now + 0.8);
-  const osc2 = ctx.createOscillator();
-  osc2.type = 'sine';
-  osc2.frequency.value = freq * 2.76;
-  const env2 = ctx.createGain();
-  env2.gain.setValueAtTime(0, now);
-  env2.gain.linearRampToValueAtTime(0.08, now + 0.002);
-  env2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-  osc2.connect(env2);
-  env2.connect(seqGain);
-  osc2.start(now);
-  osc2.stop(now + 0.5);
-}
-
-function seqPlayMelody(repeat) {
-  repeat = repeat || 1;
-  const now = ctx.currentTime;
-  const bpm = parseInt(document.getElementById('seqBpm').value);
-  const spacing = 60 / bpm / 8;
-  let freqs;
-  if (seqPianoRoll[seqStep].length > 0) {
-    freqs = seqPianoRoll[seqStep].map(n => PIANO_FREQ_MAP[n]);
-  } else {
-    freqs = [pentatonicFreqs[seqStep]];
-  }
-  freqs.forEach((freq, fi) => {
-    for (let r = 0; r < repeat; r++) {
-      const t = now + r * spacing + fi * 0.025;
-      const vel = 1 - r * 0.15;
-      if (vel <= 0) break;
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      const env = ctx.createGain();
-      env.gain.setValueAtTime(0, t);
-      env.gain.linearRampToValueAtTime(0.12 * vel, t + 0.015);
-      env.gain.setValueAtTime(0.1 * vel, t + 0.3);
-      env.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-      osc.connect(env);
-      env.connect(seqGain);
-      osc.start(t);
-      osc.stop(t + 0.55);
-    }
-  });
-}
 let bassNoteIdx = 0;
 const bassNotes = [41.2, 55.0, 61.7]; // E1, A1, B1
 function seqPlayBass() {
@@ -4068,22 +4156,32 @@ function seqPlayPiano() {
   });
 }
 
+let seqBeatEls = null, seqPrCells = null;
+
+function seqCacheDOM() {
+  seqBeatEls = Array.from(document.querySelectorAll('.beat-step'));
+  seqPrCells = Array.from(document.querySelectorAll('#pianoRollTable .pr-cell'));
+}
+
 function seqPlayStep() {
   if (!ctx || !seqPlaying) return;
+  if (!seqBeatEls) seqCacheDOM();
+  const bpm = parseInt(document.getElementById('seqBpm').value);
+  const now = ctx.currentTime;
+  const stepDuration = 60 / bpm / 4;
   const noKick = seqGate44 && (seqStep % 16 >= 12);
   if (!noKick && seqPatterns.kick[seqStep] && !seqMuted.kick) seqPlayKick();
   if (seqPatterns.snare[seqStep] && !seqMuted.snare) seqPlaySnare();
   if (seqPatterns.hh[seqStep] && !seqMuted.hh) seqPlayHH();
   if (seqPatterns.oh[seqStep] && !seqMuted.oh) seqPlayOH();
-  if (seqPatterns.conga[seqStep] && !seqMuted.conga) seqPlayConga();
-  if (seqPatterns.melody[seqStep] && !seqMuted.melody) seqPlayMelody(parseInt(document.getElementById('seqMelodyRepeat').value));
   if (seqPatterns.bass[seqStep] && !seqMuted.bass) seqPlayBass();
-  document.querySelectorAll('.beat-step.active').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll(`.beat-step[data-step="${seqStep}"]`).forEach(el => el.classList.add('active'));
-  document.querySelectorAll('#pianoRollTable .pr-cell.active-col').forEach(el => el.classList.remove('active-col'));
-  document.querySelectorAll(`#pianoRollTable .pr-cell[data-step="${seqStep}"]`).forEach(el => el.classList.add('active-col'));
+  seqBeatEls.forEach(el => el.classList.remove('active'));
+  seqBeatEls.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active'));
+  seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
+  seqPrCells.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active-col'));
   seqStep = (seqStep + 1) % 16;
-  seqTimer = setTimeout(seqPlayStep, 60000 / parseInt(document.getElementById('seqBpm').value) / 4);
+  const next = now + stepDuration;
+  seqTimer = setTimeout(seqPlayStep, Math.max(0, (next - ctx.currentTime) * 1000));
 }
 
 async function seqStart() {
@@ -4103,8 +4201,8 @@ async function seqStart() {
 function seqStop() {
   seqPlaying = false;
   clearTimeout(seqTimer);
-  document.querySelectorAll('.beat-step').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('#pianoRollTable .pr-cell.active-col').forEach(el => el.classList.remove('active-col'));
+  if (seqBeatEls) seqBeatEls.forEach(el => el.classList.remove('active'));
+  if (seqPrCells) seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
   document.getElementById('seqBtn').textContent = '\u25B6 Start';
   document.getElementById('seqBtn').classList.remove('active');
   scheduleSeqRenew();
@@ -4199,8 +4297,14 @@ document.getElementById('dspBypassBtn').addEventListener('click', function() {
   this.textContent = on ? 'On' : 'Off';
   this.className = on ? 'btn-bypass-on' : 'btn-bypass-off';
   if (dspProcessGain && dspDirectGain) {
-    dspProcessGain.gain.value = on ? 0 : 1;
-    dspDirectGain.gain.value = on ? 1 : 0;
+    var t = ctx.currentTime;
+    if (on) {
+      dspProcessGain.gain.setTargetAtTime(0, t, 0.025);
+      dspDirectGain.gain.setTargetAtTime(1, t, 0.025);
+    } else {
+      dspProcessGain.gain.setTargetAtTime(1, t, 0.025);
+      dspDirectGain.gain.setTargetAtTime(0, t, 0.025);
+    }
   }
 });
 
@@ -4490,10 +4594,24 @@ document.getElementById('limitSlider').addEventListener('input', function() {
 // ── Rap Demo ──
 (() => {
   const btn = document.getElementById('btnRapDemo');
+  const lyrics = document.getElementById('rapLyrics');
   const audio = document.createElement('audio');
   audio.src = 'assets/let-me-assist-you.mp3';
   audio.preload = 'auto';
   document.body.appendChild(audio);
+
+  const showLyrics = (show) => {
+    lyrics.classList.toggle('visible', show);
+    if (show) {
+      const active = track1.style.display !== 'none' ? track1 : track2;
+      active.querySelectorAll('.lyric-line').forEach((el, i) => {
+        el.style.animationDelay = (i * 0.1) + 's';
+        el.style.animation = 'none';
+        void el.offsetHeight;
+        el.style.animation = '';
+      });
+    }
+  };
 
   btn.addEventListener('click', () => {
     if (audio.paused) {
@@ -4501,17 +4619,39 @@ document.getElementById('limitSlider').addEventListener('input', function() {
       audio.play();
       btn.style.background = '#884466';
       btn.textContent = '\u{1F3A4} Playing...';
+      showLyrics(true);
     } else {
       audio.pause();
       audio.currentTime = 0;
       btn.style.background = '#662244';
       btn.textContent = '\u{1F3A4} Rap Demo';
+      showLyrics(false);
     }
   });
 
   audio.addEventListener('ended', () => {
     btn.style.background = '#662244';
     btn.textContent = '\u{1F3A4} Rap Demo';
+    showLyrics(false);
+  });
+
+  // Track switching
+  const track1 = lyrics.querySelector('.rap-track-1');
+  const track2 = lyrics.querySelector('.rap-track-2');
+  lyrics.querySelectorAll('.track-select button').forEach((tab, idx) => {
+    tab.addEventListener('click', () => {
+      lyrics.querySelectorAll('.track-select button').forEach(b => b.classList.remove('active'));
+      tab.classList.add('active');
+      track1.style.display = idx === 0 ? '' : 'none';
+      track2.style.display = idx === 1 ? '' : 'none';
+      const active = idx === 0 ? track1 : track2;
+      active.querySelectorAll('.lyric-line').forEach((el, i) => {
+        el.style.animationDelay = (i * 0.1) + 's';
+        el.style.animation = 'none';
+        void el.offsetHeight;
+        el.style.animation = '';
+      });
+    });
   });
 })();
 
