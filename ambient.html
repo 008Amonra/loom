@@ -1108,8 +1108,14 @@ I'll be back next session — same bat-time, same bat-way</textarea>
   <div class="panel-section" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)">
     <p class="sub">Global ceiling — everything stays below this level</p>
     <div class="beat-controls">
-      <label>Limit <input type="range" id="limitSlider" min="0" max="1" step="0.01" value="0">
-        <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">Off</span></label>
+      <label>Limit <input type="range" id="limitSlider" min="0" max="1" step="0.01" value="0.15">
+        <span id="limitVal" style="min-width:32px;font-size:0.75rem;color:#666">6dB</span></label>
+      <span id="peakMeter" style="display:inline-flex;align-items:center;gap:4px;font-size:0.65rem;color:#555">
+        <span id="meterBar" style="display:inline-block;width:40px;height:6px;border-radius:3px;background:#1a1a2e;border:1px solid #2a2a3a;overflow:hidden">
+          <span id="meterFill" style="display:block;width:0%;height:100%;border-radius:2px;background:#44ff44;transition:width .1s"></span>
+        </span>
+        <span id="meterDb">-inf</span>
+      </span>
     </div>
   </div>
   <div class="panel-section" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)">
@@ -1279,6 +1285,7 @@ let reverbWet = null;
 let reverbConvolver = null;
 let reverbSum = null;
 let limiterNode = null;
+let peakAnalyser = null;
 let eqBassNode = null, eqMidNode = null, eqTrebleNode = null;
 
 // DSP nodes
@@ -1298,6 +1305,8 @@ function initAudio() {
   destNode = ctx.createMediaStreamDestination();
   initReverb();
   initLimiter();
+  setLimit(parseFloat(document.getElementById('limitSlider').value));
+  startPeakMeter();
   initDSP();
   initEq();
   seqBus = ctx.createGain();
@@ -1481,6 +1490,31 @@ function setLimit(v) {
   }
 }
 
+function startPeakMeter() {
+  if (!peakAnalyser) return;
+  let meterId = null;
+  function poll() {
+    const data = new Float32Array(peakAnalyser.fftSize);
+    peakAnalyser.getFloatTimeDomainData(data);
+    let peak = 0;
+    for (let i = 0; i < data.length; i++) {
+      const abs = Math.abs(data[i]);
+      if (abs > peak) peak = abs;
+    }
+    const db = peak > 0 ? 20 * Math.log10(peak) : -100;
+    const fill = document.getElementById('meterFill');
+    const label = document.getElementById('meterDb');
+    if (fill && label) {
+      const pct = Math.min(100, Math.max(0, (db + 40) / 40 * 100));
+      fill.style.width = pct + '%';
+      fill.style.background = db < -12 ? '#44ff44' : db < -6 ? '#ffaa00' : '#ff4444';
+      label.textContent = db <= -60 ? '-inf' : db.toFixed(1) + 'dB';
+    }
+    meterId = requestAnimationFrame(poll);
+  }
+  poll();
+}
+
 function initLimiter() {
   if (limiterNode) return;
   limiterNode = ctx.createDynamicsCompressor();
@@ -1489,11 +1523,15 @@ function initLimiter() {
   limiterNode.ratio.value = 20;
   limiterNode.attack.value = 0.003;
   limiterNode.release.value = 0.05;
+  peakAnalyser = ctx.createAnalyser();
+  peakAnalyser.fftSize = 256;
+  peakAnalyser.smoothingTimeConstant = 0.3;
   try { reverbSum.disconnect(ctx.destination); } catch(e) {}
   try { reverbSum.disconnect(destNode); } catch(e) {}
   reverbSum.connect(limiterNode);
-  limiterNode.connect(ctx.destination);
-  limiterNode.connect(destNode);
+  limiterNode.connect(peakAnalyser);
+  peakAnalyser.connect(ctx.destination);
+  peakAnalyser.connect(destNode);
 }
 
 function initReverb() {
@@ -2931,6 +2969,10 @@ TRACK_DEFS.forEach(def => {
 function setMuteState(id, muted) {
   const card = document.getElementById('card-' + id);
   if (muted) {
+    const vol = parseFloat(sliders[id].value);
+    sliders[id].dataset.prevVol = vol;
+    sliders[id].value = 0;
+    updateSliderDisplay(id);
     muteBtns[id].classList.add('muted');
     muteR_Btns[id].classList.remove('on');
     muteR_Btns[id].classList.add('off');
@@ -2938,12 +2980,15 @@ function setMuteState(id, muted) {
     card.classList.add('muted');
     if (engines[id]) engines[id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
   } else {
+    const prev = parseFloat(sliders[id].dataset.prevVol) || 0.5;
+    sliders[id].value = prev;
+    updateSliderDisplay(id);
     muteBtns[id].classList.remove('muted');
     muteR_Btns[id].classList.remove('off');
     muteR_Btns[id].classList.add('on');
     muteR_Btns[id].textContent = '\u2713';
     card.classList.remove('muted');
-    if (engines[id]) engines[id].gain.gain.setTargetAtTime(parseFloat(sliders[id].value), ctx.currentTime, 0.05);
+    if (engines[id]) engines[id].gain.gain.setTargetAtTime(prev, ctx.currentTime, 0.05);
   }
   if (typeof updateTrackOverview === 'function') updateTrackOverview();
 }
