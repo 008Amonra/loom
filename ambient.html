@@ -2983,10 +2983,6 @@ TRACK_DEFS.forEach(def => {
 function setMuteState(id, muted) {
   const card = document.getElementById('card-' + id);
   if (muted) {
-    const vol = parseFloat(sliders[id].value);
-    sliders[id].dataset.prevVol = vol;
-    sliders[id].value = 0;
-    updateSliderDisplay(id);
     muteBtns[id].classList.add('muted');
     muteR_Btns[id].classList.remove('on');
     muteR_Btns[id].classList.add('off');
@@ -2994,15 +2990,12 @@ function setMuteState(id, muted) {
     card.classList.add('muted');
     if (engines[id]) engines[id].gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
   } else {
-    const prev = parseFloat(sliders[id].dataset.prevVol) || 0.5;
-    sliders[id].value = prev;
-    updateSliderDisplay(id);
     muteBtns[id].classList.remove('muted');
     muteR_Btns[id].classList.remove('off');
     muteR_Btns[id].classList.add('on');
     muteR_Btns[id].textContent = '\u2713';
     card.classList.remove('muted');
-    if (engines[id]) engines[id].gain.gain.setTargetAtTime(prev, ctx.currentTime, 0.05);
+    if (engines[id]) engines[id].gain.gain.setTargetAtTime(parseFloat(sliders[id].value), ctx.currentTime, 0.05);
   }
   if (typeof updateTrackOverview === 'function') updateTrackOverview();
 }
@@ -3182,7 +3175,6 @@ document.getElementById('btnRec').addEventListener('click', () => {
 document.getElementById('btnDl').addEventListener('click', downloadRecording);
 document.getElementById('btnMuteAll').addEventListener('click', function() {
   TRACK_DEFS.forEach(function(def) {
-    if (!engines[def.id]) return;
     if (!muteBtns[def.id].classList.contains('muted')) {
       setMuteState(def.id, true);
     }
@@ -3190,7 +3182,6 @@ document.getElementById('btnMuteAll').addEventListener('click', function() {
 });
 document.getElementById('btnUnmuteAll').addEventListener('click', function() {
   TRACK_DEFS.forEach(function(def) {
-    if (!engines[def.id]) return;
     if (muteBtns[def.id].classList.contains('muted')) {
       setMuteState(def.id, false);
     }
