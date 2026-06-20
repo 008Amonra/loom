@@ -287,6 +287,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 
 .beat-step.on.bass{background:#aa44ff;border-color:#aa44ff}
 .beat-step.on.piano{background:#ffaa44;border-color:#ffaa44}
+.beat-step.on.oxygene{background:#ff8844;border-color:#ff8844}
+.beat-step.on.equinoxe{background:#cc66ff;border-color:#cc66ff}
 .beat-step.active{box-shadow:0 0 6px rgba(255,255,255,.3)}
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
 .seq-mute:hover{color:#aaa;background:#1a1a2e}
@@ -1229,8 +1231,6 @@ const TRACK_DEFS = [
     desc:'Resonant struck bell — inharmonic partials, slow decay, meditative' },
   { id:'perc',       icon:'&#x1F3B6;', name:'Percussion', color:'#ddaa66', defaultPan:-0.3,
     desc:'Ambient rimshots, hi-hat ticks, and soft tikititata patterns — gentle rhythm' },
-  { id:'melody',     icon:'&#x1F3B5;', name:'Melody',     color:'#88dd88', defaultPan:0,
-    desc:'Pentatonic scale wander — slow two-voice notes, fifth harmonies, meditative' },
   { id:'tambourine', icon:'&#x1F3BA;', name:'Tambourine', color:'#ddbb44', defaultPan:0.4,
     desc:'Rapid metallic jingle bursts — shake, ting, and shimmer, festive' },
   { id:'tb303',      icon:'&#x1F50A;', name:'TB-303',         color:'#ff6644', defaultPan: -0.3,
@@ -1241,10 +1241,6 @@ const TRACK_DEFS = [
     desc:'Deep sub-bass thump with exponential frequency sweep — every 2-4 bars' },
   { id:'subbass',    icon:'&#x1F50A;', name:'Sub Bass',       color:'#4444cc', defaultPan:0,
     desc:'Continuous low sine drone at 25-40Hz with gentle pitch drift — foundation rumble' },
-  { id:'jarre1',     icon:'&#x1F3B9;', name:'Oxygène',       color:'#ff8844', defaultPan:-0.3,
-    desc:'Slow sawtooth pad with filter sweep — Jarre-style breathing carpet, open chords' },
-  { id:'jarre2',     icon:'&#x1F3AD;', name:'Equinoxe',      color:'#cc66ff', defaultPan:0.3,
-    desc:'Evolving atmospheric pad with bandpass resonance — wide, ethereal, slow motion' },
   { id:'ocean',      icon:'&#x1F30A;', name:'Ocean Waves',    color:'#4488cc', defaultPan:0,
     desc:'Layered pink noise with slow amplitude LFO — rising and falling surf' },
   { id:'sample1',    icon:'&#x1F4E4;', name:'Sample 1',    color:'#aa88dd', defaultPan:0,
@@ -1258,10 +1254,10 @@ const TRACK_DEFS = [
 ];
 
 const PRESETS = {
-  winter:    { wind:.7, shaker:.15, musicbox:.3,  voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, melody:.15, tambourine:0, tb303:0, umze:0, kick808:0, subbass:.2, jarre1:.35, jarre2:.3, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  harbor:    { wind:.4, shaker:.2,  musicbox:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, melody:.2, tambourine:.15, tb303:0, umze:0, kick808:0, subbass:0, jarre1:.3, jarre2:.25, ocean:.4, sample1:0, sample2:0, sample3:0, sample4:0 },
-  monastery: { wind:.5, shaker:0,   musicbox:.35, voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, melody:.25, tambourine:.1, tb303:0, umze:0, kick808:0, subbass:.15, jarre1:.4, jarre2:.35, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
-  full:      { wind:.6, shaker:.35, musicbox:.4,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, melody:.2, tambourine:.2, tb303:.3, umze:.35, kick808:.25, subbass:.3, jarre1:.4, jarre2:.35, ocean:.35, sample1:0, sample2:0, sample3:0, sample4:0 },
+  winter:    { wind:.7, shaker:.15, musicbox:.3,  voices:.4, car:.1,  birds:.25, monks:0,   boat:0, cat:.2,  dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.5, bell:.15, perc:.15, tambourine:0, tb303:0, umze:0, kick808:0, subbass:.2, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  harbor:    { wind:.4, shaker:.2,  musicbox:.1,  voices:.3, car:.15, birds:.5,  monks:0,   boat:.7, cat:.1,  dog:.15, rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.35, bell:.1, perc:.1, tambourine:.15, tb303:0, umze:0, kick808:0, subbass:0, ocean:.4, sample1:0, sample2:0, sample3:0, sample4:0 },
+  monastery: { wind:.5, shaker:0,   musicbox:.35, voices:.1, car:0,   birds:.3,  monks:.75, boat:0, cat:0,   dog:0,  rain:0, lightning:0, police:0, medical:0, ufo:0, synth:.3, bell:.3, perc:.15, tambourine:.1, tb303:0, umze:0, kick808:0, subbass:.15, ocean:0, sample1:0, sample2:0, sample3:0, sample4:0 },
+  full:      { wind:.6, shaker:.35, musicbox:.4,  voices:.5, car:.4,  birds:.5,  monks:.5,  boat:.4, cat:.35, dog:.3, rain:.5, lightning:.2, police:.2, medical:.15, ufo:.2, synth:.45, bell:.25, perc:.2, tambourine:.2, tb303:.3, umze:.35, kick808:.25, subbass:.3, ocean:.35, sample1:0, sample2:0, sample3:0, sample4:0 },
 };
 
 let ctx = null;
@@ -2344,47 +2340,6 @@ function createPerc() {
   return { gain, start() { tick() }, stop() { clearTimeout(interval) } };
 }
 
-function createMelody() {
-  const gain = ctx.createGain();
-  gain.gain.value = 0.3;
-  const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00];
-  let interval = null;
-  let noteIndex = Math.floor(Math.random() * 5);
-  function playNote() {
-    const now = ctx.currentTime;
-    const freq = pentatonic[noteIndex % pentatonic.length];
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.value = freq * 1.5;
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.15, now + 0.1);
-    env.gain.setValueAtTime(0.15, now + 2.0);
-    env.gain.linearRampToValueAtTime(0, now + 3.5);
-    const env2 = ctx.createGain();
-    env2.gain.setValueAtTime(0, now);
-    env2.gain.linearRampToValueAtTime(0.08, now + 0.1);
-    env2.gain.setValueAtTime(0.08, now + 2.0);
-    env2.gain.linearRampToValueAtTime(0, now + 3.5);
-    osc.connect(env);
-    osc2.connect(env2);
-    env.connect(gain);
-    env2.connect(gain);
-    osc.start(now);
-    osc2.stop(now + 3.7);
-    osc2.start(now);
-    osc2.stop(now + 3.7);
-    osc.stop(now + 3.7);
-    noteIndex = (noteIndex + 1 + Math.floor(Math.random() * 2)) % pentatonic.length;
-    const next = 2.0 + Math.random() * 2.5;
-    interval = setTimeout(playNote, next * 1000);
-  }
-  return { gain, start() { playNote() }, stop() { clearTimeout(interval) } };
-}
-
 // --- Auto DJ ---
 let djActive = false;
 let djInterval = null;
@@ -2721,104 +2676,6 @@ function createSubBass() {
   };
 }
 
-// --- Ocean Waves ---
-function createOxygene() {
-  const gain = ctx.createGain();
-  gain.gain.value = 0.5;
-  let interval = null;
-  const chords = [
-    [65.41, 98.00, 130.81],
-    [55.00, 82.41, 110.00],
-    [73.42, 110.00, 146.83],
-    [49.00, 73.42, 98.00],
-    [58.27, 87.31, 116.54],
-    [61.74, 92.50, 123.47],
-  ];
-  function playChord() {
-    const now = ctx.currentTime;
-    const chord = chords[Math.floor(Math.random() * chords.length)];
-    const dur = 8 + Math.random() * 6;
-    chord.forEach((freq, i) => {
-      for (let v = 0; v < 3; v++) {
-        const osc = ctx.createOscillator();
-        osc.type = 'sawtooth';
-        osc.frequency.value = freq;
-        osc.detune.value = (v - 1) * 5 + (Math.random() - 0.5) * 3;
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(120, now);
-        filter.frequency.linearRampToValueAtTime(900 + Math.random() * 300, now + 3);
-        filter.Q.value = 2;
-        const vca = ctx.createGain();
-        const stagger = i * 0.3;
-        vca.gain.setValueAtTime(0, now + stagger);
-        vca.gain.linearRampToValueAtTime(0.025, now + stagger + 2.5);
-        vca.gain.setValueAtTime(0.025, now + dur - 2);
-        vca.gain.linearRampToValueAtTime(0, now + dur);
-        osc.connect(filter);
-        filter.connect(vca);
-        vca.connect(gain);
-        osc.start(now + stagger);
-        osc.stop(now + dur + 0.1);
-      }
-    });
-    const next = dur + 3 + Math.random() * 4;
-    interval = setTimeout(playChord, next * 1000);
-  }
-  return { gain, start() { playChord() }, stop() { clearTimeout(interval) } };
-}
-
-function createEquinoxe() {
-  const gain = ctx.createGain();
-  gain.gain.value = 0.5;
-  let interval = null;
-  const chords = [
-    [98.00, 146.83, 196.00],
-    [87.31, 130.81, 174.61],
-    [110.00, 165.00, 220.00],
-    [82.41, 123.47, 164.81],
-    [92.50, 138.59, 185.00],
-    [73.42, 110.00, 146.83],
-  ];
-  function playChord() {
-    const now = ctx.currentTime;
-    const chord = chords[Math.floor(Math.random() * chords.length)];
-    const dur = 10 + Math.random() * 8;
-    chord.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sawtooth';
-      osc.frequency.value = freq;
-      osc.detune.value = (Math.random() - 0.5) * 10;
-      const sub = ctx.createOscillator();
-      sub.type = 'triangle';
-      sub.frequency.value = freq;
-      sub.detune.value = (Math.random() - 0.5) * 6;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(200, now);
-      filter.frequency.linearRampToValueAtTime(1200 + Math.random() * 400, now + 5);
-      filter.Q.value = 3 + Math.random() * 2;
-      const vca = ctx.createGain();
-      const stagger = i * 0.4;
-      vca.gain.setValueAtTime(0, now + stagger);
-      vca.gain.linearRampToValueAtTime(0.02, now + stagger + 3.5);
-      vca.gain.setValueAtTime(0.02, now + dur - 3);
-      vca.gain.linearRampToValueAtTime(0, now + dur);
-      osc.connect(filter);
-      sub.connect(filter);
-      filter.connect(vca);
-      vca.connect(gain);
-      osc.start(now + stagger);
-      osc.stop(now + dur + 0.1);
-      sub.start(now + stagger);
-      sub.stop(now + dur + 0.1);
-    });
-    const next = dur + 4 + Math.random() * 5;
-    interval = setTimeout(playChord, next * 1000);
-  }
-  return { gain, start() { playChord() }, stop() { clearTimeout(interval) } };
-}
-
 function createOcean() {
   const gain = ctx.createGain();
   gain.gain.value = 0.45;
@@ -2916,14 +2773,11 @@ const GENERATORS = {
   synth: createSynth,
   bell: createBell,
   perc: createPerc,
-  melody: createMelody,
   tambourine: createTambourine,
   tb303: createTB303,
   umze: createUmze,
   kick808: createKick808,
   subbass: createSubBass,
-  jarre1: createOxygene,
-  jarre2: createEquinoxe,
   ocean: createOcean,
   sample1: () => createSample('sample1'),
   sample2: () => createSample('sample2'),
@@ -3886,15 +3740,17 @@ let seqGain = null;
 let beatSurpriseTimer = null;
 let beatSurpriseStop = null;
 const seqPatterns = {
-  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  hh:    [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-  oh:    [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  bass:  [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
-  piano: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  kick:    [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  snare:   [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  hh:      [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  oh:      [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+  bass:    [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
+  piano:   [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+  oxygene: [0,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,1],
+  equinoxe:[0,0,0,0, 0,1,0,0, 0,0,0,0, 0,0,0,0],
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44' };
+const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano', 'oxygene', 'equinoxe'];
+const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44', oxygene:'#ff8844', equinoxe:'#cc66ff' };
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -3926,7 +3782,7 @@ function seqBuildGrid() {
   seqRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -4052,6 +3908,12 @@ function seqRandomize() {
           if (i % 8 === 4 && Math.random() < 0.6) on = 1;
           else if (i % 16 === 12 && Math.random() < 0.4) on = 1;
           break;
+        case 'oxygene':
+          if (i % 8 === 7 && Math.random() < 0.4) on = 1;
+          break;
+        case 'equinoxe':
+          if (i % 8 === 5 && Math.random() < 0.3) on = 1;
+          break;
       }
       pat.push(on);
     }
@@ -4067,8 +3929,10 @@ function seqBreakbeat() {
   seqPatterns.snare = [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
   seqPatterns.hh    = [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1];
   seqPatterns.oh    = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
-  seqPatterns.bass  = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
-  seqPatterns.piano = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
+  seqPatterns.bass    = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.piano   = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
+  seqPatterns.oxygene = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+  seqPatterns.equinoxe= [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   seqUpdateGrid();
   document.getElementById('presetSelect').value = 'custom';
 }
@@ -4259,6 +4123,87 @@ function seqPlayPiano() {
   });
 }
 
+const oxygeneChords = [
+  [65.41, 98.00, 130.81],
+  [55.00, 82.41, 110.00],
+  [73.42, 110.00, 146.83],
+  [49.00, 73.42, 98.00],
+  [58.27, 87.31, 116.54],
+  [61.74, 92.50, 123.47],
+];
+let oxygeneChordIdx = 0;
+function seqPlayOxygene() {
+  const now = ctx.currentTime;
+  const chord = oxygeneChords[oxygeneChordIdx % oxygeneChords.length];
+  oxygeneChordIdx++;
+  chord.forEach((freq, i) => {
+    for (let v = 0; v < 3; v++) {
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freq;
+      osc.detune.value = (v - 1) * 5;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(150, now);
+      filter.frequency.linearRampToValueAtTime(1000, now + 0.4);
+      filter.Q.value = 2;
+      const vca = ctx.createGain();
+      const stagger = i * 0.06;
+      vca.gain.setValueAtTime(0, now + stagger);
+      vca.gain.linearRampToValueAtTime(0.03, now + stagger + 0.15);
+      vca.gain.setValueAtTime(0.03, now + 0.8);
+      vca.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+      osc.connect(filter);
+      filter.connect(vca);
+      vca.connect(seqGain);
+      osc.start(now + stagger);
+      osc.stop(now + 1.3);
+    }
+  });
+}
+
+const equinoxeChords = [
+  [98.00, 146.83, 196.00],
+  [87.31, 130.81, 174.61],
+  [110.00, 165.00, 220.00],
+  [82.41, 123.47, 164.81],
+];
+let equinoxeChordIdx = 0;
+function seqPlayEquinoxe() {
+  const now = ctx.currentTime;
+  const chord = equinoxeChords[equinoxeChordIdx % equinoxeChords.length];
+  equinoxeChordIdx++;
+  chord.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = freq;
+    osc.detune.value = (Math.random() - 0.5) * 8;
+    const sub = ctx.createOscillator();
+    sub.type = 'triangle';
+    sub.frequency.value = freq;
+    sub.detune.value = (Math.random() - 0.5) * 5;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(250, now);
+    filter.frequency.linearRampToValueAtTime(1400, now + 0.6);
+    filter.Q.value = 4;
+    const vca = ctx.createGain();
+    const stagger = i * 0.08;
+    vca.gain.setValueAtTime(0, now + stagger);
+    vca.gain.linearRampToValueAtTime(0.025, now + stagger + 0.2);
+    vca.gain.setValueAtTime(0.025, now + 1.0);
+    vca.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+    osc.connect(filter);
+    sub.connect(filter);
+    filter.connect(vca);
+    vca.connect(seqGain);
+    osc.start(now + stagger);
+    osc.stop(now + 1.6);
+    sub.start(now + stagger);
+    sub.stop(now + 1.6);
+  });
+}
+
 let seqBeatEls = null, seqPrCells = null;
 
 function seqCacheDOM() {
@@ -4278,6 +4223,8 @@ function seqPlayStep() {
   if (seqPatterns.hh[seqStep] && !seqMuted.hh) seqPlayHH();
   if (seqPatterns.oh[seqStep] && !seqMuted.oh) seqPlayOH();
   if (seqPatterns.bass[seqStep] && !seqMuted.bass) seqPlayBass();
+  if (seqPatterns.oxygene[seqStep] && !seqMuted.oxygene) seqPlayOxygene();
+  if (seqPatterns.equinoxe[seqStep] && !seqMuted.equinoxe) seqPlayEquinoxe();
   seqBeatEls.forEach(el => el.classList.remove('active'));
   seqBeatEls.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active'));
   seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
@@ -4296,6 +4243,8 @@ async function seqStart() {
   seqStep = 0;
   bassNoteIdx = 0;
   pianoChordIdx = 0;
+  oxygeneChordIdx = 0;
+  equinoxeChordIdx = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
   document.getElementById('seqBtn').classList.add('active');
   seqPlayStep();
