@@ -295,6 +295,20 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
 .seq-mute:hover{color:#aaa;background:#1a1a2e}
 .seq-mute.muted{color:#553;text-decoration:line-through}
+.bank-bar{display:flex;gap:12px;padding:6px 0;margin-bottom:4px;flex-wrap:wrap;border-bottom:1px solid #1e1e2e}
+.bank-toggle{display:flex;align-items:center;gap:4px;font-size:0.7rem;color:#888;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px}
+.bank-toggle input{accent-color:#4488ff;cursor:pointer}
+.bank-toggle.fixed{opacity:0.5;cursor:default}
+.bank-toggle.fixed input{cursor:default}
+.bank-toggle:hover{color:#bbb}
+.beat-step.on.clap{background:#ff8844;border-color:#ff8844}
+.beat-step.on.rimshot{background:#ff8844;border-color:#ff8844}
+.beat-step.on.shaker{background:#ff8844;border-color:#ff8844}
+.beat-step.on.cabasa{background:#ff8844;border-color:#ff8844}
+.beat-step.on.pluck{background:#33cc99;border-color:#33cc99}
+.beat-step.on.bell{background:#33cc99;border-color:#33cc99}
+.beat-step.on.marimba{background:#33cc99;border-color:#33cc99}
+.beat-step.on.vibes{background:#33cc99;border-color:#33cc99}
 .seq-gate{background:#2a2a3a;color:#ff8844;font-size:0.75rem;padding:3px 10px;border:1px solid #884422;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-gate:hover{background:#3a3a4a}
 .seq-gate.on{background:#884422;color:#ffaa66;border-color:#ff8844}
@@ -3786,20 +3800,44 @@ let seqTimer = null;
 let seqGain = null;
 let beatSurpriseTimer = null;
 let beatSurpriseStop = null;
-const seqPatterns = {
-  kick:    [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  snare:   [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  hh:      [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-  oh:      [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
-  bass:    [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
-  piano:   [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  oxygene: [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0],
-  equinoxe:[1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0],
-  beam:    [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0],
+const BANKS = [
+  { id:'foundation', label:'Foundation', fixed:true,
+    rows:['kick','snare','hh','oh','bass','piano','oxygene','equinoxe','beam'],
+    padRows:['oxygene','equinoxe','beam'] },
+  { id:'percussion', label:'Percussion',
+    rows:['clap','rimshot','shaker','cabasa'] },
+  { id:'tonal', label:'Tonal',
+    rows:['pluck','bell','marimba','vibes'] },
+];
+
+const seqColors = {
+  kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844',
+  bass:'#aa44ff', piano:'#ffaa44',
+  oxygene:'#ff8844', equinoxe:'#cc66ff', beam:'#88ddff',
+  clap:'#ff8844', rimshot:'#ff8844', shaker:'#ff8844', cabasa:'#ff8844',
+  pluck:'#33cc99', bell:'#33cc99', marimba:'#33cc99', vibes:'#33cc99',
 };
-const seqRows = ['kick', 'snare', 'hh', 'oh', 'bass', 'piano', 'oxygene', 'equinoxe', 'beam'];
-const PAD_ROWS = ['oxygene', 'equinoxe', 'beam'];
-const seqColors = { kick:'#4488ff', snare:'#dd5566', hh:'#66dd88', oh:'#ff8844', bass:'#aa44ff', piano:'#ffaa44', oxygene:'#ff8844', equinoxe:'#cc66ff', beam:'#88ddff' };
+
+let enabledBanks = new Set(['foundation']);
+
+function getActiveRows() {
+  return BANKS.filter(b => enabledBanks.has(b.id)).flatMap(b => b.rows);
+}
+function isPadRow(row) {
+  return BANKS.some(b => (b.padRows || []).includes(row));
+}
+
+const seqPatterns = {};
+BANKS.forEach(b => b.rows.forEach(r => { seqPatterns[r] = Array(16).fill(0); }));
+seqPatterns.kick  = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
+seqPatterns.snare = [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
+seqPatterns.hh    = [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0];
+seqPatterns.oh    = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+seqPatterns.bass  = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
+seqPatterns.piano = [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0];
+seqPatterns.oxygene = [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
+seqPatterns.equinoxe=[1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
+seqPatterns.beam    = [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
 const seqMuted = {};
 let seqAutoRestart = true;
 let seqRenewTimer = null;
@@ -3828,10 +3866,30 @@ if (localStorage.getItem('ambientSettings')) loadSettings();
 
 function seqBuildGrid() {
   const grid = document.getElementById('beatGrid');
-  seqRows.forEach(row => {
+  grid.innerHTML = '';
+  // Bank toggles
+  const bankBar = document.createElement('div');
+  bankBar.className = 'bank-bar';
+  BANKS.forEach(b => {
+    const cb = document.createElement('label');
+    cb.className = 'bank-toggle';
+    if (b.fixed) cb.classList.add('fixed');
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.checked = enabledBanks.has(b.id);
+    chk.disabled = !!b.fixed;
+    chk.addEventListener('change', () => seqToggleBank(b.id));
+    cb.appendChild(chk);
+    cb.appendChild(document.createTextNode(b.label));
+    bankBar.appendChild(cb);
+  });
+  grid.appendChild(bankBar);
+  // Track rows
+  const activeRows = getActiveRows();
+  activeRows.forEach(row => {
     const rdiv = document.createElement('div');
     rdiv.className = 'beat-row';
-    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe', beam:'Beam' };
+    const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe', beam:'Beam', clap:'Clap', rimshot:'Rim', shaker:'Shaker', cabasa:'Cabasa', pluck:'Pluck', bell:'Bell', marimba:'Marimba', vibes:'Vibes' };
     const label = labels[row] || row;
     rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
@@ -3842,9 +3900,9 @@ function seqBuildGrid() {
       btn.dataset.step = i;
     if (row === 'bass') btn.textContent = ['E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1','A1','B1','E1'][i];
     if (row === 'piano') btn.textContent = ['Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm','Eb','Cm','Fm'][i];
-    if (PAD_ROWS.includes(row) && seqPatterns[row][i] > 0) btn.textContent = seqPatterns[row][i];
+    if (isPadRow(row) && seqPatterns[row][i] > 0) btn.textContent = seqPatterns[row][i];
       btn.addEventListener('click', () => {
-        if (PAD_ROWS.includes(row)) {
+        if (isPadRow(row)) {
           seqPatterns[row][i] = (seqPatterns[row][i] + 1) % 4;
           const v = seqPatterns[row][i];
           btn.classList.toggle('on', v > 0);
@@ -3862,6 +3920,7 @@ function seqBuildGrid() {
   });
   // Beat numbers
   const nums = document.getElementById('beatNums');
+  nums.innerHTML = '';
   for (let i = 0; i < 16; i++) {
     const n = document.createElement('span');
     n.className = 'beat-num';
@@ -3869,10 +3928,21 @@ function seqBuildGrid() {
     nums.appendChild(n);
   }
   // Wire up mute buttons
-  seqRows.forEach(row => {
+  activeRows.forEach(row => {
     const el = document.getElementById(SEQ_MUTE + '-' + row);
     if (el) el.addEventListener('click', () => seqToggleMute(row));
   });
+  seqCacheDOM();
+}
+function seqToggleBank(bankId) {
+  const b = BANKS.find(b => b.id === bankId);
+  if (!b || b.fixed) return;
+  if (enabledBanks.has(bankId)) {
+    enabledBanks.delete(bankId);
+  } else {
+    enabledBanks.add(bankId);
+  }
+  seqBuildGrid();
 }
 seqBuildGrid();
 
@@ -3937,7 +4007,8 @@ function seqPianoToggle() {
 }
 
 function seqRandomize() {
-  seqRows.forEach(row => {
+  getActiveRows().forEach(row => {
+    if (isPadRow(row)) return;
     const pat = [];
     for (let i = 0; i < 16; i++) {
       let on = 0;
@@ -3966,6 +4037,32 @@ function seqRandomize() {
           if (i % 8 === 4 && Math.random() < 0.6) on = 1;
           else if (i % 16 === 12 && Math.random() < 0.4) on = 1;
           break;
+        case 'clap':
+          if (i % 8 === 4 && Math.random() < 0.5) on = 1;
+          else if (Math.random() < 0.04) on = 1;
+          break;
+        case 'rimshot':
+          if (i % 2 === 1 && Math.random() < 0.15) on = 1;
+          else if (i % 4 === 0 && Math.random() < 0.1) on = 1;
+          break;
+        case 'shaker':
+          if (Math.random() < 0.25) on = 1;
+          break;
+        case 'cabasa':
+          if (Math.random() < 0.12) on = 1;
+          break;
+        case 'pluck':
+          if (i % 8 === 0 && Math.random() < 0.5) on = 1;
+          break;
+        case 'bell':
+          if (i % 8 === 4 && Math.random() < 0.4) on = 1;
+          break;
+        case 'marimba':
+          if (i % 8 === 2 && Math.random() < 0.3) on = 1;
+          break;
+        case 'vibes':
+          if (Math.random() < 0.1) on = 1;
+          break;
       }
       pat.push(on);
     }
@@ -3983,19 +4080,22 @@ function seqBreakbeat() {
   seqPatterns.oh    = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
   seqPatterns.bass    = [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0];
   seqPatterns.piano   = [0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0];
-  PAD_ROWS.forEach(r => seqPatterns[r] = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]);
+  BANKS.forEach(b => {
+    (b.padRows || []).forEach(r => { seqPatterns[r] = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]; });
+  });
+  getActiveRows().filter(r => !seqPatterns[r]).forEach(r => { seqPatterns[r] = Array(16).fill(0); });
   seqUpdateGrid();
   document.getElementById('presetSelect').value = 'custom';
 }
 function seqUpdateGrid() {
-  seqRows.forEach(row => {
+  getActiveRows().forEach(row => {
     for (let i = 0; i < 16; i++) {
       const btn = document.querySelector('.beat-step[data-row="' + row + '"][data-step="' + i + '"]');
       if (!btn) continue;
       const isOn = seqPatterns[row][i];
       btn.classList.toggle('on', isOn > 0);
       btn.classList.toggle(row, isOn > 0);
-      if (PAD_ROWS.includes(row)) {
+      if (isPadRow(row)) {
         btn.textContent = isOn || '';
       }
     }
@@ -4045,7 +4145,7 @@ function seqPlayKick() {
   nsrc.stop(now + 0.02);
 }
 
-function seqPlayHH() {
+function seqPlayHh() {
   const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.04);
   const buf = ctx.createBuffer(1, len, sr);
   const d = buf.getChannelData(0);
@@ -4066,7 +4166,7 @@ function seqPlayHH() {
   src.stop(now + 0.06);
 }
 
-function seqPlayOH() {
+function seqPlayOh() {
   const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.2);
   const buf = ctx.createBuffer(1, len, sr);
   const d = buf.getChannelData(0);
@@ -4298,6 +4398,188 @@ function seqPlayBeam(chordIdx) {
   });
 }
 
+// ── Percussion bank ──
+function seqPlayClap() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.08);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1200;
+  bp.Q.value = 2;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.4, now + 0.003);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+  src.connect(bp);
+  bp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.12);
+}
+
+function seqPlayRimshot() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.03);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 3000;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.3, now + 0.002);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+  src.connect(hp);
+  hp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.05);
+}
+
+function seqPlayShaker() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.02);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 6000;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.15, now);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+  src.connect(hp);
+  hp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.03);
+}
+
+function seqPlayCabasa() {
+  const now = ctx.currentTime, sr = ctx.sampleRate, len = Math.floor(sr * 0.04);
+  const buf = ctx.createBuffer(1, len, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) {
+    const t = i / sr;
+    d[i] = (Math.random() * 2 - 1) * Math.exp(-t * 80);
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 3500;
+  bp.Q.value = 1.5;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.2, now);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  src.connect(bp);
+  bp.connect(env);
+  env.connect(seqGain);
+  src.start(now);
+  src.stop(now + 0.06);
+}
+
+// ── Tonal bank ──
+function seqPlayPluck() {
+  const now = ctx.currentTime;
+  const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00];
+  const freq = notes[Math.floor(Math.random() * notes.length)];
+  const osc = ctx.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(2000, now);
+  filter.frequency.exponentialRampToValueAtTime(400, now + 0.3);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.15, now + 0.005);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  osc.connect(filter);
+  filter.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.7);
+}
+
+function seqPlayBell() {
+  const now = ctx.currentTime;
+  const notes = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+  const freq = notes[Math.floor(Math.random() * notes.length)];
+  [1, 2.01, 3.02, 4.03].forEach((mult, i) => {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq * mult;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, now);
+    env.gain.linearRampToValueAtTime(0.04 / (i + 1), now + 0.002);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 0.6 + i * 0.4);
+    osc.connect(env);
+    env.connect(seqGain);
+    osc.start(now);
+    osc.stop(now + 2.0);
+  });
+}
+
+function seqPlayMarimba() {
+  const now = ctx.currentTime;
+  const notes = [392.00, 440.00, 493.88, 523.25, 587.33, 659.25];
+  const freq = notes[Math.floor(Math.random() * notes.length)];
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(0.2, now + 0.002);
+  env.gain.setValueAtTime(0.18, now + 0.01);
+  env.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+  osc.connect(env);
+  env.connect(seqGain);
+  osc.start(now);
+  osc.stop(now + 0.5);
+}
+
+function seqPlayVibes() {
+  const now = ctx.currentTime;
+  const notes = [440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+  const freq = notes[Math.floor(Math.random() * notes.length)];
+  const tri = ctx.createOscillator();
+  tri.type = 'triangle';
+  tri.frequency.value = freq;
+  const sine = ctx.createOscillator();
+  sine.type = 'sine';
+  sine.frequency.value = freq * 2;
+  sine.detune.value = 5;
+  const tremolo = ctx.createOscillator();
+  tremolo.type = 'sine';
+  tremolo.frequency.value = 5;
+  const vca = ctx.createGain();
+  vca.gain.setValueAtTime(0, now);
+  vca.gain.linearRampToValueAtTime(0.08, now + 0.01);
+  vca.gain.setValueAtTime(0.08, now + 0.4);
+  vca.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+  const tremGain = ctx.createGain();
+  tremGain.gain.value = 0.3;
+  tremolo.connect(tremGain);
+  tremGain.connect(vca.gain);
+  tri.connect(vca);
+  sine.connect(vca);
+  vca.connect(seqGain);
+  tri.start(now);
+  tri.stop(now + 1.6);
+  sine.start(now);
+  sine.stop(now + 1.6);
+  tremolo.start(now);
+  tremolo.stop(now + 1.6);
+}
+
 let seqBeatEls = null, seqPrCells = null;
 
 function seqCacheDOM() {
@@ -4312,14 +4594,18 @@ function seqPlayStep() {
   const now = ctx.currentTime;
   const stepDuration = 60 / bpm / 4;
   const noKick = seqGate44 && (seqStep % 16 >= 12);
-  if (!noKick && seqPatterns.kick[seqStep] && !seqMuted.kick) seqPlayKick();
-  if (seqPatterns.snare[seqStep] && !seqMuted.snare) seqPlaySnare();
-  if (seqPatterns.hh[seqStep] && !seqMuted.hh) seqPlayHH();
-  if (seqPatterns.oh[seqStep] && !seqMuted.oh) seqPlayOH();
-  if (seqPatterns.bass[seqStep] && !seqMuted.bass) seqPlayBass();
-  if (seqPatterns.oxygene[seqStep] && !seqMuted.oxygene) seqPlayOxygene(seqPatterns.oxygene[seqStep] - 1);
-  if (seqPatterns.equinoxe[seqStep] && !seqMuted.equinoxe) seqPlayEquinoxe(seqPatterns.equinoxe[seqStep] - 1);
-  if (seqPatterns.beam[seqStep] && !seqMuted.beam) seqPlayBeam(seqPatterns.beam[seqStep] - 1);
+  getActiveRows().forEach(row => {
+    if (!seqPatterns[row] || !seqPatterns[row][seqStep]) return;
+    if (seqMuted[row]) return;
+    if (noKick && row === 'kick') return;
+    const fnName = 'seqPlay' + row.charAt(0).toUpperCase() + row.slice(1);
+    if (typeof window[fnName] !== 'function') return;
+    if (isPadRow(row)) {
+      window[fnName](seqPatterns[row][seqStep] - 1);
+    } else {
+      window[fnName]();
+    }
+  });
   seqBeatEls.forEach(el => el.classList.remove('active'));
   seqBeatEls.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active'));
   seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
@@ -4338,9 +4624,6 @@ async function seqStart() {
   seqStep = 0;
   bassNoteIdx = 0;
   pianoChordIdx = 0;
-  oxygeneChordIdx = 0;
-  equinoxeChordIdx = 0;
-  beamChordIdx = 0;
   document.getElementById('seqBtn').textContent = '\u25A0 Stop';
   document.getElementById('seqBtn').classList.add('active');
   seqPlayStep();
