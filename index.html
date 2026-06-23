@@ -77,6 +77,50 @@
   .intro-btn-playing:hover{border-color:#66ee88 !important;color:#66ee88 !important}
   @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(68,204,102,0.3)}50%{box-shadow:0 0 12px 4px rgba(68,204,102,0.15)}}
 
+  /* ---- Loom figure effects ---- */
+  .loom-wrap{position:relative;text-align:center;margin-bottom:24px;animation:loomFloat 4s ease-in-out infinite}
+  .loom-wrap::before{content:'';position:absolute;inset:-10px;border-radius:24px;background:conic-gradient(from 0deg,#c8a87c,#00ff88,#4488ff,#c8a87c);opacity:0.12;z-index:-1;animation:loomSpin 6s linear infinite;filter:blur(12px)}
+  .loom-wrap::after{content:'';position:absolute;inset:-2px;border-radius:18px;border:1px solid rgba(200,168,124,0.15);z-index:-1;animation:loomEdge 3s ease-in-out infinite}
+  @keyframes loomFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes loomSpin{to{transform:rotate(360deg)}}
+  @keyframes loomEdge{0%,100%{opacity:0.3}50%{opacity:0.8}}
+  .loom-img{max-width:320px;width:100%;border-radius:16px;opacity:0.92;transition:transform 0.4s ease,filter 0.4s ease;transform-style:preserve-3d;perspective:800px;display:block;margin:0 auto}
+  .loom-img:hover{transform:rotateX(3deg) rotateY(-4deg) scale(1.03);filter:brightness(1.08) contrast(1.05)}
+
+  /* ---- Apps badge ---- */
+  .apps-badge{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,124,0.3);transition:.25s;white-space:nowrap;animation:badgePulse 2.5s ease-in-out infinite;z-index:2}
+  .apps-badge:hover{transform:translateX(-50%) translateY(-3px) !important;box-shadow:0 8px 35px rgba(200,168,124,0.55) !important}
+  @keyframes badgePulse{0%,100%{box-shadow:0 4px 20px rgba(200,168,124,0.3)}50%{box-shadow:0 4px 40px rgba(200,168,124,0.55),0 0 60px rgba(200,168,124,0.15)}}
+
+  /* ---- Spark particles ---- */
+  .spark{position:absolute;width:4px;height:4px;border-radius:50%;background:#c8a87c;pointer-events:none;opacity:0;z-index:1}
+  .spark:nth-child(1){top:15%;left:10%;animation:sparkBurst 3.5s ease-out infinite}
+  .spark:nth-child(2){top:50%;left:5%;animation:sparkBurst 3.5s ease-out infinite 0.7s}
+  .spark:nth-child(3){top:70%;left:88%;animation:sparkBurst 3.5s ease-out infinite 1.4s}
+  .spark:nth-child(4){top:20%;left:92%;animation:sparkBurst 3.5s ease-out infinite 2.1s}
+  .spark:nth-child(5){top:85%;left:15%;animation:sparkBurst 3.5s ease-out infinite 2.8s}
+  .spark:nth-child(6){top:5%;left:50%;animation:sparkBurst 4s ease-out infinite 1s}
+  .spark:nth-child(7){top:60%;left:95%;animation:sparkBurst 4s ease-out infinite 2s}
+  .spark:nth-child(8){top:35%;left:2%;animation:sparkBurst 4s ease-out infinite 3s}
+  @keyframes sparkBurst{0%{opacity:1;transform:translate(0,0) scale(1);box-shadow:0 0 6px rgba(200,168,124,0.8)}100%{opacity:0;transform:translate(var(--dx,15px),var(--dy,-20px)) scale(0);box-shadow:0 0 0 transparent}}
+  .spark:nth-child(1){--dx:18px;--dy:-22px}
+  .spark:nth-child(2){--dx:-12px;--dy:-30px}
+  .spark:nth-child(3){--dx:-15px;--dy:-25px}
+  .spark:nth-child(4){--dx:20px;--dy:-18px}
+  .spark:nth-child(5){--dx:12px;--dy:-28px}
+  .spark:nth-child(6){--dx:-8px;--dy:-20px}
+  .spark:nth-child(7){--dx:16px;--dy:-24px}
+  .spark:nth-child(8){--dx:-14px;--dy:-26px}
+
+  /* ---- Bzzzt attention flash ---- */
+  .bzzzt{animation:bzzztFlash 0.6s ease-out !important}
+  @keyframes bzzztFlash{0%{filter:brightness(1)}20%{filter:brightness(1.7) saturate(1.5)}40%{filter:brightness(0.85)}60%{filter:brightness(1.4)}100%{filter:brightness(1)}}
+
+  /* ---- Dimensional warp on click ---- */
+  .warp-active .loom-img{transition:all 0.8s ease-in;opacity:0;transform:scale(3) rotateZ(15deg);filter:brightness(2) blur(4px)}
+  .warp-active .apps-badge{transition:all 0.8s ease-in;opacity:0;transform:translateX(-50%) scale(3)}
+  .warp-active .spark{display:none}
+
   @media(max-width:640px){
     body{padding:1rem;font-size:15px}
     h1{font-size:1.5rem}
@@ -90,9 +134,12 @@
 <body>
 <div class="wrap">
 
-<div style="text-align:center;margin-bottom:24px;position:relative">
-  <img src="loom-figure.webp" alt="Loom figure" style="max-width:320px;width:100%;border-radius:16px;opacity:0.9" />
-  <a href="https://tools.45dgof8.com" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,124,0.3);transition:.2s;white-space:nowrap" onmouseover="this.style.transform='translateX(-50%) translateY(-2px)';this.style.boxShadow='0 6px 28px rgba(200,168,124,0.45)'" onmouseout="this.style.transform='translateX(-50%)';this.style.boxShadow='0 4px 20px rgba(200,168,124,0.3)'">Apps &amp; Tools &#9656;</a>
+<div class="loom-wrap" id="loomWrap">
+  <img src="loom-figure.webp" alt="Loom figure" class="loom-img" id="loomImg" />
+  <a href="https://tools.45dgof8.com" class="apps-badge" id="appsBadge">Apps &amp; Tools &#9656;</a>
+  <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
+  <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
+</div>
 </div>
 
 <div class="hat-title">
@@ -448,6 +495,30 @@ function submitProject() {
   document.querySelector('.btn-submit').style.background = '#44cc66';
   document.querySelector('.btn-submit').disabled = true;
 }
+</script>
+<script>
+// --- Loom bzzzt + warp ---
+document.addEventListener("DOMContentLoaded", () => {
+  const wrap = document.getElementById("loomWrap");
+  const badge = document.getElementById("appsBadge");
+  if (!wrap) return;
+
+  function doBzzzt() {
+    wrap.classList.add("bzzzt");
+    setTimeout(() => wrap.classList.remove("bzzzt"), 600);
+  }
+  setTimeout(doBzzzt, 700);
+  setInterval(doBzzzt, 23000);
+
+  let engaged = false;
+  badge.addEventListener("click", (e) => {
+    if (engaged) return;
+    engaged = true;
+    e.preventDefault();
+    wrap.classList.add("warp-active");
+    setTimeout(() => { window.location.href = badge.href; }, 800);
+  });
+});
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 </body>
