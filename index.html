@@ -149,13 +149,13 @@
   <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
   <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
     <a href="/chat.html" style="display:inline-block;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
-    <button id="introPlayBtn" class="intro-btn-muted" title="Unmute intro" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:2px solid #8b7355;border-radius:8px;background:#1e1610;color:#b89060;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:all .2s">
+    <button id="introPlayBtn" class="intro-btn-muted" title="Play intro" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:2px solid #8b7355;border-radius:8px;background:#1e1610;color:#b89060;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:all .2s">
       <span id="introIcon">🔇</span>
-      <span id="introLabel">Unmute</span>
+      <span id="introLabel">Listen</span>
     </button>
   </div>
 </div>
-<audio id="introAudio" src="assets/intro.mp3" preload="auto"></audio>
+<audio id="introAudio" preload="auto"></audio>
 
 <!-- About -->
 <div class="card" style="border-color:#2a3a2a;background:#0e0e14">
@@ -424,29 +424,49 @@ document.querySelectorAll('.qbtn').forEach(btn => {
 <!-- close .wrap -->
 
 <script>
-// --- Intro audio player ---
+// --- Lady speaks ---
 (function(){
   const btn = document.getElementById('introPlayBtn');
   const aud = document.getElementById('introAudio');
   const icon = document.getElementById('introIcon');
   const label = document.getElementById('introLabel');
   if (!btn || !aud) return;
-  aud.volume = 0.7;
+  aud.volume = 0.8;
+
+  const clips = [
+    "assets/hello-sandra.mp3",
+    "assets/let-me-assist-you.mp3",
+    "assets/indonesia-promo.mp3",
+    "loom-welcome.mp3",
+    "assets/intro.mp3"
+  ];
+  let idx = 0;
+
+  function playNext() {
+    aud.src = clips[idx];
+    aud.load();
+    aud.play().then(function() {
+      btn.className = 'intro-btn-playing';
+      icon.textContent = '\uD83D\uDD0A';
+      label.textContent = 'Playing\u2026';
+    }).catch(function(){});
+    idx = (idx + 1) % clips.length;
+  }
+
   function setMuted() {
     btn.className = 'intro-btn-muted';
     icon.textContent = '\uD83D\uDD07';
-    label.textContent = 'Unmute';
+    label.textContent = 'Listen';
   }
-  function setPlaying() {
-    btn.className = 'intro-btn-playing';
-    icon.textContent = '\uD83D\uDD0A';
-    label.textContent = 'Playing...';
-  }
-  aud.addEventListener('ended', setMuted);
+
+  aud.addEventListener('ended', function() {
+    setMuted();
+  });
+
   btn.addEventListener('click', function(){
     if (aud.paused) {
       aud.currentTime = 0;
-      aud.play().then(setPlaying).catch(function(){});
+      playNext();
     } else {
       aud.pause();
       aud.currentTime = 0;
