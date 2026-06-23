@@ -1024,6 +1024,15 @@ function submitProject() {
     master.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 3);
     toggleEl.classList.add('on');
     labelEl.textContent = 'ambient';
+    playWelcome();
+  }
+
+  function playWelcome() {
+    try {
+      var w = new Audio('assets/agent-welcome.mp3');
+      w.volume = 0.4;
+      w.play().catch(function(){});
+    } catch(e){}
   }
 
   function stopAmbient() {
