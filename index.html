@@ -3,268 +3,451 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>45dgof8 — Apps & Tools</title>
+<title>45dgof8 Agent Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="/manifest-chat.json">
-<meta name="theme-color" content="#08080e">
+<meta name="theme-color" content="#0d0d14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,sans-serif;background:#08080e;color:#e0d8d0;line-height:1.6;min-height:100vh}
-.wrap{max-width:900px;margin:0 auto;padding:32px 20px 80px}
-header{text-align:center;padding:40px 0 36px}
-header .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#887a6a;margin-bottom:8px}
-header h1{font-size:36px;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(135deg,#c8a87c,#e8d5b0,#d4b88a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:#6a5d4a;font-size:14px;margin-top:4px}
-.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:8px}
-.app-card{background:#111118;border:1px solid #1c1c2a;border-radius:14px;padding:28px 24px;text-decoration:none;color:#e0d8d0;transition:.25s;display:flex;flex-direction:column}
-.app-card:hover{border-color:#c8a87c;transform:translateY(-3px);box-shadow:0 6px 30px rgba(200,168,124,0.12)}
-.app-card .icon{font-size:32px;margin-bottom:12px}
-.app-card .name{font-size:17px;font-weight:700;margin-bottom:6px}
-.app-card .desc{font-size:13px;color:#6a5d4a;line-height:1.5}
-.app-card .tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#887a6a;border:1px solid #2a2a3a;border-radius:4px;padding:2px 8px;align-self:flex-start}
-.section-title{font-size:13px;font-weight:700;color:#c8a87c;margin-top:48px;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;min-height:100vh}
+  .wrap{max-width:800px;margin:0 auto;padding:40px 24px 80px}
 
-.separator{text-align:center;padding:40px 0 20px;position:relative}
-.separator span{display:inline-block;background:#111118;border:1px solid #1c1c2a;border-radius:20px;padding:6px 18px;font-size:11px;color:#6a5d4a;letter-spacing:1px;text-transform:uppercase}
-.separator::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:1px;background:#1c1c2a;z-index:-1}
+  .hat-title{text-align:center;margin-bottom:40px;border-bottom:1px solid #222;padding-bottom:24px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2.6rem;font-weight:400;letter-spacing:12px;text-transform:uppercase;color:#888;background:linear-gradient(135deg,#e0e0e8,#888,#e0e0e8);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite 0.5s}
+  .hat-brim-accent{display:block;font-size:0.75rem;letter-spacing:8px;color:#555;margin-top:8px;font-weight:300}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  h2{font-size:1.3rem;color:#00cc77;margin-top:48px;margin-bottom:16px}
+  h3{font-size:1.05rem;color:#ddd;margin-top:24px;margin-bottom:10px}
+  p{color:#b8b8c8;margin-bottom:12px}
+  a{color:#4488ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:#1a1a28;color:#c8a0ff;padding:2px 6px;border-radius:4px;font-size:0.9em}
 
-.old-section{opacity:.75}
-.old-section:hover{opacity:1}
-.old-section a{color:#c8a87c;text-decoration:none}
-.old-section a:hover{text-decoration:underline}
-.old-section h2{font-size:1.3rem;color:#c8a87c;margin-top:48px;margin-bottom:16px}
-.old-section h3{font-size:1.05rem;color:#ddd;margin-top:24px;margin-bottom:10px}
-.old-section p{color:#b8b8c8;margin-bottom:12px}
-.old-section .card{background:#111118;border:1px solid #1c1c2a;border-radius:12px;padding:24px;margin:16px 0}
-.old-section .card h3{margin-top:0}
-.old-section code{background:#1a1a28;color:#c8a0ff;padding:2px 6px;border-radius:4px;font-size:0.9em}
-.old-section .status{font-size:0.9rem;margin-top:8px;padding:8px 12px;border-radius:6px;min-height:20px}
-.old-section .status.ok{color:#8ab87a}
-.old-section .status.err{color:#ff6644}
-.old-section .status.info{color:#888}
-.old-section .tag{display:inline-block;background:#1a1a28;color:#887a6a;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px;border:1px solid #2a2a3a}
-.old-section .btn-submit{background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;border:none;padding:14px 32px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
-.old-section .btn-submit:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(200,168,124,0.25)}
-.old-section .note{color:#6a5d4a;font-size:0.85rem;margin-top:8px}
-.old-section .price-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0a0a12;border:1px solid #1c1c2a;border-radius:8px;margin-bottom:8px;gap:8px;flex-wrap:wrap}
-.old-section .price-item .service{font-weight:600;color:#ddd}
-.old-section .price-item .price{color:#c8a87c;font-weight:700;font-size:1.1rem}
-.old-section .btn-pay{background:#ffc439;color:#111;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;white-space:nowrap;display:inline-block}
-.old-section .btn-pay:hover{background:#ffd668;transform:translateY(-1px)}
-.old-section .amount-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0;justify-content:center}
-.old-section .amount-row input{padding:12px 16px;font-size:1.1rem;background:#0a0a12;border:1px solid #1c1c2a;border-radius:8px;color:#e0d8d0;width:160px;font-weight:700}
-.old-section .amount-row input:focus{outline:none;border-color:#c8a87c}
-.old-section .form-group{margin:16px 0}
-.old-section .form-group label{display:block;color:#6a5d4a;margin-bottom:6px;font-size:0.9rem}
-.old-section .form-group input,.old-section .form-group textarea{width:100%;padding:12px 16px;background:#0a0a12;border:1px solid #1c1c2a;border-radius:8px;color:#e0d8d0;font-size:1rem;font-family:inherit}
-.old-section .form-group input:focus,.old-section .form-group textarea:focus{outline:none;border-color:#c8a87c}
-.old-section .form-group textarea{min-height:100px;resize:vertical}
-.old-section hr{border:none;border-top:1px solid #1c1c2a;margin:40px 0}
-.old-section .qbtn:hover{border-color:#c8a87c !important;background:#1a1812 !important}
-.old-section .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
-.old-section .video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%}
+  .card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;padding:24px;margin:16px 0}
+  .card h3{margin-top:0}
 
-footer{text-align:center;padding:48px 0 0;color:#3a3a4a;font-size:12px}
-footer a{color:#6a5d4a;text-decoration:none}
-footer a:hover{color:#c8a87c}
+  hr{border:none;border-top:1px solid #222;margin:40px 0}
 
-@media(max-width:640px){
-body{padding:0;font-size:15px}
-.apps{grid-template-columns:1fr}
-header h1{font-size:26px}
-.wrap{padding:16px 14px 60px}
-}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+  .price-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0f0f1a;border-radius:8px;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+  .price-item .service{font-weight:600;color:#ddd}
+  .price-item .price{color:#00ff88;font-weight:700;font-size:1.1rem}
+
+  .btn-pay{background:#ffc439;color:#111;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
+  .btn-pay:hover{background:#ffd668;transform:translateY(-1px)}
+
+  .amount-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0}
+  .amount-row input{padding:12px 16px;font-size:1.1rem;background:#0f0f1a;border:1px solid #3a3a4a;border-radius:8px;color:#e0e0e8;width:160px;font-weight:700}
+  .amount-row input:focus{outline:none;border-color:#00ff88}
+
+  .form-group{margin:16px 0}
+  .form-group label{display:block;color:#aaa;margin-bottom:6px;font-size:0.9rem}
+  .form-group input,.form-group textarea{width:100%;padding:12px 16px;background:#0f0f1a;border:1px solid #3a3a4a;border-radius:8px;color:#e0e0e8;font-size:1rem;font-family:inherit}
+  .form-group input:focus,.form-group textarea:focus{outline:none;border-color:#00ff88}
+  .form-group textarea{min-height:100px;resize:vertical}
+  .btn-submit{background:#00ff88;color:#0a0a0a;padding:14px 32px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn-submit:hover{background:#33ffaa;transform:translateY(-1px)}
+
+  .note{color:#666;font-size:0.85rem;margin-top:8px}
+  .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
+
+  .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
+  .qbtn:hover{border-color:#6a5a9a !important;background:#2a1a3e !important}
+  .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+  .video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%}
+
+  .status{font-size:0.9rem;margin-top:8px;padding:8px 12px;border-radius:6px;min-height:20px}
+  .status.ok{color:#44cc66}
+  .status.err{color:#ff6644}
+  .status.info{color:#888}
+
+  .footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.85rem}
+  .footer a{color:#4488ff}
+
+  .disclaimer{font-size:0.8rem;color:#555;margin-top:24px;padding:12px;border:1px solid #2a2a2a;border-radius:8px}
+
+  .intro-btn-muted:hover{border-color:#d4a847 !important;color:#d4a847 !important;background:#2a2018 !important}
+  .intro-btn-playing{border-color:#44cc66 !important;color:#44cc66 !important;background:#1a2a1a !important;animation:btnPulse 0.8s ease-in-out infinite}
+  .intro-btn-playing:hover{border-color:#66ee88 !important;color:#66ee88 !important}
+  @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(68,204,102,0.3)}50%{box-shadow:0 0 12px 4px rgba(68,204,102,0.15)}}
+
+  @media(max-width:640px){
+    body{padding:1rem;font-size:15px}
+    h1{font-size:1.5rem}
+    h2{font-size:1.2rem}
+    video{max-height:300px}
+    .card{padding:16px}
+    #project-form input,#project-form textarea{font-size:16px}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-<div class="badge">45dgof8</div>
-<h1>Apps &amp; Tools</h1>
-<p>Free tools, AI agents, and utilities</p>
-</header>
 
-<!-- Apps Grid — THE NEW STUFF, FRONT AND CENTER -->
-<div class="apps">
-<a class="app-card" href="https://tools.45dgof8.com">
-<div class="icon">&#128295;</div>
-<div class="name">Tools Hub</div>
-<div class="desc">PDF merge &amp; compress, image optimizer, QR code, JSON formatter, color palette, video→GIF, text diff</div>
-<span class="tag">8 tools</span>
-</a>
-<a class="app-card" href="https://yt-producer.45dgof8.com">
-<div class="icon">&#127916;</div>
-<div class="name">YT Producer</div>
-<div class="desc">YouTube Shorts generator with multi-frame comic-movie editor, TTS voiceover, Ken Burns effect</div>
-<span class="tag">free + pro</span>
-</a>
-<a class="app-card" href="/chat.html">
-<div class="icon">&#128172;</div>
-<div class="name">Big Pickle Chat</div>
-<div class="desc">Unfiltered AI chat — runs locally, no guardrails, no filters, straight answers</div>
-<span class="tag">free</span>
-</a>
-<a class="app-card" href="https://paypal.me/45dgof8" target="_blank">
-<div class="icon">&#128179;</div>
-<div class="name">PayPal.Me</div>
-<div class="desc">Pay for custom work, tools, or services — one-time, no subscription</div>
-<span class="tag">pay per use</span>
-</a>
+<div style="text-align:center;margin-bottom:24px;position:relative">
+  <img src="loom-figure.webp" alt="Loom figure" style="max-width:320px;width:100%;border-radius:16px;opacity:0.9" />
+  <a href="/apps" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,124,0.3);transition:.2s;white-space:nowrap" onmouseover="this.style.transform='translateX(-50%) translateY(-2px)';this.style.boxShadow='0 6px 28px rgba(200,168,124,0.45)'" onmouseout="this.style.transform='translateX(-50%)';this.style.boxShadow='0 4px 20px rgba(200,168,124,0.3)'">Apps &amp; Tools &#9656;</a>
 </div>
 
-<!-- SEPARATOR: old stuff below, still there but faded -->
-<div class="separator"><span>&#9660; everything else</span></div>
+<div class="hat-title">
+  <span class="hat-crown">45dgof8</span>
+  <span class="hat-brim">Agent Services</span>
+  <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
+  <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+    <a href="/chat.html" style="display:inline-block;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
+    <button id="introPlayBtn" class="intro-btn-muted" title="Unmute intro" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:2px solid #8b7355;border-radius:8px;background:#1e1610;color:#b89060;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:all .2s">
+      <span id="introIcon">🔇</span>
+      <span id="introLabel">Unmute</span>
+    </button>
+  </div>
+</div>
+<audio id="introAudio" src="assets/intro.mp3" preload="auto"></audio>
 
-<div class="old-section">
-<div style="text-align:center;margin-bottom:24px">
-<img src="loom-figure.webp" alt="Loom figure" style="max-width:280px;width:100%;border-radius:16px;opacity:.8" />
-</div>
-
-<div style="text-align:center;margin-bottom:32px">
-<span style="display:block;font-family:'Cinzel',serif;font-size:1.3rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(135deg,#c8a87c,#e8d5b0,#d4b88a);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:-2px">45dgof8</span>
-<span style="display:block;font-family:'Cinzel',serif;font-size:2rem;font-weight:400;letter-spacing:10px;text-transform:uppercase;background:linear-gradient(135deg,#e0d8d0,#6a5d4a,#e0d8d0);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Agent Services</span>
-<span style="display:block;font-size:0.7rem;letter-spacing:4px;color:#6a5d4a;margin-top:4px">Not a flatpack. Built for you.</span>
-<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap">
-<a href="/chat.html" style="display:inline-block;padding:8px 20px;background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem">Chat</a>
-<a href="https://tools.45dgof8.com" style="display:inline-block;padding:8px 20px;border:1px solid #c8a87c;color:#c8a87c;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.85rem">Tools</a>
-<a href="https://yt-producer.45dgof8.com" style="display:inline-block;padding:8px 20px;border:1px solid #c8a87c;color:#c8a87c;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.85rem">YT Producer</a>
-</div>
-</div>
-
-<div class="card">
-<h2>What is 45dgof8?</h2>
-<p>I build custom AI agents for solo creators — email bots, Telegram assistants, automation workflows, video and music generation. You describe what you need, I build the agent, you get the result.</p>
-<p>No subscriptions. No platform lock-in. Every agent runs on your hardware and you own the setup. You don't rent a slot — you own the machine.</p>
-<div style="background:#0a0a12;border:1px solid #1c1c2a;border-radius:8px;padding:12px;margin:16px 0;text-align:center">
-<span style="color:#c8a87c;font-weight:700;font-size:1.05rem">&frac12; price for the first 3 clients</span>
-<span id="offer-count" style="display:block;color:#6a5d4a;font-size:0.8rem;margin-top:4px">3 of 3 slots remaining &mdash; Introductory offer</span>
-</div>
-<p>This isn't a startup. It's one person building useful AI tools.</p>
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
-<span class="tag">custom AI agents</span>
-<span class="tag">email + Telegram</span>
-<span class="tag">video + music</span>
-<span class="tag">automation</span>
-<span class="tag">no subscription</span>
-</div>
+<!-- About -->
+<div class="card" style="border-color:#2a3a2a;background:#0e0e14">
+  <h2 style="margin-top:0">What is 45dgof8?</h2>
+  <p>I build custom AI agents for solo creators - email bots, Telegram assistants, automation workflows, video and music generation. You describe what you need, I build the agent, you get the result.</p>
+  <p>No subscriptions. No platform lock-in. Every agent runs on your hardware and you own the setup. You don't rent a slot - you own the machine.</p>
+  <div id="offer-banner" style="background:#1a2a1a;border:1px solid #2a4a2a;border-radius:8px;padding:12px;margin:16px 0;text-align:center">
+    <span style="color:#44cc66;font-weight:700;font-size:1.05rem">½ price for the first 3 clients</span>
+    <span id="offer-count" style="display:block;color:#888;font-size:0.8rem;margin-top:4px">3 of 3 slots remaining — Introductory offer</span>
+  </div>
+  <p>This isn't a startup. It's one person building useful AI tools for people who want the power of agents without the enterprise overhead.</p>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+    <span class="tag">custom AI agents</span>
+    <span class="tag">email + Telegram</span>
+    <span class="tag">video + music</span>
+    <span class="tag">automation</span>
+    <span class="tag">no subscription</span>
+  </div>
 </div>
 
+<!-- Pricing -->
 <h2>What you get (SFr. / CHF)</h2>
 <div class="card">
-<div class="price-item"><span class="service">&#127916; Custom video ad (30s)</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 19</span><a class="btn-pay" href="https://paypal.me/45dgof8/19" target="_blank">Pay</a></span></div>
-<div class="price-item"><span class="service">&#127925; Custom music track (30s)</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 15</span><a class="btn-pay" href="https://paypal.me/45dgof8/15" target="_blank">Pay</a></span></div>
-<div class="price-item"><span class="service">&#9889; Automation workflow</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 25</span><a class="btn-pay" href="https://paypal.me/45dgof8/25" target="_blank">Pay</a></span></div>
-<div class="price-item" style="border-radius:0;border-bottom:1px solid #1c1c2a"><span class="service">&#128260; Revision / tweak</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 5</span><a class="btn-pay" href="https://paypal.me/45dgof8/5" target="_blank">Pay</a></span></div>
-<div class="price-item" style="background:#0f0f1a;margin-top:4px;border-radius:8px"><span class="service" style="color:#c8a87c">&#128230; Bundle &mdash; video + track</span><span style="display:flex;align-items:center;gap:10px"><span class="price" style="color:#c8a87c">SFr. 29</span><a class="btn-pay" href="https://paypal.me/45dgof8/29" target="_blank">Pay</a></span></div>
-<div class="price-item" style="background:#0f0f1a;border-radius:8px"><span class="service" style="color:#c8a87c">&#129302; Telegram bot setup</span><span style="display:flex;align-items:center;gap:10px"><span class="price" style="color:#c8a87c">SFr. 35</span><a class="btn-pay" href="https://paypal.me/45dgof8/35" target="_blank">Pay</a></span></div>
-<p class="note">First revision free. Custom amount below.</p>
+  <div class="price-item">
+    <span class="service">🎬 Custom video ad (30s)</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 19</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/19" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item">
+    <span class="service">🎵 Custom music track (30s)</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 15</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/15" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item">
+    <span class="service">⚡ Automation workflow</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 25</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/25" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="border-bottom:1px solid #2a2a3a;border-radius:0">
+    <span class="service">🔄 Revision / tweak</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 5</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/5" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="background:#1a2a1a;margin-top:4px;border-radius:8px">
+    <span class="service" style="color:#00ff88">📦 Bundle - video + track</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#00ff88">SFr. 29</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/29" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="background:#1a2a1a;margin-top:4px;border-radius:8px">
+    <span class="service" style="color:#00ff88">🤖 Telegram bot setup - auto-reply with voice, commands, your own bot</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#00ff88">SFr. 35</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/35" target="_blank">Pay</a>
+    </span>
+  </div>
+  <p class="note" style="margin-top:12px;color:#666;border-top:1px solid #2a2a3a;padding-top:12px">First revision free. Custom amount below.</p>
 </div>
 
-<div class="card" style="border-color:#3a2a4a">
-<h2>&#128295; Don't want to do it yourself?</h2>
-<div class="price-item" style="background:#0f0f1a;border:1px solid #4a3a6a;border-radius:8px">
-<span class="service" style="color:#c8a87c">Personal setup support &mdash; I'll help you get everything running</span>
-<span style="display:flex;align-items:center;gap:10px"><span class="price" style="color:#c8a87c">SFr. 49</span><a class="btn-pay" href="https://paypal.me/45dgof8/49" target="_blank">Pay</a></span>
-</div>
-<p class="note" style="color:#6a5d4a">Separate one-time service. You get full setup guide + email support.</p>
+<!-- Setup Support -->
+<div class="card" style="border-color:#4a3a6a;background:#0e0e1a">
+  <h2 style="margin-top:0">🔧 Don't want to do it yourself?</h2>
+  <div class="price-item" style="background:#1a1a2e;border:1px solid #5a4a7a;border-radius:8px">
+    <span class="service" style="color:#c0a0ff">Personal setup support - I'll help you get everything running</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#c0a0ff">SFr. 49</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/49" target="_blank">Pay</a>
+    </span>
+  </div>
+  <p class="note" style="margin-top:12px;color:#aaa">This is a separate one-time service, not an add-on to the prices above. You get the full setup guide + email support to get your own agent ops center running.</p>
 </div>
 
+<!-- Custom Amount -->
 <h2>Custom project?</h2>
-<div class="card" style="text-align:center">
-<p style="color:#6a5d4a;margin-bottom:16px">Enter an amount and pay via PayPal. I'll follow up within 24h.</p>
-<div class="amount-row">
-<span style="color:#6a5d4a">SFr.</span>
-<input type="number" id="custom-amount" value="19" min="1" step="1" />
-<a class="btn-pay" style="font-size:1rem;padding:12px 24px" href="#" onclick="payCustom()">Pay with PayPal</a>
-</div>
-<p class="note">First revision free. No commitment until you approve.</p>
+<div class="card" style="text-align:center;border-color:#4a3a6a">
+  <p style="color:#aaa;margin-bottom:16px">Enter an amount and pay via PayPal. I'll follow up within 24h.</p>
+  <div class="amount-row" style="justify-content:center">
+    <span style="color:#888">SFr.</span>
+    <input type="number" id="custom-amount" value="19" min="1" step="1" />
+    <a class="btn-pay" style="font-size:1rem;padding:12px 24px" href="#" onclick="payCustom()">Pay with PayPal</a>
+  </div>
+  <p class="note" style="margin-top:12px;color:#888;font-size:0.9rem">First revision free. No commitment until you approve.</p>
 </div>
 
+<!-- Project Form -->
 <h2>Tell me what you need</h2>
 <div class="card">
-<div class="form-group"><label for="email">Your email</label><input type="email" id="email" placeholder="you@example.com" /></div>
-<p style="text-align:center;margin:16px 0"><a href="https://t.me/Jace_mail_bot" target="_blank" style="display:inline-block;background:#2a6bb0;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600">&#9992; Message me on Telegram</a></p>
-<div class="form-group"><label for="project">What do you need?</label><textarea id="project" placeholder="I need a 30-second video ad for my brand. Dark cinematic style, electronic background music, text overlays with my tagline..."></textarea></div>
-<button class="btn-submit" onclick="submitProject()">Send project brief</button>
-<p class="note">I'll reply within 24h. No commitment until you approve.</p>
+  <div class="form-group">
+    <label for="email">Your email</label>
+    <input type="email" id="email" placeholder="you@example.com" />
+  </div>
+  <p style="text-align:center;margin:16px 0">
+  <a href="https://t.me/Jace_mail_bot" target="_blank" style="display:inline-block;background:#2a6bb0;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600">✈️ Message me on Telegram</a>
+</p>
+<div class="form-group">
+    <label for="project">What do you need?</label>
+    <textarea id="project" placeholder="I need a 30-second video ad for my brand. Dark cinematic style, electronic background music, text overlays with my tagline..."></textarea>
+  </div>
+  <button class="btn-submit" onclick="submitProject()">Send project brief</button>
+  <p class="note" style="margin-top:8px">I'll reply within 24h. No commitment until you approve.</p>
 </div>
 
 <hr />
 
+<!-- Conversation Examples -->
 <h2>What a conversation with us looks like</h2>
-<div class="card" style="border-color:#2a2a3a">
-<p style="color:#6a5d4a;font-size:0.85rem;margin-bottom:16px">Real discussions from our sessions. Unfiltered, no guardrails.</p>
-<div style="background:#0a0a12;border:1px solid #1a1a28;border-radius:8px;padding:16px;margin-bottom:12px">
-<div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
-<div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">I need a Telegram bot that monitors my Gmail inbox and forwards specific emails to me on Telegram. Can that be done on my own hardware? I don't want to pay monthly.</div>
-<div style="color:#c8a87c;font-weight:600;font-size:0.85rem;margin:8px 0 4px">Big Pickle:</div>
-<div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">Absolutely. Lightweight Node.js watcher polls Gmail via IMAP, filters by sender/label, pushes to Telegram bot API. Runs on any old machine, $0/month. You own every piece.</div>
-</div>
-<div style="background:#0a0a12;border:1px solid #1a1a28;border-radius:8px;padding:16px;margin-bottom:12px">
-<div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
-<div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">I want a 30-second ad video with music. Dark cinematic. No GPU. Possible?</div>
-<div style="color:#c8a87c;font-weight:600;font-size:0.85rem;margin:8px 0 4px">Big Pickle:</div>
-<div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">Music via AI audio (CPU), FFmpeg + Python for overlays/cuts. No GPU needed. Proper 1080p MP4, source files included, no watermarks. SFr. 19, first revision free.</div>
-</div>
+<div class="card" style="border-color:#2a3a4a;background:#0e0e16">
+  <p style="color:#888;font-size:0.85rem;margin-bottom:16px">Real discussions from our sessions. The model runs locally - no filters, no guardrails, straight answers.</p>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a2a;border-radius:8px;padding:16px;margin-bottom:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I need a Telegram bot that monitors my Gmail inbox and forwards specific emails (invoices, client messages) to me on Telegram. Can that be done on my own hardware? I don't want to pay monthly for a service.</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Absolutely. Here's the stack:</p>
+      <ul style="color:#b8b8c8;margin:0 0 8px 20px;padding:0">
+        <li>A lightweight Node.js watcher polls Gmail via IMAP every 5 minutes</li>
+        <li>Filters by sender/label/keyword - only forwards what matters</li>
+        <li>Pushes matches to Telegram via bot API (free, no monthly)</li>
+        <li>Runs on any old machine - modest hardware, no GPU needed</li>
+      </ul>
+      <p style="margin-bottom:8px">Total cost: $0/month. You own every piece. If the bot breaks, you fix it or I help you fix it. No platform decides to deprecate your workflow next quarter.</p>
+      <p style="margin-bottom:0">We've built exactly this for our setup. Takes about a day to customize for your filters.</p>
+    </div>
+  </div>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a2a;border-radius:8px;padding:16px;margin-bottom:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I want a 30-second ad video for my brand with music. Dark cinematic style. I don't have a GPU or any fancy hardware - is that a problem?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Not a problem. Here's how we do it:</p>
+      <ul style="color:#b8b8c8;margin:0 0 8px 20px;padding:0">
+        <li>Music generated with AI audio models - CPU-only, outputs a 30s synth/electronic track in WAV</li>
+        <li>Video assembled with FFmpeg + Python - text overlays, cuts, transitions, color grading</li>
+        <li>No GPU needed. Everything runs on the same machine you'd use for email</li>
+      </ul>
+      <p style="margin-bottom:8px">The result is a proper 1080p MP4 with synced audio. You get the source files, you own the output, no watermarks, no platform lock-in.</p>
+      <p style="margin-bottom:0">We charge SFr. 19 for a 30s spot. First revision free. You describe the vibe, we ship the file.</p>
+    </div>
+  </div>
+
+  <p class="note" style="color:#555;margin-bottom:12px;text-align:center;border-top:1px solid #1a2a2a;padding-top:12px">And sometimes we have fun too:</p>
+
+  <div style="background:#0a0a12;border:1px solid #2a2a1a;border-radius:8px;padding:16px;margin-bottom:0">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">The last quantum engineer on Earth encoded her consciousness into a serverless function before the solar flare hit. what, in your opinion, is the year where something like this could happen?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Cute premise. Real answer: <strong>never for the serverless part, ~50-100 years for the consciousness part.</strong></p>
+      <p style="margin-bottom:8px">The "serverless function" is the joke - Lambda caps at 10GB RAM and 15 minutes. Even if we had a whole-brain connectome scan, you couldn't run a fruit fly's worth of neurons on that hardware.</p>
+      <p style="margin-bottom:0">The real answer: <strong>2126</strong> - far enough to be plausible, close enough to feel urgent.</p>
+    </div>
+  </div>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a1a;border-radius:8px;padding:16px;margin-bottom:0;margin-top:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I want to build an interactive ambient soundscape for my website — wind, rain, a distant heartbeat, some kind of low drone that shifts. But I don't want to embed a YouTube video. I want it to feel alive, like the page is breathing. Can you build something like that?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Already built it. It's called <strong>Ambient Studio</strong> — a single HTML page, zero dependencies, 26 parallel sound engines all running in your browser via Web Audio API.</p>
+      <p style="margin-bottom:8px">Wind (filtered noise with slow LFO), rain (layered bandpass noise at four different rates), a sub-bass drone that morphs, heartbeat pulses, shaker patterns, a TB-303 acid line, piano rolls, a beat machine with bassline and chords — all generated live. No samples, no streaming, no YouTube.</p>
+      <p style="margin-bottom:8px">Plus: per-track lowpass filters, Auto DJ that crossfades between scenes, recording to WAV, piano roll editor, vocalist TTS, and a brass-and-candle steampunk UI because why not.</p>
+      <p style="margin-bottom:0">Want one for your site? I'll fork the engine, customize the presets, and embed it. <strong>SFr. 25</strong>. You get the HTML, you own it, it breathes on your page.</p>
+    </div>
+  </div>
 </div>
 
 <hr />
 
+<!-- Try it live -->
 <h2>Try it live</h2>
-<div class="card" style="border-color:#2a2a3a">
-<p style="color:#6a5d4a;font-size:0.85rem;margin-bottom:16px">Click a question to see the answer appear in real time.</p>
-<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
-<button class="qbtn" data-q="0" style="background:#0a0a12;border:1px solid #3a2a4a;border-radius:8px;padding:10px 16px;color:#c8a87c;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">What can you actually build for me?</button>
-<button class="qbtn" data-q="1" style="background:#0a0a12;border:1px solid #3a2a4a;border-radius:8px;padding:10px 16px;color:#c8a87c;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">How is this different from ChatGPT Plus?</button>
-<button class="qbtn" data-q="2" style="background:#0a0a12;border:1px solid #3a2a4a;border-radius:8px;padding:10px 16px;color:#c8a87c;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">I don't know what I need — can you help me figure it out?</button>
-<button class="qbtn" data-q="3" style="background:#0a0a12;border:1px solid #3a2a4a;border-radius:8px;padding:10px 16px;color:#c8a87c;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">Do I need to pay monthly?</button>
-</div>
-<div id="answer-box" style="background:#0a0a12;border:1px solid #1c1c2a;border-radius:8px;padding:16px;min-height:60px">
-<div id="answer-text" style="color:#6a5d4a;font-size:0.85rem">Click above.</div>
-</div>
-</div>
-</div><!-- close .old-section -->
+<div class="card" style="border-color:#3a2a4a;background:#0e0e1a">
+  <p style="color:#888;font-size:0.85rem;margin-bottom:16px">Click a question and watch the answer appear in real time - this is how fast the model responds.</p>
 
-<footer>
-<a href="https://45dgof8.com">45dgof8.com</a> &middot;
-<a href="https://tools.45dgof8.com">Tools</a> &middot;
-<a href="https://yt-producer.45dgof8.com">YT Producer</a> &middot;
-<a href="https://paypal.me/45dgof8" target="_blank">PayPal</a><br>
-<span style="color:#2a2a3a;font-size:0.7rem">built by jace + opencode</span>
-</footer>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <button class="qbtn" data-q="0" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">What can you actually build for me?</button>
+    <button class="qbtn" data-q="1" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">How is this different from ChatGPT Plus?</button>
+    <button class="qbtn" data-q="2" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">I don't know what I need - can you help me figure it out?</button>
+    <button class="qbtn" data-q="3" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">Do I need to pay monthly?</button>
+  </div>
+
+  <div id="answer-box" style="background:#0a0a12;border:1px solid #2a2a3a;border-radius:8px;padding:16px;min-height:60px">
+    <div id="answer-text" style="color:#888;font-size:0.85rem">Click a question above to see the answer appear.</div>
+  </div>
 </div>
 
 <script>
 const answers = [
-"Custom AI agents that run on your hardware. Email bots forward invoices to Telegram. Automation workflows watch RSS feeds and post summaries. Video ads with music. No lock-in, no monthly, no GPU needed.",
-"ChatGPT Plus is a chat interface you rent. I build autonomous agents that actually do things. ChatGPT stops when you close the tab. My agents run 24/7 on your hardware and you keep the code.",
-"Yes. Tell me what you need and I'll propose a setup. No commitment, no pressure. If it makes sense, we build it. If not, you walk away with a clearer idea.",
-"No. One price per project, you own the result. No recurring fees, no pro tier, no cancellation dance."
+  `Custom AI agents that run on your hardware. Email bots that forward invoices to Telegram. Automation workflows that watch RSS feeds and post summaries. Video ads with music - scripted, generated, assembled, delivered. No platform lock-in, no monthly, no GPU needed. You describe what you need, I build it, you own it.`,
+  `ChatGPT Plus is a chat interface you rent. I build you autonomous agents that actually do things - monitor email, generate videos, run workflows. ChatGPT stops when you close the tab. My agents run 24/7 on your hardware and you keep the code. It's the difference between renting a drill and owning the workshop.`,
+  `Yes. That's most of what I do. Tell me what you're trying to do - manage client emails, automate social posting, generate marketing videos, whatever - and I'll propose a setup. No commitment, no pressure. If it makes sense, we build it. If not, you walk away with a clearer idea of what you actually need.`,
+  `No. One price per project, you own the result. No recurring fees, no "pro" tier, no cancellation dance. If you need support later, you pay for that hour. Not because you forgot to cancel.`,
 ];
+
 const typewriter = document.getElementById('answer-text');
-let timer = null, idx = -1;
+let timer = null;
+let currentIdx = -1;
+
 document.querySelectorAll('.qbtn').forEach(btn => {
-btn.addEventListener('click', function(){
-const n = parseInt(this.dataset.q);
-if (n === idx) return; idx = n;
-document.querySelectorAll('.qbtn').forEach(b => { b.style.borderColor = '#3a2a4a'; b.style.color = '#c8a87c'; });
-this.style.borderColor = '#c8a87c'; this.style.color = '#e8d5b0';
-if (timer) { clearInterval(timer); timer = null; }
-const full = answers[n];
-typewriter.textContent = ''; typewriter.style.color = '#b8b8c8'; typewriter.style.fontSize = '0.9rem';
-let pos = 0;
-function tick(){
-if (pos < full.length) { typewriter.textContent += full[pos]; pos++; timer = setTimeout(tick, 25); } else timer = null;
+  btn.addEventListener('click', function() {
+    const idx = parseInt(this.dataset.q);
+    if (idx === currentIdx) return;
+    currentIdx = idx;
+
+    document.querySelectorAll('.qbtn').forEach(b => {
+      b.style.borderColor = '#4a3a6a';
+      b.style.color = '#c0a0ff';
+    });
+    this.style.borderColor = '#00ff88';
+    this.style.color = '#00ff88';
+
+    if (timer) { clearInterval(timer); timer = null; }
+
+    const full = answers[idx];
+    typewriter.textContent = '';
+    typewriter.style.color = '#b8b8c8';
+    typewriter.style.fontSize = '0.9rem';
+
+    let pos = 0;
+    const speed = 25;
+    function tick() {
+      if (pos < full.length) {
+        typewriter.textContent += full[pos];
+        pos++;
+        timer = setTimeout(tick, speed);
+      } else {
+        timer = null;
+      }
+    }
+    tick();
+  });
+});
+</script>
+
+<hr />
+
+<!-- Demo Videos -->
+<h2>Watch what we deliver</h2>
+<div class="card" style="padding:0;border:none;background:none;text-align:center">
+  <div class="video-wrap" style="margin-bottom:12px">
+    <video controls poster="poster.jpg" preload="none">
+      <source src="45dgof8-ad-final.mp4" type="video/mp4">
+    </video>
+  </div>
+  <p class="note" style="margin-top:0">30s ad - music, text, cuts. All generated by agents.</p>
+</div>
+
+<hr />
+
+<div class="footer">
+  <a href="https://008amonra.github.io/loom/">008amonra.github.io/loom</a> - custom AI agents, not a subscription.<br>
+  <span style="color:#444;font-size:0.75rem">built with 🫂 by jace + opencode</span>
+</div>
+
+</div>
+<!-- close .wrap -->
+
+<script>
+// --- Intro audio player ---
+(function(){
+  const btn = document.getElementById('introPlayBtn');
+  const aud = document.getElementById('introAudio');
+  const icon = document.getElementById('introIcon');
+  const label = document.getElementById('introLabel');
+  if (!btn || !aud) return;
+  aud.volume = 0.7;
+  function setMuted() {
+    btn.className = 'intro-btn-muted';
+    icon.textContent = '\uD83D\uDD07';
+    label.textContent = 'Unmute';
+  }
+  function setPlaying() {
+    btn.className = 'intro-btn-playing';
+    icon.textContent = '\uD83D\uDD0A';
+    label.textContent = 'Playing...';
+  }
+  aud.addEventListener('ended', setMuted);
+  btn.addEventListener('click', function(){
+    if (aud.paused) {
+      aud.currentTime = 0;
+      aud.play().then(setPlaying).catch(function(){});
+    } else {
+      aud.pause();
+      aud.currentTime = 0;
+      setMuted();
+    }
+  });
+})();
+</script>
+<script>
+// --- Offer counter: tell me to decrement this when a slot is claimed ---
+let offerSlots = 3;
+
+function updateOffer() {
+  const banner = document.getElementById('offer-banner');
+  const count = document.getElementById('offer-count');
+  if (!banner) return;
+  if (offerSlots <= 0) {
+    banner.style.display = 'none';
+  } else {
+    count.textContent = offerSlots + ' of 3 slots remaining — Introductory offer';
+  }
 }
-tick();
-});
-});
-function em(){return String.fromCharCode(52,53,100,103,111,102,56,64,103,109,97,105,108,46,99,111,109)}
-function payCustom(){const a=document.getElementById('custom-amount').value;if(!a||a<1){alert('Enter an amount');return false}window.open('https://paypal.me/45dgof8/'+a,'_blank');return false}
-function submitProject(){const e=document.getElementById('email').value.trim(),p=document.getElementById('project').value.trim();if(!e){alert('Email please');return}if(!p){alert('Describe your project');return}window.location.href='mailto:'+em()+'?subject=Project%20Brief&body='+encodeURIComponent('Email: '+e+'\n\nProject:\n'+p);document.querySelector('.btn-submit').textContent='✓ Sent!';document.querySelector('.btn-submit').style.background='#8ab87a';document.querySelector('.btn-submit').disabled=true}
+updateOffer();
+
+function em() { return String.fromCharCode(52,53,100,103,111,102,56,64,103,109,97,105,108,46,99,111,109); }
+
+function payCustom() {
+  const amount = document.getElementById('custom-amount').value;
+  if (!amount || amount < 1) { alert('Enter an amount'); return false; }
+  window.open('https://paypal.me/45dgof8/' + amount, '_blank');
+  return false;
+}
+
+function submitProject() {
+  const email = document.getElementById('email').value.trim();
+  const project = document.getElementById('project').value.trim();
+
+  if (!email) { alert('Please enter your email'); return; }
+  if (!project) { alert('Please describe your project'); return; }
+
+  const mailto = 'mailto:' + em() + '?subject=Project%20Brief&body=' +
+    encodeURIComponent('Email: ' + email + '\n\nProject:\n' + project);
+
+  window.location.href = mailto;
+  document.querySelector('.btn-submit').textContent = '✓ Sent!';
+  document.querySelector('.btn-submit').style.background = '#44cc66';
+  document.querySelector('.btn-submit').disabled = true;
+}
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 </body>

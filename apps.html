@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apps — 45dgof8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#08080e">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#08080e;color:#e0d8d0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{max-width:700px;width:100%;text-align:center}
+.badge{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#887a6a;margin-bottom:6px}
+h1{font-family:'Cinzel',serif;font-size:2rem;font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,#c8a87c,#e8d5b0,#d4b88a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.sub{color:#6a5d4a;font-size:14px;margin-bottom:32px}
+.back{display:inline-block;color:#887a6a;text-decoration:none;font-size:12px;margin-bottom:28px;transition:.15s}
+.back:hover{color:#c8a87c}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:#111118;border:1px solid #1c1c2a;border-radius:14px;padding:28px 20px;text-decoration:none;color:#e0d8d0;transition:.25s;display:flex;flex-direction:column;align-items:center}
+.card:hover{border-color:#c8a87c;transform:translateY(-3px);box-shadow:0 6px 30px rgba(200,168,124,0.12)}
+.card .icon{font-size:36px;margin-bottom:10px}
+.card .name{font-size:16px;font-weight:700;margin-bottom:4px}
+.card .desc{font-size:12px;color:#6a5d4a;line-height:1.5}
+.card .tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#887a6a;border:1px solid #2a2a3a;border-radius:4px;padding:3px 10px}
+footer{margin-top:36px;color:#2a2a3a;font-size:11px}
+footer a{color:#6a5d4a;text-decoration:none}
+footer a:hover{color:#c8a87c}
+@media(max-width:480px){.grid{grid-template-columns:1fr}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="badge">45dgof8</div>
+<h1>Apps &amp; Tools</h1>
+<p class="sub">Free tools, AI agents, and utilities &mdash; no subscription, no lock-in</p>
+<a href="/" class="back">&larr; Home</a>
+
+<div class="grid">
+<a class="card" href="https://tools.45dgof8.com">
+<div class="icon">&#128295;</div>
+<div class="name">Tools Hub</div>
+<div class="desc">PDF merge, image compress, QR code, JSON formatter, color palette, video&rarr;GIF, text diff</div>
+<span class="tag">8 tools &middot; free</span>
+</a>
+
+<a class="card" href="https://yt-producer.45dgof8.com">
+<div class="icon">&#127916;</div>
+<div class="name">YT Producer</div>
+<div class="desc">YouTube Shorts generator with multi-frame editor, TTS voiceover, Ken Burns zoom</div>
+<span class="tag">free + pro</span>
+</a>
+
+<a class="card" href="/chat.html">
+<div class="icon">&#128172;</div>
+<div class="name">Big Pickle Chat</div>
+<div class="desc">Unfiltered local AI chat &mdash; no guardrails, no filters, straight answers</div>
+<span class="tag">free</span>
+</a>
+
+<a class="card" href="https://paypal.me/45dgof8" target="_blank">
+<div class="icon">&#128179;</div>
+<div class="name">PayPal.Me</div>
+<div class="desc">One-time payments for custom work, tools, services &mdash; no subscription</div>
+<span class="tag">pay per use</span>
+</a>
+</div>
+
+<footer>
+<a href="/">45dgof8.com</a> &middot; <a href="https://tools.45dgof8.com">Tools</a> &middot; <a href="https://yt-producer.45dgof8.com">YT Producer</a>
+</footer>
+</div>
+</body>
+</html>
