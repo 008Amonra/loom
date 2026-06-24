@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preload" as="image" href="/00CH.webp">
+  <link rel="preload" as="image" href="/Eva.webp">
+  <!-- NOTE: If you see unexpected URL behavior, consider removing the base tag below. -->
+  <base href="https://45dgof8.com/">
+
+<title>45dgof8 GPT Hub | AI Compliance, Security & Creative Intelligence</title>
+
+<meta name="description" content="45dgof8 provides AI-driven compliance, security, and creative intelligence services. Eva and Dion AI specialists, TSG trusted services, and Prompt-Forge powering global privacy and automation across GDPR, LGPD, PIPEDA, POPIA and more.">
+
+<meta name="keywords" content="45dgof8, Eva AI, Dion AI, TSG, Prompt-Forge, AI compliance, GDPR GPT, privacy automation, AI security, trusted services, prompt engineering, global data protection, LGPD, POPIA, PIPEDA, APPI, FADP">
+
+<link rel="canonical" href="https://45dgof8.com">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph Meta -->
+<meta property="og:title" content="45dgof8 | Eva, Dion, TSG & Prompt-Forge">
+<meta property="og:description" content="An AI ecosystem for trust and intelligence. Eva, Dion, TSG, and Prompt-Forge delivering compliance, security, and creative AI services worldwide.">
+<meta property="og:image" content="https://45dgof8.com/axel.webp">
+<meta property="og:url" content="https://45dgof8.com">
+<meta property="og:type" content="website">
+
+<!-- Twitter Card Meta -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Decision Was Made | Eva, Dion & Prompt-Forge by 45dgof8">
+<meta name="twitter:description" content="Compliance, security, and creative intelligence—powered by Eva, Dion, TSG, and Prompt-Forge. Built for a regulated future.">
+<meta name="twitter:image" content="https://45dgof8.com/axel.webp">
+<meta name="twitter:creator" content="@008Amonra">
+<meta name="p:domain_verify" content="5ce3456164166f17f6161aec52d9b47e"/>
+  <!-- Schema.org Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "45dgof8",
+    "url": "https://45dgof8.com",
+    "logo": "https://45dgof8.com/logo.png",
+    "description": "AI-powered global privacy compliance tools including GDPR, LGPD, PIPEDA, and more.",
+    "sameAs": [
+      "https://x.com/008Amonra"
+    ]
+  }
+  </script>
+   <style>
+     /* Top-right YouTube icon */
+.yt-link{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.18);
+  z-index: 1000;
+  text-decoration: none;
+  backdrop-filter: blur(6px);
+}
+.yt-link:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+.yt-link svg{
+  width: 22px;
+  height: 22px;
+  fill: #ff4d4d;
+}
+
+  #forgeLogo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  max-width: 60vw;
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0;
+  filter: blur(6px);
+  z-index: 41;
+  pointer-events: none;
+
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+#forgeLogo.warp {
+  opacity: 1;
+  transform:
+    translate(-50%, -50%)
+    scale(1.05)
+    scaleX(1.25);
+  filter: blur(0);
+}
+
+  #forgeDot {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c084fc, #5b21b6);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 40;
+  
+  /* === ELECTRIC SURFACE EFFECT === */
+#forgeDot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(220,255,255,1) 8deg,
+      transparent 16deg,
+      transparent 40deg,
+      rgba(180,240,255,0.8) 48deg,
+      transparent 56deg,
+      transparent 100deg
+    );
+
+  filter: blur(0.6px);
+  opacity: 0;
+}
+@keyframes electricRun {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(120deg);
+  }
+}
+#forgeDot {
+  animation:
+    forgePulse 2.4s ease-in-out infinite,
+    electricIdle 6.5s linear infinite;
+}
+
+@keyframes electricIdle {
+  0%, 92% {
+    --zap: 0;
+  }
+  93%, 95% {
+    --zap: 1;
+  }
+  100% {
+    --zap: 0;
+  }
+}
+#forgeDot::after {
+  animation: electricRun 0.35s linear;
+  animation-play-state: paused;
+}
+
+#forgeDot {
+  --zap: 0;
+}
+
+#forgeDot[style], /* fallback */
+#forgeDot {
+  --zap: 0;
+}
+
+#forgeDot {
+  animation:
+    forgePulse 2.4s ease-in-out infinite,
+    electricIdle 6.5s linear infinite;
+}
+
+#forgeDot::after {
+  animation-play-state: running;
+  animation-delay: calc((1 - var(--zap)) * 999s);
+}
+
+
+  animation: forgePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes forgePulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 6px rgba(192,132,252,0.4);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 20px rgba(192,132,252,0.75);
+  }
+}
+/* ===== ForgeDot: electric bzzzt (minimal + safe) ===== */
+#forgeDot.bzzzt {
+  animation: forgePulse 2.4s ease-in-out infinite, forgeJitter 220ms linear 2;
+}
+
+@keyframes forgeJitter {
+  0%   { transform: translate(-50%, -50%) scale(1.10); }
+  10%  { transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.12); }
+  20%  { transform: translate(calc(-50% + 1px), calc(-50% - 1px)) scale(1.14); }
+  30%  { transform: translate(calc(-50% - 2px), -50%) scale(1.12); }
+  40%  { transform: translate(calc(-50% + 2px), calc(-50% + 1px)) scale(1.14); }
+  50%  { transform: translate(calc(-50% - 1px), calc(-50% - 2px)) scale(1.12); }
+  60%  { transform: translate(calc(-50% + 1px), calc(-50% + 2px)) scale(1.14); }
+  70%  { transform: translate(calc(-50% - 2px), calc(-50% - 1px)) scale(1.12); }
+  80%  { transform: translate(calc(-50% + 2px), -50%) scale(1.14); }
+  90%  { transform: translate(calc(-50% - 1px), calc(-50% + 1px)) scale(1.12); }
+  100% { transform: translate(-50%, -50%) scale(1.10); }
+}
+
+#forgeDot.bzzzt::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120,255,255,.55), rgba(120,255,255,0) 60%);
+  filter: blur(2px);
+  opacity: 0;
+  animation: forgeSurge 220ms ease-out 2;
+  pointer-events: none;
+}
+
+@keyframes forgeSurge {
+  0%   { opacity: .2; transform: scale(.9); }
+  40%  { opacity: 1;  transform: scale(1.1); }
+  100% { opacity: 0;  transform: scale(1.25); }
+}
+
+    body, html { margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif; background: linear-gradient(to bottom right, #2d2a4e, #5e548e); color: white; }
+    .split-screen { display: flex; height: 100vh; width: 100vw; }
+    .image-section {width: 50%; min-height: 100vh; background: url('/00CH.webp') center / cover no-repeat;}
+    .content-section { width: 50%; padding: 20px; overflow-y: auto; }
+    .graphic-eight { position: absolute; top: 159px; left: 50%; transform: translateX(-50%); font-size: 72px; font-weight: bold; color: #ffffffaa; cursor: pointer; z-index: 10; }
+    iframe#creativeFrame { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; border: none; display: none; z-index: 999; }
+    .footer-container { display: flex; justify-content: space-between; padding: 10px; background: #1c1b29; font-size: 0.9em; }
+    button { background-color: #4CAF50; color: white; padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+    button.secondary { background-color: #2196F3; }
+    table { width: 100%; margin-top: 2rem; border-collapse: collapse; }
+    td { padding: 10px; border: 1px solid #ddd; }
+    td a { color: #ffe082; text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+    .homepage-button { padding: 6px 10px; background: #3949ab; border-radius: 6px; }
+
+    .tarot-link{
+      position: fixed;
+      top: 14px;
+      right: 65px; /* sits just left of the YouTube icon */
+      z-index: 1000;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 0;
+    }
+
+    .tarot-link img{
+      height: 44px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,.12));
+      transition: transform .18s ease, filter .22s ease;
+    }
+
+    .tarot-link:hover img{
+      transform: translateY(-1px) scale(1.04);
+      filter:
+        drop-shadow(0 0 10px rgba(255,255,255,.18))
+        drop-shadow(0 0 18px rgba(255,80,120,.22));
+    }
+
+    .tarot-link:active img{
+      transform: scale(.97);
+    }
+    
+  </style>
+</head>
+<body>
+
+  <a class="yt-link"
+   href="https://youtu.be/uUgMvCjO9es"
+   target="_blank"
+   rel="noopener"
+   aria-label="Watch our YouTube video"
+   title="Watch on YouTube">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M23.5 6.2s-.2-1.7-.8-2.4c-.8-.8-1.7-.8-2.1-.9C17.7 2.5 12 2.5 12 2.5h0s-5.7 0-8.6.4c-.4.1-1.3.1-2.1.9C.7 4.5.5 6.2.5 6.2S0 8.1 0 10v1.9c0 1.9.5 3.8.5 3.8s.2 1.7.8 2.4c.8.8 1.9.8 2.4.9 1.7.2 7.3.4 8.3.4 0 0 5.7 0 8.6-.4.4-.1 1.3-.1 2.1-.9.6-.7.8-2.4.8-2.4s.5-1.9.5-3.8V10c0-1.9-.5-3.8-.5-3.8zM9.6 14.8V7.8l6.2 3.5-6.2 3.5z"></path>
+  </svg>
+</a>
+
+<div class="split-screen">
+  <div class="image-section" id="randomImage"></div>
+  <div class="content-section">
+    <header>
+      <h1>45dgof8 GPT Hub</h1>
+      <p>Compliance & AI Innovation</p>
+    </header>
+
+    <section style="padding: 2rem; text-align: center;">
+      <p style="font-size: 1.2em; line-height: 1.6;">
+        Explore our growing collection of intelligent assistants designed to simplify compliance and boost innovation.<br><br>
+        Click on any topic to start your journey with an AI expert by your side.
+      </p>
+    </section>
+
+    <nav style="padding: 2rem;">
+      <p style="font-size: 1rem; color: #bbb;">✨ Please note: Clicking a GPT will open it on chat.openai.com and may require you to log in. "View Homepage" not.</p>
+      <table>
+        <tbody id="gptTable"></tbody>
+      </table>
+    </nav>
+
+  </div>
+</div>
+
+<div class="graphic-eight" id="infinity8">8</div>
+<iframe id="creativeFrame" src="https://45dgof8.com/seite2.html" title="Creative Frame"></iframe>
+
+<footer class="footer-container">
+  <div>© 2025 45dgof8 Compliance Hub</div>
+  <div>Email: <a href="mailto:45dgof8@gmail.com" style="color:white;">45dgof8@gmail.com</a></div>
+</footer>
+
+<div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; flex-direction:column;">
+  <h2 style="color: #00ffff; font-size: 2em; text-shadow: 0 0 10px #00ffff;">🚀 Switching Worlds...</h2>
+</div>
+
+<footer style="text-align: center; font-size: 0.9em; padding: 2em 0 1em; color: #ccc;">
+  <div style="margin-bottom: 1em;">
+    <img src="/footer_avatar_resized.webp" alt="Site Avatar" style="height: 100px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.15);" loading="lazy">
+    <div style="font-size: 0.8em; color: #888;">Your guide at 45dgof8 – generated but genuine.</div>
+  </div>
+  <p>
+    This website utilizes technologies powered by OpenAI's GPT models.<br>
+    For more details, please review our 
+    <a href="/disclaimer" target="_blank" rel="noopener" style="color: #00bcd4;">legal disclaimer."</a> 
+    <a href="/privacy" target="_blank" rel="noopener" style="color: #00bcd4;">privacy policy</a>.
+    <a href="https://45dgof8.com/legal" target="_blank" rel="noopener noreferrer" style="color:#00bcd4;">Site policy</a>
+  </p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = ['/00CH.webp', '/Eva.webp', '/nn20.webp', '/HHyzT.webp', '/Lirien.webp', '/aUJG.webp', '/ghNB.webp', '/pUzqQ.webp', '/GKUwF.webp', '/Cg2Y2.webp';
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const imgEl = document.getElementById("randomImage");if (imgEl) {imgEl.style.backgroundImage = `url('${images[randomIndex]}')`;}
+
+    document.getElementById("infinity8").addEventListener("click", function () {
+      const frame = document.getElementById("creativeFrame");
+      frame.style.display = frame.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // DATA
+    const gpts = [
+      { name: "🌟 Eva Answers — Thoughtful AI, Real Conversations", url: "https://chatgpt.com/g/g-lPUDkYN4z-eva-answers?model=gpt-5", homepage: "https://45dgof8.com/Eva_Answers.html", title: "your adaptive, empathetic co-pilot—fuses compliance with creativity to launch bold ideas across every frontier."},
+      { name: ".........................................................Etsy Shop", url: "https://www.etsy.com/ch/shop/45dgof8", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/the_button.png",homepage: "https://45dgof8.com/cups.html", title: "Potential in Ceramic Form"},
+      { name: "TSG – Tech Support GPT", url: "https://chatgpt.com/g/g-QHveZ3pME-tsg-tech-support-gpt", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/techsupport.png", description: "Troubleshooting and technical help", homepage: "https://45dgof8.com/TSG-tech-support-gpt.html" },
+      { name: "AI Merch & E-commerce Guide — Dion Wolf Jotham", url: "https://chatgpt.com/g/g-2mPAzRykZ-e-commerce-guide-dion-wolf-jotham", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/DionW.webp", description: "Explore the digital essence of Dion Wolf", homepage: "https://45dgof8.com/Dion_Wolf_Jotham.html" },
+      { name: "crypto-market-mentor", url: "https://chatgpt.com/g/g-cxKIdjjdq-crypto-market-mentor", homepage: "https://45dgof8.com/crypto-market-mentor.html", title: "Learn crypto trading with clarity, discipline, and risk awareness. Crypto Market Mentor helps new traders build skill, not hype."},
+      { name: "ListGeniusGPT", url: "https://chatgpt.com/g/g-j1EuI5Coa", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/Listgenius.webp", description: "Generate, refine, and rank high-quality lists for content, research, and ideas.", homepage: "https://45dgof8.com/ListGeniusGPT.html"}, 
+      { name: "GalacticChoices", url: "https://45dgof8.com/galactic/GalacticChoices.html", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/GalacticChoices.webp", description: "Sci-fi adventure in ethical AI storytelling", homepage: "https://45dgof8.com/galactic/GalacticChoices.html" },
+      { name: "dns-manager-gpt", url: "https://45dgof8.com/dns-manager-gpt.html", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/45dgof8-dns-manager-gpt.webp", description: "Smart DNS management with GPT guidance", homepage: "https://45dgof8.com/dns-manager-gpt.html" },
+      { name: "CatArtGenerator", url: "https://45dgof8.com/CatArtCreator.html", icon: "https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/speedy_cat256.webp", description: "Generate Art ...with Cats!", homepage: "https://45dgof8.com/CatArtCreator.html" },
+           
+      { name: "45dgof8-LinguaNode™ GPT",url: "https://chatgpt.com/g/g-67e88a6f339c8191b0a017584f72ac53-45dgof8-linguanodetm-gpt", icon: "linguanode256.webp", description: "Detects and translates languages, from English <-> Spanish to Klingon <-> English.", homepage: "https://45dgof8.com/45dgof8-LinguaNode™.html" },
+      
+      { name: "GDPR - Nibbler", url: "https://chatgpt.com/g/g-67c8884a41288191ab4211b6d693b19a-gdpr-nibbler", homepage: "https://45dgof8.com/45dgof8-GDPR_Nibbler_Compliance_GPT.html", title: "Infos about GDPR Compliance, CDN & Hosting Risks, Legal Rulings, Best Practices." },
+      { name: "Indonesia - Compliance GPT",   url: "https://chatgpt.com/g/g-6738a01a6edc81919fe6730214086ff7", homepage: "https://45dgof8.com/45dgof8-indonesia-compliance-gpt.html", title: "Bilingual AI for Indonesia's PDP Law with templates, legal guidance, and local insights." },      
+      { name: "Brazil - LGPD GPT", url: "https://chatgpt.com/g/g-674365946c7081918b642b3e693fac55", homepage: "https://45dgof8.com/45dgof8-brazil-lgpd-compliance-gpt.html", title: "Expert guidance on LGPD compliance including consent and data transfer tools." },
+      { name: "South Africa - POPIA GPT", url: "https://chatgpt.com/g/g-67500c79dbcc81919efc3b758e89bb30", homepage: "https://45dgof8.com/45dgof8-south-africa-popia-compliance-gpt.html", title: "Guides SA businesses through POPIA with policy generators and breach tools." },
+      { name: "India - Compliance GPT", url: "https://chatgpt.com/g/g-6753ee6bd6108191a33f017d5b2de60b", homepage: "https://45dgof8.com/45dgof8_india_compliance.html", title: "Delivers predictive and culturally aware legal support for India’s laws." },
+      { name: "Japan - APPI GPT", url: "https://chatgpt.com/g/g-676739efea60819198a77b106e854b7f", homepage: "https://45dgof8.com/45dgof8-japan-appi-compliance-gpt.html", title: "Offers up-to-date APPI insights, policy tools, and bilingual support." },
+      { name: "Canada - PIPEDA & Law 25 GPT", url: "https://chatgpt.com/g/g-677a2b985e3c8191a73dff182cd1c425", homepage: "https://45dgof8.com/45dgof8-Canada_PIPEDA_Compliance_GPT.html", title: "Automates Canada’s data compliance with scalable tools." },
+      { name: "Mexico - LFPDPPP GPT", url: "https://chatgpt.com/g/g-67c81a5951388191aa6d5fd48a83f255-45dgof8-mexico-lfpdppp-gpt", homepage: "https://45dgof8.com/45dgof8%E2%80%93Mexico-LFPDPPP-Compliance-GPT.html", title: "Helps with LFPDPPP rights, consent, security, and cross-border compliance." },
+      { name: "USA - Federal Privacy Compliance GPT", url: "https://chatgpt.com/g/g-67d14f0281a48191acf0d141f600152f-usa-federal-privacy-compliance-gpt", homepage: "https://45dgof8.com/45dgof8-USA_Federal_Privacy_Compliance_GPT.html", title: "Covers HIPAA, GLBA, COPPA, and AI laws with dynamic compliance tools." },
+      { name: "Australia Cth & APPs - PDPA Compliance GPT",url: "https://chatgpt.com/g/g-67fd397a2e84819190856a6e3e26897a-45dgof8-australia-privacy-compliance-gpt", homepage: "https://45dgof8.com/45dgof8-Australia_Privacy_Compliance_GPT.html", title: "Stay compliant with Australia's Privacy Act and Privacy Principles (APPs)." },      
+      { name: "Peru - Habeas Data GPT", url: "https://chatgpt.com/g/g-67ea5b6720d88191bd94359a1cffc5f3-45dgof8-peru-pdp-law-compliance-gpt", homepage: "https://45dgof8.com/Peru_Pdp_Compliance_Gpt_Homepage.html", title: "Supports compliance with Peru’s Habeas Data law." },
+      { name: "Switzerland - FADP Compliance GPT", url: "https://chatgpt.com/g/g-67d149c68c68819189a786dac0342c55-45dgof8-switzerland-fadp-compliance-gpt", homepage: "https://45dgof8.com/45dgof8-Switzerland_FADP_Compliance_GPT.html", title: "Swiss-engineered precision in digital integrity compliance." },
+      { name: "Global - Compliance GPT", url: "https://chatgpt.com/g/g-pwRUJBPBY-compliancegpt", homepage: "https://45dgof8.com/45dgof8-global-compliance-gpt.html", title: "Navigate global data laws like GDPR and CCPA with real-time compliance insights. Unique for its automation, legal intelligence, and Virtual IO support." },
+      { name: "GDPR - CGB - Compliance GPT", url: "https://chatgpt.com/g/g-evCGCyUMs-gdpr-cgb", homepage: "https://45dgof8.com/45dgof8-GDPR_EU_Compliance_GPT.html", title: "Offers GDPR-specific tools including live self-assessments and actionable compliance steps."},
+      { name: "Ready2Comply - GDPR Compliance Hub", url: "https://chatgpt.com/g/g-evCGCyUMs-gdpr-cgb", homepage: "https://45dgof8.com/Ready2Comply.html", title: "A practical GDPR compliance hub with step-by-step guidance, templates, and a structured path to implement privacy-by-design."}, 
+     
+      { name: "45dgof8-pulse - Central Payment GPT", url: "https://chat.openai.com/g/g-67d8be53451c8191a43158fc91e5a44e", homepage: "https://45dgof8.com/45dgof8-pulse.html", title: "Centralized payment system for all 45dgof8 GPTs, offering secure links, automated invoices, and real-time transaction tracking."},
+];
+    const table = document.getElementById('gptTable');
+
+    gpts.forEach(gpt => {
+      const leftLink = `<a href="${gpt.url}" target="_blank" rel="noopener" title="${gpt.title || gpt.description || gpt.name}">${gpt.name}</a>`;
+      const homepageBtn = gpt.homepage
+        ? `<a class="homepage-button" href="${gpt.homepage}" target="_blank" rel="noopener">View Homepage</a>`
+        : '';
+
+      const row = `<tr>
+        <td>${leftLink}</td>
+        <td style="text-align:right;">${homepageBtn}</td>
+      </tr>`;
+      table.insertAdjacentHTML('beforeend', row);
+    });
+  });
+
+  function showLoadingAndSwitch(newSrc) {
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+      document.getElementById('creativeFrame').src = newSrc;
+      overlay.style.display = 'none';
+    }, 700);
+  }
+
+  function switchToCompliance() { showLoadingAndSwitch('seite2.html'); }
+  function switchToCreative() { showLoadingAndSwitch('creative_parts.html'); }
+</script>
+<div id="forgeDot" aria-label="Open Prompt Forge"></div>
+<script>
+  // existing DOMContentLoaded logic
+  document.addEventListener("DOMContentLoaded", function () {
+    // images, table, infinity8, etc.
+  });
+</script>
+<img
+  id="forgeLogo"
+  src="/splash.webp"
+  alt="Prompt Forge"
+  aria-hidden="true"
+/>
+
+<!-- ✅ ADD THIS BELOW, do not merge -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const dot  = document.getElementById("forgeDot");
+  const logo = document.getElementById("forgeLogo");
+  if (!dot) return;
+  
+    // --- attention bzzzt (visual only) ---
+  function doBzzzt() {
+    dot.classList.add("bzzzt");
+    setTimeout(() => dot.classList.remove("bzzzt"), 600);
+  }
+
+  // One quick tease shortly after load (so people notice it)
+  setTimeout(doBzzzt, 700);
+
+  // Every 23 seconds
+  setInterval(doBzzzt, 23000);
+
+
+  let engaged = false;
+
+  dot.addEventListener("click", () => {
+    if (engaged) return;          // 🚫 prevent double clicks
+    engaged = true;
+
+    // stop the pulse
+    dot.style.animation = "none";
+
+    // immediate ENGAGE feedback
+    dot.style.boxShadow = "0 0 45px rgba(192,132,252,0.95)";
+
+    // next frame = warp expansion
+    requestAnimationFrame(() => {
+      dot.style.transition = "all 0.9s ease-in";
+      dot.style.width = "200vmax";
+      dot.style.height = "200vmax";
+      dot.style.borderRadius = "0";
+      dot.style.background = "#050810";
+    });
+
+    // WARP: logo forms out of the jump
+    setTimeout(() => {
+      if (logo) logo.classList.add("warp");
+    }, 180);
+
+    // jump to Prompt Forge
+    setTimeout(() => {
+      window.location.href = "/TSG-prompt-forge.html";
+    }, 900);
+  });
+});
+</script>
+
+<!-- === LOOM SPLASH BADGE === -->
+<style>
+.loom-splash {
+  position: fixed;
+  top: calc(50% - 120px);
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 1001;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 0 14px rgba(0,255,200,0.2), 0 4px 12px rgba(0,0,0,0.4);
+  border: 2px solid rgba(0,255,200,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: loomFloat 3s ease-in-out infinite;
+}
+.loom-splash:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 28px rgba(0,255,200,0.45), 0 6px 20px rgba(0,0,0,0.5);
+  animation: none;
+}
+.loom-splash img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.loom-tooltip {
+  position: fixed;
+  top: calc(50% + 20px);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1001;
+  background: rgba(10,10,20,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,255,200,0.2);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #8fffd9;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.loom-splash:hover + .loom-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loom-vapors {
+  position: fixed;
+  top: calc(50% - 120px);
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 1000;
+  pointer-events: none;
+}
+.loom-steam {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  translate: -50% 0;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: #8fffd9;
+  white-space: nowrap;
+  text-shadow: 0 0 12px rgba(0,255,200,0.5), 0 0 30px rgba(0,255,200,0.2);
+  filter: blur(2px);
+  opacity: 0;
+  animation: steamRise 4s ease-out infinite;
+}
+.loom-vapors .loom-steam:nth-child(1) { animation-delay: 0s; }
+.loom-vapors .loom-steam:nth-child(2) { animation-delay: 1.3s; }
+.loom-vapors .loom-steam:nth-child(3) { animation-delay: 2.6s; }
+
+@keyframes steamRise {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(0) translateX(0) scale(0.6);
+  }
+  15% {
+    opacity: 0.6;
+    filter: blur(2px);
+    transform: translateY(-10px) translateX(0) scale(0.8);
+  }
+  50% {
+    opacity: 0.4;
+    filter: blur(3px);
+    transform: translateY(-60px) translateX(8px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(-120px) translateX(20px) scale(1.5);
+  }
+}
+
+@keyframes loomFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+</style>
+
+<a href="https://008amonra.github.io/loom/agent-services.html"
+   target="_blank"
+   rel="noopener"
+   class="loom-splash"
+   aria-label="Loom Agent Services — AI für Kreative"
+   title="Loom Agent Services">
+  <img src="https://008amonra.github.io/loom/loom-figure.webp"
+       alt="Loom"
+       loading="lazy">
+</a>
+<div class="loom-tooltip" aria-hidden="true">AI Agent Services →</div>
+<div class="loom-vapors" aria-hidden="true">
+  <div class="loom-steam">Digital-Dampf</div>
+  <div class="loom-steam">Digital-Dampf</div>
+  <div class="loom-steam">Digital-Dampf</div>
+</div>
+<!-- === END LOOM SPLASH BADGE === -->
+
+</body>
+
+</html>
