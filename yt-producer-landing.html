@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YT Producer — YouTube Shorts Generator | 45dgof8</title>
+<meta name="description" content="Erstelle professionelle YouTube Shorts in 60 Sekunden. Multi-Frame Comic-Movie Editor mit AI Voiceover. Kein Download nötig." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0a0f;color:#e0e0e8;line-height:1.6;overflow-x:hidden}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid #1a1a22;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:3px;color:#d4af37}
+nav .logo span{color:#666}
+nav a{color:#999;text-decoration:none;font-size:.85rem;margin-left:20px;transition:color .15s}
+nav a:hover{color:#d4af37}
+nav .btn-nav{background:#d4af37;color:#0a0a0f!important;padding:6px 16px;border-radius:6px;font-weight:600;font-size:.8rem}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(212,175,55,.06) 0%, transparent 60%);pointer-events:none}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid rgba(212,175,55,.3);border-radius:20px;font-size:.75rem;letter-spacing:2px;color:#b8960a;margin-bottom:24px;text-transform:uppercase}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(2.2rem,6vw,4.5rem);font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#d4af37,#f5d742,#d4af37);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;line-height:1.1;margin-bottom:20px}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{font-size:clamp(1rem,2vw,1.25rem);color:#999;max-width:600px;margin-bottom:32px}
+.hero .sub{color:#666;font-size:.9rem;margin-top:16px}
+.hero .cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cta-primary{padding:14px 36px;background:#d4af37;color:#0a0a0f;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;transition:all .15s}
+.cta-primary:hover{background:#e8c44a;transform:translateY(-1px)}
+.cta-secondary{padding:14px 36px;background:transparent;color:#d4af37;border:1px solid rgba(212,175,55,.4);border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .15s}
+.cta-secondary:hover{background:rgba(212,175,55,.08);border-color:#d4af37}
+
+/* sections wrap */
+.wrap{max-width:960px;margin:0 auto;padding:80px 24px}
+
+/* section headers */
+.section-label{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:4px;color:#666;text-transform:uppercase;text-align:center;margin-bottom:8px}
+h2{font-family:'Cinzel',serif;font-size:clamp(1.5rem,3vw,2.2rem);text-align:center;color:#d4af37;margin-bottom:48px;font-weight:700}
+
+/* demo video */
+.demo-wrap{max-width:400px;margin:0 auto 60px;border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(212,175,55,.1);border:1px solid #1a1a22}
+.demo-wrap video{width:100%;display:block;border-radius:16px}
+
+/* features grid */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:60px}
+.feature-card{background:#0f0f18;border:1px solid #1a1a22;border-radius:12px;padding:28px 24px;transition:all .2s}
+.feature-card:hover{border-color:rgba(212,175,55,.3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.feature-icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.feature-card h3{color:#d4af37;font-size:1rem;margin-bottom:8px;font-weight:600}
+.feature-card p{color:#888;font-size:.85rem;line-height:1.5}
+
+/* pricing */
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:40px}
+.price-card{background:#0f0f18;border:1px solid #1a1a22;border-radius:12px;padding:32px 24px;text-align:center;position:relative;transition:all .2s}
+.price-card.featured{border-color:#d4af37;background:linear-gradient(180deg,rgba(212,175,55,.06),#0f0f18)}
+.price-card.featured::before{content:'EMPFEHLUNG';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#d4af37;color:#0a0a0f;font-size:.65rem;font-weight:700;letter-spacing:2px;padding:4px 14px;border-radius:4px}
+.price-card .plan{color:#666;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.price-card .price{font-family:'Cinzel',serif;font-size:2.2rem;color:#fff;font-weight:900}
+.price-card .price span{font-size:1rem;color:#666}
+.price-card .perks{margin:20px 0;list-style:none;text-align:left}
+.price-card .perks li{color:#aaa;font-size:.85rem;padding:6px 0;padding-left:20px;position:relative}
+.price-card .perks li::before{content:'✓';position:absolute;left:0;color:#d4af37;font-weight:700}
+.price-card .perks li.muted{color:#555}
+.price-card .perks li.muted::before{content:'—';color:#444}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:60px;counter-reset:step}
+.step{background:#0f0f18;border:1px solid #1a1a22;border-radius:10px;padding:24px;text-align:center;position:relative}
+.step::before{counter-increment:step;content:counter(step);position:absolute;top:-10px;left:-10px;width:28px;height:28px;background:#d4af37;color:#0a0a0f;border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:.95rem;color:#ddd;margin-bottom:6px}
+.step p{font-size:.8rem;color:#777}
+
+/* how it works - demo gallery */
+.demo-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:60px}
+.demo-gallery img{width:100%;border-radius:8px;border:1px solid #1a1a22;aspect-ratio:9/16;object-fit:cover}
+
+/* faq */
+.faq-item{border-bottom:1px solid #1a1a1a;padding:20px 0}
+.faq-item h3{color:#ccc;font-size:.95rem;cursor:pointer;font-weight:600}
+.faq-item p{color:#777;font-size:.85rem;margin-top:8px;display:none}
+.faq-item.active p{display:block}
+
+/* footer */
+footer{text-align:center;padding:40px 24px;border-top:1px solid #1a1a1a;color:#555;font-size:.8rem}
+footer a{color:#777;text-decoration:none}
+footer a:hover{color:#d4af37}
+
+@media(max-width:600px){.hero{padding:100px 16px 60px}.wrap{padding:60px 16px}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo">45<span>dgof8</span></div>
+<div>
+<a href="https://tools.45dgof8.com">Tools</a>
+<a href="/" style="color:#d4af37">Agent Services</a>
+<a href="https://45dgof8.com/apps.html">Apps</a>
+<a href="/buy" class="btn-nav">Buy $19</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-badge">🔥 Jetzt in Beta</div>
+<h1>YouTube Shorts<br>in 60 Sekunden</h1>
+<p>Erstelle professionelle Multi-Frame Shorts mit AI Voiceover, Ken Burns Effekten und nahtlosen Crossfades — direkt im Browser.</p>
+<div class="cta-group">
+<a href="https://yt-producer.45dgof8.com" class="cta-primary">Kostenlos Testen</a>
+<a href="/buy" class="cta-secondary">$19/Monat → Kein Wasserzeichen</a>
+</div>
+<p class="sub">Keine Registration. Kein Download. Wasserzeichen-frei ab $19/mo.</p>
+</section>
+
+<div class="wrap">
+
+<div class="section-label">Demo</div>
+<h2>So sieht's aus</h2>
+<div class="demo-wrap">
+<video src="assets/yt-producer-demo.mp4" controls poster="demo-slides/slide-1.png"></video>
+</div>
+
+<div class="section-label">Funktionen</div>
+<h2>Alles was Du brauchst</h2>
+<div class="features">
+<div class="feature-card">
+<span class="feature-icon">🎬</span>
+<h3>Multi-Frame Editor</h3>
+<p>Bis zu 6 Bilder pro Short mit individuellen Texten. Clonebare Frames — jedes Bild kann eigene Textzeilen haben.</p>
+</div>
+<div class="feature-card">
+<span class="feature-icon">🎙️</span>
+<h3>AI Voiceover</h3>
+<p>Realistische Sprachausgabe per Piper TTS. Deutsch & Englisch. Ein Klick — fertig.</p>
+</div>
+<div class="feature-card">
+<span class="feature-icon">✨</span>
+<h3>Ken Burns Effekt</h3>
+<p>Sanfte Zoom-Animationen auf jedem Bild. Professioneller Look ohne Schnittprogramm.</p>
+</div>
+<div class="feature-card">
+<span class="feature-icon">🔄</span>
+<h3>Nahtlose Crossfades</h3>
+<p>Bilder gehen fließend ineinander über. Perfekt für Storytelling und Produktdemos.</p>
+</div>
+<div class="feature-card">
+<span class="feature-icon">💬</span>
+<h3>Scrolling Text</h3>
+<p>Mehrzeilige Texte erscheinen zeilenweise mit Fade-Effekt — wie ein Teleprompter.</p>
+</div>
+<div class="feature-card">
+<span class="feature-icon">🚀</span>
+<h3>1-Click Export</h3>
+<p>1080×1920 vertical MP4. Ready für YouTube, TikTok, Instagram Reels. Kein Rendern warten.</p>
+</div>
+</div>
+
+<div class="section-label">So einfach geht's</div>
+<h2>3 Schritte zum Short</h2>
+<div class="steps">
+<div class="step">
+<h3>Bilder hochladen</h3>
+<p>Ziehe bis zu 6 Bilder in den Editor</p>
+</div>
+<div class="step">
+<h3>Texte eingeben</h3>
+<p>Schreibe deine Botschaft — oder lass sie von AI generieren</p>
+</div>
+<div class="step">
+<h3>Exportieren</h3>
+<p>MP4 downloaden und auf YouTube posten</p>
+</div>
+</div>
+
+<div class="section-label">Preise</div>
+<h2>Loslegen ist kostenlos</h2>
+<div class="pricing">
+<div class="price-card">
+<div class="plan">Free</div>
+<div class="price">$0</div>
+<ul class="perks">
+<li>Bis zu 3 Frames</li>
+<li>Wasserzeichen-frei</li>
+<li>AI Voiceover</li>
+<li>Ken Burns + Crossfade</li>
+<li class="muted">Max 2 Frames pro Short</li>
+<li class="muted">Kein Premium-Support</li>
+</ul>
+<a href="https://yt-producer.45dgof8.com" class="cta-secondary" style="display:block;margin-top:16px">Jetzt Nutzen</a>
+</div>
+<div class="price-card featured">
+<div class="plan">Monthly</div>
+<div class="price">$19 <span>/ Monat</span></div>
+<ul class="perks">
+<li>Unbegrenzte Frames</li>
+<li>Kein Wasserzeichen</li>
+<li>AI Voiceover DE + EN</li>
+<li>Alle Export-Formate</li>
+<li>Prioritäts-Rendering</li>
+<li>E-Mail Support</li>
+</ul>
+<a href="https://paypal.me/45dgof8/19" class="cta-primary" style="display:block;margin-top:16px">Jetzt Kaufen</a>
+</div>
+<div class="price-card">
+<div class="plan">Lifetime</div>
+<div class="price">$97 <span> einmalig</span></div>
+<ul class="perks">
+<li>Alle Monthly Features</li>
+<li>Keine wiederkehrenden Kosten</li>
+<li>Zukünftige Updates inklusive</li>
+<li>Premium-Support</li>
+<li>Early Access zu neuen Features</li>
+<li>💎 Lebenslange Lizenz</li>
+</ul>
+<a href="https://paypal.me/45dgof8/97" class="cta-secondary" style="display:block;margin-top:16px">Lifetime Kaufen</a>
+</div>
+</div>
+
+<div class="section-label">FAQ</div>
+<h2>Häufige Fragen</h2>
+<div class="faq-item active">
+<h3 onclick="this.parentElement.classList.toggle('active')">Muss ich etwas installieren?</h3>
+<p>Nein! Alles läuft im Browser. Du brauchst nur einen modernen Browser (Chrome, Firefox, Edge) und eine Internetverbindung.</p>
+</div>
+<div class="faq-item">
+<h3 onclick="this.parentElement.classList.toggle('active')">Wie funktioniert der Kauf?</h3>
+<p>Klicke auf "Jetzt Kaufen", wähle $19/Monat oder $97 Lifetime. Nach Zahlung via PayPal senden wir Dir Deinen Lizenz-Key per E-Mail. Diesen trägst Du im YT Producer ein — und das Wasserzeichen verschwindet.</p>
+</div>
+<div class="faq-item">
+<h3 onclick="this.parentElement.classList.toggle('active')">Kann ich die Videos kommerziell nutzen?</h3>
+<p>Ja, alle mit YT Producer erstellten Videos dürfen kommerziell genutzt werden — auch in der kostenlosen Version.</p>
+</div>
+<div class="faq-item">
+<h3 onclick="this.parentElement.classList.toggle('active')">Welche Sprachen unterstützt der Voiceover?</h3>
+<p>Derzeit Deutsch und Englisch. Die Sprachqualität ist realistisch und natürlich dank Piper TTS.</p>
+</div>
+<div class="faq-item">
+<h3 onclick="this.parentElement.classList.toggle('active')">Gibt es ein Limit in der Free-Version?</h3>
+<p>In der Free-Version kannst Du bis zu 3 Frames pro Short verwenden. Die Ausgabe hat ein dezentes Wasserzeichen. Keine zeitliche Begrenzung.</p>
+</div>
+</div>
+
+<footer>
+<p>45<span style="color:#666">dgof8</span> — YT Producer</p>
+<p style="margin-top:8px"><a href="mailto:45dgof8@gmail.com">45dgof8@gmail.com</a></p>
+</footer>
+
+<script>
+// FAQ: open first by default
+document.querySelectorAll('.faq-item').forEach((item, i) => {
+if(i === 0) item.classList.add('active');
+item.querySelector('h3').onclick = () => item.classList.toggle('active');
+});
+</script>
+
+</body>
+</html>

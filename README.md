@@ -1,32 +1,30 @@
-# 008Amonra / loom
+# 45dgof8 — AI Agent Studio
 
-Asset hosting for [45DGOF8](https://45dgof8.com) — a one-person studio building AI agents, audio stories, and weird signals.
+One-person studio. AI agents, automation, tools. Based in Switzerland.
 
-## What lives here
+## Products
 
-- **Agent Services** — landing page for AI automation services: custom agents, n8n workflows, talking head videos
-- **Morning Signals** — daily (ish) audio story series. Sci-fi, odd signals, small wonders
-- **Product catalog** — cups, art prints, merch from the Etsy shop (hosted here because Pinterest blocks direct Etsy feeds)
-- **German Hörspiel** — "Die Letzte Frequenz", a short audio drama in German
-- **Talking head pipeline** — Piper TTS → SadTalker → MP4 video, all CPU local
+- **[YT Producer](https://yt-producer.45dgof8.com/landing)** — YouTube Shorts generator. Multi-frame comic-movie editor with AI voiceover, Ken Burns zoom, crossfades. Free trial → $19/mo or $97 lifetime.
+- **[Tools Hub](https://tools.45dgof8.com)** — 8 free micro-SaaS tools: PDF merge, PDF compress, image compress, text diff, QR code generator, JSON formatter, color palette extractor, video→GIF.
+- **Agent Services** — Custom AI agents, n8n workflows, Telegram bots, ChatGPT integrations.
+- **[Chat](https://n8n.45dgof8.com/webhook/chat)** — AI chat powered by GPT-4o-mini via n8n.
 
-## Why this repo exists instead of a subfolder on 45dgof8.com
+## Infrastructure
 
-The custom domain 45dgof8.com is served through Fastly CDN which caches aggressively and returns stale results for subdirectory paths. New filenames do serve fresh, so all assets use absolute URLs pointing to:
+All self-hosted on Pop!_OS, exposed via Cloudflare Tunnel:
 
-```
-https://008amonra.github.io/loom/
-```
-
-This bypasses the CDN and serves current content directly from GitHub Pages.
-
-## Stack
-
-- Static HTML/CSS/JS — no frameworks, no build step, no dependencies
-- Piper TTS + SadTalker for voice/face animation
-- n8n for workflow automation (local, Cloudflare tunnel)
-- Local LLMs (llama-server, Gemma 4 12B QAT)
+| Service | Port | Stack |
+|---------|------|-------|
+| YT Producer | 5005 | Flask + FFmpeg + Piper TTS |
+| Tools Hub | 5006 | Flask + Pillow + Ghostscript |
+| n8n | 5678 | Workflow automation + GPT |
+| Telegram Bot | — | n8n → GPT webhook |
+| Cloudflare Tunnel | — | agent-n8n, yt-producer, tools, n8n |
 
 ## Contact
 
-45dgof8@gmail.com
+45dgof8@gmail.com · [PayPal.Me](https://paypal.me/45dgof8)
+
+---
+
+Built with FFmpeg, Flask, Piper TTS, and too much caffeine.
