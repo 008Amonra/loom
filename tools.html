@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools — 45dgof8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0d0d14;color:#e0e0e8;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-x:hidden;padding:40px 20px}
+
+/* ---- Flowing symbol centerpiece ---- */
+.symbol-wrap{position:relative;text-align:center;margin-bottom:32px;animation:symFloat 5s ease-in-out infinite;max-width:520px;width:100%}
+.symbol-wrap::before{content:'';position:absolute;inset:-20px;border-radius:30px;background:conic-gradient(from 0deg,#4488ff,#c8a87c,#00ff88,#4488ff);opacity:0.10;z-index:-1;animation:symSpin 8s linear infinite;filter:blur(16px)}
+.symbol-wrap::after{content:'';position:absolute;inset:-4px;border-radius:22px;border:1px solid rgba(200,168,124,0.12);z-index:-1;animation:symEdge 4s ease-in-out infinite}
+@keyframes symFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes symSpin{to{transform:rotate(360deg)}}
+@keyframes symEdge{0%,100%{opacity:0.25}50%{opacity:0.7}}
+
+.symbol-inner{background:#12121e;border:1px solid #2a2a3a;border-radius:20px;padding:36px 28px;backdrop-filter:blur(8px);position:relative}
+
+/* ---- Spark particles ---- */
+.spark{position:absolute;width:5px;height:5px;border-radius:50%;pointer-events:none;opacity:0;z-index:1}
+.spark:nth-child(1){top:8%;left:8%;animation:spkBurst 3.5s ease-out infinite;background:#4488ff}
+.spark:nth-child(2){top:45%;left:3%;animation:spkBurst 3.5s ease-out infinite 0.7s;background:#c8a87c}
+.spark:nth-child(3){top:75%;left:90%;animation:spkBurst 3.5s ease-out infinite 1.4s;background:#00ff88}
+.spark:nth-child(4){top:15%;left:94%;animation:spkBurst 3.5s ease-out infinite 2.1s;background:#4488ff}
+.spark:nth-child(5){top:88%;left:12%;animation:spkBurst 3.5s ease-out infinite 2.8s;background:#c8a87c}
+.spark:nth-child(6){top:3%;left:50%;animation:spkBurst 4s ease-out infinite 1s;background:#00ff88}
+@keyframes spkBurst{0%{opacity:1;transform:translate(0,0) scale(1);box-shadow:0 0 8px currentColor}100%{opacity:0;transform:translate(var(--dx,20px),var(--dy,-24px)) scale(0);box-shadow:0 0 0 transparent}}
+
+/* ---- Title ---- */
+.title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;letter-spacing:5px;text-transform:uppercase;margin-bottom:6px;background:linear-gradient(135deg,#c8a87c,#e8d4a8,#c8a87c);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite}
+.subtitle{font-size:0.75rem;letter-spacing:4px;color:#555;margin-bottom:24px;font-weight:300;text-transform:uppercase}
+
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ---- Tool grid ---- */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 16px}
+.tool-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0a0a14;border:1px solid #2a2a3a;border-radius:10px;text-decoration:none;color:#c8c8d8;font-size:0.85rem;font-weight:500;transition:all .2s}
+.tool-item:hover{border-color:#4488ff;background:#1a1a2e;transform:translateY(-2px);color:#fff}
+.tool-item .icon{font-size:1.2rem;flex-shrink:0}
+.tool-item .name{font-weight:600;color:#e0e0e8;font-size:0.8rem}
+.tool-item .desc{color:#888;font-size:0.7rem}
+
+@media(max-width:500px){.tool-grid{grid-template-columns:1fr}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-item{animation:fadeUp 0.5s ease forwards;opacity:0}
+.tool-item:nth-child(1){animation-delay:0.1s}
+.tool-item:nth-child(2){animation-delay:0.2s}
+.tool-item:nth-child(3){animation-delay:0.3s}
+.tool-item:nth-child(4){animation-delay:0.4s}
+.tool-item:nth-child(5){animation-delay:0.5s}
+.tool-item:nth-child(6){animation-delay:0.6s}
+.tool-item:nth-child(7){animation-delay:0.7s}
+.tool-item:nth-child(8){animation-delay:0.8s}
+.tool-item:nth-child(9){animation-delay:0.9s}
+.tool-item:nth-child(10){animation-delay:1.0s}
+
+.links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:20px;font-size:0.8rem}
+.links a{color:#4488ff;text-decoration:none;transition:.15s}
+.links a:hover{text-decoration:underline;color:#66aaff}
+
+.footer{text-align:center;margin-top:32px;color:#444;font-size:0.7rem}
+.footer a{color:#4488ff;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="symbol-wrap">
+  <div class="symbol-inner">
+    <span class="spark" style="--dx:18px;--dy:-22px"></span>
+    <span class="spark" style="--dx:-14px;--dy:-28px"></span>
+    <span class="spark" style="--dx:-18px;--dy:-24px"></span>
+    <span class="spark" style="--dx:22px;--dy:-20px"></span>
+    <span class="spark" style="--dx:14px;--dy:-30px"></span>
+    <span class="spark" style="--dx:-10px;--dy:-22px"></span>
+
+    <div class="title">Tools</div>
+    <div class="subtitle">Free online tools by 45dgof8</div>
+
+    <div class="tool-grid">
+      <a href="https://tools.45dgof8.com/tools/pdf-merge" class="tool-item">
+        <span class="icon">📄</span>
+        <div><div class="name">PDF Merge</div><div class="desc">Combine PDFs</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/pdf-compress" class="tool-item">
+        <span class="icon">💾</span>
+        <div><div class="name">PDF Compress</div><div class="desc">Reduce file size</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/image-compress" class="tool-item">
+        <span class="icon">🎨</span>
+        <div><div class="name">Image Compress</div><div class="desc">JPEG/PNG</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/text-diff" class="tool-item">
+        <span class="icon">📜</span>
+        <div><div class="name">Text Diff</div><div class="desc">Compare texts</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/qr-code" class="tool-item">
+        <span class="icon">📷</span>
+        <div><div class="name">QR Code</div><div class="desc">Generate codes</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/json-formatter" class="tool-item">
+        <span class="icon">{}</span>
+        <div><div class="name">JSON Formatter</div><div class="desc">Pretty-print</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/color-palette" class="tool-item">
+        <span class="icon">🎨</span>
+        <div><div class="name">Color Palette</div><div class="desc">Extract colors</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/video-to-gif" class="tool-item">
+        <span class="icon">🎬</span>
+        <div><div class="name">Video to GIF</div><div class="desc">Convert clips</div></div>
+      </a>
+      <a href="https://tools.45dgof8.com/tools/scrape" class="tool-item">
+        <span class="icon">🔍</span>
+        <div><div class="name">Web Scraper</div><div class="desc">AI extraction</div></div>
+      </a>
+      <a href="https://yt-producer.45dgof8.com" class="tool-item">
+        <span class="icon">🎬</span>
+        <div><div class="name">YT Producer</div><div class="desc">AI Shorts maker</div></div>
+      </a>
+    </div>
+
+    <div class="links">
+      <a href="https://45dgof8.com">Home</a>
+      <a href="https://tools.45dgof8.com">All Tools</a>
+      <a href="https://yt-producer.45dgof8.com">YT Producer</a>
+      <a href="https://paypal.me/45dgof8">Donate</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="https://45dgof8.com">45dgof8.com</a> &middot; built by jace
+</div>
+
+</body>
+</html>
