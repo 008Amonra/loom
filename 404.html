@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>404 — 45dgof8</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#ccc;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.wrap{text-align:center;padding:2rem}
+h1{font-size:4rem;font-weight:300;color:#c9a84c;margin-bottom:.5rem}
+p{font-size:1.1rem;line-height:1.6;margin-bottom:1rem;color:#999}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+<div class=wrap>
+<h1>404</h1>
+<p id=msg>Page not found.</p>
+<a href="/">&#8592; 45dgof8.com</a>
+</div>
+<script>
+(function(){
+  var path = location.pathname;
+  // redirect /tools/* to tools.45dgof8.com
+  if (path.startsWith('/tools') || path.startsWith('/pdf-merge') || path.startsWith('/pdf-compress') || path.startsWith('/image-compress') || path.startsWith('/text-diff') || path.startsWith('/qr-code') || path.startsWith('/json-formatter') || path.startsWith('/color-palette') || path.startsWith('/video-to-gif') || path.startsWith('/scrape')) {
+    if (path.startsWith('/tools')) {
+      location.replace('https://tools.45dgof8.com' + path);
+    } else {
+      location.replace('https://tools.45dgof8.com/tools' + path);
+    }
+  } else {
+    document.getElementById('msg').textContent = 'Page not found.';
+  }
+})();
+</script>
+</html>
