@@ -160,8 +160,10 @@ header::after{content:'';display:block;height:2px;background:linear-gradient(90d
 .art img{width:100%;height:auto;display:block;object-fit:cover;max-height:280px;filter:url(#wind);cursor:zoom-in}
 .art img:fullscreen{max-height:none;object-fit:contain;cursor:zoom-out}
 
-header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222}
+header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222;position:relative}
 h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#d4a847,#b89060,#8b7355);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;text-shadow:0 0 30px rgba(180,140,60,0.15)}
+.sound-sign{position:absolute;top:8px;right:8px;font-size:18px;color:#6a5a4a;text-decoration:none;opacity:0.4;transition:0.25s;cursor:help}
+.sound-sign:hover{opacity:1;color:#d4a847;transform:scale(1.2)}
 .tagline{color:#888;font-size:0.9rem;max-width:600px;margin:0 auto}
 
 .study-note{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.82rem;color:#aaa;line-height:1.5}
@@ -187,6 +189,10 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .btn-dl{background:#4488ff;color:#fff}
 .btn-dl:hover{background:#5599ff}
 .btn-dl:disabled{background:#333;color:#666;cursor:not-allowed}
+.render-input{width:50px;background:#222;color:#ccc;border:1px solid #555;border-radius:4px;padding:4px 6px;font-size:0.75rem;text-align:center}
+#btnRender{font-size:0.75rem;padding:4px 10px;background:#2a6;color:#fff;border:none;border-radius:6px;cursor:pointer}
+#btnRender:hover{background:#3b8}
+#btnRender:disabled{background:#444;color:#888;cursor:not-allowed}
 .btn-muteall{background:#2a2a3a;color:#e0e0e8}
 .btn-muteall:hover{background:#3a3a4a}
 .btn-muteall.on{background:#cc3344;color:#fff}
@@ -342,6 +348,25 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .pr-label.step strong{color:#777}
 .pr-cell{width:12px;height:12px;border-radius:1px;border:1px solid #111122;background:#060612;cursor:pointer;transition:all .1s}
 .pr-cell:hover{border-color:#445}
+
+/* 4x4 Beat Sequencer */
+.beat44-grid{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
+.beat44-row{display:flex;align-items:center;gap:4px}
+.beat44-label{width:36px;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;text-align:right;padding-right:4px}
+.beat44-steps{display:grid;grid-template-columns:repeat(16,28px);gap:3px}
+.beat44-step.on.piano{background:#ffaa44;border-color:#ffaa44}
+.beat44-step.on.drums{background:#4488ff;border-color:#4488ff}
+.beat44-step.on.synth{background:#66dd88;border-color:#66dd88}
+.beat44-step.on.bass{background:#aa44ff;border-color:#aa44ff}
+.beat44-mute{background:none;border:none;cursor:pointer;font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;padding:2px 4px;border-radius:3px;transition:all .15s;font-family:inherit}
+.beat44-mute:hover{color:#aaa;background:#1a1a2e}
+.beat44-mute.muted{color:#553;text-decoration:line-through}
+.beat44-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;padding:10px;background:#14141e;border:1px solid #2a2a3a;border-radius:10px}
+.beat44-controls label{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:#aaa}
+.beat44-controls input[type="range"]{-webkit-appearance:none;appearance:none;width:70px;height:4px;border-radius:2px;background:#2a2a3a;outline:none}
+.beat44-controls input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#4488ff;cursor:pointer;border:none}
+.beat44-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+
 .pr-cell.on{background:#55dd77;border-color:#44bb66}
 .pr-cell.black{background:#0a0a18;border-color:#0d0d20}
 .pr-cell.on.black{background:#44cc66;border-color:#33aa55}
@@ -432,6 +457,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 #panel-noise { top: 180px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); }
 #panel-beats { bottom: 100px; left: max(20px, calc((100vw - 960px) / 2)); top: auto; }
 #panel-reverb { bottom: 100px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); top: auto; }
+#panel-beat44 { bottom: 100px; left: max(20px, calc((100vw - 960px) / 2)); top: auto; }
 
 @keyframes panelFloat {
   0%, 100% { transform: scale(0.8) translateY(0); }
@@ -788,6 +814,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 <header>
   <h1>Ambient Studio</h1>
   <p class="tagline">Generative soundscape mixer — eighteen synthetic tracks, real-time control, export to file.</p>
+  <a href="https://yt-producer.45dgof8.com/reverie" target="_blank" rel="noopener" class="sound-sign" title="Reverie — soft glass instrument">&#9834;</a>
 </header>
 
 <div class="study-note">
@@ -815,6 +842,8 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </span>
   <button class="btn-rec" id="btnRec">&#x25CF; Record</button>
   <button class="btn-dl" id="btnDl" disabled>&#x2B07; Download</button>
+  <input type="number" id="renderDur" value="30" min="1" max="120" class="render-input"> min
+  <button id="btnRender">&#x23EB; Render</button>
   <button class="btn-muteall" id="btnMuteAll">&#x1F507; Mute All</button>
   <button class="btn-unmuteall" id="btnUnmuteAll" style="font-size:0.75rem;padding:4px 10px;border:1px solid #444;border-radius:6px;cursor:pointer">&#x1F509; Unmute All</button>
   <button id="btnRapDemo" style="font-size:0.75rem;padding:4px 10px;background:#662244;color:#e0b0d0;border:none;border-radius:6px;cursor:pointer;transition:all .15s">&#x1F3A4; Rap Demo</button>
@@ -1058,8 +1087,8 @@ I'll be back next session — same bat-time, same bat-way</textarea>
     <button id="btnAutoRenew" class="seq-auto on" title="Auto-restart after stop">Auto</button>
     <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
       <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
-    <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.5">
-      <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">50</span></label>
+    <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0">
+      <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">0</span></label>
     <button id="btnPianoRoll" class="btn-piano" title="Toggle piano roll note editor">&#x1F3B9; PR</button>
     <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
     <button class="seq-break" id="btnBreak">&#x1F3B6; Break</button>
@@ -1158,6 +1187,38 @@ I'll be back next session — same bat-time, same bat-way</textarea>
 <div class="glassball" data-panel="panel-reverb" title="Space &amp; Ceiling + EQ">SC</div>
 
 <div class="glassball dsp-glassball" data-panel="panel-dsp" title="DSP">DSP</div>
+
+<div class="glassball" data-panel="panel-beat44" title="4x4 Beat Sequencer">4×4</div>
+
+<div class="floating-panel" id="panel-beat44">
+<div class="panel-header">
+  <h2>4×4 Beat Sequencer</h2>
+  <button class="embed-switch" title="Toggle float/embed">
+    <span class="label-on">Float</span>
+    <span class="track"></span>
+    <span class="label-off">Embed</span>
+  </button>
+  <button class="minimize-btn" title="Minimize to glassball">─</button>
+  <span class="drag-dots">⠿</span>
+</div>
+<div class="beat44-controls">
+  <button id="seq44Btn" class="noise-btn">▶ Start</button>
+  <button id="seq44Auto" class="seq-auto on" title="Auto-restart after stop">Auto</button>
+  <label>BPM <input type="range" id="seq44Bpm" min="40" max="160" value="100">
+    <span id="seq44BpmVal" style="min-width:24px;font-size:0.75rem;color:#666">100</span></label>
+  <label>Vol <input type="range" id="seq44Vol" min="0" max="1" step="0.05" value="0.6">
+    <span id="seq44VolVal" style="min-width:24px;font-size:0.75rem;color:#666">60</span></label>
+</div>
+<div class="beat44-grid" id="beat44Grid"></div>
+<div class="beat-numbers">
+  <div class="beat-nums" id="beat44Nums"></div>
+</div>
+<div class="beat44-actions">
+  <button id="btn44Rand" class="seq-surprise" title="Randomize pattern">🎲 Randomize</button>
+  <button id="btn44Clear" class="seq-break" title="Clear all steps">✕ Clear</button>
+</div>
+<div class="resize-handle"></div>
+</div>
 
 <div class="floating-panel" id="panel-dsp">
 <div class="panel-header">
@@ -1294,6 +1355,8 @@ let recChunks = [];
 let recStartTime = 0;
 let recTimer = null;
 let recordedBlob = null;
+let isRendering = false;
+let renderTimeout = null;
 let reverbDry = null;
 let reverbWet = null;
 let reverbConvolver = null;
@@ -3131,6 +3194,13 @@ function stopRecording() {
   document.getElementById('btnRec').classList.remove('active');
   document.getElementById('btnRec').innerHTML = '&#x25CF; Record';
   document.getElementById('statusText').textContent = 'Recording stopped';
+  if (isRendering) {
+    isRendering = false;
+    clearTimeout(renderTimeout);
+    const btn = document.getElementById('btnRender');
+    btn.disabled = false;
+    btn.textContent = '\u23EB Render';
+  }
 }
 
 function downloadRecording() {
@@ -3141,6 +3211,30 @@ function downloadRecording() {
   a.download = 'ambient-mix-' + new Date().toISOString().slice(0,19).replace(/[:-]/g,'') + '.webm';
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// --- Timed Render ---
+function renderAudio() {
+  if (isRendering) return;
+  const dur = parseInt(document.getElementById('renderDur').value) || 30;
+  isRendering = true;
+  const btn = document.getElementById('btnRender');
+  btn.disabled = true;
+  btn.textContent = '\u23F3 Rendering...';
+
+  startRecording();
+  document.getElementById('statusText').textContent = 'Rendering ' + dur + ' min mix...';
+
+  renderTimeout = setTimeout(function() {
+    stopRecording();
+    setTimeout(function() {
+      downloadRecording();
+      isRendering = false;
+      btn.disabled = false;
+      btn.textContent = '\u23EB Render';
+      document.getElementById('statusText').textContent = 'Render complete';
+    }, 500);
+  }, dur * 60 * 1000);
 }
 
 // --- Event wiring ---
@@ -3173,6 +3267,7 @@ document.getElementById('btnRec').addEventListener('click', () => {
   if (!isRecording) startRecording(); else stopRecording();
 });
 document.getElementById('btnDl').addEventListener('click', downloadRecording);
+document.getElementById('btnRender').addEventListener('click', renderAudio);
 document.getElementById('btnMuteAll').addEventListener('click', function() {
   TRACK_DEFS.forEach(function(def) {
     if (!muteBtns[def.id].classList.contains('muted')) {
@@ -3829,6 +3924,7 @@ seqPatterns.oxygene = [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
 seqPatterns.equinoxe=[1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
 seqPatterns.beam    = [1,0,0,0, 2,0,0,0, 3,0,0,0, 1,0,0,0];
 const seqMuted = {};
+BANKS.forEach(b => b.rows.forEach(r => { seqMuted[r] = true; }));
 let seqAutoRestart = true;
 let seqRenewTimer = null;
 const SEQ_MUTE = 'seqMute';
@@ -3879,7 +3975,7 @@ function seqBuildGrid() {
     rdiv.className = 'beat-row';
     const labels = { kick:'Kick', snare:'Snare', hh:'HH', oh:'OH', bass:'Bass', piano:'Piano', oxygene:'Oxygène', equinoxe:'Equinoxe', beam:'Beam', clap:'Clap', rimshot:'Rim', shaker:'Shaker', cabasa:'Cabasa', pluck:'Pluck', bell:'Bell', marimba:'Marimba', vibes:'Vibes' };
     const label = labels[row] || row;
-    rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
+    rdiv.innerHTML = `<span class="beat-label"><button class="seq-mute${seqMuted[row] ? ' muted' : ''}" id="${SEQ_MUTE}-${row}" title="Mute ${label}">${label}</button></span><div class="beat-steps" id="steps-${row}"></div>`;
     const steps = rdiv.querySelector('.beat-steps');
     for (let i = 0; i < 16; i++) {
       const btn = document.createElement('button');
@@ -4097,7 +4193,7 @@ function seqPlayKick() {
   osc.frequency.exponentialRampToValueAtTime(25, now + 0.25);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.9, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.4, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
   osc.connect(env);
   // Sub oscillator one octave down
@@ -4107,7 +4203,7 @@ function seqPlayKick() {
   sub.frequency.exponentialRampToValueAtTime(12, now + 0.3);
   const subEnv = ctx.createGain();
   subEnv.gain.setValueAtTime(0, now);
-  subEnv.gain.linearRampToValueAtTime(0.6, now + 0.008);
+  subEnv.gain.linearRampToValueAtTime(0.25, now + 0.008);
   subEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
   sub.connect(subEnv);
   subEnv.connect(env);
@@ -4124,7 +4220,7 @@ function seqPlayKick() {
   const nsrc = ctx.createBufferSource();
   nsrc.buffer = nbuf;
   const nenv = ctx.createGain();
-  nenv.gain.setValueAtTime(0.15, now);
+  nenv.gain.setValueAtTime(0.08, now);
   nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
   nsrc.connect(nenv);
   nenv.connect(seqGain);
@@ -4144,7 +4240,7 @@ function seqPlayHh() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.15, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
   src.connect(hp);
   hp.connect(env);
@@ -4165,7 +4261,7 @@ function seqPlayOh() {
   hp.frequency.value = 8000;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.3, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.1, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
   src.connect(hp);
   hp.connect(env);
@@ -4182,7 +4278,7 @@ function seqPlaySnare() {
   osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.5, now + 0.008);
+  env.gain.linearRampToValueAtTime(0.2, now + 0.008);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
   osc.connect(env);
   env.connect(seqGain);
@@ -4199,7 +4295,7 @@ function seqPlaySnare() {
   hp.frequency.value = 1000;
   const nenv = ctx.createGain();
   nenv.gain.setValueAtTime(0, now);
-  nenv.gain.linearRampToValueAtTime(0.35, now + 0.005);
+  nenv.gain.linearRampToValueAtTime(0.15, now + 0.005);
   nenv.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
   nsrc.connect(hp);
   hp.connect(nenv);
@@ -4223,7 +4319,7 @@ function seqPlayBass() {
   flt.Q.value = 2;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.25, now + 0.01);
+  env.gain.linearRampToValueAtTime(0.1, now + 0.01);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
   osc.connect(flt);
   flt.connect(env);
@@ -4231,6 +4327,7 @@ function seqPlayBass() {
   osc.start(now);
   osc.stop(now + 0.35);
 }
+
 let pianoChordIdx = 0;
 const pianoChords = [
   [174.61, 207.65, 261.63], // Fm  (F3, Ab3, C4)
@@ -4251,8 +4348,8 @@ function seqPlayPiano() {
     osc2.detune.value = 3;
     const env = ctx.createGain();
     env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.18, now + 0.006);
-    env.gain.setValueAtTime(0.14, now + 0.05);
+    env.gain.linearRampToValueAtTime(0.08, now + 0.006);
+    env.gain.setValueAtTime(0.06, now + 0.05);
     env.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
     osc2.connect(env);
     osc.connect(env);
@@ -4283,13 +4380,13 @@ function seqPlayOxygene(chordIdx) {
     sub.frequency.value = freq * 0.5;
     const filter = ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(250, t);
-    filter.frequency.linearRampToValueAtTime(700, t + 0.4);
+    filter.frequency.setValueAtTime(150, t);
+    filter.frequency.linearRampToValueAtTime(400, t + 0.4);
     filter.Q.value = 10;
     const vca = ctx.createGain();
     vca.gain.setValueAtTime(0, t);
-    vca.gain.linearRampToValueAtTime(0.12, t + 0.15);
-    vca.gain.setValueAtTime(0.12, t + 0.6);
+    vca.gain.linearRampToValueAtTime(0.04, t + 0.15);
+    vca.gain.setValueAtTime(0.04, t + 0.6);
     vca.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
     tri.connect(filter);
     sub.connect(filter);
@@ -4322,15 +4419,15 @@ function seqPlayEquinoxe(chordIdx) {
     sine.detune.value = 3;
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(600, t);
-    filter.frequency.linearRampToValueAtTime(1200, t + 0.3);
+    filter.frequency.setValueAtTime(300, t);
+    filter.frequency.linearRampToValueAtTime(600, t + 0.3);
     filter.frequency.setValueAtTime(1200, t + 0.8);
     filter.frequency.linearRampToValueAtTime(500, t + 1.5);
     filter.Q.value = 2;
     const vca = ctx.createGain();
     vca.gain.setValueAtTime(0, t);
-    vca.gain.linearRampToValueAtTime(0.08, t + 0.3);
-    vca.gain.setValueAtTime(0.08, t + 0.7);
+    vca.gain.linearRampToValueAtTime(0.03, t + 0.3);
+    vca.gain.setValueAtTime(0.03, t + 0.7);
     vca.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
     tri.connect(filter);
     sine.connect(filter);
@@ -4363,15 +4460,15 @@ function seqPlayBeam(chordIdx) {
     thick.detune.value = 7;
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(200, t);
-    filter.frequency.linearRampToValueAtTime(1800, t + 0.3);
+    filter.frequency.setValueAtTime(100, t);
+    filter.frequency.linearRampToValueAtTime(800, t + 0.3);
     filter.frequency.setValueAtTime(1800, t + 1.2);
     filter.frequency.linearRampToValueAtTime(400, t + 1.8);
     filter.Q.value = 3;
     const vca = ctx.createGain();
     vca.gain.setValueAtTime(0, t);
-    vca.gain.linearRampToValueAtTime(0.04, t + 0.04);
-    vca.gain.setValueAtTime(0.04, t + 0.8);
+    vca.gain.linearRampToValueAtTime(0.015, t + 0.04);
+    vca.gain.setValueAtTime(0.015, t + 0.8);
     vca.gain.linearRampToValueAtTime(0.025, t + 1.2);
     vca.gain.exponentialRampToValueAtTime(0.001, t + 2.0);
     lead.connect(filter);
@@ -4399,7 +4496,7 @@ function seqPlayClap() {
   bp.Q.value = 2;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.4, now + 0.003);
+  env.gain.linearRampToValueAtTime(0.12, now + 0.003);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
   src.connect(bp);
   bp.connect(env);
@@ -4440,7 +4537,7 @@ function seqPlayShaker() {
   hp.type = 'highpass';
   hp.frequency.value = 6000;
   const env = ctx.createGain();
-  env.gain.setValueAtTime(0.15, now);
+  env.gain.setValueAtTime(0.05, now);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
   src.connect(hp);
   hp.connect(env);
@@ -4464,7 +4561,7 @@ function seqPlayCabasa() {
   bp.frequency.value = 3500;
   bp.Q.value = 1.5;
   const env = ctx.createGain();
-  env.gain.setValueAtTime(0.2, now);
+  env.gain.setValueAtTime(0.08, now);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
   src.connect(bp);
   bp.connect(env);
@@ -4487,7 +4584,7 @@ function seqPlayPluck() {
   filter.frequency.exponentialRampToValueAtTime(400, now + 0.3);
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.15, now + 0.005);
+  env.gain.linearRampToValueAtTime(0.06, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
   osc.connect(filter);
   filter.connect(env);
@@ -4506,7 +4603,7 @@ function seqPlayBell() {
     osc.frequency.value = freq * mult;
     const env = ctx.createGain();
     env.gain.setValueAtTime(0, now);
-    env.gain.linearRampToValueAtTime(0.04 / (i + 1), now + 0.002);
+    env.gain.linearRampToValueAtTime(0.02 / (i + 1), now + 0.002);
     env.gain.exponentialRampToValueAtTime(0.001, now + 0.6 + i * 0.4);
     osc.connect(env);
     env.connect(seqGain);
@@ -4524,8 +4621,8 @@ function seqPlayMarimba() {
   osc.frequency.value = freq;
   const env = ctx.createGain();
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.2, now + 0.002);
-  env.gain.setValueAtTime(0.18, now + 0.01);
+  env.gain.linearRampToValueAtTime(0.06, now + 0.002);
+  env.gain.setValueAtTime(0.05, now + 0.01);
   env.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
   osc.connect(env);
   env.connect(seqGain);
@@ -4549,8 +4646,8 @@ function seqPlayVibes() {
   tremolo.frequency.value = 5;
   const vca = ctx.createGain();
   vca.gain.setValueAtTime(0, now);
-  vca.gain.linearRampToValueAtTime(0.08, now + 0.01);
-  vca.gain.setValueAtTime(0.08, now + 0.4);
+  vca.gain.linearRampToValueAtTime(0.03, now + 0.01);
+  vca.gain.setValueAtTime(0.03, now + 0.4);
   vca.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
   const tremGain = ctx.createGain();
   tremGain.gain.value = 0.3;
@@ -4603,7 +4700,7 @@ function seqPlayStep() {
 async function seqStart() {
   if (!ctx) initAudio();
   if (ctx.state === 'suspended') await ctx.resume();
-  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0.5; seqGain.connect(seqBus || masterGain); }
+  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0; seqGain.connect(seqBus || masterGain); }
   clearTimeout(seqRenewTimer);
   seqPlaying = true;
   seqStep = 0;
@@ -5062,6 +5159,259 @@ document.getElementById('limitSlider').addEventListener('input', function() {
     });
   });
 })();
+
+// ── 4x4 Beat Sequencer ──
+const SEQ44_TRACKS = ['piano','drums','synth','bass'];
+const SEQ44_LABELS = { piano:'Pno', drums:'Drm', synth:'Syn', bass:'Bas' };
+let seq44Patterns = {};
+let seq44Mutes = {};
+let seq44Running = false;
+let seq44Step = 0;
+let seq44Timer = null;
+let seq44Gain = null;
+const SEQ44_CHORDS = [
+  [175, 208, 262],
+  [156, 196, 233],
+  [131, 156, 196],
+  [175, 208, 262]
+];
+const SEQ44_BASS_MIDI = [41, 45, 47, 41];
+const SEQ44_SYNTH_HZ = [131, 156, 196, 156];
+function seq44Freq(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+function seq44Init() {
+  SEQ44_TRACKS.forEach(function(t) { seq44Patterns[t] = Array(16).fill(0); seq44Mutes[t] = false; });
+  for (var i = 0; i < 16; i++) {
+    if (i % 4 === 0) seq44Patterns.piano[i] = 1;
+    if (i < 8) {
+      if (i % 4 === 0 || i % 4 === 2) seq44Patterns.drums[i] = 1;
+      if (i % 4 === 0) seq44Patterns.bass[i] = 1;
+    } else {
+      seq44Patterns.drums[i] = 1;
+      if (i % 2 === 0) seq44Patterns.bass[i] = 1;
+      if (i % 4 === 0) seq44Patterns.synth[i] = 1;
+    }
+  }
+  seq44BuildGrid();
+}
+function seq44BuildGrid() {
+  var grid = document.getElementById('beat44Grid');
+  grid.innerHTML = '';
+  SEQ44_TRACKS.forEach(function(track) {
+    var row = document.createElement('div');
+    row.className = 'beat44-row';
+    var label = document.createElement('span');
+    label.className = 'beat44-label';
+    var muteBtn = document.createElement('button');
+    muteBtn.className = 'beat44-mute' + (seq44Mutes[track] ? ' muted' : '');
+    muteBtn.textContent = SEQ44_LABELS[track];
+    muteBtn.addEventListener('click', function() { seq44ToggleMute(track); });
+    label.appendChild(muteBtn);
+    row.appendChild(label);
+    var steps = document.createElement('div');
+    steps.className = 'beat44-steps';
+    for (var i = 0; i < 16; i++) {
+      (function(step) {
+        var btn = document.createElement('button');
+        var on = seq44Patterns[track][step];
+        btn.className = 'beat-step beat44-step' + (on ? ' on ' + track : '');
+        btn.dataset.track = track;
+        btn.dataset.step = step;
+        btn.addEventListener('click', function() {
+          seq44Patterns[track][step] = seq44Patterns[track][step] ? 0 : 1;
+          btn.classList.toggle('on');
+          btn.classList.toggle(track);
+        });
+        steps.appendChild(btn);
+      })(i);
+    }
+    row.appendChild(steps);
+    grid.appendChild(row);
+  });
+  var nums = document.getElementById('beat44Nums');
+  nums.innerHTML = '';
+  for (var i2 = 0; i2 < 16; i2++) {
+    var n = document.createElement('span');
+    n.className = 'beat-num';
+    n.textContent = i2 % 4 === 0 ? (i2 / 4 + 1) : '\u00B7';
+    nums.appendChild(n);
+  }
+}
+function seq44ToggleMute(track) {
+  seq44Mutes[track] = !seq44Mutes[track];
+  var btns = document.querySelectorAll('#panel-beat44 .beat44-mute');
+  SEQ44_TRACKS.forEach(function(t, idx) { btns[idx].classList.toggle('muted', seq44Mutes[t]); });
+}
+function seq44EnsureGain() {
+  if (!ctx) return;
+  if (!seq44Gain) {
+    seq44Gain = ctx.createGain();
+    seq44Gain.gain.value = parseFloat(document.getElementById('seq44Vol').value);
+    seq44Gain.connect(masterGain);
+  }
+}
+function seq44PlayPiano(step) {
+  if (!seq44Patterns.piano[step] || seq44Mutes.piano) return;
+  var now = ctx.currentTime;
+  var chord = SEQ44_CHORDS[Math.floor(step / 4) % 4];
+  chord.forEach(function(f) {
+    var osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = f;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.15 * seq44Gain.gain.value, now + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(g);
+    g.connect(seq44Gain);
+    osc.start(now);
+    osc.stop(now + 0.35);
+  });
+}
+function seq44PlayDrums(step) {
+  if (!seq44Patterns.drums[step] || seq44Mutes.drums) return;
+  var now = ctx.currentTime;
+  var bi = step % 4;
+  if (bi === 0 || bi === 2) {
+    var osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(35, now + 0.2);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.25, now + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.connect(g);
+    g.connect(seq44Gain);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  }
+  if (bi === 1 || bi === 3) {
+    var sr = ctx.sampleRate;
+    var len = Math.floor(sr * 0.025);
+    var buf = ctx.createBuffer(1, len, sr);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    var hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 7000;
+    var g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.08, now);
+    g2.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+    src.connect(hp);
+    hp.connect(g2);
+    g2.connect(seq44Gain);
+    src.start(now);
+    src.stop(now + 0.04);
+  }
+}
+function seq44PlayBass(step) {
+  if (!seq44Patterns.bass[step] || seq44Mutes.bass) return;
+  var now = ctx.currentTime;
+  var f = seq44Freq(SEQ44_BASS_MIDI[Math.floor(step / 4) % 4]);
+  var osc = ctx.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.value = f;
+  var g = ctx.createGain();
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.12, now + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+  osc.connect(g);
+  g.connect(seq44Gain);
+  osc.start(now);
+  osc.stop(now + 0.45);
+}
+function seq44PlaySynth(step) {
+  if (!seq44Patterns.synth[step] || seq44Mutes.synth) return;
+  var now = ctx.currentTime;
+  var f = SEQ44_SYNTH_HZ[Math.floor(step / 4) % 4];
+  var osc = ctx.createOscillator();
+  osc.type = 'sawtooth';
+  var filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 400;
+  filter.Q.value = 0.5;
+  var g = ctx.createGain();
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.03, now + 0.003);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+  osc.connect(filter);
+  filter.connect(g);
+  g.connect(seq44Gain);
+  osc.start(now);
+  osc.stop(now + 0.35);
+}
+function seq44Tick() {
+  if (!seq44Running) return;
+  var bpm = parseInt(document.getElementById('seq44Bpm').value);
+  var beatMs = 60000 / bpm / 4;
+  document.querySelectorAll('#beat44Grid .beat-step.active').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('#beat44Grid .beat-step[data-step="' + seq44Step + '"]').forEach(function(el) { el.classList.add('active'); });
+  seq44PlayPiano(seq44Step);
+  seq44PlayDrums(seq44Step);
+  seq44PlaySynth(seq44Step);
+  seq44PlayBass(seq44Step);
+  seq44Step = (seq44Step + 1) % 16;
+  if (seq44Step === 0 && !document.getElementById('seq44Auto').classList.contains('on')) { seq44Stop(); return; }
+  seq44Timer = setTimeout(seq44Tick, beatMs);
+}
+async function seq44Start() {
+  if (seq44Running) { seq44Stop(); return; }
+  if (!ctx) initAudio();
+  if (ctx.state === 'suspended') await ctx.resume();
+  seq44EnsureGain();
+  seq44Running = true;
+  seq44Step = 0;
+  seq44Tick();
+  document.getElementById('seq44Btn').textContent = '\u25A0 Stop';
+}
+function seq44Stop() {
+  seq44Running = false;
+  if (seq44Timer) { clearTimeout(seq44Timer); seq44Timer = null; }
+  document.querySelectorAll('#beat44Grid .beat-step.active').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById('seq44Btn').textContent = '\u25B6 Start';
+}
+function seq44RefreshGrid() {
+  document.querySelectorAll('#beat44Grid .beat-step').forEach(function(el) {
+    var t = el.dataset.track;
+    var s = parseInt(el.dataset.step);
+    var on = seq44Patterns[t][s];
+    el.classList.toggle('on', !!on);
+    el.classList.toggle(t, !!on);
+  });
+}
+function seq44Randomize() {
+  SEQ44_TRACKS.forEach(function(t) {
+    if (t === 'synth') return;
+    for (var i = 0; i < 16; i++) {
+      if (t === 'piano') seq44Patterns.piano[i] = (i % 4 === 0 && Math.random() < 0.7) || (i % 8 === 4 && Math.random() < 0.4) ? 1 : 0;
+      else if (t === 'drums') seq44Patterns.drums[i] = (i % 4 === 0 && Math.random() < 0.8) || ((i % 4 === 1 || i % 4 === 3) && Math.random() < 0.3) ? 1 : 0;
+      else if (t === 'bass') seq44Patterns.bass[i] = (i % 4 === 0 && Math.random() < 0.5) || (i % 8 === 4 && Math.random() < 0.3) ? 1 : 0;
+    }
+  });
+  seq44RefreshGrid();
+}
+function seq44Clear() {
+  SEQ44_TRACKS.forEach(function(t) {
+    if (t === 'synth') return;
+    seq44Patterns[t] = Array(16).fill(0);
+  });
+  seq44RefreshGrid();
+}
+function seq44InitControls() {
+  document.getElementById('seq44Btn').addEventListener('click', seq44Start);
+  document.getElementById('seq44Auto').addEventListener('click', function() { this.classList.toggle('on'); });
+  document.getElementById('seq44Bpm').addEventListener('input', function() { document.getElementById('seq44BpmVal').textContent = this.value; });
+  document.getElementById('seq44Vol').addEventListener('input', function() {
+    document.getElementById('seq44VolVal').textContent = Math.round(this.value * 100);
+    if (seq44Gain) seq44Gain.gain.value = parseFloat(this.value);
+  });
+  document.getElementById('btn44Rand').addEventListener('click', seq44Randomize);
+  document.getElementById('btn44Clear').addEventListener('click', seq44Clear);
+}
+seq44Init();
+seq44InitControls();
 
 // ── Artwork fullscreen ──
 document.querySelector('.art img')?.addEventListener('click', function() {
