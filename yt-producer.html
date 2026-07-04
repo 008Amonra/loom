@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YT Producer — 45DGOF8</title>
+<meta name="description" content="One prompt. No editing. No timeline. YT Producer did the pan, the crop, the voice.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0a0a0f;color:#c8b898;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  background:radial-gradient(ellipse at 50% 30%, rgba(200,168,124,0.04), transparent 60%),#0a0a0f}
+.wrap{max-width:560px;padding:60px 20px 40px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* ── Logo ── */
+.logo{font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#6a5d4a;margin-bottom:40px}
+.logo span{color:#c8a87c}
+
+/* ── Tagline ── */
+.tagline{font-size:clamp(22px,5vw,34px);font-weight:300;line-height:1.3;color:#e0d8d0;margin-bottom:8px;letter-spacing:-0.01em}
+.tagline em{font-style:normal;color:#c8a87c;font-weight:400}
+.byline{font-size:clamp(13px,2.5vw,15px);color:#6a5d4a;line-height:1.6;margin-bottom:48px}
+.byline span{display:inline-block;position:relative}
+.byline .pan::after,.byline .crop::after,.byline .voice::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:rgba(200,168,124,0.2)}
+
+/* ── Demo Video ── */
+.video-wrap{width:100%;max-width:400px;margin-bottom:40px;position:relative;border-radius:12px;overflow:hidden;box-shadow:0 0 40px rgba(200,168,124,0.06),0 0 0 1px rgba(200,168,124,0.08)}
+.video-wrap video{width:100%;display:block;border-radius:12px;background:#000}
+.video-wrap .badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);border:1px solid rgba(200,168,124,0.1);border-radius:6px;padding:3px 10px;font-size:10px;color:#8a7d6a;letter-spacing:1px;text-transform:uppercase}
+
+/* ── Features ── */
+.features{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%;max-width:400px;margin-bottom:40px}
+.feat{padding:16px 12px;border-radius:10px;background:rgba(200,168,124,0.02);border:1px solid rgba(200,168,124,0.06);transition:0.2s}
+.feat:hover{border-color:rgba(200,168,124,0.15);background:rgba(200,168,124,0.04)}
+.feat .icon{font-size:22px;margin-bottom:6px;display:block;color:#c8a87c}
+.feat .title{font-size:11px;font-weight:600;color:#c8b898;letter-spacing:0.5px;text-transform:uppercase}
+.feat .desc{font-size:11px;color:#6a5d4a;margin-top:4px;line-height:1.4}
+
+/* ── Buttons ── */
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:0.25s;letter-spacing:0.3px}
+.btn-primary{background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;box-shadow:0 4px 20px rgba(200,168,124,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(200,168,124,0.35)}
+.btn-secondary{background:rgba(200,168,124,0.04);border:1px solid rgba(200,168,124,0.12);color:#c8b898}
+.btn-secondary:hover{background:rgba(200,168,124,0.08);border-color:rgba(200,168,124,0.2);transform:translateY(-2px)}
+
+/* ── Steps ── */
+.steps{width:100%;max-width:400px;text-align:left;margin-bottom:40px;padding:20px 24px;border-radius:10px;background:rgba(200,168,124,0.02);border:1px solid rgba(200,168,124,0.06)}
+.steps h3{font-size:12px;font-weight:600;color:#8a7d6a;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;text-align:center}
+.step{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(200,168,124,0.04)}
+.step:last-child{border:none}
+.step .num{width:24px;height:24px;border-radius:50%;background:rgba(200,168,124,0.06);border:1px solid rgba(200,168,124,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#8a7d6a;flex-shrink:0}
+.step .text{font-size:13px;color:#a89880}
+.step .text em{font-style:normal;color:#c8a87c}
+
+/* ── Footer ── */
+.footer{font-size:11px;color:#3a322a;letter-spacing:1px;padding:20px;text-align:center}
+.footer a{color:#5a4a3a;text-decoration:none;border-bottom:1px dotted rgba(200,168,124,0.1)}
+.footer a:hover{color:#8a7d6a}
+
+/* ── Mobile ── */
+@media(max-width:460px){.features{grid-template-columns:1fr 1fr}.features .feat:last-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="logo">45<span>dgof8</span> · YT Producer</div>
+
+<h1 class="tagline">One prompt.<br>No editing. No timeline.</h1>
+<p class="byline">
+  <span class="pan">pan</span> &middot;
+  <span class="crop">crop</span> &middot;
+  <span class="voice">voice</span>
+  &mdash; YT Producer did it all
+</p>
+
+<div class="video-wrap">
+  <video src="scifi-ghost.mp4" poster="scene1-neon.png" controls playsinline preload="metadata"></video>
+  <div class="badge">generated with YT producer</div>
+</div>
+
+<div class="features">
+  <div class="feat">
+    <span class="icon">&#9670;</span>
+    <div class="title">Prompt</div>
+    <div class="desc">Write your text. That's it.</div>
+  </div>
+  <div class="feat">
+    <span class="icon">&#9671;</span>
+    <div class="title">Process</div>
+    <div class="desc">Pan, crop, voice, render.</div>
+  </div>
+  <div class="feat">
+    <span class="icon">&#9673;</span>
+    <div class="title">Publish</div>
+    <div class="desc">YouTube Short in one click.</div>
+  </div>
+</div>
+
+<div class="actions">
+  <a href="https://yt-producer.45dgof8.com" class="btn btn-primary">Open YT Producer</a>
+  <a href="https://yt-producer.45dgof8.com/buy" class="btn btn-secondary">Pricing</a>
+</div>
+
+<div class="steps">
+  <h3>How it works</h3>
+  <div class="step"><span class="num">1</span><span class="text">Upload an image or write text</span></div>
+  <div class="step"><span class="num">2</span><span class="text">Add voice, pan, crop &mdash; or let it auto-pick</span></div>
+  <div class="step"><span class="num">3</span><span class="text">Click generate &mdash; your Short is ready</span></div>
+  <div class="step"><span class="num">4</span><span class="text">Publish to YouTube or download</span></div>
+</div>
+
+</div>
+
+<div class="footer"><a href="https://45dgof8.com">45dgof8.com</a> &middot; <a href="https://yt-producer.45dgof8.com/tips">Audio Tips</a></div>
+</body>
+</html>
