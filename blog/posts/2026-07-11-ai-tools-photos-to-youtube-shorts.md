@@ -3,6 +3,7 @@ title: 10 AI Tools That Turn Your Photos Into YouTube Shorts
 description: Turn your existing photos into engaging YouTube Shorts using AI. From Ken Burns zoom to voiceover, these tools do the heavy lifting.
 date: 2026-07-11
 tags: AI Tools, YouTube Shorts, Content Creation, Video Editing
+image: /blog/images/hero-ai-tools.png
 ---
 
 You already have the photos. What you don't have is the time to edit them into 60-second Shorts. That's where AI tools come in — they take your images and text, and produce a finished video with animation, voiceover, and music.
