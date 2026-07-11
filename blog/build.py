@@ -63,6 +63,11 @@ def render_post(meta, html_content, slug):
     image = meta.get("image", "")
     tags = meta.get("tags", "")
 
+    # Hero image HTML
+    hero_html = ""
+    if image:
+        hero_html = f'<img src="{image}" alt="{title}" class="hero-img" loading="eager">'
+
     # Format date nicely
     try:
         dt = datetime.strptime(date, "%Y-%m-%d")
@@ -92,6 +97,7 @@ def render_post(meta, html_content, slug):
     html = html.replace("{{META_TAGS}}", meta_tags)
     html = html.replace("{{DATE_DISPLAY}}", date_display)
     html = html.replace("{{AUTHOR}}", author)
+    html = html.replace("{{HERO_IMAGE}}", hero_html)
     html = html.replace("{{CONTENT}}", html_content)
     html = html.replace("{{SLUG}}", slug)
     html = html.replace("{{ANALYTICS}}", analytics)
@@ -102,8 +108,11 @@ def render_index(posts):
     """Render the blog index page."""
     posts_html = ""
     for post in sorted(posts, key=lambda p: p["date"], reverse=True):
+        hero_img = post.get("image", "")
+        hero_html = f'<img src="{hero_img}" alt="{post["title"]}" class="hero-thumb" loading="lazy">' if hero_img else ""
         posts_html += f"""
         <article class="post-card">
+            {hero_html}
             <time>{post["date_display"]}</time>
             <h2><a href="/blog/{post["slug"]}/">{post["title"]}</a></h2>
             <p>{post["description"]}</p>
@@ -159,6 +168,7 @@ def build_post(md_path):
         "slug": slug,
         "tags": tags,
         "tags_html": tags_html,
+        "image": meta.get("image", ""),
     }
 
 
