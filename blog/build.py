@@ -80,7 +80,7 @@ def render_post(meta, html_content, slug):
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://45dgof8.com/blog/{slug}/">
+<meta property="og:url" content="https://008amonra.github.io/loom/blog/{slug}/">
 <meta property="article:published_time" content="{date}">
 <meta property="article:author" content="{author}">"""
     if image:
