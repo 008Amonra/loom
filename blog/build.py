@@ -114,7 +114,7 @@ def render_index(posts):
         <article class="post-card">
             {hero_html}
             <time>{post["date_display"]}</time>
-            <h2><a href="/blog/{post["slug"]}/">{post["title"]}</a></h2>
+            <h2><a href="/loom/blog/{post["slug"]}/">{post["title"]}</a></h2>
             <p>{post["description"]}</p>
             <div class="post-tags">{post["tags_html"]}</div>
         </article>"""
