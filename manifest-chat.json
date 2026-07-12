@@ -2,7 +2,7 @@
   "name": "45dgof8 Chat",
   "short_name": "Big Pickle",
   "description": "Chat with Big Pickle — 45dgof8 agent",
-  "start_url": "/chat.html",
+  "start_url": "/loom/chat.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0d0d14",
