@@ -43,6 +43,42 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0
 .sg1::before,.sg3::before{border-style:dashed}
 .sg2::before,.sg4::before{border-style:dotted}
 
+/* ── Avatar: Brass Automaton ── */
+.avatar-wrap{position:fixed;bottom:20px;left:20px;width:120px;height:160px;z-index:100;pointer-events:none}
+.avatar-body{width:100px;height:120px;margin:0 auto;position:relative;
+  background:radial-gradient(ellipse at 50% 30%,rgba(180,140,60,0.15),rgba(120,90,40,0.08) 60%,transparent);
+  border:2px solid rgba(180,140,60,0.2);border-radius:50% 50% 40% 40%/60% 60% 40% 40%;
+  box-shadow:0 0 30px rgba(180,140,60,0.08),inset 0 0 20px rgba(180,140,60,0.04)}
+.avatar-eye{position:absolute;width:20px;height:20px;top:35px;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,rgba(255,200,100,0.1),rgba(180,140,60,0.05));
+  border:1.5px solid rgba(180,140,60,0.25);transition:all 0.3s}
+.avatar-eye.left{left:22px}
+.avatar-eye.right{right:22px}
+.avatar-pupil{width:8px;height:8px;margin:6px auto;border-radius:50%;
+  background:rgba(255,200,100,0.3);transition:all 0.3s;box-shadow:0 0 8px rgba(255,200,100,0.2)}
+.avatar-beak{position:absolute;top:55px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;
+  border-top:12px solid rgba(180,140,60,0.3)}
+.avatar-gear{position:absolute;width:24px;height:24px;border-radius:50%;
+  border:2px solid rgba(180,140,60,0.2);animation:spinCw 8s linear infinite}
+.avatar-gear::before{content:'';position:absolute;inset:25%;border-radius:50%;border:1px solid rgba(180,140,60,0.15)}
+.avatar-gear.left{left:-12px;top:60px}
+.avatar-gear.right{right:-12px;top:60px;animation-direction:reverse}
+.avatar-chest{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);
+  width:40px;height:30px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,200,100,0.05),transparent);
+  border:1px solid rgba(180,140,60,0.15);transition:all 0.3s}
+.avatar-label{text-align:center;font-size:0.55rem;color:rgba(180,140,60,0.4);
+  letter-spacing:0.1em;margin-top:4px;text-transform:uppercase}
+.avatar-active .avatar-pupil{background:rgba(255,220,120,0.6);box-shadow:0 0 15px rgba(255,200,100,0.5)}
+.avatar-active .avatar-eye{border-color:rgba(255,200,100,0.4);box-shadow:0 0 12px rgba(255,200,100,0.15)}
+.avatar-active .avatar-chest{background:radial-gradient(circle,rgba(255,200,100,0.15),transparent);
+  border-color:rgba(255,200,100,0.3);box-shadow:0 0 20px rgba(255,200,100,0.1)}
+
+/* ── Fractal Stripe ── */
+#fractalStripe{position:fixed;top:0;left:0;width:7cm;height:100vh;z-index:0;pointer-events:none}
+#fractalCanvas{width:100%;height:100%}
+
 /* ── DSP panel ── */
 #panel-dsp { top: 60px; right: max(20px, calc((100vw - 960px) / 2 + 20px)); }
 #panel-dsp .sub { color:#b080d0; }
@@ -54,6 +90,36 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0
 #panel-dsp .dsp-bypass button { font-size:0.72rem; padding:4px 12px; border-radius:6px; border:none; cursor:pointer; }
 #panel-dsp .dsp-bypass .btn-bypass-off { background:#2a2a3a; color:#e0e0e8; }
 #panel-dsp .dsp-bypass .btn-bypass-on { background:#884466; color:#e0b0d0; }
+
+/* ── Reverie Panel ── */
+#panel-reverie { top:60px; right:max(20px,calc((100vw - 960px) / 2 + 20px)); width:340px; }
+#panel-reverie .rv-orb{width:160px;height:160px;border-radius:50%;margin:8px auto 16px;position:relative;cursor:pointer;
+  background:radial-gradient(circle at 40% 35%, rgba(200,180,160,0.12), rgba(160,130,100,0.06) 40%, rgba(80,60,40,0.03) 70%, transparent);
+  box-shadow:0 0 40px rgba(200,160,120,0.06),0 0 80px rgba(200,160,120,0.04),inset 0 0 60px rgba(200,170,140,0.04),inset 0 0 0 1px rgba(200,180,160,0.06);
+  transition:box-shadow 1.5s ease,background 1.5s ease;display:flex;align-items:center;justify-content:center}
+#panel-reverie .rv-orb.glow{box-shadow:0 0 60px rgba(220,200,180,0.15),0 0 120px rgba(200,170,140,0.08),0 0 180px rgba(180,150,120,0.04),inset 0 0 80px rgba(220,200,180,0.08),inset 0 0 0 1px rgba(220,200,180,0.12);
+  background:radial-gradient(circle at 40% 35%, rgba(220,200,180,0.2), rgba(180,150,120,0.1) 40%, rgba(100,80,60,0.04) 70%, transparent)}
+#panel-reverie .rv-orb-inner{width:72px;height:72px;border-radius:50%;position:absolute;
+  background:radial-gradient(circle at 45% 40%, rgba(200,180,160,0.06), transparent 60%);border:1px solid rgba(200,180,160,0.04);
+  transition:transform 2s ease,opacity 2s ease}
+#panel-reverie .rv-orb.glow .rv-orb-inner{transform:scale(1.4);opacity:1.5}
+#panel-reverie .rv-note-name{font-size:0.6rem;color:#6a5a4a;letter-spacing:0.15em;position:absolute;bottom:-20px;text-transform:uppercase;transition:color 0.5s;pointer-events:none}
+#panel-reverie .rv-orb.glow .rv-note-name{color:#c0a890}
+#panel-reverie .rv-keys{display:flex;gap:3px;justify-content:center;margin-bottom:12px}
+#panel-reverie .rv-key{width:36px;height:90px;border-radius:4px;border:none;cursor:pointer;position:relative;transition:all 0.15s;
+  background:radial-gradient(ellipse at 50% 85%, rgba(160,140,120,0.06), rgba(200,180,160,0.02));
+  border:1px solid rgba(200,180,160,0.08);box-shadow:0 2px 6px rgba(0,0,0,0.3),inset 0 1px 0 rgba(200,180,160,0.06);
+  font-size:0.55rem;color:#7a6a5a;letter-spacing:0.05em;padding-top:66px;font-family:'Inter',sans-serif}
+#panel-reverie .rv-key:hover{border-color:rgba(200,180,160,0.2);background:radial-gradient(ellipse at 50% 85%, rgba(200,180,160,0.1), rgba(200,180,160,0.03))}
+#panel-reverie .rv-key:active,#panel-reverie .rv-key.active{background:radial-gradient(ellipse at 50% 85%, rgba(220,200,180,0.2), rgba(200,180,160,0.06));border-color:rgba(220,200,180,0.25);box-shadow:0 0 15px rgba(200,180,160,0.08),inset 0 1px 0 rgba(220,200,180,0.1);color:#c0a890}
+#panel-reverie .rv-key .rv-label{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:0.5rem;color:#5a4a3a;text-transform:uppercase}
+#panel-reverie .rv-controls{display:flex;gap:16px;justify-content:center;align-items:center;margin-bottom:8px}
+#panel-reverie .rv-controls label{font-size:0.65rem;color:#6a5a4a;display:flex;align-items:center;gap:6px}
+#panel-reverie .rv-controls input[type="range"]{width:60px;height:3px;-webkit-appearance:none;appearance:none;background:#2a2018;border-radius:2px;outline:none}
+#panel-reverie .rv-controls input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#5a4a3a;border:1px solid rgba(200,180,160,0.15);cursor:pointer;transition:0.2s}
+#panel-reverie .rv-controls input[type="range"]::-webkit-slider-thumb:hover{background:#7a6a5a;border-color:rgba(200,180,160,0.3)}
+#panel-reverie .rv-controls .rv-val{font-size:0.65rem;color:#8a7a6a;min-width:24px;text-align:right}
+#panel-reverie .rv-status{font-size:0.65rem;color:#5a4a3a;text-align:center;letter-spacing:0.05em}
 .dsp-glassball { background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.1) 0%, rgba(25,10,30,0.85) 60%, rgba(15,8,20,0.95) 100%) !important; border-color: rgba(180,80,200,0.15) !important; color: #d0a0e0 !important; text-shadow: 0 0 8px rgba(180,80,200,0.15) !important; }
 
 /* ── Brass frame around PayPal ── */
@@ -162,8 +228,7 @@ header::after{content:'';display:block;height:2px;background:linear-gradient(90d
 
 header{text-align:center;margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid #222;position:relative}
 h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#d4a847,#b89060,#8b7355);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;text-shadow:0 0 30px rgba(180,140,60,0.15)}
-.sound-sign{position:absolute;top:8px;right:8px;font-size:18px;color:#6a5a4a;text-decoration:none;opacity:0.4;transition:0.25s;cursor:help}
-.sound-sign:hover{opacity:1;color:#d4a847;transform:scale(1.2)}
+
 .tagline{color:#888;font-size:0.9rem;max-width:600px;margin:0 auto}
 
 .study-note{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.82rem;color:#aaa;line-height:1.5}
@@ -796,6 +861,18 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 <div class="steam-gear sg2"></div>
 <div class="steam-gear sg3"></div>
 <div class="steam-gear sg4"></div>
+<div id="fractalStripe"><canvas id="fractalCanvas"></canvas></div>
+<div class="avatar-wrap" id="avatarWrap">
+  <div class="avatar-body" id="avatarBody">
+    <div class="avatar-eye left"><div class="avatar-pupil"></div></div>
+    <div class="avatar-eye right"><div class="avatar-pupil"></div></div>
+    <div class="avatar-beak"></div>
+    <div class="avatar-gear left"></div>
+    <div class="avatar-gear right"></div>
+    <div class="avatar-chest"></div>
+  </div>
+  <div class="avatar-label">Harmonic</div>
+</div>
 <div class="candle-wrap">
   <div class="candle-holder"></div>
   <div class="candle-body">
@@ -814,7 +891,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 <header>
   <h1>Ambient Studio</h1>
   <p class="tagline">Generative soundscape mixer — eighteen synthetic tracks, real-time control, export to file.</p>
-  <a href="https://yt-producer.45dgof8.com/reverie" target="_blank" rel="noopener" class="sound-sign" title="Reverie — soft glass instrument">&#9834;</a>
+  <div class="glassball" data-panel="panel-reverie" title="Reverie — soft glass instrument" style="position:absolute;top:8px;right:8px;width:30px;height:30px;font-size:11px">&#9834;</div>
 </header>
 
 <div class="study-note">
@@ -1264,6 +1341,31 @@ I'll be back next session — same bat-time, same bat-way</textarea>
     <button id="dspBypassBtn" class="btn-bypass-off">Off</button>
   </div>
 </div>
+<div class="resize-handle"></div>
+</div>
+
+<div class="floating-panel" id="panel-reverie">
+<div class="panel-header">
+  <h2>Reverie</h2>
+  <button class="embed-switch" title="Toggle float/embed">
+    <span class="label-on">Float</span>
+    <span class="track"></span>
+    <span class="label-off">Embed</span>
+  </button>
+  <button class="minimize-btn" title="Minimize to glassball">─</button>
+  <span class="drag-dots">⠿</span>
+</div>
+<p class="sub" style="padding:0 12px;margin-bottom:6px">soft glass instrument — tap the glass or use keys A–K</p>
+<div class="rv-orb" id="rvOrb">
+  <div class="rv-orb-inner"></div>
+  <span class="rv-note-name">—</span>
+</div>
+<div class="rv-controls">
+  <label>Vol <input type="range" id="rvVol" min="0" max="100" value="60"><span class="rv-val" id="rvVolVal">60</span></label>
+  <label>Breath <input type="range" id="rvMorph" min="0" max="100" value="40"><span class="rv-val" id="rvMorphVal">40</span></label>
+</div>
+<div class="rv-keys" id="rvKeys"></div>
+<div class="rv-status">touch the glass · <span style="color:#6a5a4a">keys A S D F G H J K</span></div>
 <div class="resize-handle"></div>
 </div>
 
@@ -3425,12 +3527,25 @@ TRACK_DEFS.forEach(def => {
 
 // --- Activity LED analyser loop ---
 function initAnalyserLoop() {
+  const avatarWrap = document.getElementById('avatarWrap');
+  let overallLevel = 0;
+  
   function poll() {
     if (ctx) {
+      let totalLevel = 0;
+      let trackCount = 0;
+      
       for (const [id, analyser] of Object.entries(analysers)) {
         const data = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(data);
         const avg = data.reduce((a, b) => a + b, 0) / data.length;
+        
+        // Accumulate for overall level
+        if (!muteBtns[id]?.classList.contains('muted')) {
+          totalLevel += avg;
+          trackCount++;
+        }
+        
         const led = document.getElementById('led-' + id);
         if (led) {
           if (avg > 0.5 && !muteBtns[id]?.classList.contains('muted')) {
@@ -3438,6 +3553,28 @@ function initAnalyserLoop() {
           } else {
             led.classList.remove('on');
           }
+        }
+      }
+      
+      // Update avatar based on overall audio level
+      if (trackCount > 0) {
+        overallLevel = overallLevel * 0.85 + (totalLevel / trackCount) * 0.15; // Smooth
+      } else {
+        overallLevel *= 0.9; // Decay
+      }
+      
+      if (avatarWrap) {
+        if (overallLevel > 2) {
+          avatarWrap.classList.add('avatar-active');
+          // Speed up gears based on audio level
+          const gears = avatarWrap.querySelectorAll('.avatar-gear');
+          const speed = Math.max(2, 8 - overallLevel * 0.5);
+          gears.forEach(g => g.style.animationDuration = speed + 's');
+        } else {
+          avatarWrap.classList.remove('avatar-active');
+          // Reset gear speed
+          const gears = avatarWrap.querySelectorAll('.avatar-gear');
+          gears.forEach(g => g.style.animationDuration = '8s');
         }
       }
     }
@@ -5413,6 +5550,186 @@ function seq44InitControls() {
 seq44Init();
 seq44InitControls();
 
+// ── Reverie (Soft Glass Instrument) ──
+const RV_NOTES = [
+  { name:'C4', freq:261.63 }, { name:'D4', freq:293.66 }, { name:'E4', freq:329.63 },
+  { name:'F4', freq:349.23 }, { name:'G4', freq:392.00 }, { name:'A4', freq:440.00 },
+  { name:'B4', freq:493.88 }, { name:'C5', freq:523.25 },
+];
+const RV_KEY_MAP = { a:0, s:1, d:2, f:3, g:4, h:5, j:6, k:7 };
+const rvActive = new Map();
+let rvMasterGain = null;
+let rvReverbNode = null;
+
+function rvInit() {
+  if (rvMasterGain) return;
+  if (!ctx) initAudio();
+  rvMasterGain = ctx.createGain();
+  rvMasterGain.gain.value = 0.6;
+
+  const length = ctx.sampleRate * 2.5;
+  const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const data = impulse.getChannelData(ch);
+    for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 1.5);
+  }
+  rvReverbNode = ctx.createConvolver();
+  rvReverbNode.buffer = impulse;
+  const revGain = ctx.createGain();
+  revGain.gain.value = 0.3;
+  rvMasterGain.connect(rvReverbNode);
+  rvReverbNode.connect(revGain);
+  revGain.connect(masterGain);
+
+  const dryGain = ctx.createGain();
+  dryGain.gain.value = 0.7;
+  rvMasterGain.connect(dryGain);
+  dryGain.connect(masterGain);
+}
+
+function rvPlayNote(idx, velocity) {
+  velocity = velocity || 0.7;
+  if (!ctx) initAudio();
+  rvInit();
+  const note = RV_NOTES[idx];
+  if (!note) return;
+  rvStopNote(idx);
+  const morph = parseInt(document.getElementById('rvMorph').value) / 100;
+  const osc1 = ctx.createOscillator();
+  const osc2 = ctx.createOscillator();
+  const osc3 = ctx.createOscillator();
+  const detune = 3 + morph * 5;
+  osc1.frequency.value = note.freq;
+  osc2.frequency.value = note.freq * Math.pow(2, detune / 1200);
+  osc3.frequency.value = note.freq * Math.pow(2, -detune / 1200);
+  osc1.type = 'triangle';
+  osc2.type = 'sine';
+  osc3.type = 'sine';
+  const gainNode = ctx.createGain();
+  gainNode.gain.value = 0;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 400 + morph * 400;
+  filter.Q.value = 1.2 + morph * 0.8;
+  const lfo = ctx.createOscillator();
+  lfo.frequency.value = 0.08 + morph * 0.12;
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 60 + morph * 80;
+  lfo.connect(lfoGain);
+  lfoGain.connect(filter.frequency);
+  lfo.start();
+  const now = ctx.currentTime;
+  const attack = 0.4 + morph * 0.6;
+  const release = 2.0 + morph * 2.0;
+  gainNode.gain.setValueAtTime(0, now);
+  gainNode.gain.linearRampToValueAtTime(velocity * 0.35, now + attack);
+  gainNode.gain.setValueAtTime(velocity * 0.35, now + attack + 1.0);
+  gainNode.gain.linearRampToValueAtTime(0.01, now + attack + 1.0 + release);
+  osc1.connect(filter);
+  osc2.connect(filter);
+  osc3.connect(filter);
+  filter.connect(gainNode);
+  gainNode.connect(rvMasterGain);
+  osc1.start(now);
+  osc2.start(now);
+  osc3.start(now);
+  const stopTime = now + attack + 1.0 + release + 0.1;
+  osc1.stop(stopTime);
+  osc2.stop(stopTime);
+  osc3.stop(stopTime);
+  lfo.stop(stopTime);
+  rvActive.set(idx, { osc1, osc2, osc3, lfo, gainNode, filter });
+  rvGlow(note.name);
+}
+
+function rvStopNote(idx) {
+  const v = rvActive.get(idx);
+  if (v) {
+    const now = ctx.currentTime;
+    v.gainNode.gain.linearRampToValueAtTime(0.001, now + 0.1);
+    setTimeout(() => {
+      try { v.osc1.stop(); } catch(e) {}
+      try { v.osc2.stop(); } catch(e) {}
+      try { v.osc3.stop(); } catch(e) {}
+      try { v.lfo.stop(); } catch(e) {}
+    }, 150);
+    rvActive.delete(idx);
+  }
+  if (rvActive.size === 0) rvUnglow();
+}
+
+let rvGlowTimer = null;
+function rvGlow(name) {
+  const orb = document.getElementById('rvOrb');
+  const nameEl = document.querySelector('#panel-reverie .rv-note-name');
+  if (nameEl) nameEl.textContent = name;
+  if (orb) orb.classList.add('glow');
+  clearTimeout(rvGlowTimer);
+}
+function rvUnglow() {
+  rvGlowTimer = setTimeout(() => {
+    const orb = document.getElementById('rvOrb');
+    const nameEl = document.querySelector('#panel-reverie .rv-note-name');
+    if (orb) orb.classList.remove('glow');
+    if (nameEl) nameEl.textContent = '—';
+  }, 800);
+}
+
+function rvBuildKeys() {
+  const el = document.getElementById('rvKeys');
+  if (!el || el.children.length) return;
+  RV_NOTES.forEach((note, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'rv-key';
+    btn.innerHTML = '<span class="rv-label">' + note.name.replace('4','').replace('5','') + '</span>';
+    btn.addEventListener('mousedown', (e) => { e.preventDefault(); btn.classList.add('active'); rvPlayNote(i); });
+    btn.addEventListener('mouseup', () => btn.classList.remove('active'));
+    btn.addEventListener('mouseleave', () => btn.classList.remove('active'));
+    btn.addEventListener('touchstart', (e) => { e.preventDefault(); btn.classList.add('active'); rvPlayNote(i); });
+    btn.addEventListener('touchend', () => btn.classList.remove('active'));
+    el.appendChild(btn);
+  });
+  document.getElementById('rvOrb').addEventListener('click', () => {
+    const i = Math.floor(Math.random() * RV_NOTES.length);
+    rvPlayNote(i);
+    document.querySelectorAll('#panel-reverie .rv-key').forEach((k, idx) => {
+      k.classList.toggle('active', idx === i);
+      setTimeout(() => k.classList.remove('active'), 300);
+    });
+  });
+}
+
+function rvInitControls() {
+  document.getElementById('rvVol').addEventListener('input', (e) => {
+    const v = parseInt(e.target.value) / 100;
+    document.getElementById('rvVolVal').textContent = e.target.value;
+    if (rvMasterGain) rvMasterGain.gain.value = v * 0.6;
+  });
+  document.getElementById('rvMorph').addEventListener('input', (e) => {
+    document.getElementById('rvMorphVal').textContent = e.target.value;
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  const idx = RV_KEY_MAP[e.key.toLowerCase()];
+  if (idx !== undefined && document.getElementById('panel-reverie') && !document.getElementById('panel-reverie').classList.contains('minimizing')) {
+    e.preventDefault();
+    const keys = document.querySelectorAll('#panel-reverie .rv-key');
+    if (keys[idx]) keys[idx].classList.add('active');
+    rvPlayNote(idx, 0.6);
+  }
+});
+document.addEventListener('keyup', (e) => {
+  const idx = RV_KEY_MAP[e.key.toLowerCase()];
+  if (idx !== undefined) {
+    const keys = document.querySelectorAll('#panel-reverie .rv-key');
+    if (keys[idx]) keys[idx].classList.remove('active');
+  }
+});
+
+rvBuildKeys();
+rvInitControls();
+
 // ── Artwork fullscreen ──
 document.querySelector('.art img')?.addEventListener('click', function() {
   if (document.fullscreenElement) {
@@ -5421,6 +5738,86 @@ document.querySelector('.art img')?.addEventListener('click', function() {
     this.requestFullscreen();
   }
 });
+
+// ── Fractal Stripe (Julia Set) ──
+(function() {
+  const canvas = document.getElementById('fractalCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  function resize() {
+    // Use lower DPR for performance in narrow stripe
+    canvas.width = canvas.offsetWidth * Math.min(window.devicePixelRatio, 1.5);
+    canvas.height = canvas.offsetHeight * Math.min(window.devicePixelRatio, 1.5);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  
+  const palette = [];
+  for (let i = 0; i < 256; i++) {
+    const t = i / 255;
+    const r = Math.floor(9 + t * 40);
+    const g = Math.floor(7 + t * 25);
+    const b = Math.floor(15 + t * 35);
+    palette.push([r, g, b]);
+  }
+  
+  let time = 0;
+  const maxIter = 60; // Reduced for performance
+  
+  function render() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.createImageData(w, h);
+    const data = imgData.data;
+    
+    const cx = -0.7 + Math.sin(time * 0.0003) * 0.15;
+    const cy = 0.27015 + Math.cos(time * 0.0004) * 0.1;
+    
+    // Sample every other pixel for performance, interpolate
+    const step = 2;
+    for (let px = 0; px < w; px += step) {
+      for (let py = 0; py < h; py += step) {
+        let zx = (px / w - 0.5) * 3.0;
+        let zy = (py / h - 0.5) * 3.0;
+        
+        let i = 0;
+        while (zx * zx + zy * zy < 4 && i < maxIter) {
+          const xtemp = zx * zx - zy * zy + cx;
+          zy = 2 * zx * zy + cy;
+          zx = xtemp;
+          i++;
+        }
+        
+        const idx = (py * w + px) * 4;
+        let r, g, b;
+        if (i === maxIter) {
+          r = 8; g = 6; b = 12;
+        } else {
+          const c = palette[i % 256];
+          r = c[0]; g = c[1]; b = c[2];
+        }
+        
+        // Fill block
+        for (let dx = 0; dx < step && px + dx < w; dx++) {
+          for (let dy = 0; dy < step && py + dy < h; dy++) {
+            const idx2 = ((py + dy) * w + (px + dx)) * 4;
+            data[idx2] = r;
+            data[idx2 + 1] = g;
+            data[idx2 + 2] = b;
+            data[idx2 + 3] = 255;
+          }
+        }
+      }
+    }
+    
+    ctx.putImageData(imgData, 0, 0);
+    time++;
+    requestAnimationFrame(render);
+  }
+  
+  render();
+})();
 
 </script>
 </body>
