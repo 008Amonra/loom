@@ -3,7 +3,7 @@ title: How to Create YouTube Shorts Without a Camera
 description: A practical guide to making YouTube Shorts from images, text, and AI voiceover. No camera, no filming, no editing experience required.
 date: 2026-07-09
 tags: YouTube Shorts, Tutorial, Faceless YouTube, AI Video
-image: /blog/images/hero-no-camera.png
+image: /loom/blog/images/hero-no-camera.png
 ---
 
 You don't need a camera to make YouTube Shorts. You need images, text, and a way to turn them into a 60-second vertical video with voiceover. Here's how.

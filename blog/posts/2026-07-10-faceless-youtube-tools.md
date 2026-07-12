@@ -3,7 +3,7 @@ title: 10 Faceless YouTube Tools You Can Use Today
 description: Build a faceless YouTube channel with these tools. From AI voiceover to automated video creation, everything you need without showing your face.
 date: 2026-07-10
 tags: Faceless YouTube, AI Tools, Content Creation, YouTube Strategy
-image: /blog/images/hero-faceless.png
+image: /loom/blog/images/hero-faceless.png
 ---
 
 Faceless YouTube channels are a specific kind of project. You don't need a camera, a ring light, or charisma. You need images, text, and a voice that doesn't sound robotic. Here are 10 tools that handle the actual work.
