@@ -115,6 +115,35 @@
   .spark:nth-child(7){--dx:16px;--dy:-24px}
   .spark:nth-child(8){--dx:-14px;--dy:-26px}
 
+  /* ---- SPLASH STAR (Newspaper) ---- */
+  .splash-star-wrap{position:relative;text-align:center;margin:24px 0 32px;cursor:pointer}
+  .splash-star{display:inline-block;width:120px;height:120px;position:relative;animation:starSpin 12s linear infinite}
+  .splash-star::before{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg,#ffd700,#ffaa00,#ff6600,#ffd700);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:starGlow 2s ease-in-out infinite alternate}
+  .splash-star::after{content:'';position:absolute;inset:12px;background:radial-gradient(circle at 40% 35%,#fff8e0,#ffd700 40%,#cc8800 80%,#885500);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);filter:blur(0.5px)}
+  .splash-star-wrap:hover .splash-star::before{filter:brightness(1.3) drop-shadow(0 0 20px rgba(255,170,0,0.6))}
+  .splash-star-wrap:hover .splash-star{animation-duration:4s}
+  .splash-star-ring{position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(255,215,0,0.2);animation:ringPulse 3s ease-in-out infinite}
+  .splash-star-ring2{position:absolute;inset:-28px;border-radius:50%;border:1px solid rgba(255,170,0,0.1);animation:ringPulse 3s ease-in-out infinite 0.5s}
+  @keyframes starSpin{to{transform:rotate(360deg)}}
+  @keyframes starGlow{0%{filter:brightness(1) drop-shadow(0 0 8px rgba(255,170,0,0.3))}100%{filter:brightness(1.15) drop-shadow(0 0 16px rgba(255,170,0,0.5))}}
+  @keyframes ringPulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.8;transform:scale(1.05)}}
+  .splash-label{display:block;margin-top:8px;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,#ffd700,#ffaa00,#ff6600);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite}
+  .splash-sub{display:block;font-size:0.7rem;color:#665533;letter-spacing:2px;margin-top:4px}
+  .splash-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffd700;pointer-events:none;opacity:0}
+  .splash-spark:nth-child(1){top:10%;left:15%;animation:splashSpark 2.5s ease-out infinite}
+  .splash-spark:nth-child(2){top:80%;left:10%;animation:splashSpark 2.5s ease-out infinite 0.6s}
+  .splash-spark:nth-child(3){top:15%;left:85%;animation:splashSpark 2.5s ease-out infinite 1.2s}
+  .splash-spark:nth-child(4){top:75%;left:90%;animation:splashSpark 2.5s ease-out infinite 1.8s}
+  .splash-spark:nth-child(5){top:5%;left:50%;animation:splashSpark 3s ease-out infinite 0.3s}
+  .splash-spark:nth-child(6){top:90%;left:50%;animation:splashSpark 3s ease-out infinite 1.5s}
+  @keyframes splashSpark{0%{opacity:1;transform:translate(0,0) scale(1);box-shadow:0 0 6px rgba(255,215,0,0.8)}100%{opacity:0;transform:translate(var(--sdx,10px),var(--sdy,-15px)) scale(0);box-shadow:0 0 0 transparent}}
+  .splash-spark:nth-child(1){--sdx:12px;--sdy:-18px}
+  .splash-spark:nth-child(2){--sdx:-10px;--sdy:-20px}
+  .splash-spark:nth-child(3){--sdx:-14px;--sdy:-16px}
+  .splash-spark:nth-child(4){--sdx:15px;--sdy:-14px}
+  .splash-spark:nth-child(5){--sdx:-8px;--sdy:-18px}
+  .splash-spark:nth-child(6){--sdx:10px;--sdy:-20px}
+
   /* ---- Bzzzt attention flash ---- */
   .bzzzt{animation:bzzztFlash 0.6s ease-out !important}
   @keyframes bzzztFlash{0%{filter:brightness(1)}20%{filter:brightness(1.7) saturate(1.5)}40%{filter:brightness(0.85)}60%{filter:brightness(1.4)}100%{filter:brightness(1)}}
@@ -153,6 +182,8 @@
     video{max-height:300px}
     .card{padding:16px}
     #project-form input,#project-form textarea{font-size:16px}
+    .splash-star{width:90px;height:90px}
+    .splash-label{font-size:0.75rem;letter-spacing:3px}
   }
 </style>
 </head>
@@ -165,6 +196,16 @@
   <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
   <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
 </div>
+
+<a href="https://newspaper.45dgof8.com" target="_blank" rel="noopener" class="splash-star-wrap" id="splashStar">
+  <div class="splash-star"></div>
+  <div class="splash-star-ring"></div>
+  <div class="splash-star-ring2"></div>
+  <span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span>
+  <span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span>
+  <span class="splash-label">The Newspaper</span>
+  <span class="splash-sub">science · security · sci-fi · AI</span>
+</a>
 
 <div class="launch-pad">
   <a href="https://yt-producer.45dgof8.com" class="launch-icon yt" target="_blank" rel="noopener">
