@@ -122,44 +122,53 @@ body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0
 #panel-reverie .rv-status{font-size:0.65rem;color:#5a4a3a;text-align:center;letter-spacing:0.05em}
 .dsp-glassball { background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.1) 0%, rgba(25,10,30,0.85) 60%, rgba(15,8,20,0.95) 100%) !important; border-color: rgba(180,80,200,0.15) !important; color: #d0a0e0 !important; text-shadow: 0 0 8px rgba(180,80,200,0.15) !important; }
 
-/* ── Brass frame around PayPal ── */
-#paypal-container-MU5Q6SR4ACAAU {
+/* ── PayPal donate link ── */
+.paypal-donate {
   position: fixed;
   bottom: 24px;
-  right: calc(24px + 3cm);
+  right: 24px;
   z-index: 110;
-  transform: scale(0.5);
-  transform-origin: bottom right;
-  padding: 18px 24px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(40,30,20,0.9), rgba(20,15,10,0.95));
-  border: 3px solid #8b7355;
-  border-radius: 60% 60% 50% 50% / 40% 40% 60% 60%;
+  background: radial-gradient(ellipse at 50% 40%, rgba(40,30,20,0.92), rgba(20,15,10,0.96));
+  border: 2px solid #8b7355;
+  border-radius: 8px;
+  padding: 10px 14px;
   box-shadow:
     0 0 0 1px #5a4a35,
-    0 0 0 4px #2a2018,
-    0 0 0 5px #6b5a45,
-    0 0 30px rgba(200,160,60,0.08),
-    inset 0 0 20px rgba(180,140,60,0.06),
-    inset 0 0 0 1px rgba(200,170,80,0.1);
+    0 0 0 3px #2a2018,
+    0 0 15px rgba(200,160,60,0.1);
   animation: brassPulse 4s ease-in-out infinite;
+  transform-origin: bottom right;
+  transform: scale(0.55);
+  text-decoration: none;
+  display: block;
+}
+.paypal-donate__label {
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b7355;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.paypal-donate__btn {
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.6rem;
+  color: #d4af37;
+  text-align: center;
+  border: 1px solid #8b7355;
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+.paypal-donate:hover {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 1px #6b5a45, 0 0 0 3px #3a2820, 0 0 25px rgba(200,160,60,0.15);
 }
 @keyframes brassPulse {
-  0%, 100% { box-shadow: 0 0 0 1px #5a4a35, 0 0 0 4px #2a2018, 0 0 0 5px #6b5a45, 0 0 30px rgba(200,160,60,0.08), inset 0 0 20px rgba(180,140,60,0.06); }
-  50% { box-shadow: 0 0 0 1px #6b5a45, 0 0 0 4px #3a2820, 0 0 0 5px #7b6a55, 0 0 40px rgba(200,160,60,0.12), inset 0 0 25px rgba(180,140,60,0.08); }
-}
-
-/* ── Rivet dots on the frame ── */
-#paypal-container-MU5Q6SR4ACAAU::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: inherit;
-  background:
-    radial-gradient(3px 3px at 20% 15%, rgba(180,160,120,0.4), transparent 3px),
-    radial-gradient(3px 3px at 80% 15%, rgba(180,160,120,0.4), transparent 3px),
-    radial-gradient(3px 3px at 20% 85%, rgba(180,160,120,0.4), transparent 3px),
-    radial-gradient(3px 3px at 80% 85%, rgba(180,160,120,0.4), transparent 3px);
-  pointer-events: none;
+  0%, 100% { box-shadow: 0 0 0 1px #5a4a35, 0 0 0 3px #2a2018, 0 0 15px rgba(200,160,60,0.1); }
+  50% { box-shadow: 0 0 0 1px #6b5a45, 0 0 0 3px #3a2820, 0 0 25px rgba(200,160,60,0.15); }
 }
 
 /* ── Candle holder ── */
@@ -314,8 +323,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   .beat-grid{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .beat-numbers{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .candle-wrap{display:none}
-  #paypal-container-MU5Q6SR4ACAAU{bottom:12px;right:12px;padding:12px 18px;border-radius:10px;transform:scale(0.35);box-shadow:0 0 0 1px #5a4a35,0 0 0 3px #2a2018}
-  #paypal-container-MU5Q6SR4ACAAU::before{display:none}
+  .paypal-donate{bottom:12px;right:12px;padding:8px 12px;transform:scale(0.45)}
 }
 
 /* Noise Garden */
@@ -849,7 +857,7 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
   </filter>
 </svg>
   
-<script src="https://www.paypal.com/sdk/js?client-id=BAAmB7lcCMqajEX6ZQ6_EnZ0PtDeUv5VKZFrO06dRXN64vpMoAkt--npuAWXUVVznCgrUBfQdWizxX1UPY&components=hosted-buttons&disable-funding=venmo&currency=CHF" data-sdk-integration-source="button-factory"></script>
+<!-- PayPal SDK removed — using paypal.me link instead -->
 </head>
 <body>
 <div class="loading-overlay" id="loadingOverlay">
@@ -1369,7 +1377,10 @@ I'll be back next session — same bat-time, same bat-way</textarea>
 <div class="resize-handle"></div>
 </div>
 
-<div id="paypal-container-MU5Q6SR4ACAAU"></div>
+<a href="https://paypal.me/45dgof8" target="_blank" class="paypal-donate" title="Support the workshop via PayPal">
+  <span class="paypal-donate__label">Support the workshop</span>
+  <span class="paypal-donate__btn">Donate via PayPal →</span>
+</a>
 
 <div class="footer">
    45DGOF8 &middot; <a href="https://github.com/008Amonra/loom">GitHub</a> &middot; <a href="mailto:45dgof8@gmail.com">Contact</a> &middot; Car + dog samples by <a href="https://pixabay.com">Pixabay</a>
@@ -3885,7 +3896,7 @@ document.getElementById('ngMuteBtn').addEventListener('click', function() {
   if (ngMuted) {
     speechSynthesis.cancel();
     ngSpeaking = false;
-    ngQueue = [];
+    ngQueue.length = 0;
     ngUpdateQueue();
     document.getElementById('ngDJInd').className = 'indicator';
     document.getElementById('ngDJText').textContent = 'Muted — click ✕ to enable';
@@ -5203,12 +5214,7 @@ document.getElementById('limitSlider').addEventListener('input', function() {
   overlay.classList.add('hidden');
 })();
 
-// --- Init PayPal hosted button ---
-(function() {
-  if (typeof paypal !== 'undefined' && paypal.HostedButtons) {
-    paypal.HostedButtons({ hostedButtonId: 'MU5Q6SR4ACAAU' }).render('#paypal-container-MU5Q6SR4ACAAU');
-  }
-})();
+// --- PayPal: using simple paypal.me link (no SDK needed) ---
 
 // --- First visit: minimize all panels, pulse glassballs ---
 (function() {
