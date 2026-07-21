@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Run AI agents on your own machine. Custom GPTs, automation workflows, compliance agents, talking head videos, and music production tools — all local, no subscriptions, CPU-friendly.">
+<meta name="keywords" content="AI agents, custom GPTs, automation, n8n workflow, compliance AI, talking head video, local AI, no subscription, 45dgof8">
+<meta name="author" content="45dgof8">
 <title>45dgof8 Agent Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,6 +103,43 @@
   .btn-pulse:hover{background:#2a1a3e;border-color:#7a5aaa;transform:translateY(-1px)}
   #paypal-container{margin-top:12px;min-height:40px}
   #paypal-container iframe{margin:0 auto}
+
+  /* === PLAQUETTE: THE LOOM === */
+  .plaquette{position:relative;max-width:700px;margin:0 auto;padding:24px 0}
+  .plaquette-title{text-align:center;margin-bottom:24px}
+  .plaquette-title h2{font-family:'Cinzel',serif;font-size:1.2rem;letter-spacing:6px;color:#00ff88;text-transform:uppercase;margin-bottom:4px}
+  .plaquette-title p{font-size:0.75rem;letter-spacing:3px;color:#555}
+  .bar-stage{position:relative;height:200px;margin:20px 0;perspective:800px;perspective-origin:50% 80%;overflow:hidden}
+  .bar-stage.party{perspective:600px}
+  .bar-row{display:flex;align-items:flex-end;justify-content:center;gap:6px;height:100%;transform-style:preserve-3d;transform:rotateX(8deg) rotateY(0deg);transition:transform 1.2s cubic-bezier(.25,.8,.25,1)}
+  .bar-row.party{animation:barDance 2s ease-in-out infinite}
+  @keyframes barDance{0%,100%{transform:rotateX(8deg) rotateY(0deg) translateZ(0)}25%{transform:rotateX(5deg) rotateY(15deg) translateZ(20px)}50%{transform:rotateX(12deg) rotateY(-10deg) translateZ(-10px)}75%{transform:rotateX(6deg) rotateY(-20deg) translateZ(15px)}}
+  .plaquette .bar{flex:0 0 auto;width:clamp(18px,4vw,36px);border-radius:6px 6px 2px 2px;position:relative;transition:height 0.8s cubic-bezier(.25,.8,.25,1),opacity 0.6s ease,transform 0.8s cubic-bezier(.25,.8,.25,1);cursor:pointer;transform-origin:bottom center}
+  .plaquette .bar:hover{filter:brightness(1.3)}
+  .plaquette .bar[data-depth="0"]{opacity:1}
+  .plaquette .bar[data-depth="1"]{opacity:0.85;transform:scaleY(0.75) translateZ(-30px)}
+  .plaquette .bar[data-depth="2"]{opacity:0.65;transform:scaleY(0.55) translateZ(-60px)}
+  .plaquette .bar[data-depth="3"]{opacity:0.45;transform:scaleY(0.38) translateZ(-90px)}
+  .plaquette .bar .bar-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:0.55rem;letter-spacing:1px;color:#555;white-space:nowrap;text-transform:uppercase;transition:color 0.3s}
+  .plaquette .bar:hover .bar-label{color:#00ff88}
+  .plaquette .bar .bar-icon{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:1.1rem;transition:transform 0.4s,filter 0.3s}
+  .plaquette .bar:hover .bar-icon{transform:translateX(-50%) scale(1.3)}
+  .bar-row.party .plaquette .bar,.bar-row.party .bar{animation:barGlow 1.5s ease-in-out infinite alternate}
+  .bar-row.party .bar:nth-child(odd){animation-delay:0.15s}
+  .bar-row.party .bar:nth-child(3n){animation-delay:0.3s}
+  .bar-row.party .bar:nth-child(4n){animation-delay:0.45s}
+  @keyframes barGlow{0%{filter:brightness(1) saturate(1);transform:scaleY(1) translateZ(0)}50%{filter:brightness(1.6) saturate(1.4);transform:scaleY(1.15) translateZ(10px)}100%{filter:brightness(1.2) saturate(1.1);transform:scaleY(0.9) translateZ(-5px)}}
+  .plaquette .controls{display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  .btn-hypno{padding:10px 24px;border-radius:20px;border:1px solid #2a4a3a;background:#0e0e14;color:#44cc66;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:2px;cursor:pointer;transition:all 0.2s;user-select:none}
+  .btn-hypno:hover{background:#1a2a1a;border-color:#44cc66;transform:translateY(-1px)}
+  .btn-hypno:active{transform:translateY(0);box-shadow:0 0 20px rgba(0,255,136,0.15)}
+  .click-counter{font-size:0.7rem;letter-spacing:2px;color:#333;text-align:center;margin-top:8px;transition:color 0.3s}
+  .click-counter.hot{color:#ff6644}
+  .click-counter.fire{color:#ff4444;text-shadow:0 0 8px rgba(255,68,68,0.4)}
+  .party-overlay{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 0.5s;background:radial-gradient(ellipse at center,rgba(0,255,136,0.05) 0%,transparent 70%)}
+  .bar-stage.party .party-overlay{opacity:1}
+  .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none;animation:sparkleFloat 2s ease-out infinite}
+  @keyframes sparkleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(0)}}
 </style>
 </head>
 <body>
@@ -149,6 +189,25 @@
     <span class="tag">automation</span>
     <span class="tag">n8n workflows</span>
     <span class="tag">open source</span>
+  </div>
+</div>
+
+<!-- PLAQUETTE: THE LOOM -->
+<div class="card" style="border-color:#2a3a3a;background:#0a0a14;padding:20px 0">
+  <div class="plaquette">
+    <div class="plaquette-title">
+      <h2>The Loom</h2>
+      <p>Every thread a service. Press to weave.</p>
+    </div>
+    <div class="bar-stage" id="barStage">
+      <div class="bar-row" id="barRow"></div>
+      <div class="party-overlay"></div>
+    </div>
+    <div class="controls">
+      <button class="btn-hypno" id="shuffleBtn">REARRANGE</button>
+      <button class="btn-hypno" id="danceBtn" style="display:none">STOP THE PARTY</button>
+    </div>
+    <div class="click-counter" id="clickCounter"></div>
   </div>
 </div>
 
@@ -1151,6 +1210,120 @@ function submitBrief() {
     btn.style.background = '#44cc66';
     btn.disabled = true;
   }
+}
+</script>
+
+<script>
+/* === PLAQUETTE: THE LOOM === */
+{
+const SERVICES=[
+  {name:'Email Bot',icon:'📬',color:'#00ff88',h:85},
+  {name:'Telegram',icon:'💬',color:'#00ccff',h:70},
+  {name:'n8n',icon:'⚙️',color:'#c0a0ff',h:95},
+  {name:'Video',icon:'🎬',color:'#ffc439',h:80},
+  {name:'Music',icon:'🎵',color:'#ff6688',h:60},
+  {name:'Search',icon:'🔍',color:'#44cc66',h:75},
+  {name:'TTS',icon:'🗣️',color:'#88ccff',h:55},
+  {name:'Agent',icon:'🤖',color:'#00ff88',h:90},
+  {name:'Monitor',icon:'📊',color:'#c0a0ff',h:50},
+  {name:'Backup',icon:'💾',color:'#44cc66',h:65},
+  {name:'Security',icon:'🛡️',color:'#ff6644',h:45},
+  {name:'AI Ops',icon:'🧠',color:'#ffc439',h:100},
+];
+let clickCount=0,partyMode=false,currentPattern=0;
+const stage=document.getElementById('barStage');
+const row=document.getElementById('barRow');
+const shuffleBtn=document.getElementById('shuffleBtn');
+const danceBtn=document.getElementById('danceBtn');
+const counter=document.getElementById('clickCounter');
+
+const PATTERNS=[
+  ()=>SERVICES.map(()=>0),
+  ()=>SERVICES.map((_,i)=>i%3),
+  ()=>SERVICES.map((_,i)=>{const m=SERVICES.length/2,d=Math.abs(i-m)/m;return Math.floor(d*3)}),
+  ()=>SERVICES.map((_,i)=>Math.floor((i/SERVICES.length)*3.5)),
+  ()=>SERVICES.map((_,i)=>Math.floor(((SERVICES.length-1-i)/SERVICES.length)*3.5)),
+  ()=>SERVICES.map((_,i)=>(Math.floor(i/2)%2===0)?0:2),
+  ()=>SERVICES.map(()=>Math.floor(Math.random()*4)),
+  ()=>SERVICES.map((_,i)=>{const m=SERVICES.length/2,d=Math.abs(i-m)/m;return Math.floor((1-d)*3)}),
+];
+
+function renderBars(depths){
+  row.innerHTML='';
+  SERVICES.forEach((s,i)=>{
+    const bar=document.createElement('div');
+    bar.className='bar';bar.dataset.depth=depths[i];
+    bar.style.height=s.h+'%';
+    bar.style.background='linear-gradient(180deg,'+s.color+' 0%,'+s.color+'44 100%)';
+    bar.style.boxShadow='0 0 12px '+s.color+'33';
+    const icon=document.createElement('div');icon.className='bar-icon';icon.textContent=s.icon;
+    const label=document.createElement('div');label.className='bar-label';label.textContent=s.name;
+    bar.appendChild(icon);bar.appendChild(label);
+    bar.addEventListener('click',()=>{bar.style.transform='scaleY(1.2) translateZ(20px)';setTimeout(()=>bar.style.transform='',300)});
+    row.appendChild(bar);
+  });
+  row.querySelectorAll('.bar').forEach((b,i)=>{
+    b.style.opacity='0';b.style.transform+=' translateY(30px)';
+    setTimeout(()=>{b.style.opacity='';b.style.transform=''},60+i*50);
+  });
+}
+
+function shuffle(){
+  clickCount++;
+  currentPattern=(currentPattern+1)%PATTERNS.length;
+  renderBars(PATTERNS[currentPattern]());
+  const rem=20-clickCount;
+  if(rem>0){counter.textContent=rem+' more to party';counter.className='click-counter'+(rem<=5?' fire':rem<=10?' hot':'')}
+  if(clickCount>=20&&!partyMode)startParty();
+}
+
+function startParty(){
+  partyMode=true;stage.classList.add('party');row.classList.add('party');
+  shuffleBtn.style.display='none';danceBtn.style.display='';
+  counter.textContent='🎉 PARTY MODE 🎉';counter.className='click-counter fire';
+  for(let i=0;i<30;i++)setTimeout(spawnSparkle,i*100);
+  playPartyMusic();
+}
+
+function spawnSparkle(){
+  if(!partyMode)return;
+  const sp=document.createElement('div');sp.className='sparkle';
+  sp.style.left=Math.random()*100+'%';sp.style.bottom=Math.random()*40+'%';
+  sp.style.background=['#00ff88','#00ccff','#c0a0ff','#ffc439','#ff6688'][Math.floor(Math.random()*5)];
+  stage.appendChild(sp);setTimeout(()=>sp.remove(),2000);
+  if(partyMode)setTimeout(spawnSparkle,200+Math.random()*400);
+}
+
+function stopParty(){
+  partyMode=false;stage.classList.remove('party');row.classList.remove('party');
+  shuffleBtn.style.display='';danceBtn.style.display='none';
+  counter.textContent='';counter.className='click-counter';
+  clickCount=0;currentPattern=0;renderBars(PATTERNS[0]());
+  if(partyCtx){partyCtx.close();partyCtx=null}
+}
+
+let partyCtx=null;
+function playPartyMusic(){
+  partyCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const master=partyCtx.createGain();master.gain.value=0.3;master.connect(partyCtx.destination);
+  function kick(t){const o=partyCtx.createOscillator();o.type='sine';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(30,t+0.15);const g=partyCtx.createGain();g.gain.setValueAtTime(0.8,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);o.connect(g);g.connect(master);o.start(t);o.stop(t+0.2)}
+  function hihat(t){const buf=partyCtx.createBuffer(1,partyCtx.sampleRate*0.05,partyCtx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.3;const s=partyCtx.createBufferSource();s.buffer=buf;const f=partyCtx.createBiquadFilter();f.type='highpass';f.frequency.value=8000;const g=partyCtx.createGain();g.gain.setValueAtTime(0.4,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.05);s.connect(f);f.connect(g);g.connect(master);s.start(t)}
+  function synth(t,freq,dur){const o=partyCtx.createOscillator();o.type='square';o.frequency.value=freq;const f=partyCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=2000;const g=partyCtx.createGain();g.gain.setValueAtTime(0.15,t);g.gain.setValueAtTime(0.15,t+dur*0.7);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.connect(f);f.connect(g);g.connect(master);o.start(t);o.stop(t+dur)}
+  const bpm=130,beat=60/bpm;
+  const notes=[261.63,293.66,329.63,349.23,392,440,523.25,587.33];
+  let t=partyCtx.currentTime+0.1;
+  for(let bar=0;bar<16;bar++)for(let step=0;step<8;step++){
+    const s=t+(bar*8+step)*beat*0.5;
+    if(step%2===0)kick(s);if(step%2===1)hihat(s);
+    if(step===0||step===3||step===5)synth(s,notes[Math.floor(Math.random()*notes.length)],beat*0.8);
+  }
+  const loopLen=16*8*beat*0.5;
+  setTimeout(()=>{if(partyMode)playPartyMusic()},loopLen*1000);
+}
+
+shuffleBtn.addEventListener('click',shuffle);
+danceBtn.addEventListener('click',stopParty);
+renderBars(PATTERNS[0]());
 }
 </script>
 
