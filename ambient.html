@@ -1172,8 +1172,8 @@ I'll be back next session — same bat-time, same bat-way</textarea>
     <button id="btnAutoRenew" class="seq-auto on" title="Auto-restart after stop">Auto</button>
     <label>BPM <input type="range" id="seqBpm" min="40" max="180" value="120">
       <span id="seqBpmVal" style="min-width:24px;font-size:0.75rem;color:#666">120</span></label>
-    <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0">
-      <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">0</span></label>
+    <label>Vol <input type="range" id="seqVol" min="0" max="1" step="0.05" value="0.6">
+      <span id="seqVolVal" style="min-width:24px;font-size:0.75rem;color:#666">60</span></label>
     <button id="btnPianoRoll" class="btn-piano" title="Toggle piano roll note editor">&#x1F3B9; PR</button>
     <button id="btnRandSeq" class="seq-surprise" title="Randomize all drum patterns">&#x1F3B2; Pattern</button>
     <button class="seq-break" id="btnBreak">&#x1F3B6; Break</button>
@@ -4848,7 +4848,7 @@ function seqPlayStep() {
 async function seqStart() {
   if (!ctx) initAudio();
   if (ctx.state === 'suspended') await ctx.resume();
-  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = 0; seqGain.connect(seqBus || masterGain); }
+  if (!seqGain) { seqGain = ctx.createGain(); seqGain.gain.value = parseFloat(document.getElementById('seqVol').value) || 0.6; seqGain.connect(seqBus || masterGain); }
   clearTimeout(seqRenewTimer);
   seqPlaying = true;
   seqStep = 0;
