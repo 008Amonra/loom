@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="sec-toolkit.sh — One file. Five phases. Full Linux desktop security. Firewall, AppArmor, kernel hardening, auto-updates, virus scanning. Bilingual EN/DE.">
+<meta name="keywords" content="Linux security, UFW firewall, AppArmor, kernel hardening, sysctl, auto-updates, ClamAV, desktop security, sec-toolkit, Ubuntu, Pop!_OS, 45dgof8">
+<meta name="author" content="45dgof8">
+<meta name="robots" content="index, follow">
+<title>sec-toolkit.sh — Linux Desktop Security in One File</title>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="sec-toolkit.sh — Linux Desktop Security in One File">
+<meta property="og:description" content="Five phases. Full hardening. One file, no dependencies. Firewall, AppArmor, sysctl, auto-updates, ClamAV — bilingual EN/DE.">
+<meta property="og:url" content="https://008amonra.github.io/loom/sec-toolkit.html">
+<meta property="og:site_name" content="45dgof8">
+<meta property="og:image" content="https://45dgof8.com/sec-toolkit-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sec-toolkit.sh — Linux Desktop Security in One File">
+<meta name="twitter:description" content="Five phases. Full hardening. One file, no dependencies.">
+<meta name="twitter:image" content="https://45dgof8.com/sec-toolkit-og.jpg">
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "sec-toolkit.sh",
+  "description": "Unified Linux desktop security toolkit — check, harden, verify, scan. One file, bilingual, no dependencies.",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Linux",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:100vh;overflow-x:hidden}
+
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:
+  radial-gradient(circle at 20% 30%,rgba(0,180,100,0.03) 0%,transparent 50%),
+  radial-gradient(circle at 80% 70%,rgba(200,168,124,0.03) 0%,transparent 50%);
+}
+.bg-scanline{position:fixed;top:0;left:0;right:0;height:2px;z-index:-1;background:linear-gradient(90deg,transparent,rgba(0,180,100,0.3),transparent);animation:scanline 4s ease-in-out infinite;opacity:0.5}
+@keyframes scanline{0%{transform:translateX(-100%)}50%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,180,100,0.08)}
+.nav-brand{font-family:'Cinzel',serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#c8a87c;text-decoration:none}
+.nav-links{display:flex;gap:24px;font-size:0.8rem}
+.nav-links a{color:#666;text-decoration:none;transition:.2s;letter-spacing:1px}
+.nav-links a:hover{color:#00ff88}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+
+.hero-icon{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#0a1a0a,#0a2a10);border:1px solid rgba(0,180,100,0.2);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin-bottom:28px;position:relative;animation:iconPulse 3s ease-in-out infinite}
+.hero-icon::after{content:'';position:absolute;inset:-6px;border-radius:24px;border:1px solid rgba(0,180,100,0.1);animation:iconRing 3s ease-in-out infinite}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 20px rgba(0,180,100,0.1)}50%{box-shadow:0 0 40px rgba(0,180,100,0.2)}}
+@keyframes iconRing{0%,100%{transform:scale(1);opacity:0.3}50%{transform:scale(1.08);opacity:0.6}}
+
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:900;letter-spacing:8px;text-transform:uppercase;background:linear-gradient(135deg,#00ff88,#00cc66,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite;margin-bottom:12px}
+.hero-sub{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#555;letter-spacing:2px;margin-bottom:20px}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.hero-tag{font-size:clamp(0.85rem,2vw,1.05rem);color:#888;max-width:560px;line-height:1.7;font-weight:300;margin-bottom:36px}
+.hero-tag strong{color:#00ff88;font-weight:600}
+
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 32px;border-radius:10px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .25s;letter-spacing:1px;cursor:pointer;border:none;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#00ff88,#00cc66);color:#08080e;box-shadow:0 4px 24px rgba(0,255,136,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,255,136,0.3)}
+.btn-ghost{background:transparent;border:1px solid #333;color:#888}
+.btn-ghost:hover{border-color:#00ff88;color:#00ff88}
+
+.hero-stats{display:flex;gap:48px;margin-top:56px;padding-top:40px;border-top:1px solid rgba(0,180,100,0.08)}
+.stat{text-align:center}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#00ff88}
+.stat-label{font-size:0.7rem;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+section{max-width:1000px;margin:0 auto;padding:80px 24px}
+.section-title{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#00ff88;text-align:center;margin-bottom:8px}
+.section-sub{text-align:center;color:#555;font-size:0.85rem;margin-bottom:48px;font-weight:300}
+
+.terminal{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;overflow:hidden;max-width:680px;margin:0 auto 48px;box-shadow:0 8px 48px rgba(0,0,0,0.4)}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#0f0f1a;border-bottom:1px solid #1a1a2a}
+.terminal-dot{width:10px;height:10px;border-radius:50%}
+.terminal-dot.r{background:#ff5f56}.terminal-dot.y{background:#ffbd2e}.terminal-dot.g{background:#27c93f}
+.terminal-title{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#444;margin-left:8px}
+.terminal-body{padding:20px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.8;color:#a8a8b8;overflow-x:auto}
+.terminal-body .prompt{color:#00ff88}
+.terminal-body .cmd{color:#e0e0e8}
+.terminal-body .out{color:#666}
+.terminal-body .ok{color:#6bff6b}
+.terminal-body .warn{color:#ffdd6b}
+.terminal-body .dim{color:#444}
+
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.feature{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:28px 24px;transition:all .3s;position:relative;overflow:hidden}
+.feature::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,180,100,0.3),transparent);opacity:0;transition:.3s}
+.feature:hover{border-color:#2a2a3a;transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.feature:hover::before{opacity:1}
+.feature-icon{font-size:1.6rem;margin-bottom:14px}
+.feature-title{font-size:1rem;font-weight:700;color:#e0e0e8;margin-bottom:8px}
+.feature-desc{font-size:0.82rem;color:#666;line-height:1.6}
+
+.steps{display:flex;flex-direction:column;gap:0;max-width:600px;margin:0 auto}
+.step{display:flex;gap:20px;align-items:flex-start;padding:24px 0;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:19px;top:56px;bottom:0;width:1px;background:linear-gradient(to bottom,#2a2a3a,transparent)}
+.step-num{width:40px;height:40px;border-radius:10px;background:#0a1a0a;border:1px solid rgba(0,180,100,0.15);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#00ff88;flex-shrink:0;font-weight:700}
+.step-text{flex:1}
+.step-title{font-weight:700;color:#e0e0e8;margin-bottom:4px}
+.step-desc{font-size:0.82rem;color:#666;line-height:1.6}
+
+.problem{max-width:720px;margin:0 auto;padding:40px 0}
+.problem-text{color:#888;font-size:0.92rem;line-height:1.9;text-align:center;margin-bottom:20px}
+.problem-text strong{color:#00ff88;font-weight:600}
+
+.cta-banner{text-align:center;padding:80px 24px;background:linear-gradient(180deg,transparent,rgba(0,180,100,0.03),transparent)}
+.cta-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:4px;color:#00ff88;margin-bottom:16px}
+.cta-desc{color:#666;font-size:0.9rem;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
+
+.footer{text-align:center;padding:40px 24px;color:#333;font-size:0.7rem;border-top:1px solid #111}
+.footer a{color:#00ff88;text-decoration:none}
+
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:640px){
+  .hero-stats{flex-direction:column;gap:24px}
+  .nav-links{display:none}
+  .features{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-scanline"></div>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">45DGOF8</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#setup">Setup</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-icon">🔒</div>
+  <h1 class="hero-title">sec-toolkit</h1>
+  <div class="hero-sub">UNIFIED LINUX SECURITY</div>
+  <p class="hero-tag">
+    One file. Five phases. <strong>Full desktop hardening.</strong><br>
+    Check, harden, verify, scan — all from a single script.
+  </p>
+  <div class="hero-cta">
+    <a href="#setup" class="btn btn-primary">Get Started</a>
+    <a href="#features" class="btn btn-ghost">See Features</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">File</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Phases</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Dependencies</div></div>
+    <div class="stat"><div class="stat-num">EN/DE</div><div class="stat-label">Bilingual</div></div>
+  </div>
+</header>
+
+<!-- Why This Exists -->
+<section class="problem fade-in">
+  <div class="section-title">Why This Exists</div>
+  <div class="section-sub">Linux security is fragmented. This makes it simple.</div>
+  <p class="problem-text">
+    Every guide tells you to install UFW, enable AppArmor, set sysctl values,
+    configure auto-updates — but nobody gives you a single script that does
+    all of it, safely, with verification.
+  </p>
+  <p class="problem-text">
+    <strong>sec-toolkit.sh</strong> is that script. One file, no dependencies beyond
+    what Ubuntu/Pop!_OS already ships. It checks your system, hardens it,
+    verifies the results, and optionally sets up ClamAV virus scanning.
+    Every step is conservative — it won't break your desktop.
+  </p>
+</section>
+
+<!-- Terminal Demo -->
+<section id="demo">
+  <div class="section-title">Live Output</div>
+  <div class="section-sub">Run the check — see what needs attention</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">sec-toolkit.sh check</span>
+    </div>
+    <div class="terminal-body">
+<span class="dim">  ──────────────────────────────────────────────────</span>
+  <span class="ok">[OK]</span> UFW is active
+  <span class="ok">[OK]</span> Default incoming = deny
+  <span class="ok">[OK]</span> Default outgoing = allow
+  <span class="warn">[WARN]</span> UFW logging is off
+  <span class="ok">[OK]</span> AppArmor service is running
+  <span class="ok">[OK]</span> unattended-upgrades installed
+  <span class="ok">[OK]</span> Automatic package list updates enabled
+  <span class="ok">[OK]</span> kernel.randomize_va_space = 2
+  <span class="ok">[OK]</span> kernel.kptr_restrict = 2
+  <span class="warn">[WARN]</span> 3 updates available
+
+  <span class="dim">  Report: ~/sec-check-reports/sec-check_20260726.log</span>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="section-title">What It Does</div>
+  <div class="section-sub">Five phases, one file, zero fluff</div>
+  <div class="features">
+    <div class="feature fade-in">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Check (sec-toolkit.sh check)</div>
+      <div class="feature-desc">Read-only security audit. Inspects UFW, AppArmor, auto-updates, sysctl, listening ports, failed services, login history, SSH keys, kernel hardening — saves a full report to ~/sec-check-reports/.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🛡️</div>
+      <div class="feature-title">Harden (sudo sec-toolkit.sh harden)</div>
+      <div class="feature-desc">Conservative desktop hardening. Installs unattended-upgrades, AppArmor tools, and applies safe sysctl settings. Creates backups before any change. Won't break your desktop.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">✅</div>
+      <div class="feature-title">Verify (sec-toolkit.sh verify)</div>
+      <div class="feature-desc">Confirms hardening took effect. Checks UFW status, AppArmor, auto-updates config, sysctl values, listening ports, SSH server, and pending updates. Color-coded output.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🦠</div>
+      <div class="feature-title">ClamAV Scan (sec-toolkit.sh scan)</div>
+      <div class="feature-desc">Optional virus scanning with ClamAV. Scan any directory (default: ~/Downloads). Installs ClamAV + ClamTk GUI with one command.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🌐</div>
+      <div class="feature-title">Firewall (sec-toolkit.sh fw)</div>
+      <div class="feature-desc">UFW setup in one step. Deny incoming, allow outgoing, deny routed. Optional SSH rate limiting and LAN access — your choice via interactive prompts.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🌍</div>
+      <div class="feature-title">Bilingual EN/DE</div>
+      <div class="feature-desc">Full English and German support. Choose at startup — all menus, prompts, and output follow your language choice automatically.</div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how">
+  <div class="section-title">How It Works</div>
+  <div class="section-sub">From zero to hardened in 5 steps</div>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">01</div>
+      <div class="step-text">
+        <div class="step-title">Download one file</div>
+        <div class="step-desc">No package manager, no repo to add. Just <code style="color:#00ff88">wget</code> the script and run it. Single bash file, ~800 lines, everything inline.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">02</div>
+      <div class="step-text">
+        <div class="step-title">Run the check</div>
+        <div class="step-desc"><code style="color:#00ff88">./sec-toolkit.sh check</code> — read-only audit of your current security posture. See what's good, what's missing, what's open.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">03</div>
+      <div class="step-text">
+        <div class="step-title">Back up first</div>
+        <div class="step-desc">Run <code style="color:#00ff88">sudo apt install timeshift</code> and create a snapshot. Takes seconds. Restores in minutes. Cheap insurance.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">04</div>
+      <div class="step-text">
+        <div class="step-title">Harden your system</div>
+        <div class="step-desc"><code style="color:#00ff88">sudo ./sec-toolkit.sh harden</code> — installs security packages, configures auto-updates, enables AppArmor, applies kernel hardening. Backs up existing configs first.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">05</div>
+      <div class="step-text">
+        <div class="step-title">Verify everything</div>
+        <div class="step-desc"><code style="color:#00ff88">./sec-toolkit.sh verify</code> — confirms all hardening steps took effect. Color-coded: green = good, yellow = check, red = critical.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Security Integration -->
+<section id="integration" style="padding-top:20px">
+  <div class="section-title">Works With nomad</div>
+  <div class="section-sub">sec-toolkit hardens your system. nomad watches for agents.</div>
+  <div class="problem" style="padding-top:0">
+    <p class="problem-text">
+      <strong style="color:#ff6644">nomad</strong> detects autonomous agents on your machine.
+      <strong style="color:#00ff88">sec-toolkit.sh</strong> hardens the system they're running on.
+      Together: detect the agents, lock down the infrastructure.
+    </p>
+    <p class="problem-text">
+      Run <code style="color:#00ff88">python3 cli.py security</code> from nomad to get a
+      combined security posture score — UFW, AppArmor, sysctl, auto-updates — all in one view.
+    </p>
+  </div>
+</section>
+
+<!-- Setup -->
+<section id="setup">
+  <div class="section-title">Get Started</div>
+  <div class="section-sub">One file. Copy and run.</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">terminal</span>
+    </div>
+    <div class="terminal-body">
+<span class="dim"># Download the toolkit</span>
+<span class="prompt">$</span> <span class="cmd">wget https://008amonra.github.io/loom/sec-toolkit.sh</span>
+<span class="prompt">$</span> <span class="cmd">chmod +x sec-toolkit.sh</span>
+
+<span class="dim"># Back up your system first (recommended)</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install timeshift</span>
+<span class="prompt">$</span> <span class="cmd">sudo timeshift --create --comments "before sec-toolkit"</span>
+
+<span class="dim"># Run a read-only security check</span>
+<span class="prompt">$</span> <span class="cmd">./sec-toolkit.sh check</span>
+
+<span class="dim"># Harden your system (needs sudo)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ./sec-toolkit.sh harden</span>
+
+<span class="dim"># Verify hardening took effect</span>
+<span class="prompt">$</span> <span class="cmd">./sec-toolkit.sh verify</span>
+
+<span class="dim"># Or run the interactive menu</span>
+<span class="prompt">$</span> <span class="cmd">./sec-toolkit.sh</span>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<div class="cta-banner">
+  <div class="cta-title">One File. Full Security.</div>
+  <p class="cta-desc">No accounts. No subscriptions. No cloud. Just a bash script that hardens your Linux desktop.</p>
+  <a href="#setup" class="btn btn-primary">Download sec-toolkit.sh</a>
+</div>
+
+<footer class="footer">
+  <p>built by <a href="https://45dgof8.com">45dgof8</a> · Zurich, Switzerland · <a href="https://008amonra.github.io/loom/nomad.html">nomad</a></p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) }})
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
