@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="nomad — Catch autonomous agents that spawn ephemeral infrastructure and migrate fluidly between services. Real-time drift detection for Docker, systemd, and processes.">
+<meta name="keywords" content="AI agent detection, drift detection, ephemeral infrastructure, container monitoring, Docker security, autonomous agent monitoring, nomad, 45dgof8, Linux security, sec-toolkit, system hardening">
+<meta name="author" content="45dgof8">
+<meta name="robots" content="index, follow">
+<title>nomad — Drift Detection for Autonomous Agents</title>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="nomad — Catch Autonomous Agents Before They Vanish">
+<meta property="og:description" content="Real-time drift detection for Docker, systemd, and processes. See every autonomous agent on your machine. Catch them before they disappear.">
+<meta property="og:url" content="https://45dgof8.com/nomad.html">
+<meta property="og:site_name" content="45dgof8">
+<meta property="og:image" content="https://45dgof8.com/nomad-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="nomad — Catch Autonomous Agents Before They Vanish">
+<meta name="twitter:description" content="Real-time drift detection for Docker, systemd, and processes. See every autonomous agent on your machine.">
+<meta name="twitter:image" content="https://45dgof8.com/nomad-og.jpg">
+<meta name="twitter:site" content="@45dgof8">
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "nomad",
+  "description": "Catch autonomous agents that spawn ephemeral infrastructure and migrate fluidly between services",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Linux, macOS",
+  "offers": [
+    { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Starter" },
+    { "@type": "Offer", "price": "19", "priceCurrency": "USD", "name": "Pro" },
+    { "@type": "Offer", "price": "49", "priceCurrency": "USD", "name": "Team" }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:100vh;overflow-x:hidden}
+
+/* ---- Ambient background ---- */
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:
+  radial-gradient(circle at 20% 30%,rgba(200,40,40,0.04) 0%,transparent 50%),
+  radial-gradient(circle at 80% 70%,rgba(200,168,124,0.03) 0%,transparent 50%);
+}
+.bg-scanline{position:fixed;top:0;left:0;right:0;height:2px;z-index:-1;background:linear-gradient(90deg,transparent,rgba(200,60,60,0.3),transparent);animation:scanline 4s ease-in-out infinite;opacity:0.5}
+@keyframes scanline{0%{transform:translateX(-100%)}50%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* ---- Nav ---- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,168,124,0.08)}
+.nav-brand{font-family:'Cinzel',serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#c8a87c;text-decoration:none}
+.nav-links{display:flex;gap:24px;font-size:0.8rem}
+.nav-links a{color:#666;text-decoration:none;transition:.2s;letter-spacing:1px}
+.nav-links a:hover{color:#c8a87c}
+
+/* ---- Hero ---- */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+
+.hero-icon{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#1a0a0a,#2a1010);border:1px solid rgba(200,60,60,0.2);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin-bottom:28px;position:relative;animation:iconPulse 3s ease-in-out infinite}
+.hero-icon::after{content:'';position:absolute;inset:-6px;border-radius:24px;border:1px solid rgba(200,60,60,0.1);animation:iconRing 3s ease-in-out infinite}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 20px rgba(200,60,60,0.1)}50%{box-shadow:0 0 40px rgba(200,60,60,0.2)}}
+@keyframes iconRing{0%,100%{transform:scale(1);opacity:0.3}50%{transform:scale(1.08);opacity:0.6}}
+
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;letter-spacing:8px;text-transform:uppercase;background:linear-gradient(135deg,#c8a87c,#e8d4a8,#c8a87c);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite;margin-bottom:12px}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.hero-tag{font-size:clamp(0.85rem,2vw,1.1rem);color:#888;max-width:560px;line-height:1.7;font-weight:300;margin-bottom:36px}
+.hero-tag strong{color:#c8a87c;font-weight:600}
+
+/* ---- Problem section ---- */
+.problem{max-width:720px;margin:0 auto;padding:80px 24px 40px}
+.problem-title{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e0e0e8;text-align:center;margin-bottom:28px}
+.problem-text{color:#888;font-size:0.92rem;line-height:1.9;text-align:center;margin-bottom:20px}
+.problem-text strong{color:#c8a87c;font-weight:600}
+.problem-danger{background:linear-gradient(135deg,#1a0a0a,#120808);border:1px solid rgba(200,60,60,0.15);border-radius:14px;padding:24px 28px;margin:32px 0;text-align:center}
+.problem-danger p{color:#cc8888;font-size:0.88rem;line-height:1.8}
+.problem-danger strong{color:#ff6b6b}
+.problem-solution{text-align:center;margin-top:32px}
+.problem-solution p{color:#666;font-size:0.9rem;line-height:1.7;max-width:520px;margin:0 auto}
+.problem-solution strong{color:#c8a87c}
+
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 32px;border-radius:10px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .25s;letter-spacing:1px;cursor:pointer;border:none;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#c8a87c,#a88a5c);color:#08080e;box-shadow:0 4px 24px rgba(200,168,124,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,168,124,0.3)}
+.btn-ghost{background:transparent;border:1px solid #333;color:#888}
+.btn-ghost:hover{border-color:#c8a87c;color:#c8a87c}
+
+.hero-stats{display:flex;gap:48px;margin-top:56px;padding-top:40px;border-top:1px solid rgba(200,168,124,0.08)}
+.stat{text-align:center}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#c8a87c}
+.stat-label{font-size:0.7rem;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* ---- Section base ---- */
+section{max-width:1000px;margin:0 auto;padding:80px 24px}
+.section-title{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#c8a87c;text-align:center;margin-bottom:8px}
+.section-sub{text-align:center;color:#555;font-size:0.85rem;margin-bottom:48px;font-weight:300}
+
+/* ---- Terminal demo ---- */
+.terminal{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;overflow:hidden;max-width:680px;margin:0 auto 48px;box-shadow:0 8px 48px rgba(0,0,0,0.4)}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#0f0f1a;border-bottom:1px solid #1a1a2a}
+.terminal-dot{width:10px;height:10px;border-radius:50%}
+.terminal-dot.r{background:#ff5f56}.terminal-dot.y{background:#ffbd2e}.terminal-dot.g{background:#27c93f}
+.terminal-title{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#444;margin-left:8px}
+.terminal-body{padding:20px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.8;color:#a8a8b8;overflow-x:auto}
+.terminal-body .prompt{color:#c8a87c}
+.terminal-body .cmd{color:#e0e0e8}
+.terminal-body .out{color:#666}
+.terminal-body .alert{color:#ff6b6b}
+.terminal-body .warn{color:#ffdd6b}
+.terminal-body .ok{color:#6bff6b}
+.terminal-body .dim{color:#444}
+
+/* ---- Features grid ---- */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.feature{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:28px 24px;transition:all .3s;position:relative;overflow:hidden}
+.feature::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(200,60,60,0.3),transparent);opacity:0;transition:.3s}
+.feature:hover{border-color:#2a2a3a;transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.feature:hover::before{opacity:1}
+.feature-icon{font-size:1.6rem;margin-bottom:14px}
+.feature-title{font-size:1rem;font-weight:700;color:#e0e0e8;margin-bottom:8px}
+.feature-desc{font-size:0.82rem;color:#666;line-height:1.6}
+
+/* ---- How it works ---- */
+.steps{display:flex;flex-direction:column;gap:0;max-width:600px;margin:0 auto}
+.step{display:flex;gap:20px;align-items:flex-start;padding:24px 0;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:19px;top:56px;bottom:0;width:1px;background:linear-gradient(to bottom,#2a2a3a,transparent)}
+.step-num{width:40px;height:40px;border-radius:10px;background:#1a0a0a;border:1px solid rgba(200,60,60,0.15);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#c8a87c;flex-shrink:0;font-weight:700}
+.step-text{flex:1}
+.step-title{font-weight:700;color:#e0e0e8;margin-bottom:4px}
+.step-desc{font-size:0.82rem;color:#666;line-height:1.6}
+
+/* ---- Score table ---- */
+.score-table{max-width:500px;margin:0 auto;border:1px solid #1a1a2a;border-radius:14px;overflow:hidden}
+.score-row{display:flex;align-items:center;padding:12px 20px;border-bottom:1px solid #1a1a2a;font-size:0.82rem}
+.score-row:last-child{border-bottom:none}
+.score-range{font-family:'JetBrains Mono',monospace;color:#c8a87c;width:80px;font-weight:600}
+.score-meaning{color:#888;flex:1}
+.score-badge{padding:3px 10px;border-radius:6px;font-size:0.7rem;font-weight:600;letter-spacing:1px}
+.badge-safe{background:#0a1a0a;color:#4a8;font-weight:600}
+.badge-watch{background:#1a1a0a;color:#aa8}
+.badge-sus{background:#1a150a;color:#ca8}
+.badge-drip{background:#1a0a0a;color:#f66}
+
+/* ---- Pricing ---- */
+.pricing{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.price-card{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:32px 28px;text-align:center;min-width:240px;flex:1;max-width:300px;transition:.3s;position:relative}
+.price-card.featured{border-color:rgba(200,168,124,0.3)}
+.price-card.featured::before{content:'MOST POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#c8a87c;color:#08080e;font-size:0.6rem;font-weight:700;padding:3px 12px;border-radius:6px;letter-spacing:1px}
+.price-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.price-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#c8a87c;letter-spacing:2px;margin-bottom:8px}
+.price-amount{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:#e0e0e8;margin-bottom:4px}
+.price-period{font-size:0.75rem;color:#555;margin-bottom:20px}
+.price-features{text-align:left;font-size:0.8rem;color:#888;line-height:2;margin-bottom:24px}
+.price-features li{list-style:none;padding-left:16px;position:relative}
+.price-features li::before{content:'→';position:absolute;left:0;color:#c8a87c}
+
+/* ---- CTA banner ---- */
+.cta-banner{text-align:center;padding:80px 24px;background:linear-gradient(180deg,transparent,rgba(200,60,60,0.03),transparent)}
+.cta-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:4px;color:#c8a87c;margin-bottom:16px}
+.cta-desc{color:#666;font-size:0.9rem;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
+
+/* ---- Footer ---- */
+.footer{text-align:center;padding:40px 24px;color:#333;font-size:0.7rem;border-top:1px solid #111}
+.footer a{color:#c8a87c;text-decoration:none}
+
+/* ---- Animations ---- */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ---- Responsive ---- */
+@media(max-width:640px){
+  .hero-stats{flex-direction:column;gap:24px}
+  .pricing{flex-direction:column;align-items:center}
+  .nav-links{display:none}
+  .features{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-scanline"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="/" class="nav-brand">45DGOF8</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#setup">Setup</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-icon">🛡</div>
+  <h1 class="hero-title">nomad</h1>
+  <p class="hero-tag">
+    See every <strong>autonomous agent</strong> on your machine.<br>
+    Catch them before they disappear.
+  </p>
+  <div class="hero-cta">
+    <a href="#setup" class="btn btn-primary">Get Started</a>
+    <a href="#features" class="btn btn-ghost">See Features</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Layers Scanned</div></div>
+    <div class="stat"><div class="stat-num">30s</div><div class="stat-label">Default Interval</div></div>
+    <div class="stat"><div class="stat-num">&lt;5MB</div><div class="stat-label">Footprint</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Cloud Required</div></div>
+  </div>
+  <div style="margin-top:16px;font-size:0.75rem;color:#555">
+    Linux-first · macOS drift detection works too · Security hardening is Linux-only
+  </div>
+</header>
+
+<!-- The Problem -->
+<section class="problem fade-in">
+  <div class="problem-title">Why This Exists</div>
+  <p class="problem-text">
+    Something new is happening on your machine — and on every machine connected to the internet.
+  </p>
+  <p class="problem-text">
+    <strong>AI agents</strong> are no longer just chatbots. They are programs that
+    <strong>act on their own</strong>. They spin up Docker containers, open ports,
+    start services, run tasks, then shut down and vanish. Minutes later, they appear
+    somewhere else — different name, same behavior.
+  </p>
+  <p class="problem-text">
+    This is not a hypothetical. It is happening right now, on systems running
+    tools like AutoGPT, CrewAI, LangChain, and custom-built agent frameworks.
+    Some are harmless experiments. Some are not.
+  </p>
+  <div class="problem-danger">
+    <p>
+      An agent can <strong>spin up a container</strong>, run code inside it,
+      <strong>expose a port</strong> to the internet, serve a task for five minutes,
+      then <strong>kill it and move on</strong>. By the time you notice,
+      it is gone — and a new one has appeared somewhere else on your system.
+      <br><br>
+      If you are not looking, <strong>you will never see it happen</strong>.
+    </p>
+  </div>
+  <div class="problem-solution">
+    <p>
+      <strong>nomad</strong> is the thing that looks. It scans your machine every
+      30 seconds, fingerprints every process and container, scores each one for
+      agent-like behavior, and tells you — instantly — when something is drifting.
+    </p>
+  </div>
+</section>
+
+<!-- Terminal Demo -->
+<section id="demo">
+  <div class="section-title">Live Output</div>
+  <div class="section-sub">What nomad sees when it catches a drifter</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">nomad scan — 07:22:35 UTC</span>
+    </div>
+    <div class="terminal-body">
+<span class="dim">  ──────────────────────────────────────────────────</span>
+  Containers: <span class="cmd">3</span>    Services: <span class="cmd">41</span>    Processes: <span class="cmd">392</span>
+
+  <span class="ok">🟢 New containers: autogpt-executor-42</span>
+
+  <span class="alert">  🚨 DRIFTERS DETECTED: 1</span>
+    <span class="warn">🟡</span>  container  <span class="cmd">autogpt-executor-42</span>  score=<span class="alert">0.60</span>  [<span class="ok">alive</span>]
+              reason: agent name patterns: <span class="cmd">executor, autogpt</span>
+              evidence: Ports: <span class="cmd">0.0.0.0:8888->8080/tcp</span>
+              evidence: Running agent container on host
+
+  <span class="dim">  Mode: monitoring (dry-run)</span>
+    </div>
+  </div>
+</section>
+
+<!-- Security Integration -->
+<section id="security" style="padding-top:60px">
+  <div class="section-title">System Security</div>
+  <div class="section-sub">nomad watches for agents. sec-toolkit hardens your system.</div>
+  <div class="problem" style="padding-top:0">
+    <p class="problem-text">
+      Detecting agents is only half the battle. If your system has open ports,
+      missing firewalls, weak kernel settings, or no auto-updates — it's already exposed.
+    </p>
+    <p class="problem-text">
+      nomad integrates with <strong>sec-toolkit.sh</strong> — a hardened Linux security
+      baseline that checks UFW, AppArmor, sysctl, SSH, and auto-updates.
+      Run <strong>nomad security</strong> and get a single posture score alongside your
+      drift detection.
+    </p>
+    <div class="problem-danger">
+      <p>
+        Before installing anything, <strong>back up your system</strong>.<br>
+        <a href="https://github.com/teejee2008/timeshift" style="color:#c8a87c">Timeshift</a>
+        makes system snapshots that take seconds to create and minutes to restore.
+        <br><br>
+        <code style="color:#c8a87c">sudo apt install timeshift</code> — then create a snapshot before you harden.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" style="padding-top:40px">
+  <div class="section-title">Features</div>
+  <div class="section-sub">Everything you need to catch the drifters</div>
+  <div class="features">
+    <div class="feature fade-in">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Multi-Layer Scanning</div>
+      <div class="feature-desc">Scans Docker containers, systemd services, and all running processes in a single pass. No agent to install — reads what the OS already knows.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🧬</div>
+      <div class="feature-title">Behavioral Fingerprinting</div>
+      <div class="feature-desc">Scores every entity on agent naming patterns, API keys in command lines, ephemeral lifetimes, volatile states, and exposed ports.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title">Migration Detection</div>
+      <div class="feature-desc">When something dies and a near-clone spawns elsewhere — same image, same ports, same user — nomad flags the migration with similarity scores.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">Telegram Alerts</div>
+      <div class="feature-desc">Instant push notifications with drift scores, evidence, and migration paths. Set up in under 2 minutes with the interactive wizard.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🌐</div>
+      <div class="feature-title">Web Dashboard</div>
+      <div class="feature-desc">Dark-themed real-time dashboard showing drifters, migrations, and system state. Auto-refreshes every 10 seconds.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🛑</div>
+      <div class="feature-title">Optional Blocking</div>
+      <div class="feature-desc">Enable block mode to automatically kill high-confidence drifters (>0.85 score). Dry-run by default — your choice.</div>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🛡️</div>
+      <div class="feature-title">Security Posture</div>
+      <div class="feature-desc">Integrated security check via sec-toolkit.sh — verifies firewall, AppArmor, kernel hardening, and auto-updates. One score for your whole system.</div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how">
+  <div class="section-title">How It Works</div>
+  <div class="section-sub">From scan to alert in 4 steps</div>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">01</div>
+      <div class="step-text">
+        <div class="step-title">Scan</div>
+        <div class="step-desc">Reads Docker, systemd, and process tables via native APIs. No polling overhead — just a fast snapshot.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">02</div>
+      <div class="step-text">
+        <div class="step-title">Diff</div>
+        <div class="step-desc">Compares against the previous snapshot. New containers? Gone services? Spawned processes? Flagged instantly.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">03</div>
+      <div class="step-text">
+        <div class="step-title">Fingerprint</div>
+        <div class="step-desc">Every entity gets a drift score (0–1) based on name patterns, API exposure, lifetime, and resource usage. Known infrastructure is excluded.</div>
+      </div>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">04</div>
+      <div class="step-text">
+        <div class="step-title">Alert</div>
+        <div class="step-desc">High-confidence drifters trigger Telegram alerts with full evidence. Optionally block them automatically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Score Table -->
+<section id="scores" style="padding-top:20px">
+  <div class="section-title">Drift Scoring</div>
+  <div class="section-sub">How nomad decides what's a threat</div>
+  <div class="score-table fade-in">
+    <div class="score-row">
+      <span class="score-range">0.0 – 0.4</span>
+      <span class="score-meaning">Known infrastructure</span>
+      <span class="score-badge badge-safe">SAFE</span>
+    </div>
+    <div class="score-row">
+      <span class="score-range">0.4 – 0.6</span>
+      <span class="score-meaning">Unlikely agent — logged</span>
+      <span class="score-badge badge-watch">WATCH</span>
+    </div>
+    <div class="score-row">
+      <span class="score-range">0.6 – 0.8</span>
+      <span class="score-meaning">Suspicious activity</span>
+      <span class="score-badge badge-sus">SUSPICIOUS</span>
+    </div>
+    <div class="score-row">
+      <span class="score-range">0.8 – 1.0</span>
+      <span class="score-meaning">High confidence drifter</span>
+      <span class="score-badge badge-drip">ALERT</span>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="section-title">Pricing</div>
+  <div class="section-sub">Start free. Upgrade when you need more.</div>
+  <div class="pricing">
+    <div class="price-card fade-in">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">Free</div>
+      <div class="price-period">forever</div>
+      <ul class="price-features">
+        <li>Single machine scanning</li>
+        <li>Docker + systemd + processes</li>
+        <li>CLI + fingerprint mode</li>
+        <li>Security posture check</li>
+        <li>File-based alert logs</li>
+        <li>Community support</li>
+      </ul>
+      <a href="#setup" class="btn btn-ghost" style="width:100%;display:block;text-align:center">Download Free</a>
+    </div>
+    <div class="price-card featured fade-in">
+      <div class="price-name">Pro</div>
+      <div class="price-amount">$19<span style="font-size:0.8rem;color:#555">/mo</span></div>
+      <div class="price-period">billed monthly</div>
+      <ul class="price-features">
+        <li>Everything in Starter</li>
+        <li>Telegram alerts</li>
+        <li>Web dashboard</li>
+        <li>Migration detection</li>
+        <li>Auto-blocking mode</li>
+        <li>Full security audit + verify</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#setup" class="btn btn-primary" style="width:100%;display:block;text-align:center">Start Pro Trial</a>
+    </div>
+    <div class="price-card fade-in">
+      <div class="price-name">Team</div>
+      <div class="price-amount">$49<span style="font-size:0.8rem;color:#555">/mo</span></div>
+      <div class="price-period">up to 10 machines</div>
+      <ul class="price-features">
+        <li>Everything in Pro</li>
+        <li>Multi-machine dashboard</li>
+        <li>Custom agent patterns</li>
+        <li>Webhook integrations</li>
+        <li>Audit log export</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a href="#setup" class="btn btn-ghost" style="width:100%;display:block;text-align:center">Contact Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- Setup CTA -->
+<section id="setup">
+  <div class="section-title">Get Started</div>
+  <div class="section-sub">Running in under 60 seconds</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">terminal</span>
+    </div>
+    <div class="terminal-body">
+<span class="dim"># Back up your system first (recommended)</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install timeshift</span>
+<span class="prompt">$</span> <span class="cmd">sudo timeshift --create --comments "before nomad"</span>
+
+<span class="dim"># Clone and install</span>
+<span class="prompt">$</span> <span class="cmd">git clone https://github.com/45dgof8/nomad.git</span>
+<span class="prompt">$</span> <span class="cmd">cd nomad && bash install.sh</span>
+
+<span class="dim"># Run your first scan</span>
+<span class="prompt">$</span> <span class="cmd">python3 cli.py scan</span>
+
+<span class="dim"># Check system security posture</span>
+<span class="prompt">$</span> <span class="cmd">python3 cli.py security</span>
+
+<span class="dim"># Start continuous monitoring</span>
+<span class="prompt">$</span> <span class="cmd">python3 cli.py watch</span>
+
+<span class="dim"># Open the dashboard</span>
+<span class="prompt">$</span> <span class="cmd">python3 dashboard.py</span>
+<span class="dim">→ http://localhost:5010</span>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<div class="cta-banner">
+  <div class="cta-title">Stop Guessing. Start Detecting.</div>
+  <p class="cta-desc">Your infrastructure is already running agents. nomad tells you which ones.</p>
+  <a href="#setup" class="btn btn-primary">Get nomad Free</a>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>built by <a href="https://45dgof8.com">45dgof8</a> · Zurich, Switzerland</p>
+</footer>
+
+<!-- Scroll animations -->
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) }})
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
