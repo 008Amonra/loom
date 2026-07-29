@@ -399,6 +399,9 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;background:linear
 .seq-surprise.armed{background:#663388;color:#ffccff;border-color:#dd88ff}
 .seq-break{background:#2a2a3a;color:#ff8844;font-size:0.75rem;padding:3px 10px;border:1px solid #cc6633;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
 .seq-break:hover{background:#3a3a3a;border-color:#ff8844}
+.seq-sync{background:#2a2a3a;color:#66ccff;font-size:0.75rem;padding:3px 10px;border:1px solid #3388aa;cursor:pointer;border-radius:6px;transition:all .15s;font-family:inherit}
+.seq-sync:hover{background:#3a3a4a}
+.seq-sync.on{background:#336688;color:#88ddff;border-color:#66ccff}
 .seq-repeat{background:#2a2a3a;color:#88dd88;font-size:0.75rem;padding:3px 8px;border:1px solid #448855;cursor:pointer;border-radius:6px;font-family:inherit}
 .seq-repeat:hover{background:#3a3a4a;border-color:#66dd88}
 .beat-numbers{display:flex;align-items:center;gap:4px;padding-left:36px}
@@ -1179,6 +1182,7 @@ I'll be back next session — same bat-time, same bat-way</textarea>
     <button class="seq-break" id="btnBreak">&#x1F3B6; Break</button>
     <button id="btnGate44" class="seq-gate" title="Silence every 4th beat (trance drop)">4/4 Gate</button>
     <button id="btnSurprise" class="seq-surprise" title="Random delay then 2 min 4/4 beat">&#x1F3B2; Surprise</button>
+    <button id="btnSyncSeq" class="seq-sync" title="Sync 4x4 BPM to Beat Machine BPM">Sync</button>
   </div>
 
   <div class="beat-grid" id="beatGrid"></div>
@@ -3445,6 +3449,7 @@ function loadSettings() {
         if (el) el.classList.toggle('muted', seqMuted[row]);
       });
     }
+    seqDefaultUnmuted.forEach(r => { seqMuted[r] = false; const el = document.getElementById(SEQ_MUTE + '-' + r); if (el) el.classList.remove('muted'); });
     if (d.seqPianoRoll) {
       seqPianoRoll = d.seqPianoRoll.map(arr => Array.isArray(arr) ? [...arr] : []);
       seqPianoActive = d.seqPianoActive || false;
@@ -4083,6 +4088,7 @@ function seqToggleMute(row) {
   if (el) el.classList.toggle('muted');
 }
 let seqGate44 = false;
+let seqSync = false;
 const PIANO_NOTES = [
   {n:'C4',f:261.63},{n:'C#4',f:277.18},{n:'D4',f:293.66},{n:'D#4',f:311.13},
   {n:'E4',f:329.63},{n:'F4',f:349.23},{n:'F#4',f:369.99},{n:'G4',f:392.00},
@@ -4837,6 +4843,15 @@ function seqPlayStep() {
       window[fnName]();
     }
   });
+  if (seqSync && seqStep % 4 === 0) {
+    const bm = parseInt(document.getElementById('seqBpm').value);
+    const fg = parseInt(document.getElementById('seq44Bpm').value);
+    if (fg !== bm) {
+      const next = fg + Math.sign(bm - fg);
+      document.getElementById('seq44Bpm').value = next;
+      document.getElementById('seq44BpmVal').textContent = next;
+    }
+  }
   seqBeatEls.forEach(el => el.classList.remove('active'));
   seqBeatEls.filter(el => el.dataset.step == seqStep).forEach(el => el.classList.add('active'));
   seqPrCells.filter(el => el.classList.contains('active-col')).forEach(el => el.classList.remove('active-col'));
@@ -4918,6 +4933,7 @@ document.getElementById('btnGate44').addEventListener('click', function() {
   seqGate44 = !seqGate44;
   this.classList.toggle('on');
 });
+document.getElementById('btnSyncSeq').addEventListener('click', function() { seqSync = !seqSync; this.classList.toggle('on'); });
 document.getElementById('btnSurprise').addEventListener('click', startBeatSurprise);
 document.getElementById('btnRandSeq').addEventListener('click', seqRandomize);
 document.getElementById('btnBreak').addEventListener('click', seqBreakbeat);
@@ -5492,6 +5508,15 @@ function seq44Tick() {
   var beatMs = 60000 / bpm / 4;
   document.querySelectorAll('#beat44Grid .beat-step.active').forEach(function(el) { el.classList.remove('active'); });
   document.querySelectorAll('#beat44Grid .beat-step[data-step="' + seq44Step + '"]').forEach(function(el) { el.classList.add('active'); });
+  if (seqSync && seq44Step % 4 === 0) {
+    var bm = parseInt(document.getElementById('seqBpm').value);
+    var fg = parseInt(document.getElementById('seq44Bpm').value);
+    if (bm !== fg) {
+      var next = bm + Math.sign(fg - bm);
+      document.getElementById('seqBpm').value = next;
+      document.getElementById('seqBpmVal').textContent = next;
+    }
+  }
   seq44PlayPiano(seq44Step);
   seq44PlayDrums(seq44Step);
   seq44PlaySynth(seq44Step);
