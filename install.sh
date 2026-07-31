@@ -231,6 +231,16 @@ speak "$clean" 2>/dev/null
 SCRIPT
 chmod +x "$BIN_DIR/voice-button"
 
+# voice-assistant — local web app for blind (speech) + deaf (live transcript) users
+if [ -f "$BIN_DIR/voice-assistant" ]; then
+  ok "voice-assistant already installed"
+else
+  info "Installing voice-assistant (blind + deaf local assistant)..."
+  curl -fsSL https://008amonra.github.io/loom/voice-assistant -o "$BIN_DIR/voice-assistant" \
+    && chmod +x "$BIN_DIR/voice-assistant" \
+    && ok "voice-assistant installed — run 'voice-assistant'"
+fi
+
 # Desktop launcher for voice-button
 mkdir -p "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/big-pickle-voice.desktop" << EOF
@@ -273,6 +283,7 @@ echo "  Commands:"
 echo "    speak \"Hello\"    — text to speech"
 echo "    voice-button      — click, speak 5s, hear Big Pickle reply"
 echo "    v-toggle          — push-to-talk (press twice)"
+echo "    voice-assistant   — blind + deaf assistant (opens in browser)"
 echo "    llmfit            — model recommender (if installed)"
 echo ""
 echo "  Tip: Bind Super+V to 'voice-button' in COSMIC Settings → Keyboard → Shortcuts"

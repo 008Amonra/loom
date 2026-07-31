@@ -1,0 +1,471 @@
+#!/usr/bin/env python3
+"""Voice assistant — blind (speech) + deaf (live transcript) in one local web app.
+Cross-platform (Windows / Linux / Mac). Zero installs on the client: speech comes
+from the browser's Web Speech API (use Chrome or Edge). Everything runs locally,
+nothing leaves the machine except the LLM call to the endpoint you configure.
+
+Usage:
+    voice-assistant [--port N] [--no-browser]
+
+Config: ~/.config/voice-loop/config.json  (extended with llm_* + system_prompt)
+The LLM endpoint is your choice — default points at a local OpenAI-compatible
+server (e.g. Gemma via llama-server / LM Studio on localhost:1234). Set llm_api_key
+for cloud endpoints that need one.
+
+For blind users: open the page, everything is spoken. For deaf users: every word
+appears on screen — voice output can be disabled with the "Visual mode" toggle.
+"""
+import argparse
+import json
+import os
+import sys
+import threading
+import urllib.request
+import webbrowser
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+CFG = os.path.expanduser("~/.config/voice-loop/config.json")
+DEFAULTS = {
+    "voice": "en",          # en | de
+    "speed": "normal",      # slow | normal | fast
+    "auto_start": True,
+    "llm_url": "http://localhost:1234/v1/chat/completions",
+    "llm_model": "",
+    "llm_api_key": "",
+    "system_prompt": "You are a helpful voice assistant. Answer briefly and "
+                     "precisely, in plain spoken language. Max 2 sentences.",
+    "port": 8081,
+}
+
+config = dict(DEFAULTS)
+
+
+def load_config():
+    global config
+    data = {}
+    try:
+        with open(CFG) as f:
+            data = json.load(f)
+    except Exception:
+        pass
+    config = dict(DEFAULTS)
+    config.update({k: v for k, v in data.items() if k in DEFAULTS})
+
+
+def save_config():
+    try:
+        os.makedirs(os.path.dirname(CFG), exist_ok=True)
+        with open(CFG, "w") as f:
+            json.dump(config, f, indent=2)
+    except Exception as e:
+        print(f"config write failed: {e}", file=sys.stderr)
+
+
+PAGE = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%234da3ff'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23101418' font-family='sans-serif' font-weight='bold'%3EV%3C/text%3E%3C/svg%3E">
+<title>Voice Assistant</title>
+<style>
+  :root { --bg:#101418; --panel:#1a2027; --line:#2c3540; --tx:#e8eef4; --dim:#8fa1b0;
+          --acc:#4da3ff; --ok:#35c48d; --warn:#f2b23e; --err:#f2584e; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; }
+  body { background:var(--bg); color:var(--tx);
+         font:20px/1.5 system-ui, "Segoe UI", Roboto, sans-serif; }
+  #app { max-width:900px; margin:0 auto; padding:16px; height:100%;
+         display:flex; flex-direction:column; gap:12px; }
+  header { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  h1 { font-size:24px; margin:0; flex:1; }
+  #status { display:flex; align-items:center; gap:8px; font-size:18px; color:var(--dim); }
+  #dot { width:14px; height:14px; border-radius:50%; background:var(--dim); }
+  #dot.listening { background:var(--ok); box-shadow:0 0 10px var(--ok); }
+  #dot.thinking { background:var(--warn); }
+  #dot.speaking { background:var(--acc); }
+  #dot.error { background:var(--err); }
+  #log { flex:1; overflow-y:auto; background:var(--panel); border:1px solid var(--line);
+         border-radius:10px; padding:16px; font-size:24px; line-height:1.55; }
+  .bubble { margin:6px 0; padding:10px 14px; border-radius:12px; white-space:pre-wrap;
+            word-wrap:break-word; }
+  .user { background:#233143; align-self:flex-start; }
+  .assistant { background:#1c2a24; }
+  .system { background:#2a2026; color:var(--err); }
+  .interim { color:var(--dim); font-style:italic; }
+  .who { display:block; font-size:13px; color:var(--dim); margin-bottom:2px; }
+  #controls { display:flex; gap:10px; flex-wrap:wrap; }
+  button { font:inherit; padding:12px 20px; border-radius:10px; border:1px solid var(--line);
+           background:#222c35; color:var(--tx); cursor:pointer; }
+  button:hover { border-color:var(--acc); }
+  button.primary { background:var(--acc); color:#08131f; border:none; font-weight:700; }
+  button.primary.active { background:var(--ok); }
+  #settings { display:none; background:var(--panel); border:1px solid var(--line);
+              border-radius:10px; padding:16px; }
+  #settings.open { display:block; }
+  label { display:block; margin:10px 0 4px; color:var(--dim); font-size:15px; }
+  input, select, textarea { width:100%; font:inherit; padding:8px 10px; border-radius:8px;
+      border:1px solid var(--line); background:#141a21; color:var(--tx); }
+  textarea { min-height:70px; }
+  .row { display:flex; gap:12px; } .row > div { flex:1; }
+  .muted { color:var(--dim); font-size:14px; }
+  @media (max-width:600px) { .row { flex-direction:column; } #log { font-size:20px; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Voice Assistant</h1>
+    <div id="status"><span id="dot"></span><span id="statusText">idle</span></div>
+    <button id="settingsBtn">Settings</button>
+  </header>
+  <div id="log"></div>
+  <div id="controls">
+    <button id="toggleBtn" class="primary">Listen</button>
+    <button id="visualBtn">Visual mode: off</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+  <div id="settings">
+    <div class="row">
+      <div><label>Language</label>
+        <select id="setLang"><option value="en-US">English</option>
+        <option value="de-DE">Deutsch</option></select></div>
+      <div><label>Speed</label>
+        <select id="setSpeed"><option value="slow">Slow</option>
+        <option value="normal">Normal</option>
+        <option value="fast">Fast</option></select></div>
+    </div>
+    <label><input type="checkbox" id="setAutoStart" style="width:auto;margin-right:8px;transform:scale(1.4)">Automatically start listening when the page opens</label>
+    <div class="muted">Advantage: you can start talking immediately — no need to find or press anything. Great if talking is the easiest thing for you. Turn it off if you prefer to press Listen yourself.</div>
+    <label>LLM endpoint (OpenAI-compatible)</label>
+    <input id="setLlm" placeholder="http://localhost:1234/v1/chat/completions">
+    <div class="row">
+      <div><label>Model</label><input id="setModel" placeholder="leave empty for server default"></div>
+      <div><label>API key (optional, cloud only)</label><input id="setKey" type="password"></div>
+    </div>
+    <label>System prompt</label>
+    <textarea id="setPrompt"></textarea>
+    <button id="saveBtn">Save</button>
+    <div class="muted" id="cfgHint"></div>
+  </div>
+</div>
+<script>
+const log = document.getElementById('log');
+const dot = document.getElementById('dot');
+const statusText = document.getElementById('statusText');
+let cfg = {};
+let messages = [];
+let recognition = null;
+let listening = false;
+let busy = false;
+let visual = false;
+
+const setStatus = (s, cls) => { statusText.textContent = s; dot.className = cls || ''; };
+const scroll = () => log.scrollTop = log.scrollHeight;
+
+function addBubble(role, text) {
+  const d = document.createElement('div');
+  d.className = 'bubble ' + (role === 'user' ? 'user' : role === 'assistant' ? 'assistant' : 'system');
+  const who = document.createElement('span');
+  who.className = 'who';
+  who.textContent = role === 'user' ? 'You' : role === 'assistant' ? 'Assistant' : 'System';
+  d.appendChild(who);
+  d.appendChild(document.createTextNode(text));
+  log.appendChild(d);
+  scroll();
+}
+
+let interimEl = null;
+function showInterim(text) {
+  if (!interimEl) {
+    interimEl = document.createElement('div');
+    interimEl.className = 'interim';
+    log.appendChild(interimEl);
+  }
+  interimEl.textContent = text || '';
+  scroll();
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = cfg.lang || 'en-US';
+  u.rate = { slow: 0.8, normal: 1.0, fast: 1.25 }[cfg.speed] || 1.0;
+  u.onstart = () => setStatus('speaking', 'speaking');
+  u.onend = () => { if (listening) try { recognition && recognition.start(); } catch(_){} };
+  speechSynthesis.speak(u);
+}
+
+async function sendLLM(text) {
+  try {
+    const payload = {
+      model: cfg.model || '',
+      messages: [{ role: 'system', content: cfg.systemPrompt || '' }].concat(messages)
+    };
+    const r = await fetch('/api/llm', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+    if (j.reply) {
+      messages.push({ role: 'assistant', content: j.reply });
+      addBubble('assistant', j.reply);
+      if (!visual) speak(j.reply);
+      else if (listening) try { recognition && recognition.start(); } catch(_){}
+    } else {
+      addBubble('system', 'LLM error: ' + (j.error || 'unknown'));
+    }
+  } catch (e) {
+    addBubble('system', 'LLM error: ' + e.message);
+  }
+  busy = false;
+  setStatus(listening ? 'listening' : 'idle', listening ? 'listening' : '');
+}
+
+function commit(text) {
+  if (!text) return;
+  messages.push({ role: 'user', content: text });
+  addBubble('user', text);
+  interimEl = null;
+  busy = true;
+  setStatus('thinking', 'thinking');
+  try { recognition && recognition.stop(); } catch(_){}
+  sendLLM(text);
+}
+
+function makeRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    setStatus('unsupported', 'error');
+    return null;
+  }
+  const rec = new SR();
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.lang = cfg.lang || 'en-US';
+  rec.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const res = e.results[i];
+      if (res.isFinal) commit(res[0].transcript.trim());
+      else interim += res[0].transcript;
+    }
+    showInterim(interim);
+  };
+  rec.onerror = (e) => {
+    if (listening && !busy && e.error !== 'aborted') { try { rec.start(); } catch(_){} }
+  };
+  rec.onend = () => {
+    if (listening && !busy) { try { rec.start(); } catch(_){} }
+  };
+  return rec;
+}
+
+function startListen() {
+  listening = true;
+  if (!recognition) recognition = makeRecognition();
+  if (!recognition) return;
+  try { recognition.start(); } catch(_){}
+  setStatus('listening', 'listening');
+  toggleBtn.classList.add('active');
+  toggleBtn.textContent = 'Stop';
+}
+
+function stopListen() {
+  listening = false;
+  try { recognition && recognition.stop(); } catch(_){}
+  setStatus('idle', '');
+  toggleBtn.classList.remove('active');
+  toggleBtn.textContent = 'Listen';
+}
+
+async function loadConfig() {
+  const r = await fetch('/api/config');
+  cfg = await r.json();
+  document.getElementById('setLang').value = cfg.lang || 'en-US';
+  document.getElementById('setSpeed').value = cfg.speed || 'normal';
+  document.getElementById('setLlm').value = cfg.llm_url || '';
+  document.getElementById('setModel').value = cfg.model || '';
+  document.getElementById('setKey').value = cfg.apiKey || '';
+  document.getElementById('setPrompt').value = cfg.systemPrompt || '';
+  document.getElementById('setAutoStart').checked = !!cfg.autoStart;
+  const h = document.getElementById('cfgHint');
+  h.textContent = 'Serving config from: ' + (cfg.configPath || '');
+}
+
+const toggleBtn = document.getElementById('toggleBtn');
+toggleBtn.addEventListener('click', () => listening ? stopListen() : startListen());
+
+const visualBtn = document.getElementById('visualBtn');
+visualBtn.addEventListener('click', () => {
+  visual = !visual;
+  visualBtn.textContent = 'Visual mode: ' + (visual ? 'on' : 'off');
+  if (visual) speechSynthesis && speechSynthesis.cancel();
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  messages = []; log.textContent = ''; interimEl = null;
+  speechSynthesis && speechSynthesis.cancel();
+});
+
+const settingsBtn = document.getElementById('settingsBtn');
+const settings = document.getElementById('settings');
+settingsBtn.addEventListener('click', () => settings.classList.toggle('open'));
+
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const body = {
+    lang: document.getElementById('setLang').value,
+    speed: document.getElementById('setSpeed').value,
+    llm_url: document.getElementById('setLlm').value.trim(),
+    model: document.getElementById('setModel').value.trim(),
+    apiKey: document.getElementById('setKey').value.trim(),
+    systemPrompt: document.getElementById('setPrompt').value.trim(),
+    autoStart: document.getElementById('setAutoStart').checked
+  };
+  await fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body) });
+  await loadConfig();
+  addBubble('system', 'Settings saved.');
+});
+
+addBubble('system', 'Open Settings to choose your LLM endpoint, then press Listen.');
+loadConfig().then(() => {
+  if (cfg.autoStart) startListen();
+});
+</script>
+</body>
+</html>
+"""
+
+
+class Handler(BaseHTTPRequestHandler):
+    def _send(self, code, body, ctype="application/json"):
+        if isinstance(body, (dict, list)):
+            body = json.dumps(body).encode()
+        elif isinstance(body, str):
+            body = body.encode()
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == "/api/config":
+            self._send(200, {
+                "lang": "de-DE" if config["voice"] == "de" else "en-US",
+                "speed": config["speed"],
+                "llm_url": config["llm_url"],
+                "model": config["llm_model"],
+                "apiKey": config["llm_api_key"],
+                "systemPrompt": config["system_prompt"],
+                "autoStart": config["auto_start"],
+                "configPath": CFG,
+            })
+        elif self.path in ("/", "/index.html"):
+            self._send(200, PAGE, "text/html; charset=utf-8")
+        else:
+            self._send(404, {"error": "not found"})
+
+    def do_POST(self):
+        n = int(self.headers.get("Content-Length", 0))
+        try:
+            body = json.loads(self.rfile.read(n) or b"{}")
+        except Exception:
+            body = {}
+        if self.path == "/api/llm":
+            self._proxy_llm(body)
+        elif self.path == "/api/config":
+            self._update_config(body)
+        else:
+            self._send(404, {"error": "not found"})
+
+    def _update_config(self, body):
+        mapping = {
+            "lang": lambda v: config.update(voice="de" if v == "de-DE" else "en"),
+            "speed": lambda v: config.update(speed=v if v in ("slow", "normal", "fast") else "normal"),
+            "llm_url": lambda v: config.update(llm_url=v),
+            "model": lambda v: config.update(llm_model=v),
+            "apiKey": lambda v: config.update(llm_api_key=v),
+            "systemPrompt": lambda v: config.update(system_prompt=v),
+            "autoStart": lambda v: config.update(auto_start=bool(v)),
+        }
+        for k, fn in mapping.items():
+            if k not in body:
+                continue
+            v = body[k]
+            if isinstance(v, str):
+                fn(v.strip() if k != "systemPrompt" else v)
+            elif isinstance(v, bool) and k == "autoStart":
+                fn(v)
+        save_config()
+        self._send(200, {"ok": True})
+
+    def _proxy_llm(self, body):
+        if not config["llm_url"]:
+            self._send(502, {"error": "no LLM endpoint configured"})
+            return
+        model = body.get("model") or config["llm_model"]
+        payload = {
+            "model": model,
+            "messages": body.get("messages", []),
+            "max_tokens": 300,
+            "temperature": 0.7,
+        }
+        req = urllib.request.Request(
+            config["llm_url"],
+            data=json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        if config["llm_api_key"]:
+            req.add_header("Authorization", f"Bearer {config['llm_api_key']}")
+        try:
+            r = json.loads(urllib.request.urlopen(req, timeout=60).read())
+            reply = r["choices"][0]["message"]["content"].strip()
+            self._send(200, {"reply": reply})
+        except Exception as e:
+            self._send(502, {"error": str(e)})
+
+    def log_message(self, *args):
+        pass
+
+
+def free_port(start):
+    import socket
+    for port in range(start, start + 20):
+        with socket.socket() as s:
+            try:
+                s.bind(("127.0.0.1", port))
+                return port
+            except OSError:
+                continue
+    return start
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Voice assistant web app (blind + deaf)")
+    ap.add_argument("--port", type=int, default=None)
+    ap.add_argument("--no-browser", action="store_true")
+    args = ap.parse_args()
+
+    load_config()
+    port = args.port or free_port(int(config["port"]))
+
+    srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    url = f"http://127.0.0.1:{port}"
+    print(f"Voice Assistant running at {url}")
+    print(f"Config: {CFG}")
+
+    if not args.no_browser:
+        threading.Timer(0.5, lambda: webbrowser.open(url)).start()
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        srv.server_close()
+
+
+if __name__ == "__main__":
+    main()

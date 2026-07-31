@@ -103,12 +103,33 @@ switch ($choice) {
 Set-Content -Path "$configDir\opencode.json" -Value $config
 Write-Host "✓ opencode configured"
 
-# ── 3. Create project directory ──
+# ── 3. Install voice-assistant (blind + deaf local assistant) ──
+$binDir = "$env:USERPROFILE\bin"
+New-Item -ItemType Directory -Force -Path $binDir | Out-Null
+$vaPath = "$binDir\voice-assistant"
+if (Test-Path $vaPath) {
+    Write-Host "✓ voice-assistant already installed"
+} else {
+    Write-Host "→ Installing voice-assistant (blind + deaf local assistant)..."
+    try {
+        Invoke-WebRequest -Uri "https://008amonra.github.io/loom/voice-assistant" -OutFile $vaPath -UseBasicParsing
+        Write-Host "✓ voice-assistant installed"
+    } catch {
+        Write-Host "✗ voice-assistant download failed — try manually:"
+        Write-Host "    curl -fsSL https://008amonra.github.io/loom/voice-assistant -o $vaPath"
+    }
+}
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($userPath -notlike "*$binDir*") {
+    [Environment]::SetEnvironmentVariable("Path", "$userPath;$binDir", [EnvironmentVariableTarget]::User)
+}
+
+# ── 4. Create project directory ──
 $projectDir = "$env:USERPROFILE\45dgof8-agent"
 New-Item -ItemType Directory -Force -Path $projectDir | Out-Null
 Write-Host "✓ project directory: $projectDir"
 
-# ── 4. Welcome ──
+# ── 5. Welcome ──
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 Write-Host "  45dgof8 Agent Services — installed   "
@@ -118,4 +139,7 @@ Write-Host "  Next steps:"
 Write-Host "    1. Open a NEW PowerShell window"
 Write-Host "    2. cd $projectDir"
 Write-Host "    3. opencode"
+Write-Host ""
+Write-Host "  Commands:"
+Write-Host "    python $vaPath   — blind + deaf assistant (opens in browser)"
 Write-Host ""
