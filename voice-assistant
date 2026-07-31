@@ -100,6 +100,9 @@ PAGE = r"""<!DOCTYPE html>
   button:hover { border-color:var(--acc); }
   button.primary { background:var(--acc); color:#08131f; border:none; font-weight:700; }
   button.primary.active { background:var(--ok); }
+  #inputRow { display:flex; gap:10px; }
+  #textInput { flex:1; }
+  #sendBtn { flex-shrink:0; }
   #settings { display:none; background:var(--panel); border:1px solid var(--line);
               border-radius:10px; padding:16px; }
   #settings.open { display:block; }
@@ -124,6 +127,10 @@ PAGE = r"""<!DOCTYPE html>
     <button id="toggleBtn" class="primary">Listen</button>
     <button id="visualBtn">Visual mode: off</button>
     <button id="clearBtn">Clear</button>
+  </div>
+  <div id="inputRow">
+    <input id="textInput" placeholder="Type a message, press Enter…" autocomplete="off">
+    <button id="sendBtn">Send</button>
   </div>
   <div id="settings">
     <div class="row">
@@ -296,6 +303,20 @@ async function loadConfig() {
 
 const toggleBtn = document.getElementById('toggleBtn');
 toggleBtn.addEventListener('click', () => listening ? stopListen() : startListen());
+
+const textInput = document.getElementById('textInput');
+const sendBtn = document.getElementById('sendBtn');
+function sendText() {
+  const t = textInput.value.trim();
+  if (!t) return;
+  textInput.value = '';
+  if (interimEl) { interimEl.remove(); interimEl = null; }
+  commit(t);
+}
+sendBtn.addEventListener('click', sendText);
+textInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); sendText(); }
+});
 
 const visualBtn = document.getElementById('visualBtn');
 visualBtn.addEventListener('click', () => {
