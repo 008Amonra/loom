@@ -130,8 +130,9 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
 .feature:hover{border-color:#2a2a3a;transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
 .feature:hover::before{opacity:1}
 .feature-icon{font-size:1.6rem;margin-bottom:14px}
-.feature-title{font-size:1rem;font-weight:700;color:#e0e0e8;margin-bottom:8px}
+.feature-title{font-size:1rem;font-weight:700;color:#e0e0e8;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .feature-desc{font-size:0.82rem;color:#666;line-height:1.6}
+.pro-badge{background:linear-gradient(135deg,#c8a87c,#a88a5c);color:#08080e;font-size:0.55rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;font-family:'Inter',sans-serif;white-space:nowrap}
 
 /* ---- How it works ---- */
 .steps{display:flex;flex-direction:column;gap:0;max-width:600px;margin:0 auto}
@@ -294,7 +295,7 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
 
 <!-- Security Integration -->
 <section id="security" style="padding-top:60px">
-  <div class="section-title">System Security</div>
+  <div class="section-title">System Security <span class="pro-badge" style="margin-left:12px">Pro</span></div>
   <div class="section-sub">nomad watches for agents. sec-toolkit hardens your system.</div>
   <div class="problem" style="padding-top:0">
     <p class="problem-text">
@@ -302,10 +303,13 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
       missing firewalls, weak kernel settings, or no auto-updates — it's already exposed.
     </p>
     <p class="problem-text">
-      nomad integrates with <strong>sec-toolkit.sh</strong> — a hardened Linux security
+      nomad Pro integrates with <strong>sec-toolkit.sh</strong> — a hardened Linux security
       baseline that checks UFW, AppArmor, sysctl, SSH, and auto-updates.
       Run <strong>nomad security</strong> and get a single posture score alongside your
-      drift detection.
+      drift detection. Includes harden, verify, scan, and firewall setup.
+    </p>
+    <p class="problem-text" style="font-size:0.82rem;color:#555">
+      Free tier includes read-only security posture check. Full sec-toolkit integration (harden, verify, scan, fw) requires Pro.
     </p>
     <div class="problem-danger">
       <p>
@@ -341,23 +345,23 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
     </div>
     <div class="feature fade-in">
       <div class="feature-icon">📱</div>
-      <div class="feature-title">Telegram Alerts</div>
+      <div class="feature-title">Telegram Alerts <span class="pro-badge">Pro</span></div>
       <div class="feature-desc">Instant push notifications with drift scores, evidence, and migration paths. Set up in under 2 minutes with the interactive wizard.</div>
     </div>
     <div class="feature fade-in">
       <div class="feature-icon">🌐</div>
-      <div class="feature-title">Web Dashboard</div>
+      <div class="feature-title">Web Dashboard <span class="pro-badge">Pro</span></div>
       <div class="feature-desc">Dark-themed real-time dashboard showing drifters, migrations, and system state. Auto-refreshes every 10 seconds.</div>
     </div>
     <div class="feature fade-in">
       <div class="feature-icon">🛑</div>
-      <div class="feature-title">Optional Blocking</div>
+      <div class="feature-title">Optional Blocking <span class="pro-badge">Pro</span></div>
       <div class="feature-desc">Enable block mode to automatically kill high-confidence drifters (>0.85 score). Dry-run by default — your choice.</div>
     </div>
     <div class="feature fade-in">
       <div class="feature-icon">🛡️</div>
-      <div class="feature-title">Security Posture</div>
-      <div class="feature-desc">Integrated security check via sec-toolkit.sh — verifies firewall, AppArmor, kernel hardening, and auto-updates. One score for your whole system.</div>
+      <div class="feature-title">Security Posture <span class="pro-badge">Pro</span></div>
+      <div class="feature-desc">Full sec-toolkit.sh integration — harden, verify, scan, and firewall setup. Free tier includes read-only posture check.</div>
     </div>
   </div>
 </section>
@@ -391,8 +395,8 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
     <div class="step fade-in">
       <div class="step-num">04</div>
       <div class="step-text">
-        <div class="step-title">Alert</div>
-        <div class="step-desc">High-confidence drifters trigger Telegram alerts with full evidence. Optionally block them automatically.</div>
+        <div class="step-title">Alert <span class="pro-badge" style="margin-left:8px">Pro</span></div>
+        <div class="step-desc">High-confidence drifters trigger Telegram alerts with full evidence. Optionally block them automatically. Free tier logs to file.</div>
       </div>
     </div>
   </div>
@@ -523,6 +527,7 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
 <!-- Footer -->
 <footer class="footer">
   <p>built by <a href="https://45dgof8.com">45dgof8</a> · Zurich, Switzerland</p>
+  <p style="font-size:0.65rem;color:#555;margin-top:0.5rem">nomad is provided "as is" without warranty. It monitors processes and can optionally block them — use blocking mode with caution. You are responsible for configuring it appropriately. See <a href="https://github.com/45dgof8/nomad/blob/main/LICENSE" style="color:#777">LICENSE</a> for full terms.</p>
 </footer>
 
 <!-- Scroll animations -->
