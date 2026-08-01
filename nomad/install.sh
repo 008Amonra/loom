@@ -118,8 +118,8 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     DEST="$HOME/.config/systemd/user"
     mkdir -p "$DEST"
-    cp "$SCRIPT_DIR/nomad-dashboard.service" "$DEST/"
-    cp "$SCRIPT_DIR/nomad-watch.service" "$DEST/"
+    sed "s|__NOMAD_DIR__|$SCRIPT_DIR|g" "$SCRIPT_DIR/nomad-dashboard.service" > "$DEST/nomad-dashboard.service"
+    sed "s|__NOMAD_DIR__|$SCRIPT_DIR|g" "$SCRIPT_DIR/nomad-watch.service" > "$DEST/nomad-watch.service"
     systemctl --user daemon-reload
     systemctl --user enable nomad-dashboard.service nomad-watch.service
     systemctl --user start nomad-dashboard.service nomad-watch.service

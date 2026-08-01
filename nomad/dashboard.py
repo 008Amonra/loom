@@ -30,113 +30,181 @@ DASHBOARD_HTML = """
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    background: #0a0a0f;
-    color: #e0e0e0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: radial-gradient(1100px 520px at 18% -10%, #1c1016 0%, #08080e 45%), #08080e;
+    color: #e0e0e8;
     padding: 24px;
+    min-height: 100vh;
   }
-  h1 { color: #ff6b6b; font-size: 1.6em; margin-bottom: 8px; }
-  .subtitle { color: #666; font-size: 0.85em; margin-bottom: 24px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  h1, .brand-name { font-family: 'Cinzel', 'Georgia', serif; }
+
+  /* ---- Top bar ---- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-logo {
+    width: 46px; height: 46px; border-radius: 13px;
+    background: linear-gradient(135deg, #1a0a0a, #2a1010);
+    border: 1px solid rgba(200, 60, 60, .3);
+    display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+    box-shadow: 0 4px 18px rgba(255, 60, 60, .12);
+  }
+  .brand-name {
+    font-size: 1.55rem; font-weight: 900; letter-spacing: 5px; text-transform: uppercase;
+    background: linear-gradient(135deg, #ff6b6b, #c8a87c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .brand-sub { color: #777; font-size: .8rem; margin-top: 3px; }
+  .health {
+    display: flex; align-items: center; gap: 9px;
+    background: #111118; border: 1px solid #222; border-radius: 10px;
+    padding: 9px 15px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: .78rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.ok { background: #6bff6b; box-shadow: 0 0 9px #6bff6b; }
+  .dot.stale { background: #ffdd6b; box-shadow: 0 0 9px #ffdd6b; }
+  .dot.dead { background: #ff6b6b; box-shadow: 0 0 9px #ff6b6b; }
+  .health-label { color: #aaa; }
+  .health .age { color: #555; }
+
+  /* ---- Stat grid ---- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .stat {
-    background: #111118;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
+    background: linear-gradient(160deg, #14141e, #0d0d15);
+    border: 1px solid #20202c; border-radius: 12px;
+    padding: 18px; text-align: center; position: relative; overflow: hidden;
+    transition: transform .15s ease;
   }
-  .stat .num { font-size: 2em; color: #ff6b6b; }
-  .stat .label { font-size: 0.75em; color: #666; margin-top: 4px; }
+  .stat:hover { transform: translateY(-2px); }
+  .stat::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+  .stat.blue::before { background: #6b9bff; }
+  .stat.purple::before { background: #b06bff; }
+  .stat.cyan::before { background: #6bd8ff; }
+  .stat.red::before { background: #ff6b6b; }
+  .stat .num { font-family: 'JetBrains Mono', monospace; font-size: 2.2em; font-weight: 700; }
+  .stat.blue .num { color: #6b9bff; }
+  .stat.purple .num { color: #b06bff; }
+  .stat.cyan .num { color: #6bd8ff; }
+  .stat.red .num { color: #ff6b6b; }
+  .stat .label { font-size: .72em; color: #888; margin-top: 5px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .stat.hot { border-color: #ff6b6b; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 rgba(255, 107, 107, 0); } 50% { box-shadow: 0 0 20px rgba(255, 107, 107, .4); } }
+
+  /* ---- Panels ---- */
+  .panel { background: #0d0d15; border: 1px solid #1e1e2a; border-radius: 12px; padding: 18px; margin-bottom: 20px; }
+  .panel-title { font-size: 1.02em; font-weight: 700; letter-spacing: 1px; margin-bottom: 13px; display: flex; align-items: center; gap: 9px; }
+  .panel-title .bar { width: 4px; height: 16px; border-radius: 2px; }
+  .p-red .bar { background: #ff6b6b; } .p-red .panel-title { color: #ff8b8b; }
+  .p-blue .bar { background: #6b9bff; } .p-blue .panel-title { color: #8fb0ff; }
+  .p-amber .bar { background: #ffbb6b; } .p-amber .panel-title { color: #ffd08b; }
+  .p-pink .bar { background: #ff6bb8; } .p-pink .panel-title { color: #ff8fc8; }
+  .p-green .bar { background: #6bff9b; } .p-green .panel-title { color: #8bffb0; }
+
+  .empty { color: #444; text-align: center; padding: 30px; font-style: italic; }
+
+  /* Drifters */
   .drifter {
-    background: #1a0a0a;
-    border: 1px solid #3a1515;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
+    background: #1a0c0c; border: 1px solid #3a1515; border-left: 3px solid #ff6b6b;
+    border-radius: 10px; padding: 15px 17px; margin-bottom: 12px;
   }
-  .drifter.safe { background: #0a1a0a; border-color: #153a15; }
+  .drifter.safe { background: #0d1610; border-color: #163a21; border-left-color: #6bff9b; }
   .drifter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .drifter-name { font-weight: bold; font-size: 1.1em; }
-  .drifter-score {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    font-weight: bold;
-  }
+  .drifter-name { font-weight: 700; font-size: 1.05em; color: #f0f0f8; }
+  .drifter-score { padding: 3px 10px; border-radius: 6px; font-size: .85em; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
   .score-high { background: #3a1515; color: #ff6b6b; }
   .score-med { background: #3a3a15; color: #ffdd6b; }
   .score-low { background: #153a15; color: #6bff6b; }
-  .drifter-kind { color: #888; font-size: 0.8em; }
-  .drifter-reason { color: #aaa; font-size: 0.85em; margin-top: 4px; }
-  .drifter-evidence { color: #666; font-size: 0.8em; margin-top: 4px; }
+  .drifter-kind { color: #999; font-size: .8em; }
+  .drifter-reason { color: #bbb; font-size: .85em; margin-top: 4px; }
+  .drifter-evidence { color: #666; font-size: .78em; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  /* Migrations */
   .migration {
-    background: #0a0a1a;
-    border: 1px solid #15153a;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.9em;
+    background: #0c0f1a; border: 1px solid #15203a; border-left: 3px solid #6b9bff;
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px; font-size: .88em;
   }
-  .migration-arrow { color: #6b6bff; font-size: 1.2em; }
-  .empty { color: #444; text-align: center; padding: 32px; }
-  .section-title { font-size: 1.1em; color: #ff6b6b; margin-bottom: 12px; }
-  .refresh { color: #444; font-size: 0.75em; }
-  .sec-panel { background: #111118; border: 1px solid #222; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
-  .sec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .sec-score { font-size: 2em; font-weight: bold; }
-  .sec-score.good { color: #6bff6b; }
-  .sec-score.warn { color: #ffdd6b; }
-  .sec-score.bad { color: #ff6b6b; }
-  .sec-label { color: #888; font-size: 0.85em; }
-  .sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
-  .sec-item { font-size: 0.85em; padding: 6px 10px; border-radius: 4px; }
-  .sec-item.ok { background: #0a1a0a; color: #6bff6b; }
-  .sec-item.warn { background: #1a1a0a; color: #ffdd6b; }
-  .sec-item.critical { background: #1a0a0a; color: #ff6b6b; }
-  .sec-unavail { color: #666; font-size: 0.85em; font-style: italic; }
+  .migration-arrow { color: #6b9bff; font-size: 1.2em; }
+
+  /* Credentials / Network */
   .cred-item, .net-item {
-    background: #111118;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    font-size: 0.85em;
+    background: #0f0d14; border: 1px solid #201b2a; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 8px; font-size: .85em;
   }
   .cred-item.critical { border-color: #ff6b6b; background: #1a0a0a; }
-  .cred-item.high { border-color: #ffaa6b; background: #1a1a0a; }
-  .cred-item.medium { border-color: #ffdd6b; background: #1a1a0a; }
-  .net-item.high { border-color: #ff6b6b; background: #1a0a0a; }
-  .net-item.medium { border-color: #ffdd6b; background: #1a1a0a; }
+  .cred-item.high { border-color: #ffaa6b; background: #1a150a; }
+  .cred-item.medium { border-color: #ffdd6b; background: #1a180a; }
+  .net-item.high { border-color: #ff6bb8; background: #1a0a14; }
+  .net-item.medium { border-color: #ffbb6b; background: #1a140a; }
   .cred-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .cred-risk { padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+  .cred-risk { padding: 2px 8px; border-radius: 5px; font-size: .75em; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
   .risk-critical { background: #3a1515; color: #ff6b6b; }
   .risk-high { background: #3a2a15; color: #ffaa6b; }
   .risk-medium { background: #3a3a15; color: #ffdd6b; }
   .risk-low { background: #153a15; color: #6bff6b; }
+
+  /* Security panel */
+  .sec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .sec-score { font-size: 2.6em; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .sec-score.good { color: #6bff9b; text-shadow: 0 0 18px rgba(107, 255, 155, .35); }
+  .sec-score.warn { color: #ffdd6b; text-shadow: 0 0 18px rgba(255, 221, 107, .3); }
+  .sec-score.bad { color: #ff6b6b; text-shadow: 0 0 18px rgba(255, 107, 107, .35); }
+  .sec-label { color: #888; font-size: .82em; }
+  .sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; }
+  .sec-item { font-size: .83em; padding: 7px 11px; border-radius: 6px; }
+  .sec-item.ok { background: #0d1610; color: #6bff9b; }
+  .sec-item.warn { background: #1a180a; color: #ffdd6b; }
+  .sec-item.critical { background: #1a0a0a; color: #ff6b6b; }
+  .sec-unavail { color: #777; font-size: .85em; font-style: italic; }
+  .sec-unavail a { color: #c8a87c; }
+
+  .refresh { color: #555; font-size: .72em; text-align: right; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
 </style>
 </head>
 <body>
-<h1>nomad</h1>
-<div class="subtitle">catch autonomous agents that spawn ephemeral infrastructure</div>
-<div class="grid">
-  <div class="stat"><div class="num" id="s-containers">0</div><div class="label">Containers</div></div>
-  <div class="stat"><div class="num" id="s-services">0</div><div class="label">Services</div></div>
-  <div class="stat"><div class="num" id="s-processes">0</div><div class="label">Processes</div></div>
-  <div class="stat"><div class="num" id="s-drifters">0</div><div class="label">Drifters</div></div>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo">🛰️</div>
+    <div>
+      <div class="brand-name">nomad</div>
+      <div class="brand-sub">catch autonomous agents that spawn ephemeral infrastructure</div>
+    </div>
+  </div>
+  <div class="health">
+    <span class="dot dead" id="health-dot"></span>
+    <span class="health-label" id="health-label">connecting…</span>
+    <span class="age" id="health-age"></span>
+  </div>
 </div>
-<div class="section-title">Drifters</div>
-<div id="drifters"><div class="empty">No drifters detected</div></div>
-<div class="section-title" style="margin-top:24px">Migrations</div>
-<div id="migrations"><div class="empty">No migrations detected</div></div>
-<div class="section-title" style="margin-top:24px">🔐 Credential Access</div>
-<div id="credentials"><div class="empty">No credential access detected</div></div>
-<div class="section-title" style="margin-top:24px">🌐 Network Anomalies</div>
-<div id="network"><div class="empty">No network anomalies detected</div></div>
-<div class="section-title" style="margin-top:24px">System Security</div>
-<div class="sec-panel" id="sec-panel">
+
+<div class="grid">
+  <div class="stat blue"><div class="num" id="s-containers">0</div><div class="label">Containers</div></div>
+  <div class="stat purple"><div class="num" id="s-services">0</div><div class="label">Services</div></div>
+  <div class="stat cyan"><div class="num" id="s-processes">0</div><div class="label">Processes</div></div>
+  <div class="stat red" id="stat-drifters"><div class="num" id="s-drifters">0</div><div class="label">Drifters</div></div>
+</div>
+
+<div class="panel p-red">
+  <div class="panel-title"><span class="bar"></span>Drifters</div>
+  <div id="drifters"><div class="empty">No drifters detected</div></div>
+</div>
+
+<div class="panel p-blue">
+  <div class="panel-title"><span class="bar"></span>Migrations</div>
+  <div id="migrations"><div class="empty">No migrations detected</div></div>
+</div>
+
+<div class="panel p-amber">
+  <div class="panel-title"><span class="bar"></span>Credential Access</div>
+  <div id="credentials"><div class="empty">No credential access detected</div></div>
+</div>
+
+<div class="panel p-pink">
+  <div class="panel-title"><span class="bar"></span>Network Anomalies</div>
+  <div id="network"><div class="empty">No network anomalies detected</div></div>
+</div>
+
+<div class="panel p-green">
+  <div class="panel-title"><span class="bar"></span>System Security</div>
   <div class="sec-header">
     <div>
       <div class="sec-score" id="sec-score">--</div>
@@ -149,14 +217,31 @@ DASHBOARD_HTML = """
   </div>
   <div class="sec-grid" id="sec-items"></div>
 </div>
+
 <div class="refresh" id="refresh-time"></div>
 <script>
+function health() {
+  fetch('/api/health').then(r => r.json()).then(h => {
+    const dot = document.getElementById('health-dot');
+    const lbl = document.getElementById('health-label');
+    const age = document.getElementById('health-age');
+    dot.className = 'dot ' + h.status;
+    lbl.textContent = h.status === 'ok' ? 'online' : h.status === 'stale' ? 'stale' : 'offline';
+    const sec = h.last_scan_age_sec;
+    age.textContent = sec !== null && sec !== undefined ? (sec < 120 ? 'fresh' : sec < 600 ? Math.round(sec) + 's ago' : '>10min') : '';
+  }).catch(() => {
+    document.getElementById('health-dot').className = 'dot dead';
+    document.getElementById('health-label').textContent = 'offline';
+  });
+}
 function update() {
   fetch('/api/last').then(r => r.json()).then(d => {
     document.getElementById('s-containers').textContent = d.containers || 0;
     document.getElementById('s-services').textContent = d.services || 0;
     document.getElementById('s-processes').textContent = d.processes || 0;
-    document.getElementById('s-drifters').textContent = (d.drifters || []).length;
+    const nd = (d.drifters || []).length;
+    document.getElementById('s-drifters').textContent = nd;
+    document.getElementById('stat-drifters').classList.toggle('hot', nd > 0);
 
     const dc = document.getElementById('drifters');
     if (d.drifters && d.drifters.length) {
@@ -238,7 +323,7 @@ function update() {
     if (!s.available) {
       el.textContent = '--';
       el.className = 'sec-score';
-      items.innerHTML = '<div class="sec-unavail">sec-toolkit.sh not installed — <a href="#setup" style="color:#c8a87c">install it</a></div>';
+      items.innerHTML = '<div class="sec-unavail">sec-toolkit.sh not installed — <a href="#setup">install it</a></div>';
       verify.textContent = '';
       time.textContent = '';
       return;
@@ -264,6 +349,7 @@ function update() {
     items.innerHTML = html;
   });
 }
+health();
 update();
 setInterval(update, 10000);
 </script>
