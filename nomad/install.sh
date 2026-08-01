@@ -11,6 +11,10 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Process-substitution invocation (bash <(curl ...)) runs from /dev/fd — use cwd instead
+if [[ "$SCRIPT_DIR" == /dev/fd* ]]; then
+    SCRIPT_DIR="$(pwd)"
+fi
 REPO_URL="https://github.com/008Amonra/loom.git"
 NOMAD_PATH="nomad"
 UPGRADE_MODE=false
@@ -57,6 +61,7 @@ echo -e "${NC}"
 # Install from GitHub if piped via curl
 if [ ! -f "$SCRIPT_DIR/cli.py" ]; then
     echo -e "  ${YELLOW}Downloading from GitHub...${NC}"
+    rm -rf /tmp/nomad-repo
     git clone --depth 1 "$REPO_URL" /tmp/nomad-repo 2>/dev/null
     cp -r /tmp/nomad-repo/$NOMAD_PATH/* "$SCRIPT_DIR/"
     rm -rf /tmp/nomad-repo
@@ -74,11 +79,15 @@ echo -e "  ${YELLOW}⚠  nomad monitors and can block processes on your system.$
 echo -e "  ${YELLOW}   Use --block mode only after understanding the risks.${NC}"
 echo -e "  ${YELLOW}   See LICENSE for full terms.${NC}"
 echo ""
-read -p "  Continue with install? [y/N] " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "  ${YELLOW}Aborted. Create a backup first, then re-run this script.${NC}"
-    exit 0
+if [ -t 0 ]; then
+    read -p "  Continue with install? [y/N] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "  ${YELLOW}Aborted. Create a backup first, then re-run this script.${NC}"
+        exit 0
+    fi
+else
+    echo -e "  ${GREEN}✓${NC} Non-interactive install (curl | bash) — proceeding with defaults"
 fi
 
 # Check Python
@@ -113,8 +122,10 @@ fi
 
 # Optional: install systemd services
 echo ""
-read -p "  Install systemd services for auto-start? [y/N] " -n 1 -r
-echo
+if [ -t 0 ]; then
+    read -p "  Install systemd services for auto-start? [y/N] " -n 1 -r
+    echo
+fi
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     DEST="$HOME/.config/systemd/user"
     mkdir -p "$DEST"
