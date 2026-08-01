@@ -60,7 +60,9 @@ body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:
 
 /* ---- Nav ---- */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,168,124,0.08)}
-.nav-brand{font-family:'Cinzel',serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#c8a87c;text-decoration:none}
+.nav-brand{display:flex;align-items:center}
+.nav-brand img{width:36px;height:36px;border-radius:9px;object-fit:cover;border:1px solid rgba(200,168,124,0.3);display:block;transition:box-shadow .25s, transform .25s}
+.nav-brand:hover img{box-shadow:0 0 16px rgba(200,168,124,0.35);transform:scale(1.04)}
 .nav-links{display:flex;gap:24px;font-size:0.8rem}
 .nav-links a{color:#666;text-decoration:none;transition:.2s;letter-spacing:1px}
 .nav-links a:hover{color:#c8a87c}
@@ -68,7 +70,7 @@ body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:
 /* ---- Hero ---- */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
 
-.hero-cover{width:min(380px,70vw);margin-bottom:34px;position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(200,168,124,0.18);box-shadow:0 12px 48px rgba(0,0,0,0.5),0 0 60px rgba(200,60,60,0.12);animation:coverFade 1s ease-out}
+.hero-cover{width:min(400px,78vw);margin-bottom:34px;position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(200,168,124,0.22);box-shadow:0 12px 48px rgba(0,0,0,0.5),0 0 60px rgba(200,168,124,0.14);animation:coverFade 1s ease-out}
 .hero-cover img{display:block;width:100%;height:auto}
 .hero-cover::after{content:'';position:absolute;inset:0;border-radius:22px;box-shadow:inset 0 0 60px rgba(8,8,14,0.55);pointer-events:none}
 @keyframes coverFade{0%{opacity:0;transform:translateY(16px) scale(0.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
@@ -192,6 +194,9 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
   .pricing{flex-direction:column;align-items:center}
   .nav-links{display:none}
   .features{grid-template-columns:1fr}
+  .hero{padding-top:96px}
+  .hero-cover{width:82vw;max-width:340px;margin-bottom:26px}
+  .hero-icon{width:64px;height:64px;font-size:1.8rem;margin-bottom:22px}
 }
 </style>
 </head>
@@ -202,7 +207,7 @@ section{max-width:1000px;margin:0 auto;padding:80px 24px}
 
 <!-- Nav -->
 <nav class="nav">
-  <a href="/" class="nav-brand">45DGOF8</a>
+  <a href="/" class="nav-brand"><img src="LRYP8.webp" alt="45dgof8"></a>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#how">How It Works</a>
