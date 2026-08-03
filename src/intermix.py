@@ -4,6 +4,8 @@ import struct
 import math
 import os
 
+OUT_DIR = os.environ.get("45DGOF8_OUT", os.path.dirname(os.path.abspath(__file__)))
+
 SR = 44100
 BPM = 155
 BEAT = 60.0 / BPM
@@ -322,8 +324,8 @@ cuts = [
 
 cmd = [
     'ffmpeg', '-y',
-    '-i', './45dgof8-typo-audio.mp4',
-    '-i', './45dgof8-happy-hardcore.mp4',
+    '-i', os.path.join(OUT_DIR, '45dgof8-typo-audio.mp4'),
+    '-i', os.path.join(OUT_DIR, '45dgof8-happy-hardcore.mp4'),
     '-i', '/tmp/intermix-audio.wav',
     '-filter_complex',
 ]
@@ -339,8 +341,8 @@ concat += ''.join(map_parts) + f'concat=n={len(cuts)}:v=1:a=0[outv]'
 cmd += [concat, '-map', '[outv]', '-map', '2:a']
 cmd += ['-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p']
 cmd += ['-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart']
-cmd += ['./45dgof8-intermix.mp4']
+cmd += [os.path.join(OUT_DIR, '45dgof8-intermix.mp4')]
 
 print("Running FFmpeg intercut...")
 subprocess.run(cmd, check=True)
-print("Done! ./45dgof8-intermix.mp4")
+print("Done! " + os.path.join(OUT_DIR, '45dgof8-intermix.mp4'))

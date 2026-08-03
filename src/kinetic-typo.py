@@ -3,6 +3,8 @@ import math
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+OUT_DIR = os.environ.get("45DGOF8_OUT", os.path.dirname(os.path.abspath(__file__)))
+
 W, H = 1920, 1080
 FPS = 30
 DURATION = 30
@@ -93,7 +95,7 @@ cmd = [
     '-pix_fmt', 'yuv420p',
     '-movflags', '+faststart',
     '-r', str(FPS),
-    './45dgof8-typo.mp4'
+    os.path.join(OUT_DIR, '45dgof8-typo.mp4')
 ]
 
 proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)

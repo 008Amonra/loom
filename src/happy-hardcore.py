@@ -5,6 +5,8 @@ import math
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+OUT_DIR = os.environ.get("45DGOF8_OUT", os.path.dirname(os.path.abspath(__file__)))
+
 SR = 44100
 BPM = 155
 BEAT = 60.0 / BPM
@@ -210,7 +212,7 @@ cmd = [
     '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
     '-c:a', 'aac', '-b:a', '192k', '-shortest',
-    './45dgof8-happy-hardcore.mp4'
+    os.path.join(OUT_DIR, '45dgof8-happy-hardcore.mp4')
 ]
 
 proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
