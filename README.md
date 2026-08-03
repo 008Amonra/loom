@@ -9,22 +9,6 @@ One-person studio. AI agents, automation, tools. Based in Switzerland.
 - **Agent Services** — Custom AI agents, n8n workflows, Telegram bots, ChatGPT integrations.
 - **[Chat](https://n8n.45dgof8.com/webhook/chat)** — AI chat powered by GPT-4o-mini via n8n.
 
-## Infrastructure
-
-All self-hosted on Pop!_OS, exposed via Cloudflare Tunnel:
-
-| Service | Port | Stack |
-|---------|------|-------|
-| YT Producer | 5005 | Flask + FFmpeg + Piper TTS |
-| Tools Hub | 5006 | Flask + Pillow + Ghostscript |
-| n8n | 5678 | Workflow automation + GPT |
-| Telegram Bot | — | n8n → GPT webhook |
-| Cloudflare Tunnel | — | agent-n8n, yt-producer, tools, n8n |
-
 ## Contact
 
 45dgof8@gmail.com · [PayPal.Me](https://paypal.me/45dgof8)
-
----
-
-Built with FFmpeg, Flask, Piper TTS, and too much caffeine.

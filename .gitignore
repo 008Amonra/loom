@@ -1,7 +1,29 @@
 # Secrets
 *.enc.json
-.env
+.env*
 secrets.env
+
+# Operational / infrastructure - NOT for public repo
+email-agent/
+downloads/
+inbox/
+start-n8n.sh
+tg-auto-reply.sh
+session-state.json
+tts.sh
+tweet-draft.txt
+n8n-workflow-*.json
+tools/tools-server.py
+tools/__pycache__/
+tools/Dockerfile
+tools/nginx-site.conf
+tools/start.sh
+nomad/nomad-*.service
+crypto-report-*.csv
+crypto-report-*.ods
+.~lock.*
+.force-rebuild
+*.log
 
 # Dependencies
 node_modules/
