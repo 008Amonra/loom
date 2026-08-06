@@ -25,11 +25,41 @@
   .ambient-toggle.on .switch .knob{left:16px;background:#00ff88}
   .ambient-toggle.on{color:#44cc66;border-color:#2a4a3a}
 
-  #loader{position:fixed;inset:0;z-index:9999;background:#0d0d14;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
-  #loader.hide{opacity:0;pointer-events:none}
-  .spinner{width:40px;height:40px;border:3px solid #2a2a3a;border-top-color:#00ff88;border-radius:50%;animation:spin .8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .loader-label{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:4px;color:#888;margin-top:16px}
+  #loader{position:fixed;inset:0;z-index:9999;background:transparent;pointer-events:none;transition:opacity .5s}
+  #loader.hide{opacity:0}
+  /* Crack-open wall doors */
+  .crack{position:fixed;inset:0;z-index:9999;perspective:1200px;background:transparent;pointer-events:none;visibility:visible}
+  .crack.open{visibility:hidden}
+  .crack-panel{position:absolute;top:0;bottom:0;width:52%;overflow:hidden;
+    background:
+      repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 46px),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.008) 0 2px,transparent 2px 46px),
+      linear-gradient(180deg,#0a0a12 0%,#0d0d18 30%,#111120 60%,#08080e 100%);
+    box-shadow:0 0 60px rgba(0,0,0,.8) inset}
+  .crack-panel::before{content:'';position:absolute;inset:0;opacity:.5;
+    background:linear-gradient(90deg,transparent 60%,rgba(0,255,136,.05) 95%,rgba(0,255,136,.14) 100%);
+    transform:translateZ(0)}
+  .crack-panel.left{left:0;transform:translateX(0);animation:crackOpenL 1.25s cubic-bezier(.7,0,.3,1) .05s forwards}
+  .crack-panel.right{right:0;transform:translateX(0);animation:crackOpenR 1.25s cubic-bezier(.7,0,.3,1) .05s forwards}
+  @keyframes crackOpenL{from{transform:translateX(0)}to{transform:translateX(-103%)}}
+  @keyframes crackOpenR{from{transform:translateX(0)}to{transform:translateX(103%)}}
+  .crack-seam{position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1px;z-index:3;
+    background:linear-gradient(180deg,rgba(0,255,136,0),rgba(0,255,136,.9),rgba(0,255,136,.9),rgba(0,255,136,0));
+    box-shadow:0 0 24px 4px rgba(0,255,136,.55),0 0 80px 20px rgba(0,255,136,.18);
+    animation:seamFlash 1.5s ease-out .35s forwards}
+  @keyframes seamFlash{0%{opacity:1}70%{opacity:.6}100%{opacity:0}}
+  .crack-sweep{position:absolute;top:-5%;bottom:-5%;left:50%;width:120px;margin-left:-60px;z-index:2;
+    background:linear-gradient(100deg,transparent,rgba(180,220,255,.12),rgba(0,255,136,.08),transparent);
+    filter:blur(6px);transform:skewX(-12deg);
+    animation:crackSweep 1.5s ease-in-out .15s forwards}
+  @keyframes crackSweep{0%{transform:skewX(-12deg) translateX(-52vw)}60%{transform:skewX(-12deg) translateX(12vw)}100%{opacity:0;transform:skewX(-12deg) translateX(60vw)}}
+  /* Video background (the room behind the wall) */
+  #bgstage{position:fixed;inset:0;z-index:0;overflow:hidden;background:#000;pointer-events:none}
+  #bgstage video{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1.12);min-width:100%;min-height:100%;width:auto;height:auto;object-fit:cover;opacity:.55}
+  #bgstage .vignette{position:absolute;inset:0;z-index:2;
+    background:radial-gradient(ellipse 62% 55% at 50% 46%,rgba(0,0,0,.35) 0%,rgba(0,0,0,.6) 62%,rgba(0,0,0,.88) 100%)}
+  #bgstage .corner{position:absolute;inset:0;z-index:3;
+    background:linear-gradient(180deg,rgba(5,5,12,.6),rgba(5,5,12,.35) 24%,transparent 40%,rgba(5,5,12,.4) 78%,rgba(5,5,12,.65))}
 
   .hat-title{text-align:center;margin-bottom:40px;border-bottom:1px solid #222;padding-bottom:24px}
   .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
@@ -143,7 +173,20 @@
 </style>
 </head>
 <body>
-<div id="loader"><div class="spinner"></div><div class="loader-label">45dgof8</div></div>
+<div class="crack" id="crackWall">
+  <div class="crack-seam"></div>
+  <div class="crack-sweep"></div>
+  <div class="crack-panel left"></div>
+  <div class="crack-panel right"></div>
+</div>
+<div id="bgstage">
+  <video id="bgvideo" autoplay muted loop playsinline
+    poster="title-animation-poster.jpg" preload="metadata">
+    <source src="title-animation.mp4" type="video/mp4">
+  </video>
+  <div class="vignette"></div>
+  <div class="corner"></div>
+</div>
 <canvas id="fireworks"></canvas>
 <div class="ambient-toggle" id="ambientToggle">
   <span id="ambientLabel">silence</span>
@@ -299,14 +342,6 @@
 <hr />
 
 <!-- Get the installer -->
-<!-- Title animation (replaces the plain h2 heading) -->
-<video controls autoplay muted loop playsinline
-  poster="title-animation-poster.jpg" preload="none"
-  title="Run AI agents on your own machine"
-  style="width:100%;max-width:720px;display:block;margin:0 auto 24px;border-radius:12px;border:1px solid #2a4a3a;aspect-ratio:16/9;background:#000">
-  <source src="title-animation.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
 <h2 style="text-align:center">Run AI agents on your own machine</h2>
 <div class="card" style="border-color:#2a4a3a;background:#0e0e14">
   <p style="color:#b8b8c8;margin-bottom:16px"><strong style="color:#00ff88">You don't need a cloud subscription to run AI agents.</strong> This installer gives you a complete local AI ops center — opencode CLI for coding agents, n8n for automation, TTS voice, health monitoring — all on your own hardware. Your data stays on your machine. No monthly fees. No accounts. One command, everything works.</p>
@@ -697,12 +732,21 @@ function submitProject() {
   let played = false;
   a.play().then(() => played = true).catch(() => {});
 
+  const loader = document.getElementById('loader');
+  const crackWall = document.getElementById('crackWall');
+  const bgvideo = document.getElementById('bgvideo');
+  const hideLoader = () => { if (loader) loader.classList.add('hide'); };
+
   window.addEventListener('load', () => {
-    document.getElementById('loader').classList.add('hide');
+    if (bgvideo) { bgvideo.play().then(() => {}).catch(() => {}); }
+    if (crackWall) {
+      crackWall.classList.add('open');
+      setTimeout(hideLoader, 1600);
+    } else {
+      hideLoader();
+    }
   });
-  setTimeout(() => {
-    document.getElementById('loader').classList.add('hide');
-  }, 4000);
+  setTimeout(hideLoader, 4000);
   document.addEventListener('click', () => { if (!played) { a.play(); played = true; } }, { once: true });
   document.addEventListener('touchstart', () => { if (!played) { a.play(); played = true; } }, { once: true });
 }
