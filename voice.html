@@ -88,20 +88,20 @@
 
   <!-- 1. LIVE DEMO — give the visitor the impression first -->
   <h2>Try it now — right here, nothing to install</h2>
-  <p>This demo runs in your browser (Chrome or Edge best). It shows you exactly how it feels: <strong>press the button, hear it speak, read the words as they appear.</strong></p>
+  <p>This demo plays a <strong>sample of the assistant's real voice</strong>. Press the button, hear it speak, read the words as they appear.</p>
 
   <div class="card">
     <h3>Hear a sample</h3>
     <div class="btn-row">
-      <button id="speakBtn" class="btn btn-primary" aria-label="Hear a sample sentence spoken aloud">🔊 Hear a sample</button>
+      <button id="speakBtn" class="btn btn-primary" aria-label="Hear a sample of the assistant's voice">▶ Hear the voice</button>
       <button id="langBtn" class="btn btn-ghost" aria-label="Switch language">English</button>
     </div>
     <div class="demo-stage" id="stage" aria-live="polite">
       <span class="who">Spoken out loud</span>
-      <span class="hear">Press "Hear a sample" — this line will be read aloud while the words appear here.</span>
+      <span class="hear">Press "Hear the voice" — this line is read aloud by the assistant while the words appear here.</span>
     </div>
-    <p class="status" id="status" role="status">Ready. Works best in Chrome or Edge.</p>
-    <p class="note">Everything here runs in your browser — nothing is recorded, nothing leaves this page. Screen-reader friendly: buttons are announced.</p>
+    <p class="status" id="status" role="status">Ready. Plays the assistant's real voice.</p>
+    <p class="note">This is the exact voice that runs on your machine after install. Nothing is recorded, nothing leaves this page.</p>
   </div>
 
   <div class="card">
@@ -116,7 +116,7 @@
       <span class="interim" id="interim"></span>
     </div>
     <p class="status" id="micStatus" role="status">Mic feature available in Chrome or Edge.</p>
-    <p class="note">Your voice is transcribed by the browser, locally. It is not sent anywhere. If you prefer not to use the mic, that is fine — the whole assistant also works by typing.</p>
+    <p class="note">Your voice is transcribed by the browser, locally. It is not sent anywhere. The echo uses the browser's own voice; the full assistant speaks with the high-quality voice from above.</p>
   </div>
 
   <hr class="hr" />
@@ -138,7 +138,7 @@
 
   <p style="margin-top:16px">Two honest things before you decide:</p>
   <ul style="color:#b8b8c8;padding-left:20px;margin-bottom:12px">
-    <li>The browser's voice is already built in — this demo uses it. The full assistant adds <strong>one thing</strong>: an AI that answers you.</li>
+    <li>The voice you just heard is the assistant's real voice, already installed with it. The full assistant adds <strong>one thing</strong>: an AI that answers you.</li>
     <li>The full assistant needs an AI model on your machine. That is the one step that needs a little setup, and it is <strong>100% optional</strong>.</li>
   </ul>
 
@@ -171,8 +171,6 @@
 <script>
 (function () {
   var lang = 'en';
-  var SAMPLE_EN = 'Hello! I am a voice assistant. I can speak and show every word on screen. Press the button below to hear more.';
-  var SAMPLE_DE = 'Hallo! Ich bin ein Sprachassistent. Ich kann sprechen und jedes Wort auf dem Bildschirm zeigen.';
   var stage = document.getElementById('stage');
   var statusEl = document.getElementById('status');
   var speakBtn = document.getElementById('speakBtn');
@@ -183,7 +181,7 @@
   var micStatus = document.getElementById('micStatus');
   var recognition = null;
   var listening = false;
-  var voice = null;
+  var audio = new Audio();
 
   function pickVoice() {
     if (!('speechSynthesis' in window)) return null;
@@ -198,9 +196,27 @@
     return null;
   }
 
-  function speak(text) {
+  function playDemoSample() {
+    var isDe = lang === 'de';
+    var mp3 = isDe ? 'assets/va-demo-de.mp3' : 'assets/va-demo-en.mp3';
+    var caption = isDe
+      ? 'Hallo! Ich bin ein Sprachassistent. Ich kann sprechen und jedes Wort auf dem Bildschirm zeigen. Drücke den Knopf noch einmal, um mehr von meiner Stimme zu hören.'
+      : 'Hello! I am a voice assistant. I can speak, and show every word on the screen. Press the button again to hear more of my voice.';
+    var hear = stage.querySelector('.hear');
+    hear.textContent = caption;
+    audio.src = mp3;
+    audio.playbackRate = 1;
+    statusEl.textContent = 'Playing…';
+    statusEl.className = 'status speaking';
+    audio.onended = function () { statusEl.textContent = 'Done.'; statusEl.className = 'status'; };
+    audio.onerror = function () { browserSpeak(caption); };
+    var p = audio.play();
+    if (p && p.catch) p.catch(function () { browserSpeak(caption); });
+  }
+
+  function browserSpeak(text) {
     if (!('speechSynthesis' in window)) {
-      statusEl.textContent = 'Speech not supported in this browser. Try Chrome or Edge.';
+      statusEl.textContent = 'Audio not supported in this browser. Try Chrome or Edge.';
       statusEl.className = 'status err';
       return;
     }
@@ -217,21 +233,35 @@
     speechSynthesis.speak(u);
   }
 
+  function speak(text) {
+    var hear = stage.querySelector('.hear');
+    hear.textContent = text;
+    if (!('speechSynthesis' in window)) {
+      statusEl.textContent = 'Speech not supported in this browser. Try Chrome or Edge.';
+      statusEl.className = 'status err';
+      return;
+    }
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var v = pickVoice();
+    if (v) u.voice = v;
+    u.lang = lang === 'de' ? 'de-DE' : 'en-US';
+    u.rate = 0.95;
+    u.onstart = function () { statusEl.textContent = 'Speaking…'; statusEl.className = 'status speaking'; };
+    u.onend = function () { statusEl.textContent = 'Done.'; statusEl.className = 'status'; };
+    speechSynthesis.speak(u);
+  }
+
   speakBtn.addEventListener('click', function () {
-    speak(lang === 'de' ? SAMPLE_DE : SAMPLE_EN);
+    playDemoSample();
   });
 
   langBtn.addEventListener('click', function () {
     lang = lang === 'en' ? 'de' : 'en';
     langBtn.textContent = lang === 'en' ? 'English' : 'Deutsch';
     if (recognition) { try { recognition.lang = lang === 'de' ? 'de-DE' : 'en-US'; } catch (e) {} }
-    speak(lang === 'de' ? SAMPLE_DE : SAMPLE_EN);
+    playDemoSample();
   });
-
-  if ('speechSynthesis' in window) {
-    speechSynthesis.getVoices();
-    speechSynthesis.onvoiceschanged = function () { voice = pickVoice(); };
-  }
 
   function makeRecognition() {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
