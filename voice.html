@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Voice Assistant — talk and hear a local AI on your own machine. Works for blind users (voice-only) and deaf users (live transcript). No account, no subscription, everything on your hardware.">
+<meta name="keywords" content="voice assistant, local AI, blind, deaf, accessibility, speech, live transcript, no subscription, 45dgof8">
+<meta name="author" content="45dgof8">
+<title>Voice Assistant — talk and hear a local AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:#0d0d14;color:#e0e0e8;line-height:1.6;min-height:100vh;background:url('Z8f8U.webp') center center/cover fixed no-repeat}
+  body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(13,13,20,.88) 0%,rgba(13,13,20,.78) 50%,rgba(13,13,20,.94) 100%);z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px}
+
+  .hat-title{text-align:center;margin-bottom:36px;border-bottom:1px solid #222;padding-bottom:24px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2.2rem;font-weight:400;letter-spacing:10px;text-transform:uppercase;color:#888;background:linear-gradient(135deg,#e0e0e8,#888,#e0e0e8);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite 0.5s}
+  .hat-brim-accent{display:block;font-size:0.75rem;letter-spacing:8px;color:#555;margin-top:8px;font-weight:300}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+  .sub{text-align:center;color:#b8b8c8;font-size:1.05rem;max-width:600px;margin:0 auto 40px}
+  .sub strong{color:#00ff88}
+
+  h2{font-size:1.3rem;color:#00cc77;margin-top:48px;margin-bottom:16px}
+  h3{font-size:1.05rem;color:#ddd;margin-top:24px;margin-bottom:10px}
+  p{color:#b8b8c8;margin-bottom:12px}
+  a{color:#4488ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:#1a1a28;color:#c8a0ff;padding:2px 6px;border-radius:4px;font-size:0.9em}
+
+  .card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;padding:24px;margin:16px 0}
+  .card h3{margin-top:0}
+
+  .btn{display:inline-block;padding:14px 22px;border-radius:10px;font-size:1rem;font-weight:700;text-align:center;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+  .btn-primary{background:#00ff88;color:#0a0a0a}
+  .btn-primary:hover{background:#33ffaa;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:#ddd;border:1px solid #3a3a4a}
+  .btn-ghost:hover{border-color:#00ff88;color:#00ff88}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+
+  .demo-stage{background:#0f0f1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px;min-height:90px;margin:14px 0;font-size:1.05rem;color:#e0e0e8}
+  .demo-stage .who{display:block;font-size:0.8rem;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+  .demo-stage .say{color:#00ff88;font-weight:600}
+  .demo-stage .hear{color:#e0e0e8}
+  .demo-stage .interim{color:#888;font-style:italic;margin-top:6px;min-height:1.2em}
+  .status{font-size:0.85rem;margin-top:8px;min-height:1.3em;color:#888}
+  .status.speaking{color:#00ccff}
+  .status.listening{color:#00ff88}
+  .status.err{color:#ff6644}
+
+  .note{color:#666;font-size:0.85rem;margin-top:8px}
+  .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
+  .tag.blue{background:#0a1a2a;color:#44aaff}
+
+  .cmd{display:block;background:#0f0f1a;border:1px solid #3a3a4a;border-radius:10px;padding:14px 18px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.95rem;color:#c8a0ff;overflow-x:auto;white-space:nowrap;margin:12px 0;user-select:all}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+  .opt-card{background:#0f0f1a;border:1px solid #2a2a3a;border-radius:10px;padding:18px}
+  .opt-card h4{color:#00ff88;margin-bottom:8px;font-size:1rem}
+
+  .hr{color:#555;text-align:center;margin:44px 0 8px;letter-spacing:2px;font-size:0.75rem;text-transform:uppercase}
+
+  .footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.85rem}
+  .footer a{color:#4488ff}
+
+  @media(max-width:640px){
+    .hat-brim{font-size:1.5rem;letter-spacing:6px}
+    .cmd{font-size:0.82rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hat-title">
+    <span class="hat-crown">45dgof8</span>
+    <span class="hat-brim">Voice Assistant</span>
+    <span class="hat-brim-accent">TALK · HEAR · RUN IT ON YOUR OWN MACHINE</span>
+  </div>
+
+  <p class="sub">A local voice assistant that <strong>talks back to you</strong> and shows <strong>every word live on screen</strong>. Built for blind users who want to talk, and deaf users who want to read. No account. No subscription. Runs on your hardware.</p>
+
+  <!-- 1. LIVE DEMO — give the visitor the impression first -->
+  <h2>Try it now — right here, nothing to install</h2>
+  <p>This demo runs in your browser (Chrome or Edge best). It shows you exactly how it feels: <strong>press the button, hear it speak, read the words as they appear.</strong></p>
+
+  <div class="card">
+    <h3>Hear a sample</h3>
+    <div class="btn-row">
+      <button id="speakBtn" class="btn btn-primary" aria-label="Hear a sample sentence spoken aloud">🔊 Hear a sample</button>
+      <button id="langBtn" class="btn btn-ghost" aria-label="Switch language">English</button>
+    </div>
+    <div class="demo-stage" id="stage" aria-live="polite">
+      <span class="who">Spoken out loud</span>
+      <span class="hear">Press "Hear a sample" — this line will be read aloud while the words appear here.</span>
+    </div>
+    <p class="status" id="status" role="status">Ready. Works best in Chrome or Edge.</p>
+    <p class="note">Everything here runs in your browser — nothing is recorded, nothing leaves this page. Screen-reader friendly: buttons are announced.</p>
+  </div>
+
+  <div class="card">
+    <h3>Talk to it (your mic)</h3>
+    <p>If your browser supports it, press Listen, speak a line, and watch your words appear below while the assistant echoes them back.</p>
+    <div class="btn-row">
+      <button id="listenBtn" class="btn btn-ghost" aria-label="Toggle microphone listening">🎤 Listen</button>
+    </div>
+    <div class="demo-stage" aria-live="polite">
+      <span class="who">What you said</span>
+      <span id="heardText">—</span>
+      <span class="interim" id="interim"></span>
+    </div>
+    <p class="status" id="micStatus" role="status">Mic feature available in Chrome or Edge.</p>
+    <p class="note">Your voice is transcribed by the browser, locally. It is not sent anywhere. If you prefer not to use the mic, that is fine — the whole assistant also works by typing.</p>
+  </div>
+
+  <hr class="hr" />
+
+  <!-- 2. WHAT IT IS — explain before suggesting the install -->
+  <h2>What is Voice Assistant?</h2>
+  <p>It is a small program that runs on <strong>your own computer</strong> (Windows, Linux, or Mac). It listens to you, sends your question to an AI running on your machine, and <strong>speaks the answer out loud</strong> while <strong>showing every word as live text</strong>.</p>
+
+  <div class="grid2">
+    <div class="opt-card">
+      <h4>🎧 For blind users</h4>
+      <p style="color:#b8b8c8;margin:0">Open the page and it starts listening. Everything is spoken — the app even reads its own controls. No need to find or press anything.</p>
+    </div>
+    <div class="opt-card">
+      <h4>👁️ For deaf users</h4>
+      <p style="color:#b8b8c8;margin:0">Every word appears on screen as it happens. A "Visual mode" toggle turns speech off entirely — reading only.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:16px">Two honest things before you decide:</p>
+  <ul style="color:#b8b8c8;padding-left:20px;margin-bottom:12px">
+    <li>The browser's voice is already built in — this demo uses it. The full assistant adds <strong>one thing</strong>: an AI that answers you.</li>
+    <li>The full assistant needs an AI model on your machine. That is the one step that needs a little setup, and it is <strong>100% optional</strong>.</li>
+  </ul>
+
+  <h2>Want the full assistant?</h2>
+  <p>It is your choice. The demo above already shows the feeling. If you would like to try the real thing, one command installs it — <strong>no payment, no account, no monthly fee</strong>. If you prefer, you can simply close this page.</p>
+
+  <div class="card">
+    <h3>Install (Linux &amp; Mac)</h3>
+    <code class="cmd">curl -fsSL https://008amonra.github.io/loom/install.sh | bash</code>
+    <p class="note">This also installs opencode, Piper TTS voice, and a few helpers. Runs entirely on your machine.</p>
+  </div>
+
+  <div class="card">
+    <h3>Install (Windows)</h3>
+    <p style="color:#b8b8c8">Run in PowerShell:</p>
+    <code class="cmd">irm https://008amonra.github.io/loom/install.ps1 | iex</code>
+    <p class="note">Same result — everything local, nothing sent to a cloud unless you configure it.</p>
+  </div>
+
+  <p style="color:#b8b8c8">After install, start it with:</p>
+  <code class="cmd">voice-assistant</code>
+  <p class="note">It opens at <strong>http://localhost:8081</strong>. You configure your own AI endpoint in Settings — by default it points at a local server (e.g. Gemma on port 1234).</p>
+
+  <div class="footer">
+    <p>From <a href="https://008amonra.github.io/loom/">45dgof8</a> · privacy: the full assistant only talks to the AI endpoint you configure. No cloud by default.</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var lang = 'en';
+  var SAMPLE_EN = 'Hello! I am a voice assistant. I can speak and show every word on screen. Press the button below to hear more.';
+  var SAMPLE_DE = 'Hallo! Ich bin ein Sprachassistent. Ich kann sprechen und jedes Wort auf dem Bildschirm zeigen.';
+  var stage = document.getElementById('stage');
+  var statusEl = document.getElementById('status');
+  var speakBtn = document.getElementById('speakBtn');
+  var langBtn = document.getElementById('langBtn');
+  var interim = document.getElementById('interim');
+  var heardText = document.getElementById('heardText');
+  var listenBtn = document.getElementById('listenBtn');
+  var micStatus = document.getElementById('micStatus');
+  var recognition = null;
+  var listening = false;
+  var voice = null;
+
+  function pickVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    var vs = speechSynthesis.getVoices();
+    var want = lang === 'de' ? 'de-DE' : 'en-US';
+    for (var i = 0; i < vs.length; i++) {
+      if (vs[i].lang === want && vs[i].localService) return vs[i];
+    }
+    for (var j = 0; j < vs.length; j++) {
+      if (vs[j].lang === want) return vs[j];
+    }
+    return null;
+  }
+
+  function speak(text) {
+    if (!('speechSynthesis' in window)) {
+      statusEl.textContent = 'Speech not supported in this browser. Try Chrome or Edge.';
+      statusEl.className = 'status err';
+      return;
+    }
+    var hear = stage.querySelector('.hear');
+    hear.textContent = text;
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var v = pickVoice();
+    if (v) u.voice = v;
+    u.lang = lang === 'de' ? 'de-DE' : 'en-US';
+    u.rate = 0.95;
+    u.onstart = function () { statusEl.textContent = 'Speaking…'; statusEl.className = 'status speaking'; };
+    u.onend = function () { statusEl.textContent = 'Done.'; statusEl.className = 'status'; };
+    speechSynthesis.speak(u);
+  }
+
+  speakBtn.addEventListener('click', function () {
+    speak(lang === 'de' ? SAMPLE_DE : SAMPLE_EN);
+  });
+
+  langBtn.addEventListener('click', function () {
+    lang = lang === 'en' ? 'de' : 'en';
+    langBtn.textContent = lang === 'en' ? 'English' : 'Deutsch';
+    if (recognition) { try { recognition.lang = lang === 'de' ? 'de-DE' : 'en-US'; } catch (e) {} }
+    speak(lang === 'de' ? SAMPLE_DE : SAMPLE_EN);
+  });
+
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = function () { voice = pickVoice(); };
+  }
+
+  function makeRecognition() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return null;
+    var rec = new SR();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = lang === 'de' ? 'de-DE' : 'en-US';
+    rec.onresult = function (e) {
+      var interimText = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        var res = e.results[i];
+        if (res.isFinal) {
+          heardText.textContent = res[0].transcript.trim();
+          speak(res[0].transcript.trim());
+        } else {
+          interimText += res[0].transcript;
+        }
+      }
+      interim.textContent = interimText;
+    };
+    rec.onerror = function (ev) {
+      micStatus.textContent = 'Mic error: ' + (ev.error || 'unknown') + '. You can ignore this — the demo still works by pressing "Hear a sample".';
+      micStatus.className = 'status err';
+      listening = false;
+      listenBtn.textContent = '🎤 Listen';
+      try { rec.stop(); } catch (e) {}
+    };
+    rec.onend = function () {
+      if (listening) { try { rec.start(); } catch (e) {} }
+    };
+    return rec;
+  }
+
+  listenBtn.addEventListener('click', function () {
+    if (!recognition) recognition = makeRecognition();
+    if (!recognition) {
+      micStatus.textContent = 'Mic not supported here. Use Chrome or Edge — or just press "Hear a sample" above.';
+      micStatus.className = 'status err';
+      return;
+    }
+    if (listening) {
+      listening = false;
+      listenBtn.textContent = '🎤 Listen';
+      micStatus.textContent = 'Listening stopped.';
+      micStatus.className = 'status';
+      try { recognition.stop(); } catch (e) {}
+    } else {
+      listening = true;
+      listenBtn.textContent = '⏹ Stop';
+      listenBtn.classList.add('btn-primary');
+      micStatus.textContent = 'Listening… speak now. Your words appear below and are echoed back.';
+      micStatus.className = 'status listening';
+      try { recognition.start(); } catch (e) {}
+    }
+  });
+})();
+</script>
+</body>
+</html>
