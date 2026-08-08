@@ -51,6 +51,23 @@
 
   .future{text-align:center;padding:24px;color:#555;font-size:0.85rem;border:1px dashed #2a2a2a;border-radius:12px;margin-top:20px}
 
+  .signal-card{background:linear-gradient(180deg,#10131f 0%,#0d0d14 100%);border:1px solid #2a3a4a;border-radius:16px;padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+  .signal-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00ff88,#00ccff)}
+  .signal-badge{display:inline-block;background:#1a2a3a;color:#44aaff;font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:12px}
+  .signal-title{font-size:1.15rem;font-weight:600;margin-bottom:4px;color:#e0e0e8}
+  .signal-meta{color:#8899aa;font-size:0.8rem;margin-bottom:16px}
+  .signal-desc{color:#aabbcc;font-size:0.9rem;line-height:1.6;margin-bottom:16px}
+  .signal-pulse{background:#0a0a12;border:1px solid #1a2a3a;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+  .signal-pulse svg{width:100%;height:auto;display:block}
+  .signal-data{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+  .data-chip{background:#0a0f1a;border:1px solid #1f2f40;border-radius:8px;padding:10px 12px}
+  .data-chip .k{display:block;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:#667788;margin-bottom:3px}
+  .data-chip .v{display:block;font-size:1rem;font-weight:600;color:#00ccff}
+  .data-chip .v.hot{color:#00ff88}
+  .signal-note{color:#556677;font-size:0.75rem;line-height:1.5;border-top:1px solid #1a2a3a;padding-top:12px;margin-top:2px}
+  .signal-note a{color:#4488ff;text-decoration:none}
+  .signal-note a:hover{text-decoration:underline}
+
   .footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.82rem;border-top:1px solid #222;margin-top:40px}
   .footer a{color:#4488ff}
 
@@ -401,6 +418,52 @@
   <div class="ep-links">
     <a class="dl-mp3" href="https://008amonra.github.io/loom/breakfast/ep3-en.mp3" download>&#x2B07; Download MP3</a>
     <a class="dl-script" href="https://008amonra.github.io/loom/breakfast/ep3-en-script.txt" download>&#x1F4DD; Script</a>
+  </div>
+</div>
+
+<!-- Signals from the Stream -->
+<div class="signal-card">
+  <div class="signal-badge">&#x1F4E1; Signals from the Stream</div>
+  <div class="signal-title">Signal of the Week: The 22-Minute Signal</div>
+  <div class="signal-meta">Research-backed &middot; real YouTube data &middot; updated August 2026</div>
+
+  <div class="signal-pulse">
+    <svg viewBox="0 0 600 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Radio signal pulse waveform">
+      <defs>
+        <linearGradient id="pulse-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00ccff"/>
+          <stop offset="100%" stop-color="#00ff88"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="600" height="90" fill="#0a0a12"/>
+      <line x1="0" y1="45" x2="600" y2="45" stroke="#1a2a3a" stroke-width="1"/>
+      <path d="M0 45 H80 L95 45 M95 45 Q97 8 100 45 M100 45 Q103 82 106 45 M106 45 Q109 22 112 45 M112 45 Q115 66 118 45 M118 45 L140 45 M140 45 Q143 15 146 45 M146 45 Q149 74 152 45 M152 45 Q155 30 158 45 M158 45 L200 45 M200 45 Q205 5 210 45 M210 45 Q215 85 220 45 M220 45 Q225 25 230 45 M230 45 L260 45 M260 45 Q263 12 266 45 M266 45 Q269 78 272 45 M272 45 Q275 35 278 45 M278 45 L320 45 M320 45 Q325 8 330 45 M330 45 Q335 80 340 45 M340 45 Q345 20 350 45 M350 45 L390 45 M390 45 Q393 28 396 45 M396 45 Q399 62 402 45 M402 45 Q405 18 408 45 M408 45 L430 45 M430 45 Q433 10 436 45 M436 45 Q439 72 442 45 M442 45 Q445 40 448 45 M448 45 L520 45" fill="none" stroke="url(#pulse-grad)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="95" cy="45" r="4" fill="#00ff88" opacity="0.9"/>
+      <circle cx="95" cy="45" r="9" fill="#00ff88" opacity="0.25"/>
+      <text x="600" y="78" text-anchor="end" fill="#445566" font-family="monospace" font-size="11" letter-spacing="2">PERIOD: 22 MIN &middot; STABLE SINCE 1988</text>
+    </svg>
+  </div>
+
+  <div class="signal-desc">
+    In 2022, the Murchison Widefield Array in Western Australia caught something the radio-sky census
+    had never seen: a signal arriving every 22 minutes, like clockwork. Pulsars do that &mdash; but not
+    this slowly, and not this steadily. Digging through decades of archive recordings, astronomers found
+    the same pulses in data going back to 1988. Thirty-five years of perfect rhythm. A neutron star
+    should have slowed or drifted. This one never blinked. Where it comes from, no one has said yet.
+  </div>
+
+  <div class="signal-data">
+    <div class="data-chip"><span class="k">Source video</span><span class="v">2.56M views</span></div>
+    <div class="data-chip"><span class="k">Velocity</span><span class="v">2,423 views/day</span></div>
+    <div class="data-chip"><span class="k">Channel</span><span class="v">Astrum &middot; 2.86M subs</span></div>
+    <div class="data-chip"><span class="k">Competition</span><span class="v hot">50 / 100</span></div>
+  </div>
+
+  <div class="signal-note">
+    Researched with <a href="https://45dgof8.com/" rel="noopener">vidiq-lite</a> &mdash; no subscription required.
+    Source: <a href="https://www.youtube.com/watch?v=9hmZSOy_5qU" rel="noopener" target="_blank">Astrum, "We've Been Receiving a Radio Signal Every 22-Minutes for 35 Years"</a> &middot;
+    Channel: <a href="https://www.youtube.com/@astrumspace" rel="noopener" target="_blank">Astrum</a> &middot; best-ever upload: "Everything We Know About 'Oumuamua" (6.6M).
+    Episode idea mined from the real transcript.
   </div>
 </div>
 
