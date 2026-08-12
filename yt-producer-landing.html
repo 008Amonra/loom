@@ -89,18 +89,22 @@ footer{text-align:center;padding:40px 24px;border-top:1px solid #1a1a1a;color:#5
 footer a{color:#777;text-decoration:none}
 footer a:hover{color:#d4af37}
 
+.demo-thumb{transition:.2s;cursor:pointer}
+.demo-thumb:hover{transform:translateY(-2px)}
+.demo-thumb img:hover{border-color:rgba(212,175,55,.4)!important}
+
 @media(max-width:600px){.hero{padding:100px 16px 60px}.wrap{padding:60px 16px}}
 </style>
 </head>
 <body>
 
 <nav>
-<div class="logo">45<span>dgof8</span></div>
+<a href="https://45dgof8.com" style="text-decoration:none"><div class="logo">45<span>dgof8</span></div></a>
 <div>
 <a href="https://tools.45dgof8.com">Tools</a>
-<a href="/" style="color:#d4af37">Agent Services</a>
-<a href="https://45dgof8.com/apps.html">Apps</a>
-<a href="/buy" class="btn-nav">Buy $19</a>
+<a href="./" style="color:#d4af37">Agent Services</a>
+<a href="apps.html">Apps</a>
+<a href="buy.html" class="btn-nav">Buy $19</a>
 </div>
 </nav>
 
@@ -110,7 +114,7 @@ footer a:hover{color:#d4af37}
 <p>Erstelle professionelle Multi-Frame Shorts mit AI Voiceover, Ken Burns Effekten und nahtlosen Crossfades — direkt im Browser.</p>
 <div class="cta-group">
 <a href="https://yt-producer.45dgof8.com" class="cta-primary">Kostenlos Testen</a>
-<a href="/buy" class="cta-secondary">$19/Monat → Kein Wasserzeichen</a>
+<a href="buy.html" class="cta-secondary">$19/Monat → Kein Wasserzeichen</a>
 </div>
 <p class="sub">Keine Registration. Kein Download. Wasserzeichen-frei ab $19/mo.</p>
 </section>
@@ -121,6 +125,27 @@ footer a:hover{color:#d4af37}
 <h2>So sieht's aus</h2>
 <div class="demo-wrap">
 <video src="assets/yt-producer-demo.mp4" controls poster="demo-slides/slide-1.png"></video>
+</div>
+
+<div class="section-label">Use Cases</div>
+<h2>Sieh selbst</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:60px">
+<div class="demo-thumb" onclick="document.getElementById('demoPlayer').src='assets/yt-producer-demo.mp4';document.getElementById('demoPlayer').play();this.parentElement.parentElement.scrollIntoView({behavior:'smooth'})">
+<img src="demo-slides/slide-1.png" alt="Produktdemo" style="width:100%;border-radius:8px;aspect-ratio:9/16;object-fit:cover;border:1px solid #1a1a22;cursor:pointer">
+<div style="text-align:center;font-size:.75rem;color:#888;margin-top:6px">🎬 Produktdemo</div>
+</div>
+<div class="demo-thumb" onclick="document.getElementById('demoPlayer').src='assets/yt-producer-testimonial.mp4';document.getElementById('demoPlayer').play();document.getElementById('demoWrap').scrollIntoView({behavior:'smooth'})">
+<img src="demo-slides/testimonial-1.png" alt="Kundenstimme" style="width:100%;border-radius:8px;aspect-ratio:9/16;object-fit:cover;border:1px solid #1a1a22;cursor:pointer">
+<div style="text-align:center;font-size:.75rem;color:#888;margin-top:6px">💬 Kundenstimme</div>
+</div>
+<div class="demo-thumb" onclick="document.getElementById('demoPlayer').src='assets/yt-producer-howto.mp4';document.getElementById('demoPlayer').play();document.getElementById('demoWrap').scrollIntoView({behavior:'smooth'})">
+<img src="demo-slides/howto-1.png" alt="How-To" style="width:100%;border-radius:8px;aspect-ratio:9/16;object-fit:cover;border:1px solid #1a1a22;cursor:pointer">
+<div style="text-align:center;font-size:.75rem;color:#888;margin-top:6px">📚 How-To Tutorial</div>
+</div>
+</div>
+
+<div id="demoWrap" class="demo-wrap">
+<video id="demoPlayer" src="assets/yt-producer-demo.mp4" controls poster="demo-slides/slide-1.png"></video>
 </div>
 
 <div class="section-label">Funktionen</div>
