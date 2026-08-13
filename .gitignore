@@ -2,12 +2,16 @@
 *.enc.json
 .env*
 secrets.env
+n8n-credentials.txt
+n8n-credentials*
 
 # Operational / infrastructure - NOT for public repo
 email-agent/
 downloads/
 inbox/
 start-n8n.sh
+nomad/state/
+nomad/nomad-*.service
 tg-auto-reply.sh
 session-state.json
 tts.sh
@@ -18,7 +22,6 @@ tools/__pycache__/
 tools/Dockerfile
 tools/nginx-site.conf
 tools/start.sh
-nomad/nomad-*.service
 crypto-report-*.csv
 crypto-report-*.ods
 .~lock.*

@@ -68,6 +68,12 @@ def cmd_scan(args):
             print(f"    {emoji} {n['process_name']} (PID {n['pid']}) — {n['anomaly_type']} → {remote} [{n['risk_level']}]")
         print()
 
+    disk = result.get("disk", {})
+    if disk:
+        icon = "🔴" if disk["level"] == "crit" else "🟡" if disk["level"] == "warn" else "✅"
+        print(f"  {icon} Disk: {disk['free_gb']}G free / {disk['total_gb']}G ({disk['pct']}%) — {disk['level']}")
+        print()
+
     mode = "BLOCKING" if args.block else "monitoring (dry-run)"
     print(f"  Mode: {mode}")
 

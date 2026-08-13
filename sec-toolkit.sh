@@ -12,6 +12,10 @@ set -euo pipefail
 #   ./sec-toolkit.sh clam-setup       install ClamAV + ClamTk
 #   ./sec-toolkit.sh fw               firewall setup only
 #   ./sec-toolkit.sh files            write toolkit helper files to ~/sec-toolkit
+#
+# DISCLAIMER: This tool modifies system configuration (firewall, sysctl,
+# AppArmor, auto-updates). Always create a backup before hardening.
+# Provided "as is" without warranty. See LICENSE for full terms.
 # ─────────────────────────────────────────────────────────────────────
 
 BASE_DIR="${HOME}/sec-toolkit"

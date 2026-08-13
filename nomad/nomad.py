@@ -936,6 +936,89 @@ class Alerter:
         except Exception:
             pass
 
+    def alert_disk(self, info: dict):
+        """Send desktop notification on disk threshold crossing."""
+        level = info["level"]
+        pct = info["pct"]
+        free = info["free_gb"]
+        total = info["total_gb"]
+
+        event = {
+            "type": f"disk_{level}",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "pct": pct,
+            "free_gb": free,
+            "total_gb": total,
+        }
+        self._log_event(event)
+        self._log_alert(event)
+
+        if level == "crit":
+            title = " DISK CRITICAL"
+            body = f"Root at {pct}% — only {free}G free of {total}G"
+        else:
+            title = " DISK WARNING"
+            body = f"Root at {pct}% — {free}G free of {total}G"
+
+        try:
+            subprocess.run(
+                ["notify-send", "-u", "critical", title, body],
+                timeout=5, stderr=subprocess.DEVNULL,
+            )
+        except Exception:
+            pass
+
+        self._telegram_disk(info)
+
+    def _telegram_disk(self, info: dict):
+        if self.dry_run or not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+            return
+
+        alert_key = f"disk:{info['level']}"
+        now = time.time()
+        if alert_key in self._last_alert_time:
+            if now - self._last_alert_time[alert_key] < self._alert_cooldown:
+                return
+        self._last_alert_time[alert_key] = now
+
+        try:
+            import requests
+            emoji = "🔴" if info["level"] == "crit" else "🟡"
+            msg = (
+                f"{emoji} *nomad disk alert*\n"
+                f"Root: `{info['pct']}%`\n"
+                f"Free: `{info['free_gb']}G` / `{info['total_gb']}G`\n"
+                f"Level: `{info['level']}`"
+            )
+            requests.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                json={"chat_id": TELEGRAM_CHAT_ID, "text": msg, "parse_mode": "Markdown"},
+                timeout=10,
+            )
+        except Exception:
+            pass
+
+    def alert_disk_recovered(self, info: dict):
+        """Send recovery notification when disk drops below warn threshold."""
+        event = {
+            "type": "disk_recovered",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "pct": info["pct"],
+            "free_gb": info["free_gb"],
+        }
+        self._log_event(event)
+
+        title = " DISK OK"
+        body = f"Root back to {info['pct']}% — {info['free_gb']}G free"
+
+        try:
+            subprocess.run(
+                ["notify-send", "-u", "normal", title, body],
+                timeout=5, stderr=subprocess.DEVNULL,
+            )
+        except Exception:
+            pass
+
     def alert_network_anomalies(self, anomalies: list):
         if not anomalies:
             return
@@ -1031,6 +1114,51 @@ class Blocker:
             return False
 
 
+# ─── Disk Monitor ────────────────────────────────────────────
+
+class DiskMonitor:
+    """Monitors root disk free space and alerts on threshold crossings.
+    Uses absolute free space (not percentage) to avoid ext4 reserved-block confusion.
+    Tracks state so it only fires once per crossing, not every scan."""
+
+    def __init__(self, warn_gb: int = 15, crit_gb: int = 5):
+        self.warn_gb = warn_gb
+        self.crit_gb = crit_gb
+        self.state = "ok"  # ok, warn, crit
+        self._last_free_gb = 0.0
+
+    def check(self) -> dict:
+        """Returns {'level': 'ok'|'warn'|'crit', 'free_gb': N, 'total_gb': N,
+        'triggered': True} if this scan just crossed a threshold."""
+        import shutil
+        usage = shutil.disk_usage("/")
+        free_gb = usage.free / (1024 ** 3)
+        pct = usage.used / usage.total * 100
+
+        old_state = self.state
+        new_state = "ok"
+        if free_gb <= self.crit_gb:
+            new_state = "crit"
+        elif free_gb <= self.warn_gb:
+            new_state = "warn"
+
+        self.state = new_state
+        self._last_free_gb = round(free_gb, 1)
+
+        triggered = (new_state != old_state and new_state != "ok")
+
+        return {
+            "level": new_state,
+            "free_gb": round(free_gb, 1),
+            "total_gb": round(usage.total / (1024 ** 3), 1),
+            "pct": round(pct, 1),
+            "triggered": triggered,
+        }
+
+    def get_status(self) -> dict:
+        return {"state": self.state, "pct": 0, "free_gb": self._last_free_gb, "total_gb": 0}
+
+
 # ─── Self-Heal ───────────────────────────────────────────────
 
 class SelfHeal:
@@ -1122,11 +1250,13 @@ class NomadEngine:
         self.fingerprinter = Fingerprinter()
         self.credential_monitor = CredentialMonitor()
         self.network_monitor = NetworkMonitor()
+        self.disk_monitor = DiskMonitor()
         self.alerter = Alerter(dry_run=dry_run)
         self.blocker = Blocker()
         self.self_heal = SelfHeal()
         self.dry_run = dry_run
         self.auto_block = auto_block
+        self._disk_was_alerted = False
 
     def run_once(self) -> dict:
         degraded = self.self_heal.get_status()["state"] if HAS_PSUTIL else "nominal"
@@ -1165,6 +1295,15 @@ class NomadEngine:
 
         self.tracker.save(snapshot)
 
+        # Disk check after scan
+        disk_info = self.disk_monitor.check()
+        if disk_info["triggered"]:
+            self.alerter.alert_disk(disk_info)
+            self._disk_was_alerted = True
+        elif disk_info["level"] == "ok" and self._disk_was_alerted:
+            self.alerter.alert_disk_recovered(disk_info)
+            self._disk_was_alerted = False
+
         # Self-heal check after scan
         self.self_heal.check(scan_time)
         health = self.self_heal.get_status()
@@ -1185,6 +1324,7 @@ class NomadEngine:
             "new_processes": len(changes["processes_new"]),
             "gone_processes": len(changes["processes_gone"]),
             "scan_time_s": round(scan_time, 2),
+            "disk": disk_info,
             "health": health,
         }
 
@@ -1207,8 +1347,13 @@ class NomadEngine:
             cpu = health.get("cpu_percent", "?")
             scan_t = result.get("scan_time_s", "?")
             status_icon = {"nominal": "✓", "busy": "⚡", "throttled": "🔻", "critical": "🔴"}.get(state, "?")
+            disk = result.get("disk", {})
+            disk_pct = disk.get("pct", "?")
+            disk_free = disk.get("free_gb", "?")
+            disk_icon = "🔴" if disk.get("level") == "crit" else "🟡" if disk.get("level") == "warn" else ""
             print(f"  [{ts}] {status_icon} {result['processes']}p {result['containers']}c {result['services']}s "
-                  f"| scan={scan_t}s cpu={cpu}% state={state}", flush=True)
+                  f"| scan={scan_t}s cpu={cpu}% state={state}"
+                  f"{disk_icon} disk={disk_pct}%/{disk_free}G", flush=True)
 
             # Dynamic interval: back off when degraded
             effective_interval = interval
