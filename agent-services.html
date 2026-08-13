@@ -353,11 +353,12 @@
   </div>
   <p class="note" style="margin-top:12px">Or run: <code>curl -fsSL https://008amonra.github.io/loom/install.sh | bash</code></p>
   <div style="margin-top:14px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
-    <strong style="color:#44cc66">📦 After installing:</strong> Open LM Studio → search
-    <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Qwen2.5-Coder-7B-Instruct GGUF</code>
-    → download a <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Q4_K_M</code> quant
-    → start the server. opencode connects on port 1234 automatically.
-    <a href="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF" target="_blank" style="color:#4488ff;margin-left:6px">Browse models →</a>
+    <strong style="color:#44cc66">📦 After installing:</strong> opencode needs a local model server on port 1234.
+    Install <a href="https://lmstudio.ai/" target="_blank" style="color:#4488ff">LM Studio</a> (free), search for
+    <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Gemma 3 4B</code>, download the
+    <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Q4_K_M</code> quant, load it, and press
+    <strong style="color:#ddd">Start Server</strong> in the Developer tab. install.sh walks you through this and confirms when it's live.
+    Or let install.sh do it all automatically (optional, downloads ~3 GB).
   </div>
   <div style="margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
     <strong style="color:#44cc66">⚡ Also included:</strong> <strong style="color:#ddd">n8n</strong> is the automation engine — connect email → Telegram, generate videos from text, monitor RSS feeds, run AI workflows, trigger talking-head animations. All pre-configured with automatic daily backups. You describe what you want, the workflows do the rest.

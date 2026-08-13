@@ -113,46 +113,101 @@ CONFIG
   }
 }
 CONFIG
-    echo "  Note: Make sure LM Studio is running on port 1234"
+    echo "  Note: The next step will help you get a local LLM running on port 1234"
     ;;
 esac
 ok "opencode configured"
 
-# ── 3. llmfit — hardware-aware model recommender (optional) ──
+# ── 3. Local LLM server — detect & guide (non-invasive) ──
+# Checks whether a local LLM already answers on port 1234 (LM Studio, llama-server, ...).
+# If not, shows a guided walkthrough instead of downloading anything automatically.
 echo ""
-echo "Install llmfit? (hardware-aware model recommender)"
-echo "  Scans your machine and picks the best local LLM."
-read -rp "Install llmfit? [y/N]: " INSTALL_LLMFIT
-if [[ "$INSTALL_LLMFIT" =~ ^[Yy]$ ]]; then
-  if command -v llmfit &>/dev/null; then
-    ok "llmfit already installed"
-  else
-    info "Installing llmfit..."
-    if command -v brew &>/dev/null; then
-      brew install AlexsJones/llmfit/llmfit 2>/dev/null || true
-    fi
-    if ! command -v llmfit &>/dev/null; then
-      curl -fsSL https://llmfit.axjns.dev/install.sh | sh -s -- --local 2>/dev/null || true
-    fi
-  fi
-  if command -v llmfit &>/dev/null; then
-    ok "llmfit ready"
-    info "Scanning hardware and recommending models..."
-    mkdir -p "$PROJECT_DIR"
-    llmfit recommend --json --limit 3 2>/dev/null > "$PROJECT_DIR/llmfit-recommendations.json" 2>/dev/null || true
-    if [ -s "$PROJECT_DIR/llmfit-recommendations.json" ]; then
-      ok "Top model recommendations saved to llmfit-recommendations.json"
-      echo ""
-      echo "  Top picks for this machine:"
+echo "── Local LLM server ──"
+echo "  opencode needs a local model server on port 1234"
+echo "  (e.g. LM Studio, free, runs entirely on your machine)."
+if curl -fsS -m 3 http://127.0.0.1:1234/v1/models >/dev/null 2>&1; then
+  ok "LLM server already running on port 1234 — nothing to do."
+else
+  info "No LLM server detected on port 1234 yet."
+  echo ""
+  echo "  Guided setup (about 2 minutes, free, no account):"
+  echo ""
+  echo "    1. Download LM Studio:  https://lmstudio.ai  (Linux / macOS / Windows)"
+  echo "    2. Open LM Studio → search for \"Gemma 3 4B\""
+  echo "       and click Download (pick the Q4_K_M quant if asked)."
+  echo "    3. Click the model to load it, then open the Developer tab"
+  echo "       and press \"Start Server\" (port 1234)."
+  echo ""
+  echo "  Alternatively, from a terminal with LM Studio installed:"
+  echo "      lms get lmstudio-community/gemma-3-4b-it-GGUF@Q4_K_M"
+  echo "      lms server start -p 1234"
+  echo ""
+  echo "  Run a hardware check first? (picks the best model for your machine)"
+  read -rp "  Run llmfit hardware check? [y/N]: " RUN_LLMFIT
+  if [[ "$RUN_LLMFIT" =~ ^[Yy]$ ]]; then
+    if command -v llmfit &>/dev/null; then
       llmfit recommend --cli --limit 3 2>/dev/null || true
       echo ""
+      echo "  Full details saved to llmfit-recommendations.json"
+      llmfit recommend --json --limit 3 2>/dev/null > llmfit-recommendations.json 2>/dev/null || true
+    else
+      info "Installing llmfit (hardware-aware model recommender)..."
+      if command -v brew &>/dev/null; then
+        brew install AlexsJones/llmfit/llmfit 2>/dev/null || true
+      fi
+      if ! command -v llmfit &>/dev/null; then
+        curl -fsSL https://llmfit.axjns.dev/install.sh | sh -s -- --local 2>/dev/null || true
+      fi
+      if command -v llmfit &>/dev/null; then
+        llmfit recommend --cli --limit 3 2>/dev/null || true
+        echo ""
+        echo "  Full details saved to llmfit-recommendations.json"
+        llmfit recommend --json --limit 3 2>/dev/null > llmfit-recommendations.json 2>/dev/null || true
+      else
+        err "llmfit install failed — try: brew install llmfit"
+      fi
     fi
+  fi
+  echo ""
+  echo "  When the server is running, opencode connects automatically."
+  echo "  Waiting for a server on port 1234... (press Enter once LM Studio is started)"
+  read -rp "" _
+  if curl -fsS -m 3 http://127.0.0.1:1234/v1/models >/dev/null 2>&1; then
+    ok "LLM server detected on port 1234 — opencode will connect."
   else
-    err "llmfit install failed — try: brew install llmfit"
+    err "No server on port 1234 yet. You can start it later; opencode retries on launch."
   fi
 fi
 
-# ── 4. Install utility scripts ──
+# ── 4. Optional: fully automatic local LLM setup (opt-in) ──
+# Downloads Gemma 3 4B via LM Studio's CLI and starts the server — only if the
+# user explicitly confirms. Nothing is downloaded without consent.
+echo ""
+echo "── Fully automatic LLM setup (optional) ──"
+echo "  Downloads Gemma 3 4B (about 3 GB) and starts the server on port 1234."
+echo "  Requires LM Studio's command-line tool (lms)."
+read -rp "  Run fully automatic setup? [y/N]: " AUTO_LLM
+if [[ "$AUTO_LLM" =~ ^[Yy]$ ]]; then
+  if curl -fsS -m 3 http://127.0.0.1:1234/v1/models >/dev/null 2>&1; then
+    ok "Server already running on port 1234 — skipping auto setup."
+  elif command -v lms &>/dev/null; then
+    info "Downloading Gemma 3 4B (Q4_K_M) via lms..."
+    lms get lmstudio-community/gemma-3-4b-it-GGUF@Q4_K_M >/dev/null 2>&1 || true
+    info "Loading model..."
+    lms load lmstudio-community/gemma-3-4b-it-GGUF@Q4_K_M >/dev/null 2>&1 || true
+    info "Starting server on port 1234..."
+    lms server start -p 1234 >/dev/null 2>&1 || lms server start --port 1234 >/dev/null 2>&1 || true
+    if curl -fsS -m 5 http://127.0.0.1:1234/v1/models >/dev/null 2>&1; then
+      ok "LLM server running on port 1234 — done."
+    else
+      err "Server not up yet. Start it manually: lms server start -p 1234  (opencode retries on launch)."
+    fi
+  else
+    err "lms not found — install LM Studio (https://lmstudio.ai) first, then rerun this step."
+  fi
+fi
+
+# ── 5. Install utility scripts ──
 BIN_DIR="$HOME/bin"
 mkdir -p "$BIN_DIR"
 
@@ -262,12 +317,12 @@ grep -q 'export PATH="$HOME/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null || \
 
 ok "utility scripts installed (speak, v-toggle, voice-button)"
 
-# ── 5. Create project directory ──
+# ── 6. Create project directory ──
 PROJECT_DIR="$HOME/45dgof8-agent"
 mkdir -p "$PROJECT_DIR"
 ok "project directory: $PROJECT_DIR"
 
-# ── 6. Welcome ──
+# ── 7. Welcome ──
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${GREEN}  45dgof8 Agent Services — installed   ${NC}"
@@ -285,6 +340,7 @@ echo "    voice-button      — click, speak 5s, hear Big Pickle reply"
 echo "    v-toggle          — push-to-talk (press twice)"
 echo "    voice-assistant   — blind + deaf assistant (opens in browser)"
 echo "    llmfit            — model recommender (if installed)"
+echo "    lms               — LM Studio CLI (download/start models)"
 echo ""
 echo "  Tip: Bind Super+V to 'voice-button' in COSMIC Settings → Keyboard → Shortcuts"
 
