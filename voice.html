@@ -27,7 +27,7 @@
   .sonar-status.on{color:#00ff88}
   #sonarBtn{font-size:0.95rem;padding:10px 18px}
   #sonarBtn[aria-pressed="true"]{background:#00ff88;color:#0a0a0a;border-color:#00ff88}
-  .btn:focus-visible,a:focus-visible,.cmd:focus-visible,.sonar-target{outline:3px solid #00ccff;outline-offset:2px;border-radius:4px}
+  .btn:focus-visible,a:focus-visible,button:focus-visible,.cmd:focus-visible,.sonar-target{outline:3px solid #00ccff;outline-offset:2px;border-radius:4px}
 
   .sub{text-align:center;color:#b8b8c8;font-size:1.05rem;max-width:600px;margin:0 auto 40px}
   .sub strong{color:#00ff88}
@@ -43,6 +43,9 @@
   .card h3{margin-top:0}
 
   .btn{display:inline-block;padding:14px 22px;border-radius:10px;font-size:1rem;font-weight:700;text-align:center;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+  .copy-btn{display:inline-block;margin:0 0 4px 0;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:1px solid #3a3a4a;background:#16162a;color:#c8a0ff;transition:all .15s;font-family:inherit}
+  .copy-btn:hover{background:#1f1f38;border-color:#00ccff}
+  .copy-btn.copied{background:#123;border-color:#00ccff;color:#8ef0ff}
   .btn-primary{background:#00ff88;color:#0a0a0a}
   .btn-primary:hover{background:#33ffaa;transform:translateY(-1px)}
   .btn-ghost{background:transparent;color:#ddd;border:1px solid #3a3a4a}
@@ -160,6 +163,7 @@
   <div class="card">
     <h3>Install (Linux &amp; Mac)</h3>
     <code class="cmd" tabindex="0" aria-label="Install command for Linux and Mac: curl, f s slash to link install dot sh, pipe to bash">curl -fsSL https://008amonra.github.io/loom/install.sh | bash</code>
+    <button class="copy-btn" type="button" data-cmd="curl -fsSL https://008amonra.github.io/loom/install.sh | bash" aria-label="Copy the Linux and Mac install command to clipboard">Copy command</button>
     <p class="note">This also installs opencode, Piper TTS voice, and a few helpers. Runs entirely on your machine.</p>
   </div>
 
@@ -167,11 +171,13 @@
     <h3>Install (Windows)</h3>
     <p style="color:#b8b8c8">Run in PowerShell:</p>
     <code class="cmd" tabindex="0" aria-label="Install command for Windows PowerShell: eye are em, https link install dot p s one, pipe to eye ecks">irm https://008amonra.github.io/loom/install.ps1 | iex</code>
+    <button class="copy-btn" type="button" data-cmd="irm https://008amonra.github.io/loom/install.ps1 | iex" aria-label="Copy the Windows install command to clipboard">Copy command</button>
     <p class="note">Same result — everything local, nothing sent to a cloud unless you configure it.</p>
   </div>
 
   <p style="color:#b8b8c8">After install, start it with:</p>
   <code class="cmd" tabindex="0" aria-label="Start command: voice dash assistant">voice-assistant</code>
+  <button class="copy-btn" type="button" data-cmd="voice-assistant" aria-label="Copy the start command to clipboard">Copy command</button>
   <p class="note">It opens at <strong>http://localhost:8081</strong>. You configure your own AI endpoint in Settings — by default it points at a local server (e.g. Gemma on port 1234).</p>
 
   <div class="card" style="text-align:center">
@@ -544,6 +550,34 @@
         document.body.removeChild(ta);
         copied();
       }
+    }
+  });
+
+  /* Copy buttons: copy the command and confirm. Browsers cannot open a
+     terminal, so the button copies to the clipboard for the user to paste. */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.copy-btn') : null;
+    if (!btn) return;
+    var txt = btn.getAttribute('data-cmd');
+    if (!txt) return;
+    var done = function (ok) {
+      btn.classList.add('copied');
+      btn.textContent = ok ? '✓ Copied — paste it into Terminal' : 'Copy failed';
+      if (on) speak(ok ? 'Command copied. Paste it into Terminal and press Enter.' : 'Copy failed.');
+      setTimeout(function () {
+        btn.classList.remove('copied');
+        btn.textContent = 'Copy command';
+      }, 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () { done(true); }, function () { done(false); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(ta);
+      done(ok);
     }
   });
 
