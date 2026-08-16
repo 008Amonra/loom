@@ -245,7 +245,7 @@
     var v = pickVoice();
     if (v) u.voice = v;
     u.lang = lang === 'de' ? 'de-DE' : 'en-US';
-    u.rate = 0.95;
+    u.rate = 0.81;
     u.onstart = function () { statusEl.textContent = 'Speaking…'; statusEl.className = 'status speaking'; };
     u.onend = function () { statusEl.textContent = 'Done.'; statusEl.className = 'status'; };
     speechSynthesis.speak(u);
@@ -264,7 +264,7 @@
     var v = pickVoice();
     if (v) u.voice = v;
     u.lang = lang === 'de' ? 'de-DE' : 'en-US';
-    u.rate = 0.95;
+    u.rate = 0.81;
     u.onstart = function () { statusEl.textContent = 'Speaking…'; statusEl.className = 'status speaking'; };
     u.onend = function () { statusEl.textContent = 'Done.'; statusEl.className = 'status'; };
     speechSynthesis.speak(u);
@@ -431,7 +431,7 @@
     if (!('speechSynthesis' in window) || !text) return;
     speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95;
+    u.rate = 0.81;
     u.lang = document.documentElement.getAttribute('lang') === 'de' ? 'de-DE' : 'en-US';
     speechSynthesis.speak(u);
   }

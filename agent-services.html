@@ -1492,7 +1492,7 @@ renderBars(PATTERNS[0]());
     if (!('speechSynthesis' in window) || !text) return;
     speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95;
+    u.rate = 0.81;
     u.lang = document.documentElement.getAttribute('lang') === 'de' ? 'de-DE' : 'en-US';
     speechSynthesis.speak(u);
   }
