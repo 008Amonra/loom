@@ -163,6 +163,13 @@
   .btn-hypno{padding:10px 24px;border-radius:20px;border:1px solid #2a4a3a;background:#0e0e14;color:#44cc66;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:2px;cursor:pointer;transition:all 0.2s;user-select:none}
   .btn-hypno:hover{background:#1a2a1a;border-color:#44cc66;transform:translateY(-1px)}
   .btn-hypno:active{transform:translateY(0);box-shadow:0 0 20px rgba(0,255,136,0.15)}
+  .sonar-bar{text-align:center;margin:0 auto 28px;max-width:600px}
+  .sonar-status{display:block;margin-top:10px;font-size:0.85rem;color:#888;min-height:1.3em}
+  .sonar-status.on{color:#00ff88}
+  #sonarBtn[aria-pressed="true"]{background:#1a2a1a;border-color:#00ff88;color:#00ff88;box-shadow:0 0 14px rgba(0,255,136,0.25)}
+  #voiceAccessLink:focus-visible,#sonarBtn:focus-visible{outline:3px solid #00ccff;outline-offset:2px;border-radius:8px}
+  #voiceAccessLink.sonar-target{border-color:#00ff88 !important;box-shadow:0 0 0 3px rgba(0,255,136,0.25)}
+  #voiceAccessLink:hover{border-color:#3a5a3a;background:#0e1210}
   .click-counter{font-size:0.7rem;letter-spacing:2px;color:#333;text-align:center;margin-top:8px;transition:color 0.3s}
   .click-counter.hot{color:#ff6644}
   .click-counter.fire{color:#ff4444;text-shadow:0 0 8px rgba(255,68,68,0.4)}
@@ -205,6 +212,11 @@
   <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
   <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
   <span style="display:block;font-size:0.9rem;letter-spacing:3px;color:#00cc77;margin-top:12px">may the <strong style="color:#00ff88">RIGHT Answer</strong> be with you</span>
+</div>
+
+<div class="sonar-bar">
+  <button id="sonarBtn" class="btn-hypno" aria-label="Toggle sonar guide for blind navigation" aria-pressed="false" style="letter-spacing:1px">🔊 Sonar guide</button>
+  <span class="sonar-status" id="sonarStatus" role="status">Off. A quiet guide that beeps toward the Voice access link and speaks it.</span>
 </div>
 
 <!-- Invitation -->
@@ -363,9 +375,9 @@
   <div style="margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
     <strong style="color:#44cc66">⚡ Also included:</strong> <strong style="color:#ddd">n8n</strong> is the automation engine — connect email → Telegram, generate videos from text, monitor RSS feeds, run AI workflows, trigger talking-head animations. All pre-configured with automatic daily backups. You describe what you want, the workflows do the rest.
   </div>
-  <div style="margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
-    <strong style="color:#44cc66">🗣️ Voice access:</strong> The installer also adds <strong style="color:#ddd">voice-assistant</strong> — a local web app for <strong style="color:#ddd">blind users</strong> (voice-only operation) and <strong style="color:#ddd">deaf users</strong> (live transcript). Everything runs on your machine.
-  </div>
+  <a id="voiceAccessLink" href="voice.html" aria-label="Voice access — open the voice assistant page. Blind users: voice-only operation, deaf users: live transcript." style="display:block;margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem;text-decoration:none;color:inherit;transition:border-color .15s,background .15s">
+    <strong style="color:#44cc66">🗣️ Voice access:</strong> The installer also adds <strong style="color:#ddd">voice-assistant</strong> — a local web app for <strong style="color:#ddd">blind users</strong> (voice-only operation) and <strong style="color:#ddd">deaf users</strong> (live transcript). Everything runs on your machine. <span style="color:#4488ff">Try the live demo →</span>
+  </a>
 </div>
 
 <!-- Contact -->
@@ -1407,6 +1419,179 @@ shuffleBtn.addEventListener('click',shuffle);
 danceBtn.addEventListener('click',stopParty);
 renderBars(PATTERNS[0]());
 }
+</script>
+
+<script>
+/* --- Sonar guide: quiet blip/blaip/bliiiip beeps toward the Voice access link --- */
+(function () {
+  var sonarBtn = document.getElementById('sonarBtn');
+  var sonarStatus = document.getElementById('sonarStatus');
+  var targetEl = document.getElementById('voiceAccessLink');
+  var on = false;
+  var ctx = null;
+  var toneOsc = null;
+  var toneGain = null;
+  var mx = -1, my = -1;
+  var lastBeep = 0;
+  var lockedEl = null;
+  var lastSpoken = null;
+  var raf = null;
+  var lastSpokenSel = '';
+
+  function label(el) {
+    if (!el) return null;
+    if (el.getAttribute('aria-label')) return el.getAttribute('aria-label');
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function ensureCtx() {
+    if (!ctx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      ctx = new AC();
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return true;
+  }
+
+  function beep(freq, dur, vol) {
+    if (!ctx) return;
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+
+  function toneStart() {
+    if (!ctx || toneOsc) return;
+    toneOsc = ctx.createOscillator();
+    toneGain = ctx.createGain();
+    toneOsc.type = 'sine';
+    toneOsc.frequency.value = 660;
+    toneGain.gain.value = 0.0001;
+    toneGain.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.05);
+    toneOsc.connect(toneGain); toneGain.connect(ctx.destination);
+    toneOsc.start();
+  }
+
+  function toneStop() {
+    if (!ctx || !toneOsc) return;
+    toneGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
+    var o = toneOsc;
+    setTimeout(function () { try { o.stop(); } catch (e) {} }, 90);
+    toneOsc = null; toneGain = null;
+  }
+
+  function speak(text) {
+    if (!('speechSynthesis' in window) || !text) return;
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    u.lang = document.documentElement.getAttribute('lang') === 'de' ? 'de-DE' : 'en-US';
+    speechSynthesis.speak(u);
+  }
+
+  function rectDist(el, x, y) {
+    if (!el) return Infinity;
+    var r = el.getBoundingClientRect();
+    var dx = Math.max(r.left - x, 0, x - r.right);
+    var dy = Math.max(r.top - y, 0, y - r.bottom);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function tick(now) {
+    if (!on) return;
+    if (mx < 0 || my < 0) {
+      if (lockedEl) { lockedEl.classList.remove('sonar-target'); lockedEl = null; toneStop(); }
+      raf = requestAnimationFrame(tick);
+      return;
+    }
+    var d = rectDist(targetEl, mx, my);
+    if (targetEl && d === 0) {
+      if (lockedEl !== targetEl) {
+        lockedEl = targetEl;
+        toneStart();
+        if (lastSpoken !== targetEl) {
+          lastSpoken = targetEl;
+          speak('Voice access. Press Enter to open the voice page.');
+        }
+        targetEl.classList.add('sonar-target');
+      }
+    } else {
+      if (lockedEl) {
+        lockedEl.classList.remove('sonar-target');
+        lockedEl = null;
+        toneStop();
+      }
+      var interval;
+      var freq;
+      var dur;
+      var vol;
+      if (d > 400) { interval = 700; freq = 340; dur = 0.05; vol = 0.03; }        /* blip  */
+      else if (d > 180) { interval = 420; freq = 440; dur = 0.09; vol = 0.045; }   /* bliip */
+      else { interval = 180; freq = 560; dur = 0.16; vol = 0.06; }                 /* bliiiip */
+      if (now - lastBeep >= interval) {
+        lastBeep = now;
+        beep(freq, dur, vol);
+      }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  function setOn(v) {
+    on = v;
+    sonarBtn.setAttribute('aria-pressed', v ? 'true' : 'false');
+    sonarStatus.className = 'sonar-status' + (v ? ' on' : '');
+    sonarStatus.textContent = v
+      ? 'On. Move the mouse — beeps get longer and higher toward the Voice access link. A steady tone means you are on it.'
+      : 'Off.';
+    if (v) {
+      if (!ensureCtx()) {
+        sonarStatus.textContent = 'On, but this browser has no audio. The link still speaks when you Tab to it.';
+      }
+      speak('Sonar guide on. Move the mouse. Beeps get longer and higher as you get closer to the Voice access link. A steady tone means you are on it. Press Enter to open.');
+      raf = requestAnimationFrame(tick);
+    } else {
+      toneStop();
+      if (lockedEl) { lockedEl.classList.remove('sonar-target'); lockedEl = null; }
+      if (raf) cancelAnimationFrame(raf);
+    }
+  }
+
+  sonarBtn.addEventListener('click', function () { setOn(!on); });
+
+  document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; });
+  document.addEventListener('mouseleave', function () { mx = -1; my = -1; });
+
+  /* keyboard: speak the Voice access link when focused */
+  document.addEventListener('focusin', function (e) {
+    var el = e.target;
+    if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') return;
+    if (on && el === targetEl) speak('Voice access. Press Enter to open the voice page.');
+  });
+
+  /* read aloud text marked with the mouse */
+  document.addEventListener('mouseup', function () {
+    if (!('speechSynthesis' in window)) return;
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    var txt = sel.toString().replace(/\s+/g, ' ').trim();
+    if (!txt || txt === lastSpokenSel) return;
+    lastSpokenSel = txt;
+    toneStop();
+    speak(txt);
+  });
+  document.addEventListener('selectionchange', function () {
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed) { lastSpokenSel = ''; return; }
+  });
+})();
 </script>
 
 </body>
