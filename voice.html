@@ -388,7 +388,7 @@
   }
 
   function beep(freq, dur, vol) {
-    if (!ctx) return;
+    if (!ctx || ctx.state !== 'running') return;
     var t = ctx.currentTime;
     var o = ctx.createOscillator();
     var g = ctx.createGain();
@@ -402,7 +402,7 @@
   }
 
   function toneStart() {
-    if (!ctx || toneOsc) return;
+    if (!ctx || ctx.state !== 'running' || toneOsc) return;
     toneOsc = ctx.createOscillator();
     toneGain = ctx.createGain();
     toneOsc.type = 'sine';
@@ -469,7 +469,7 @@
     raf = requestAnimationFrame(tick);
   }
 
-  function setOn(v) {
+  function setOn(v, silent) {
     on = v;
     sonarBtn.setAttribute('aria-pressed', v ? 'true' : 'false');
     sonarStatus.className = 'sonar-status' + (v ? ' on' : '');
@@ -480,7 +480,7 @@
       if (!ensureCtx()) {
         sonarStatus.textContent = 'On, but this browser has no audio. Labels still speak when you Tab.';
       }
-      speak('Sonar guide on. Move the mouse. Beeps get faster as you get closer to a button. A steady tone means you can click.');
+      if (!silent) speak('Sonar guide on. Move the mouse. Beeps get faster as you get closer to a button. A steady tone means you can click.');
       raf = requestAnimationFrame(tick);
     } else {
       toneStop();
@@ -540,6 +540,23 @@
       }
     }
   });
+
+  /* Auto-activate on load. Browsers block audio until the first user gesture,
+     so start the guide silently and resume the AudioContext + speak the intro
+     on the first gesture. Beeps before that are skipped (not queued). */
+  var autoOn = false;
+  function firstGesture() {
+    if (!autoOn) return;
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+    speak('Sonar guide on. Move the mouse. Beeps get faster as you get closer to a button. A steady tone means you can click.');
+    autoOn = false;
+  }
+  document.addEventListener('click', firstGesture);
+  document.addEventListener('keydown', firstGesture);
+  document.addEventListener('touchstart', firstGesture);
+
+  autoOn = true;
+  setOn(true, true);
 })();
 </script>
 </body>
