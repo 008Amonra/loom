@@ -24,6 +24,7 @@ nomad catches them. Every scan diffs against the previous state. Every entity ge
 | File-based alert logs | ✓ | ✓ | ✓ |
 | Security posture check (read-only) | ✓ | ✓ | ✓ |
 | Optional blocking (`--block`) | ✓ | ✓ | ✓ |
+| Remote connection alarm | ✓ | ✓ | ✓ |
 | Telegram alerts | — | ✓ | ✓ |
 | Web dashboard | — | ✓ | ✓ |
 | Credential monitoring | — | ✓ | ✓ |
@@ -38,7 +39,7 @@ nomad catches them. Every scan diffs against the previous state. Every entity ge
 ## Install (Free)
 
 ```bash
-git clone https://github.com/45dgof8/nomad.git
+git clone https://github.com/008Amonra/nomad.git
 cd nomad
 bash install.sh
 ```
@@ -63,6 +64,15 @@ python3 cli.py fingerprint
 
 # View alert history
 python3 cli.py alerts
+
+# Remote connection alarm
+python3 cli.py alarm scan       # one-shot check
+python3 cli.py alarm watch      # continuous monitoring
+python3 cli.py alarm learn      # learn current connections as baseline
+python3 cli.py alarm on         # enable alarm
+python3 cli.py alarm off        # disable alarm
+python3 cli.py alarm status     # show alarm state
+python3 cli.py alarm alerts     # show alert history
 ```
 
 ## Pro Features
@@ -198,8 +208,10 @@ AGENT_NAME_PATTERNS = [
 nomad/
 ├── nomad.py          # Core engine (Scanner, Tracker, Fingerprinter, Alerter, Blocker)
 ├── cli.py            # Command-line interface
+├── alarm.py          # Remote connection alarm engine
 ├── dashboard.py      # Flask web dashboard (Pro)
 ├── config.py         # Configuration and patterns
+├── security.py       # Bridge to sec-toolkit.sh
 ├── setup.py          # Interactive setup wizard
 ├── install.sh        # One-command installer
 ├── requirements.txt  # Python dependencies
@@ -209,6 +221,9 @@ nomad/
 ├── state/            # Runtime snapshots (auto-managed)
 │   ├── last_snapshot.json
 │   ├── network_state.json
+│   ├── alarm_enabled.json
+│   ├── alarm_baseline.json
+│   ├── alarm_alerts.json
 │   └── history/      # Hourly snapshots (auto-cleaned after 24h)
 └── logs/             # Alert and event logs
     ├── alerts.jsonl
@@ -245,6 +260,12 @@ systemctl --user status nomad-watch.service
 # View logs
 journalctl --user -u nomad-watch.service -f
 ```
+
+## Support
+
+If Nomad saved you a headache:
+
+[![PayPal](https://img.shields.io/badge/PayPal-45dgof833-blue?logo=paypal)](https://paypal.me/45dgof833)
 
 ## License
 
