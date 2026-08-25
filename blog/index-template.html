@@ -21,22 +21,63 @@ nav .logo span{color:#555}
 nav a{color:#888;font-size:.85rem;margin-left:20px}
 nav a:hover{color:#d4af37}
 
+/* ticker */
+.ticker{position:fixed;top:52px;left:0;right:0;z-index:99;background:rgba(15,15,22,.95);backdrop-filter:blur(8px);border-bottom:1px solid #1a1a22;padding:6px 24px;display:flex;align-items:center;justify-content:center;gap:0;font-size:.75rem;color:#666;letter-spacing:.5px}
+.ticker .item{display:flex;align-items:center;gap:6px;padding:0 16px}
+.ticker .item+.item{border-left:1px solid #1a1a22}
+.ticker .label{color:#555;text-transform:uppercase;font-size:.65rem;letter-spacing:1px}
+.ticker .value{color:#d4af37;font-weight:600;font-variant-numeric:tabular-nums}
+.ticker .change{font-size:.65rem;padding:1px 5px;border-radius:3px}
+.ticker .up{color:#4caf50;background:rgba(76,175,80,.1)}
+.ticker .down{color:#f44336;background:rgba(244,67,54,.1)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.ticker .loading{animation:pulse 1.5s ease-in-out infinite;color:#333}
+.ticker .gear{background:none;border:none;color:#444;cursor:pointer;font-size:.85rem;padding:4px 8px;margin-left:12px;transition:color .2s}
+.ticker .gear:hover{color:#d4af37}
+
+/* settings panel */
+.settings-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:150;backdrop-filter:blur(4px)}
+.settings-overlay.open{display:flex;align-items:center;justify-content:center}
+.settings-panel{background:#111118;border:1px solid #222;border-radius:12px;padding:28px;width:420px;max-width:92vw;max-height:85vh;overflow-y:auto}
+.settings-panel h3{font-family:'Cinzel',serif;color:#d4af37;font-size:1rem;margin-bottom:20px;letter-spacing:2px}
+.settings-panel .slot{background:#0d0d14;border:1px solid #1a1a22;border-radius:8px;padding:14px;margin-bottom:12px}
+.settings-panel .slot-label{font-size:.7rem;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.settings-panel .field{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.settings-panel .field:last-child{margin-bottom:0}
+.settings-panel .field label{font-size:.75rem;color:#888;min-width:50px}
+.settings-panel .field select{flex:1;background:#0a0a0f;border:1px solid #1a1a22;color:#ccc;padding:6px 8px;border-radius:4px;font-size:.8rem;font-family:inherit}
+.settings-panel .field select:focus{outline:none;border-color:#d4af37}
+.settings-panel .actions{display:flex;gap:10px;margin-top:18px}
+.settings-panel .btn{padding:8px 16px;border:none;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:inherit;transition:all .2s}
+.settings-panel .btn-primary{background:#d4af37;color:#0a0a0f;font-weight:600}
+.settings-panel .btn-primary:hover{background:#f5d742}
+.settings-panel .btn-ghost{background:transparent;color:#666;border:1px solid #1a1a22}
+.settings-panel .btn-ghost:hover{color:#ccc;border-color:#333}
+.settings-panel .hint{font-size:.65rem;color:#444;margin-top:12px;font-style:italic}
+
+/* film grain */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px 128px}
+
 /* header */
-.header{padding:120px 24px 60px;text-align:center}
+.header{padding:140px 24px 60px;text-align:center;position:relative;background:linear-gradient(135deg,rgba(212,175,55,.03) 0%,transparent 40%,rgba(212,175,55,.02) 100%);animation:headerShift 8s ease-in-out infinite}
+@keyframes headerShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .header h1{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3rem);color:#d4af37;margin-bottom:12px}
 .header p{color:#888;font-size:1.1rem;max-width:500px;margin:0 auto}
 
 /* posts */
 .posts{max-width:740px;margin:0 auto;padding:0 24px 80px}
-.post-card{padding:32px 0;border-bottom:1px solid #1a1a22}
+.post-card{padding:32px 0;border-bottom:1px solid #1a1a22;transition:transform .2s ease,border-color .2s ease}
+.post-card:hover{transform:scale(1.005);border-color:rgba(212,175,55,.15)}
 .post-card:last-child{border-bottom:none}
 .post-card .hero-thumb{width:100%;height:200px;object-fit:cover;border-radius:8px;margin-bottom:16px;border:1px solid #1a1a22}
 .post-card time{font-size:.8rem;color:#666;letter-spacing:1px;text-transform:uppercase}
-.post-card h2{font-family:'Cinzel',serif;font-size:1.4rem;margin:8px 0 12px}
+.post-card h2{font-family:'Cinzel',serif;font-size:1.4rem;margin:8px 0 12px;display:flex;align-items:center;gap:10px}
 .post-card h2 a{color:#e0e0e8}
 .post-card h2 a:hover{color:#d4af37}
+.post-card .reading-time{font-size:.7rem;color:#555;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0;text-transform:none}
 .post-card p{color:#999;font-size:.95rem;margin-bottom:12px}
 .post-card .tag{display:inline-block;padding:3px 10px;border:1px solid #1a1a22;border-radius:20px;font-size:.7rem;color:#666;margin-right:6px}
+.post-card .latest-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.1);color:#d4af37;font-size:.65rem;padding:2px 8px;border-radius:3px;border:1px solid rgba(212,175,55,.2);text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
 
 /* empty */
 .empty{text-align:center;padding:80px 24px;color:#555}
@@ -45,6 +86,12 @@ nav a:hover{color:#d4af37}
 /* footer */
 footer{text-align:center;padding:40px 24px;color:#444;font-size:.8rem;border-top:1px solid #1a1a22}
 footer a{color:#666}
+footer .signal{color:#333;font-size:.7rem;margin-top:8px;font-style:italic}
+footer .signal .live-dot{display:inline-block;width:5px;height:5px;background:#4caf50;border-radius:50%;margin-right:4px;animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* adjust body for ticker */
+body{padding-top:34px}
 </style>
 </head>
 <body>
@@ -58,6 +105,58 @@ footer a{color:#666}
   </div>
 </nav>
 
+<div class="ticker" id="ticker">
+  <div class="item" id="slot-0"><span class="label loading">Loading...</span><span class="value">—</span></div>
+  <div class="item" id="slot-1"><span class="label loading">Loading...</span><span class="value">—</span></div>
+  <div class="item" id="slot-2"><span class="label loading">Loading...</span><span class="value">—</span></div>
+  <button class="gear" id="open-settings" title="Configure ticker">⚙</button>
+</div>
+
+<div class="settings-overlay" id="settings-overlay">
+  <div class="settings-panel">
+    <h3>⚙ TICKER SETTINGS</h3>
+    <div class="slot" id="cfg-0">
+      <div class="slot-label">Slot 1</div>
+      <div class="field"><label>Type</label><select class="sel-type" data-slot="0">
+        <option value="coin">Coin Price</option>
+        <option value="fx">Exchange Rate</option>
+        <option value="weather">Weather</option>
+      </select></div>
+      <div class="field"><label>Coin</label><select class="sel-coin" data-slot="0"></select></div>
+      <div class="field"><label>Currency</label><select class="sel-cur" data-slot="0"></select></div>
+      <div class="field" style="display:none"><label>City</label><select class="sel-city" data-slot="0"></select></div>
+    </div>
+    <div class="slot" id="cfg-1">
+      <div class="slot-label">Slot 2</div>
+      <div class="field"><label>Type</label><select class="sel-type" data-slot="1">
+        <option value="coin">Coin Price</option>
+        <option value="fx">Exchange Rate</option>
+        <option value="weather">Weather</option>
+      </select></div>
+      <div class="field"><label>Coin</label><select class="sel-coin" data-slot="1"></select></div>
+      <div class="field"><label>Currency</label><select class="sel-cur" data-slot="1"></select></div>
+      <div class="field" style="display:none"><label>City</label><select class="sel-city" data-slot="1"></select></div>
+    </div>
+    <div class="slot" id="cfg-2">
+      <div class="slot-label">Slot 3</div>
+      <div class="field"><label>Type</label><select class="sel-type" data-slot="2">
+        <option value="coin">Coin Price</option>
+        <option value="fx">Exchange Rate</option>
+        <option value="weather">Weather</option>
+      </select></div>
+      <div class="field"><label>Coin</label><select class="sel-coin" data-slot="2"></select></div>
+      <div class="field"><label>Currency</label><select class="sel-cur" data-slot="2"></select></div>
+      <div class="field" style="display:none"><label>City</label><select class="sel-city" data-slot="2"></select></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="save-settings">Save</button>
+      <button class="btn btn-ghost" id="reset-settings">Reset to Default</button>
+      <button class="btn btn-ghost" id="close-settings">Cancel</button>
+    </div>
+    <p class="hint">Preferences are saved in your browser. Data from CoinGecko, Open Exchange Rates, Open-Meteo.</p>
+  </div>
+</div>
+
 <div class="header">
   <h1>Blog</h1>
   <p>AI tools, YouTube creation, and building in public.</p>
@@ -69,7 +168,210 @@ footer a{color:#666}
 
 <footer>
   <p>© 2026 45dgof8 · <a href="https://45dgof8.com/">Home</a> · <a href="/loom/blog/">Blog</a> · <a href="/loom/apps.html">Apps</a></p>
+  <p class="signal"><span class="live-dot"></span>Signal from the grid · <span id="last-update">—</span></p>
 </footer>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+
+  /* === DATA DEFINITIONS === */
+  const COINS = [
+    {id:'bitcoin',sym:'BTC'}, {id:'ethereum',sym:'ETH'}, {id:'solana',sym:'SOL'},
+    {id:'ripple',sym:'XRP'}, {id:'cardano',sym:'ADA'}, {id:'dogecoin',sym:'DOGE'},
+    {id:'polkadot',sym:'DOT'}, {id:'avalanche-2',sym:'AVAX'}, {id:'chainlink',sym:'LINK'},
+    {id:'litecoin',sym:'LTC'}, {id:'tron',sym:'TRX'}, {id:'toncoin',sym:'TON'}
+  ];
+  const CURRENCIES = [
+    {code:'CHF',name:'Swiss Franc'},{code:'USD',name:'US Dollar'},{code:'EUR',name:'Euro'},
+    {code:'GBP',name:'British Pound'},{code:'JPY',name:'Japanese Yen'},{code:'AUD',name:'Australian Dollar'},
+    {code:'CAD',name:'Canadian Dollar'},{code:'CNY',name:'Chinese Yuan'},{code:'INR',name:'Indian Rupee'},
+    {code:'BRL',name:'Brazilian Real'},{code:'KRW',name:'South Korean Won'},{code:'SGD',name:'Singapore Dollar'}
+  ];
+  const CITIES = [
+    {name:'Zurich',lat:47.3769,lon:8.5417},{name:'London',lat:51.5074,lon:-0.1278},
+    {name:'New York',lat:40.7128,lon:-74.006},{name:'Tokyo',lat:35.6762,lon:139.6503},
+    {name:'Berlin',lat:52.52,lon:13.405},{name:'Paris',lat:48.8566,lon:2.3522},
+    {name:'Singapore',lat:1.3521,lon:103.8198},{name:'Sydney',lat:-33.8688,lon:151.2093},
+    {name:'Dubai',lat:25.2048,lon:55.2708},{name:'Mumbai',lat:19.076,lon:72.8777},
+    {name:'São Paulo',lat:-23.5505,lon:-46.6333},{name:'Toronto',lat:43.6532,lon:-79.3832}
+  ];
+
+  const DEFAULTS = [
+    {type:'coin',coinId:'bitcoin',cur:'CHF'},
+    {type:'fx',fxFrom:'USD',cur:'CHF'},
+    {type:'weather',cityIdx:0}
+  ];
+
+  /* === LOCALSTORAGE === */
+  const STORAGE_KEY = 'blog_ticker_config';
+  function loadConfig(){
+    try{ const c = JSON.parse(localStorage.getItem(STORAGE_KEY)); return c && c.length===3 ? c : DEFAULTS; }
+    catch(e){ return DEFAULTS; }
+  }
+  function saveConfig(cfg){ localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); }
+
+  /* === TICKER RENDERING === */
+  const WMO={0:'Clear',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Dense drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Light showers',81:'Showers',82:'Heavy showers',95:'Thunderstorm'};
+
+  function fmt(n,dec){return n==null?'—':n.toLocaleString('de-CH',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+  function chgHtml(v){if(v==null)return'';const s=(v>=0?'+':'')+v.toFixed(1)+'%';return' <span class="change '+(v>=0?'up':'down')+'">'+s+'</span>';}
+
+  function getCoinLabel(coinId){const c=COINS.find(x=>x.id===coinId);return c?c.sym:coinId;}
+  function getCurLabel(code){const c=CURRENCIES.find(x=>x.code===code);return c?c.code:code;}
+  function getCityName(idx){return CITIES[idx]?CITIES[idx].name:'City';}
+
+  function setSlotLabel(slotEl,type,extra){
+    const label=slotEl.querySelector('.label');
+    label.classList.remove('loading');
+    if(type==='coin'){label.textContent=getCoinLabel(extra.coinId)+'/'+getCurLabel(extra.cur);}
+    else if(type==='fx'){label.textContent=extra.fxFrom+'/'+extra.cur;}
+    else{label.textContent=getCityName(extra.cityIdx);}
+  }
+
+  async function fetchSlot(slotIdx){
+    const cfg=loadConfig()[slotIdx];
+    const slotEl=$('slot-'+slotIdx);
+    const valEl=slotEl.querySelector('.value');
+    if(!cfg)return;
+    setSlotLabel(slotEl,cfg.type,cfg);
+
+    try{
+      if(cfg.type==='coin'){
+        const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+cfg.coinId+'&vs_currencies='+cfg.cur.toLowerCase()+'&include_24hr_change=true');
+        const d=await r.json();
+        const price=d[cfg.coinId][cfg.cur.toLowerCase()];
+        const chg=d[cfg.coinId][cfg.cur.toLowerCase()+'_24h_change'];
+        valEl.className='value';
+        valEl.innerHTML=getCurLabel(cfg.cur)+' '+fmt(price,price<1?4:0)+chgHtml(chg);
+      }else if(cfg.type==='fx'){
+        const r=await fetch('https://open.er-api.com/v6/latest/'+cfg.fxFrom);
+        const d=await r.json();
+        const rate=d.rates[cfg.cur];
+        valEl.className='value';
+        valEl.innerHTML=fmt(rate,4);
+      }else{
+        const city=CITIES[cfg.cityIdx];
+        const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&current_weather=true');
+        const d=await r.json();
+        const w=d.current_weather;
+        valEl.className='value';
+        valEl.innerHTML=fmt(w.temperature,1)+'°C <span class="change" style="color:#555;background:none">'+(WMO[w.weathercode]||'—')+'</span>';
+      }
+    }catch(e){valEl.className='value';valEl.textContent='—';}
+  }
+
+  function updateAll(){for(let i=0;i<3;i++)fetchSlot(i);}
+  updateAll();
+  setInterval(updateAll,60000);
+
+  /* === SETTINGS PANEL === */
+  function populateSelects(){
+    for(let slot=0;slot<3;slot++){
+      const coinSel=document.querySelector('.sel-coin[data-slot="'+slot+'"]');
+      const curSel=document.querySelector('.sel-cur[data-slot="'+slot+'"]');
+      const citySel=document.querySelector('.sel-city[data-slot="'+slot+'"]');
+      coinSel.innerHTML=COINS.map(c=>'<option value="'+c.id+'">'+c.sym+' — '+c.id+'</option>').join('');
+      curSel.innerHTML=CURRENCIES.map(c=>'<option value="'+c.code+'">'+c.code+' — '+c.name+'</option>').join('');
+      citySel.innerHTML=CITIES.map((c,i)=>'<option value="'+i+'">'+c.name+'</option>').join('');
+    }
+  }
+
+  function loadSettingsToUI(){
+    const cfg=loadConfig();
+    for(let i=0;i<3;i++){
+      const s=cfg[i]||DEFAULTS[i];
+      document.querySelector('.sel-type[data-slot="'+i+'"]').value=s.type;
+      if(s.type==='coin'){
+        document.querySelector('.sel-coin[data-slot="'+i+'"]').value=s.coinId||'bitcoin';
+        document.querySelector('.sel-cur[data-slot="'+i+'"]').value=s.cur||'CHF';
+      }else if(s.type==='fx'){
+        document.querySelector('.sel-coin[data-slot="'+i+'"]').value='bitcoin';
+        document.querySelector('.sel-cur[data-slot="'+i+'"]').value=s.cur||'CHF';
+      }else{
+        document.querySelector('.sel-city[data-slot="'+i+'"]').value=s.cityIdx!=null?s.cityIdx:0;
+      }
+      toggleSlotFields(i,s.type);
+    }
+  }
+
+  function toggleSlotFields(slot,type){
+    const slotEl=$('cfg-'+slot);
+    const fields=slotEl.querySelectorAll('.field');
+    fields[1].style.display=(type==='weather')?'none':'flex'; // coin
+    fields[2].style.display=(type==='weather')?'none':'flex'; // currency
+    fields[3].style.display=(type==='weather')?'flex':'none'; // city
+    // For fx, hide coin row, show currency
+    if(type==='fx'){fields[1].style.display='none';fields[2].style.display='flex';}
+  }
+
+  function readSettingsFromUI(){
+    const cfg=[];
+    for(let i=0;i<3;i++){
+      const type=document.querySelector('.sel-type[data-slot="'+i+'"]').value;
+      if(type==='coin'){
+        cfg.push({type:'coin',coinId:document.querySelector('.sel-coin[data-slot="'+i+'"]').value,cur:document.querySelector('.sel-cur[data-slot="'+i+'"]').value});
+      }else if(type==='fx'){
+        cfg.push({type:'fx',fxFrom:document.querySelector('.sel-coin[data-slot="'+i+'"]').selectedOptions[0]?.textContent.split(' — ')[0]||'USD',cur:document.querySelector('.sel-cur[data-slot="'+i+'"]').value});
+      }else{
+        cfg.push({type:'weather',cityIdx:parseInt(document.querySelector('.sel-city[data-slot="'+i+'"]').value)});
+      }
+    }
+    return cfg;
+  }
+
+  // Type change handlers
+  document.querySelectorAll('.sel-type').forEach(sel=>{
+    sel.addEventListener('change',function(){
+      toggleSlotFields(parseInt(this.dataset.slot),this.value);
+      // For fx, pre-set coin select to USD
+      if(this.value==='fx'){
+        const coinSel=document.querySelector('.sel-coin[data-slot="'+this.dataset.slot+'"]');
+        const usdOpt=[...coinSel.options].find(o=>o.value==='USD');
+        if(!usdOpt){coinSel.insertAdjacentHTML('afterbegin','<option value="USD">USD — US Dollar</option>');}
+        coinSel.value='USD';
+      }
+    });
+  });
+
+  // Open/close settings
+  $('open-settings').addEventListener('click',()=>{loadSettingsToUI();$('settings-overlay').classList.add('open');});
+  $('close-settings').addEventListener('click',()=>$('settings-overlay').classList.remove('open'));
+  $('settings-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)$('settings-overlay').classList.remove('open');});
+
+  // Save
+  $('save-settings').addEventListener('click',()=>{
+    const cfg=readSettingsFromUI();
+    saveConfig(cfg);
+    $('settings-overlay').classList.remove('open');
+    updateAll();
+  });
+
+  // Reset
+  $('reset-settings').addEventListener('click',()=>{
+    saveConfig(DEFAULTS);
+    loadSettingsToUI();
+  });
+
+  populateSelects();
+
+  /* === READING TIME + LATEST BADGE === */
+  document.querySelectorAll('.post-card').forEach((card,i)=>{
+    const p=card.querySelector('p');
+    if(p){
+      const words=p.textContent.trim().split(/\s+/).length;
+      const min=Math.max(1,Math.round(words/50));
+      const h2=card.querySelector('h2');
+      if(h2){const rt=document.createElement('span');rt.className='reading-time';rt.textContent=' · '+min+' min read';h2.appendChild(rt);}
+    }
+    if(i===0){const h2=card.querySelector('h2');if(h2){const b=document.createElement('span');b.className='latest-badge';b.textContent='★ Latest';h2.insertBefore(b,h2.firstChild);}}
+  });
+
+  /* === FOOTER TIMESTAMP === */
+  const now=new Date();
+  $('last-update').textContent=now.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Zurich'})+' CET';
+})();
+</script>
 
 {{ANALYTICS}}
 </body>
