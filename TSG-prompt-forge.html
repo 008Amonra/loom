@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>TSG Prompt Forge – Advanced AI Prompt Builder by 45dgof8</title>
+  <meta name="description" content="TSG Prompt Forge is an advanced AI prompt builder by 45dgof8, designed for creative, technical, and experimental workflows.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://45dgof8.com/TSG-prompt-forge.html">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest-tsg.json">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#050810">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="TSG-prompt-forge.css">
+
+  <!-- Extra Vibe CSS -->
+  <style>
+    /* Dark base to match the app */
+    body {
+      background: #050810;
+      color: #e5e7eb;
+    }
+
+    /* Progress bar container */
+    #progressContainer {
+      width: 220px;
+      height: 8px;
+      background: #111827;
+      border-radius: 4px;
+      margin: 10px auto;
+      overflow: hidden;
+      display: none;
+      border: 1px solid #1f2933;
+    }
+
+    /* Progress bar */
+    #progressBar {
+      height: 8px;
+      width: 100%;
+      background: linear-gradient(90deg, #38bdf8, #6366f1);
+      transition: width 1s linear;
+    }
+
+    /* Pulse animation */
+    @keyframes pulse {
+      0%   { transform: scale(1);    opacity: 1; }
+      50%  { transform: scale(1.04); opacity: 0.8; }
+      100% { transform: scale(1);    opacity: 1; }
+    }
+
+    .pulse {
+      animation: pulse 1s infinite;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="tsg-header">
+    <h1>TSG Prompt Forge</h1>
+    <p class="tsg-sub">Advanced AI Prompt Builder for Creative Workflows</p>
+  </header>
+
+  <!-- ================= MAIN GRID WRAPPER ================= -->
+  <main class="prompt-forge">
+    <div class="pf-grid">
+      <div class="pf-column pf-controls" id="pf-controls"></div>
+      <div class="pf-column pf-output" id="pf-output"></div>
+    </div>
+  </main>
+
+  <!-- ================= SHOWCASE PREVIEW ================= -->
+  <section class="pf-showcase" id="pf-showcase"></section>
+
+  <!-- ================= BRAND MEDALLION ================= -->
+  <div class="tsg-medallion-wrap">
+    <img src="TSG-medallion.png" alt="TSG Medallion" class="tsg-medallion">
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- ===================== VIBE STATUS AREA ================== -->
+  <!-- ========================================================= -->
+
+  <div style="text-align:center; margin-top:20px;">
+
+    <!-- Status text (reflects mode from main UI) -->
+    <p id="modeInfo" style="font-size:13px; color:#9ca3af; margin-top:8px;">
+      HappyMode is active.
+    </p>
+
+    <!-- Countdown -->
+    <p id="countdown" class="pulse" style="
+        font-size:14px;
+        font-weight:600;
+        color:#e5e7eb;
+        margin-top:4px;">
+    </p>
+
+    <!-- Progress Bar -->
+    <div id="progressContainer">
+      <div id="progressBar"></div>
+    </div>
+
+    <!-- Happy Quotes -->
+    <p id="happyQuote" style="font-size:13px; color:#9ca3af; font-style:italic; margin-top:6px;"></p>
+
+    <!-- Early Return Button -->
+    <button id="earlyReturn" style="
+        display:none;
+        margin-top:10px;
+        padding:6px 12px;
+        font-size:12px;
+        border-radius:999px;
+        border:none;
+        cursor:pointer;
+        background:#22c55e;
+        color:white;">
+      Return to HappyMode now 💚
+    </button>
+
+    <!-- Sound Effect -->
+    <audio id="happySound"
+           src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+           preload="auto"></audio>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- ====================== PAYPAL AREA ====================== -->
+  <!-- ========================================================= -->
+
+  <div style="text-align:center; margin-top:30px;">
+    <a href="https://paypal.me/45dgof8" target="_blank">
+      <button style="
+        padding: 12px 20px;
+        background-color: #0070ba;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;">
+        💙 Leave a Tip
+      </button>
+    </a>
+    <p style="font-size:14px; color:#9ca3af; margin-top:8px;">
+      Tips and reactions are appreciated! --> 45dgof8@gmail.com
+    </p>
+        <p style="font-size:14px; color:#9ca3af; margin-top:8px;">
+<a href="https://45dgof8.com" target="_blank" rel="noopener">45dgof8.com</a>
+    </p>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- ===================== VIBE ENGINE JS ==================== -->
+  <!-- ========================================================= -->
+
+  <script>
+    let revertTimer;
+    let countdownTimer;
+    let secondsLeft;
+    let mode = "happy";
+
+    const INFO  = document.getElementById("modeInfo");
+    const COUNT = document.getElementById("countdown");
+    const PROG_WRAP = document.getElementById("progressContainer");
+    const PROG_BAR  = document.getElementById("progressBar");
+    const QUOTE = document.getElementById("happyQuote");
+    const EARLY = document.getElementById("earlyReturn");
+    const SOUND = document.getElementById("happySound");
+
+    const HAPPY_QUOTES = [
+      "Happiness is a choice you make today! 🌞",
+      "Smile — it's your superpower 😄",
+      "A happy thought is a tiny celebration! 🎉",
+      "You glow differently when you're happy ✨",
+      "Joy is contagious — spread some! 💛"
+    ];
+
+    // Public API: call this from TSG-prompt-forge.js
+    // tsgSetMode('happy')  or  tsgSetMode('neutral')
+    window.tsgSetMode = function(newMode) {
+      if (newMode === "happy") {
+        activateHappyMode(true);
+      } else if (newMode === "neutral") {
+        activateNeutralMode();
+      }
+    };
+
+    /* ============== NEUTRAL / STANDARD MODE ============== */
+
+    function activateNeutralMode() {
+      if (mode === "neutral") return;
+      mode = "neutral";
+
+      clearTimeout(revertTimer);
+      clearInterval(countdownTimer);
+
+      secondsLeft = 180; // 3 minutes
+      updateCountdown(secondsLeft);
+      updateProgress(secondsLeft);
+
+      INFO.innerText = "Neutral filter active for 3 minutes…";
+      PROG_WRAP.style.display = "block";
+      EARLY.style.display = "inline-block";
+
+      countdownTimer = setInterval(() => {
+        secondsLeft--;
+        updateCountdown(secondsLeft);
+        updateProgress(secondsLeft);
+        if (secondsLeft <= 0) {
+          clearInterval(countdownTimer);
+        }
+      }, 1000);
+
+      revertTimer = setTimeout(() => activateHappyMode(false), 180000);
+    }
+
+    /* ============== HAPPY MODE ============== */
+
+    function activateHappyMode(fromUserClick) {
+      const wasNeutral = (mode === "neutral");
+      mode = "happy";
+
+      clearTimeout(revertTimer);
+      clearInterval(countdownTimer);
+
+      INFO.innerText = "HappyMode is active.";
+      COUNT.innerText = "";
+      QUOTE.innerText = "";
+      PROG_WRAP.style.display = "none";
+      EARLY.style.display = "none";
+
+      if (wasNeutral || fromUserClick) {
+        try { SOUND.play(); } catch (e) { /* ignore autoplay restrictions */ }
+      }
+    }
+
+    EARLY.addEventListener("click", () => {
+      activateHappyMode(true);
+    });
+
+    /* ============== COUNTDOWN + PROGRESS ============== */
+
+    function updateCountdown(secs) {
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+
+      COUNT.innerText =
+        `⏳ ${m}:${s.toString().padStart(2, "0")} — remember to stay happy! 😊`;
+
+      if (secs % 15 === 0) {
+        QUOTE.innerText =
+          HAPPY_QUOTES[Math.floor(Math.random() * HAPPY_QUOTES.length)];
+      }
+    }
+
+    function updateProgress(secs) {
+      const pct = (secs / 180) * 100;
+      PROG_BAR.style.width = pct + "%";
+    }
+  </script>
+
+  <!-- ================= EXTERNAL JS ENGINE ================= -->
+  <script src="TSG-prompt-forge.js"></script>
+
+  <!-- ================= SERVICE WORKER ================= -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw-tsg.js").catch(() => {});
+    }
+  </script>
+
+</body>
+</html>
