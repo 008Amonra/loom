@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="45dgof8 — built to include everyone. Screen-reader and high-contrast mode for the blind, text-only mode for the deaf. Everyone's invited.">
+<link rel="canonical" href="https://45dgof8.com/accessibility.html">
+<title>45dgof8 — Made Accessible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0d0d14">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0e0e8;line-height:1.7;min-height:100vh;background:#0d0d14;transition:background .3s,color .3s}
+  a{color:#7ab0ff}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 24px 80px}
+
+  .hat-title{text-align:center;margin-bottom:32px;border-bottom:1px solid #222;padding-bottom:26px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2rem;font-weight:400;letter-spacing:8px;text-transform:uppercase;color:#888}
+  .hat-brim-accent{display:block;font-size:.72rem;letter-spacing:6px;color:#666;margin-top:10px;font-weight:300}
+
+  .lead{text-align:center;color:#b8b8c8;max-width:600px;margin:0 auto 34px}
+  .lead b{color:#00ff88}
+
+  h2{font-size:1.2rem;color:#00cc77;margin:36px 0 14px}
+
+  /* Mode cards — "click here, and the show begins" */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.modes{grid-template-columns:1fr}}
+  .mode{background:#14141e;border:2px solid #2a2a3a;border-radius:16px;padding:26px 22px;text-align:center;cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:8px;color:inherit;text-decoration:none}
+  .mode:hover{transform:translateY(-3px)}
+  .mode .big{font-size:2.4rem;line-height:1}
+  .mode h3{font-size:1.25rem;color:#eee;margin:0}
+  .mode p{color:#9a9ab0;font-size:.88rem;margin:0}
+  .mode .enter{display:inline-block;margin-top:10px;padding:10px 22px;border-radius:8px;font-weight:700;font-size:.9rem}
+  .mode.visual .enter{background:#c8a87c;color:#0a0a0f}
+  .mode.visual:hover{border-color:#c8a87c;box-shadow:0 0 26px rgba(200,168,124,.25)}
+  .mode.hearing .enter{background:#00ff88;color:#0a0a0f}
+  .mode.hearing:hover{border-color:#00ff88;box-shadow:0 0 26px rgba(0,255,136,.25)}
+  .mode.done{border-color:#2f8f66}
+
+  .panel{background:#0f0f1a;border:1px solid #2a2a3a;border-radius:12px;padding:22px;margin-top:18px;display:none}
+  .panel.open{display:block}
+  .panel h3{color:#eee;margin:0 0 10px;font-size:1.05rem}
+
+  /* Settings / controls */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  button.set{background:#1a2233;color:#cdd9f0;border:1px solid #33435a;border-radius:8px;padding:10px 16px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:inherit;transition:.15s}
+  button.set:hover{border-color:#7ab0ff;background:#223351}
+  button.set.active{background:#00ff88;color:#0a0a0f;border-color:#00ff88}
+
+  .skip{position:absolute;left:-9999px;top:0;background:#00ff88;color:#0a0a0f;padding:12px 20px;border-radius:0 0 8px 0;z-index:100;font-weight:700}
+  .skip:focus{left:0}
+
+  .note-card{background:#14141e;border:1px solid #2a2a3a;border-left:3px solid #4488ff;border-radius:10px;padding:16px 18px;margin:20px 0;font-size:.9rem;color:#b8b8c8}
+  .note-card b{color:#e0e0e8}
+
+  .footer{text-align:center;color:#555;font-size:.85rem;margin-top:48px;border-top:1px solid #222;padding-top:28px}
+  .footer a{color:#7ab0ff;text-decoration:none}
+  .footer a:hover{text-decoration:underline}
+
+  /* --- HIGH CONTRAST MODE (activated by blind mode) --- */
+  body.hc{background:#0a0a0c;color:#ffffff}
+  body.hc .hat-brim{color:#cccccc}
+  body.hc .hat-brim-accent{color:#9a9a9a}
+  body.hc h2{color:#57f5a8}
+  body.hc .lead{color:#e6e6ea}
+  body.hc .mode{background:#111113;border-color:#5a5a6a}
+  body.hc .mode p{color:#d0d0da}
+  body.hc .mode h3{color:#fff}
+  body.hc .panel{background:#0d0d10;border-color:#4a4a5a}
+  body.hc .panel h3{color:#fff}
+  body.hc .note-card{background:#111113;border-color:#555;border-left-color:#7ab0ff;color:#e0e0e4}
+  body.hc .note-card b{color:#fff}
+  body.hc .footer{color:#9a9aa2}
+  body.hc a{color:#9cc4ff;text-decoration:underline}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="wrap">
+  <div class="hat-title">
+    <span class="hat-crown">45dgof8</span>
+    <span class="hat-brim">Made Accessible</span>
+    <span class="hat-brim-accent">EVERYONE'S INVITED · IT'S POSSIBLE</span>
+  </div>
+
+  <p class="lead">
+    45dgof8 is built to include everyone. Pick how you experience this site —
+    <b>the show begins</b> as soon as you choose. Two doors, same welcome.
+  </p>
+
+  <main id="main">
+    <div class="modes">
+      <a class="mode visual" id="modeVisual" href="#blind" role="button" aria-label="Enter screen-reader and high-contrast mode for blind and visually impaired users">
+        <span class="big">🕶️</span>
+        <h3>Blind / Visually Impaired</h3>
+        <p>Screen-reader friendly, high-contrast. Works with VoiceOver, NVDA, TalkBack &amp; keyboard.</p>
+        <span class="enter">Click here — show begins →</span>
+      </a>
+      <a class="mode hearing" id="modeHearing" href="#deaf" role="button" aria-label="Enter text-only mode for deaf and hard of hearing users">
+        <span class="big">🦻</span>
+        <h3>Deaf / Hard of Hearing</h3>
+        <p>Text-first. No audio to miss — everything as words, clearly laid out.</p>
+        <span class="enter">Click here — show begins →</span>
+      </a>
+    </div>
+
+    <div class="panel" id="panelBlind">
+      <h3>🕶️ Screen-reader &amp; high-contrast mode</h3>
+      <p style="color:#9a9ab0;font-size:.92rem;margin-bottom:14px">
+        High-contrast is now ON. Use your screen reader or keyboard for the rest of the site.
+        Everything is labelled, images have descriptions, and you can jump straight to content.
+      </p>
+      <button class="set active" data-hc="on">High contrast ON</button>
+      <button class="set" data-hc="off">Standard colours</button>
+      <div class="note-card">
+        <b>Good to know:</b> every image on this site has a text description, headings are properly
+        structured for screen readers, and you can navigate with <kbd>Tab</kbd> and <kbd>Enter</kbd>.
+        A "Skip to content" link is available at the top of every page.
+      </div>
+    </div>
+
+    <div class="panel" id="panelDeaf">
+      <h3>🦻 Text-only mode</h3>
+      <p style="color:#9a9ab0;font-size:.92rem;margin-bottom:14px">
+        Nothing here relies on sound. Here's 45dgof8, in words:
+      </p>
+      <div class="note-card">
+        <b>What is 45dgof8?</b> We build custom AI agents for solo creators: email and Telegram
+        bots, automation workflows, video and music generation. <b>No subscriptions.</b> Every agent
+        runs on your own hardware and you own the result. You don't rent a slot — you own the machine.
+      </div>
+      <div class="note-card">
+        <b>A valuable helper.</b> Beyond the products, this site is powered by an AI engineering
+        partner that fixes things at the root, checks security first, backs up before touching
+        anything, and explains what it's doing as it goes — then ships it live.
+      </div>
+      <div class="note-card">
+        <b>This page.</b> You're reading the text-only view right now. There is no audio required to
+        understand 45dgof8. If a video or audio clip is ever shared and you need it in words, just
+        ask — we'll provide it.
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="set" id="sizeUp">A+ Bigger text</button>
+      <button class="set" id="sizeReset">Aa Reset text</button>
+      <button class="set" id="reduceMotion">🎬 Reduce motion</button>
+    </div>
+  </main>
+
+  <div class="footer">
+    <a href="/">Back to 45dgof8</a> · <a href="hub.html">Hub</a> · <a href="assistant.html">Assistant</a><br>
+    built with 🫂 by jace + opencode
+  </div>
+</div>
+
+<script>
+(function(){
+  var root = document.documentElement, body = document.body;
+  var spacing = parseFloat(getComputedStyle(body).fontSize) || 16;
+
+  function open(panelId, modeId){
+    document.getElementById('panelBlind').classList.remove('open');
+    document.getElementById('panelDeaf').classList.remove('open');
+    document.getElementById(panelId).classList.add('open');
+    document.getElementById('modeVisual').classList.add('done');
+    document.getElementById('modeHearing').classList.add('done');
+    document.getElementById(panelId).scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  document.getElementById('modeVisual').addEventListener('click', function(e){
+    e.preventDefault();
+    body.classList.add('hc');
+    setHCButton(true);
+    open('panelBlind');
+    try{ localStorage.setItem('45dgof8-a11y','visual'); }catch(_){}
+  });
+  document.getElementById('modeHearing').addEventListener('click', function(e){
+    e.preventDefault();
+    open('panelDeaf');
+    try{ localStorage.setItem('45dgof8-a11y','deaf'); }catch(_){}
+  });
+
+  // High contrast toggle
+  var hcBtns = document.querySelectorAll('[data-hc]');
+  function setHCButton(on){
+    hcBtns.forEach(function(b){ b.classList.toggle('active', (b.getAttribute('data-hc')==='on')===on); });
+  }
+  hcBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      body.classList.toggle('hc', b.getAttribute('data-hc')==='on');
+      setHCButton(b.getAttribute('data-hc')==='on');
+    });
+  });
+
+  // Text size
+  function setBodyFontSize(px){ body.style.fontSize = px + 'px'; }
+  document.getElementById('sizeUp').addEventListener('click', function(){
+    spacing = Math.min(spacing + 2, 24); setBodyFontSize(spacing);
+  });
+  document.getElementById('sizeReset').addEventListener('click', function(){
+    spacing = 16; setBodyFontSize(16);
+  });
+
+  // Reduce motion
+  var reduced = false;
+  document.getElementById('reduceMotion').addEventListener('click', function(){
+    reduced = !reduced;
+    root.style.setProperty('scroll-behavior', reduced ? 'auto' : 'smooth');
+    this.classList.toggle('active', reduced);
+    this.textContent = reduced ? '🎬 Reduced motion on' : '🎬 Reduce motion';
+    var style = document.createElement('style');
+    style.textContent = reduced ? '*{animation:none !important;transition:none !important}' : '';
+    style.id = 'rmstyle';
+    var old = document.getElementById('rmstyle'); if(old) old.remove();
+    if(reduced) document.head.appendChild(style);
+  });
+
+  // Restore saved choice on return visit
+  try{
+    var saved = localStorage.getItem('45dgof8-a11y');
+    if(saved==='visual'){ body.classList.add('hc'); setHCButton(true); }
+  }catch(_){}
+})();
+</script>
+</body>
+</html>
