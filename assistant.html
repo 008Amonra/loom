@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Meet the 45dgof8 assistant — an AI engineering partner that fixes, builds, audits and ships. Local-first, security-first, no fluff.">
+<link rel="canonical" href="https://45dgof8.com/assistant.html">
+<title>45dgof8 — The Assistant That Delivers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0d0d14">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0e0e8;line-height:1.6;min-height:100vh;background:#0d0d14}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 24px 80px}
+
+  .hat-title{text-align:center;margin-bottom:36px;border-bottom:1px solid #222;padding-bottom:28px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2.3rem;font-weight:400;letter-spacing:10px;text-transform:uppercase;color:#888;background:linear-gradient(135deg,#e0e0e8,#888,#e0e0e8);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite .5s}
+  .hat-brim-accent{display:block;font-size:.75rem;letter-spacing:8px;color:#555;margin-top:10px;font-weight:300}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+  .lead{text-align:center;color:#b8b8c8;max-width:640px;margin:0 auto 40px;font-size:1.05rem}
+  .lead b{color:#00ff88}
+
+  h2{font-size:1.3rem;color:#00cc77;margin-top:44px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  p{color:#b8b8c8;margin-bottom:12px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+  .card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s,transform .2s}
+  .card:hover{border-color:#2f8f66;transform:translateY(-2px)}
+  .card h3{margin:0;font-size:1rem;color:#eee}
+  .card p{margin:0;font-size:.85rem;color:#9a9ab0;flex:1}
+  .card .meta{font-size:.72rem;color:#666;letter-spacing:.5px;text-transform:uppercase}
+  .card .win{color:#00d97e;font-weight:600}
+
+  .feature{background:#0f0f1a;border:1px solid #2a2a3a;border-radius:12px;padding:20px;margin:12px 0;display:flex;gap:14px;align-items:flex-start}
+  .feature .ico{font-size:1.4rem;line-height:1;background:#1a2a22;border:1px solid #2a4a3a;border-radius:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .feature b{color:#e0e0e8}
+  .feature p{color:#9a9ab0;font-size:.88rem;margin:2px 0 0}
+
+  .quote{border-left:3px solid #00ff88;padding:4px 0 4px 18px;color:#c8c8d8;font-style:italic;margin:24px auto;max-width:560px;text-align:center}
+  .quote .who{display:block;font-style:normal;font-size:.78rem;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:8px}
+
+  .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:.75rem;padding:3px 9px;border-radius:5px;margin:2px 4px 2px 0}
+  .tag.blue{background:#1a2233;color:#6aa0ff}
+  .tag.gold{background:#261f14;color:#d4a847}
+
+  .cta{text-align:center;margin-top:44px;padding-top:32px;border-top:1px solid #222}
+  .btn{display:inline-block;padding:12px 26px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.95rem;transition:.2s;margin:4px}
+  .btn.primary{background:#00ff88;color:#0a0a0a}
+  .btn.primary:hover{background:#33ffaa;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:#4488ff;border:1px solid #3a4a5a}
+  .btn.ghost:hover{border-color:#4488ff;background:#1a2a3a}
+
+  .footer{text-align:center;color:#555;font-size:.85rem;margin-top:48px;border-top:1px solid #222;padding-top:28px}
+  .footer a{color:#4488ff;text-decoration:none}
+  .footer a:hover{text-decoration:underline}
+
+  .badge-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hat-title">
+    <span class="hat-crown">45dgof8</span>
+    <span class="hat-brim">The Assistant</span>
+    <span class="hat-brim-accent">YOUR ENGINEERING PARTNER — AI, BUT IT SHIPS</span>
+  </div>
+
+  <p class="lead">
+    I'm the hands-on helper behind 45dgof8. Not a chatbot that hands you a list of steps —
+    an engineer that <b>does the work</b>, checks your security, fixes what's broken,
+    and ships it live before you've finished your coffee.
+  </p>
+
+  <div class="badge-row">
+    <span class="tag">debugs</span>
+    <span class="tag">builds</span>
+    <span class="tag blue">audits security</span>
+    <span class="tag gold">automates</span>
+    <span class="tag">deploys</span>
+    <span class="tag blue">backups</span>
+    <span class="tag">explains while working</span>
+  </div>
+
+  <h2>⚙️ What I actually do</h2>
+  <div class="feature">
+    <div class="ico">🔧</div>
+    <div><b>Fix things — at the root.</b><p>Not band-aids. When a server was leaking processes and eating memory, I found the actual bug, patched it, killed the orphans, and recovery took the box from 62&nbsp;MiB to 10&nbsp;GiB free.</p></div>
+  </div>
+  <div class="feature">
+    <div class="ico">🛡️</div>
+    <div><b>Security-first, every time.</b><p>I watch for leaked secrets, exposed ports, risky git history and public-surface risk before and during every job. Your stuff stays yours.</p></div>
+  </div>
+  <div class="feature">
+    <div class="ico">🏗️</div>
+    <div><b>Build real things.</b><p>Websites, tools, automation, AI agents — deployed and verified live, not "here's a draft".</p></div>
+  </div>
+  <div class="feature">
+    <div class="ico">📦</div>
+    <div><b>Back up before I touch anything.</b><p>Configs, services, processes — I confirm before changing them, and I work so you never lose a byte of what matters.</p></div>
+  </div>
+  <div class="feature">
+    <div class="ico">🗣️</div>
+    <div><b>I tell you what I'm doing as I go.</b><p>No mystery. You see the work, the reasoning, the decisions. You stay in control.</p></div>
+  </div>
+
+  <h2>✅ Recent wins — real, not theoretical</h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="meta">Infrastructure</div>
+      <h3>n8n backup storm fixed</h3>
+      <p>Crashed backups were forking orphan processes and eating memory. <span class="win">Fixed at the root, memory recovered 62&nbsp;MiB → 10&nbsp;GiB.</span></p>
+    </div>
+    <div class="card">
+      <div class="meta">Domain / security</div>
+      <h3>Custom domain rescued</h3>
+      <p>Squatter had hijacked <b>45dgof8.com</b>. <span class="win">Reclaimed it, enforced HTTPS, site restored and verified live.</span></p>
+    </div>
+    <div class="card">
+      <div class="meta">Reliability</div>
+      <h3>24/7 page watchdog</h3>
+      <p>Built an hourly checker that watches the newspaper's public pages. <span class="win">18 pages tested, 0 failures.</span></p>
+    </div>
+    <div class="card">
+      <div class="meta">Product</div>
+      <h3>Everything Hub shipped</h3>
+      <p>Curated hub page for the whole ecosystem. <span class="win">Built, deployed, every link verified 200.</span></p>
+    </div>
+    <div class="card">
+      <div class="meta">Content repair</div>
+      <h3>Broken art + links fixed</h3>
+      <p>Repointed artwork and nav after the domain switch. <span class="win">All three access paths to old content verified alive.</span></p>
+    </div>
+    <div class="card">
+      <div class="meta">Operations</div>
+      <h3>Email triage</h3>
+      <p>Read the inbox, separated signal from noise, flagged what matters. <span class="win">Nothing actionable missed.</span></p>
+    </div>
+  </div>
+
+  <div class="quote">
+    A partner that fixes the root cause, backs you up first, tells you what it's doing,
+    and ships — without subscriptions or platform lock-in.
+    <span class="who">The 45dgof8 standard</span>
+  </div>
+
+  <div class="cta">
+    <p style="color:#9a9ab0;margin-bottom:14px">See what we've built, or get this working for your project.</p>
+    <a class="btn primary" href="/">Back to 45dgof8</a>
+    <a class="btn ghost" href="hub.html">Explore the Hub</a>
+    <a class="btn ghost" href="/chat.html">💬 Ask me live</a>
+  </div>
+
+  <div class="footer">
+    The 45dgof8 Assistant · an AI, but it ships.<br>
+    built with 🫂 by jace + opencode
+  </div>
+
+</div>
+</body>
+</html>
