@@ -169,3 +169,17 @@
 - Safety: git tag `homepage-restore-before-restructure-2026-08-30` + tarball at /tmp/opencode/loom-restore-2026-08-30/ BEFORE changes.
 - Verified: inline JS syntax OK on index + new-index; new-index renders 27/27 tools + new iconography; legacy 200; agent-services redirect works.
 - NEXT: commit only intended files, push, verify all URLs live (/, legacy.html, new-index.html, agent-services redirect); then show Jace.
+
+### DEPLOY + VERIFY (this session, same day)
+- Committed (a86da33) + pushed restructure to loom main. Auto-deployed to 45dgof8.com (~40-45s).
+- Verified all 4 URLs live HTTP 200: `/` (agent-services home: "Agent Services", "What is 45dgof8", "Enter the Realm", "Browse the GPT Family"), `/agent-services.html` (meta-refresh redirect), `/new-index.html` (GPT catalog), `/legacy.html` (retired old homepage).
+- Memory close-out: wakeup.md + jobs.json (homepage backlog -> done_summary) + knowledge graph entity updated to COMPLETE.
+- Main homepage locked/approved; further iconography iterations (if any) go to secondary new-index.html only.
+
+## 2026-08-30 — TSG Prompt Forge link placed (Creative & Fun + homepage)
+- Jace: "TSG Prompt Forge" = app to generate pictures/animations for YouTube (NOT a tech-support tool) — so it does NOT belong on the TSG Tech Support GPT card.
+- Reverted my earlier misplacement on the TSG GPT card (new-index `p:` field + hub.html "TSG Prompt Forge" link) — hub.html back to original.
+- Placed it properly:
+  - new-index.html: standalone entry in the "Creative & Fun" catalog group (28 of 28 tools now), homepage link -> https://45dgof8.com/TSG-prompt-forge.html, desc "pictures and animations for your YouTube content".
+  - index.html (homepage): dedicated "TSG Prompt Forge" card (🎬) before the "What is 45dgof8?" About block, green "🧭 Open the Forge" button.
+- Verified: JS syntax OK (28 tools renders), homepage card structure correct sibling, hub reverted clean.
