@@ -183,3 +183,15 @@
   - new-index.html: standalone entry in the "Creative & Fun" catalog group (28 of 28 tools now), homepage link -> https://45dgof8.com/TSG-prompt-forge.html, desc "pictures and animations for your YouTube content".
   - index.html (homepage): dedicated "TSG Prompt Forge" card (🎬) before the "What is 45dgof8?" About block, green "🧭 Open the Forge" button.
 - Verified: JS syntax OK (28 tools renders), homepage card structure correct sibling, hub reverted clean.
+
+## 2026-08-30 — nomad enhancement protocol (standing)
+- Jace green-lit: when idle at night, if the sophisticated articles mention something NEW, prototype a NON-DISRUPTIVE UPGRADE FOR nomad (drift detector, dashboard :5010, cli.py watch + alarm detector) — build nomad features/improvements FROM the new techniques.
+- NOT testing against nomad; enhancing it. Constraint: non-disruptive — no breaking prod state/running services.
+- Filed in jobs.json backlog for cross-session persistence.
+
+## 2026-08-30 — fix /loom/ 404 links (canonicalize to root)
+- Root cause: site is GitHub Pages with 45dgof8.com as custom domain → served at ROOT; but ~100 links still used the old /loom/ prefix from the github.io/loom project-page path → all 404 on 45dgof8.com. NOT related to the ufw firewall work.
+- Fixed: replaced relative `/loom/` → `/` in all live HTML files (apps, blog/*, automation-services, beta, video-services, trashbox/gpt-hub). Now /chat.html, /blog/, /apps.html, images, mp3s, install.sh, sec-toolkit.sh etc. all resolve 200 at root (verified locally).
+- Preserved absolute `https://008amonra.github.io/loom/...` legacy canonical URLs intact (restored the /loom/ segment my sed had stripped, incl. artist-profile + legacy footer hrefs).
+- Safety: pre-edit backup of all 25 touched files at /tmp/opencode/loom-link-fix-backup/.
+- Verified: 10/10 converted links return 200 locally; js untouched. NEXT: commit only the 11 changed HTML files + this log, push, verify live.
