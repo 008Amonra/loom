@@ -140,3 +140,12 @@
 - Created `CORRECTIONS.md` in repo root — dual-purpose (internal engineering knowledge + easily excerptable for a client-facing offering).
 - Format per entry: What broke → Why (root cause) → Fix → Portability (how to re-apply / offer to others). Tag cards: INFRA / SEC / PROC / WEB / AUTOMATION. Newest on top.
 - Backfilled from this session: (1) systemd unit crash-loop from manual process holding the port (INFRA), (2) n8n backup storm from orphaned subprocesses on timeout (PROC), (3) domain-switch asset/resource fallout (WEB). Future corrections go here, newest first.
+
+## 2026-08-30 — homepage redesign: GPT link fix (legacy hub)
+- Jace approved pointing the ~21 GPT "Homepage" catalog links from the 404ing 45dgof8.com/...html to the legacy hub `https://008amonra.github.io/45dgof8_ComplianceSuite/...`.
+- Rewrote all `h:` fields (and the 3 that used `c:` for detail pages — GalacticChoices, CatArt, DNS) in `/tmp/opencode/homepage-playground/homepage.html` to the legacy hub base. Percent-encoded the LinguaNode™ `/™/` -> `/®%E2%84%A2/` path for browser safety.
+- All 26 legacy homepage URLs verified HTTP 200.
+- Dead ChatGPT channels found + handled: ListGeniusGPT (`g-j1EuI5Coa*`) and Pulse (`g-67d8be...`) both return 404 (unpublished/removed) — cleared their `c` ChatGPT button, kept the working Homepage button.
+- Remaining single "FAIL" is Etsy shop 403 = Etsy bot firewall (valid link, works in real browser).
+- Final: 27 of 27 tools render, 46 unique catalog links all resolve (only Etsy bot-blocked). Playground still live at http://127.0.0.1:8899/homepage.html.
+- NEXT: visual iteration with Jace (theme colors, catalog grouping, pricing/contact), mobile 390px check, then copy into loom as preview page, commit+push, and only swap as homepage after final approval.

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="ember">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="45dgof8 — AI agents, custom GPTs, automation, and digital tools. Local-first, no subscriptions. Build, automate, create. You own the machine, not a rented slot.">
+<meta name="keywords" content="45dgof8, AI agents, custom GPTs, automation, compliance AI, privacy law, creative AI, digital services">
+<meta name="author" content="45dgof8">
+<link rel="canonical" href="https://45dgof8.com/">
+<title>45dgof8 — AI Agents &amp; Digital Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* ---------- THEMES (switch via [data-theme]) ----------
+     Each theme sets CSS variables. `ember` = current neon-green dark,
+     plus alt themes you can cycle with the button (persisted in localStorage).
+  */
+  html[data-theme="ember"]{
+    --bg:#0d0d14; --bg2:#14141e; --bg3:#0f0f1a; --card:#14141e;
+    --border:#2a2a3a; --border2:#3a3a4a;
+    --accent:#00ff88; --accent2:#00ccff;
+    --accent-dim:#44cc66; --accent-soft:#1a4a2a;
+    --head:#ddd; --text:#b8b8c8; --muted:#888; --faint:#555;
+    --link:#4488ff; --neon-shadow:0 0 24px 4px rgba(0,255,136,.35);
+  }
+  html[data-theme="ember-hot"]{
+    --bg:#0d0d14; --bg2:#161018; --bg3:#120d15; --card:#17101a;
+    --border:#3a2230; --border2:#55303f;
+    --accent:#ff5c8a; --accent2:#ffb85c;
+    --accent-dim:#ff8fb0; --accent-soft:#4a1a2e;
+    --head:#f0d8e2; --text:#d8bcc6; --muted:#9a7484; --faint:#6b4a58;
+    --link:#ff9aa8; --neon-shadow:0 0 24px 4px rgba(255,92,138,.35);
+  }
+  html[data-theme="ember-amber"]{
+    --bg:#0e0d0b; --bg2:#171309; --bg3:#120f08; --card:#181410;
+    --border:#40331b; --border2:#5a4a28;
+    --accent:#ffb347; --accent2:#ff7a3c;
+    --accent-dim:#ffc97a; --accent-soft:#4a3a14;
+    --head:#eadfc4; --text:#d0c2a2; --muted:#998063; --faint:#66543c;
+    --link:#e2ab5c; --neon-shadow:0 0 24px 4px rgba(255,179,71,.35);
+  }
+  html[data-theme="ember-ocean"]{
+    --bg:#0a0e14; --bg2:#0e1620; --bg3:#0b1119; --card:#0f1722;
+    --border:#1e3348; --border2:#2c4a66;
+    --accent:#4dd6ff; --accent2:#7a8cff;
+    --accent-dim:#7fe0ff; --accent-soft:#143a52;
+    --head:#cfe6f5; --text:#a8c4d8; --muted:#6f8fa6; --faint:#4a6277;
+    --link:#6aa8ff; --neon-shadow:0 0 24px 4px rgba(77,214,255,.35);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;background:url('Z8f8U.webp') center center/cover fixed no-repeat}
+  body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(13,13,20,.88) 0%,rgba(13,13,20,.78) 50%,rgba(13,13,20,.94) 100%);z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:40px 24px 80px}
+
+  /* skip link (accessibility) */
+  .skip{position:absolute;left:-999px;top:0;background:#00ff88;color:#0a0a0a;padding:10px 16px;z-index:9999;border-radius:0 0 8px 0;text-decoration:none;font-weight:700}
+  .skip:focus{left:0}
+
+  /* theme switcher + top nav */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;background:rgba(13,13,20,.82);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+  .topbar nav{display:flex;gap:6px;flex-wrap:wrap}
+  .topbar nav a{color:var(--muted);font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s;border-radius:6px}
+  .topbar nav a:hover{color:var(--accent)}
+  .theme-btn{display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:0.75rem;color:var(--muted);letter-spacing:1px;cursor:pointer;user-select:none;background:var(--bg3);padding:6px 12px;border-radius:20px;border:1px solid var(--border2);transition:.2s;white-space:nowrap}
+  .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .theme-swatch{display:inline-block;width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.25);flex-shrink:0;background:conic-gradient(var(--accent),var(--accent2),var(--accent))}
+
+  .hat-title{text-align:center;margin:64px 0 40px;border-bottom:1px solid var(--border);padding-bottom:24px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:var(--accent);background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2.6rem;font-weight:400;letter-spacing:12px;text-transform:uppercase;color:var(--head);background:linear-gradient(135deg,var(--head),var(--muted),var(--head));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite 0.5s}
+  .hat-brim-accent{display:block;font-size:0.75rem;letter-spacing:8px;color:var(--faint);margin-top:8px;font-weight:300}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .tagline{text-align:center;color:var(--muted);font-size:1.05rem;max-width:640px;margin:-12px auto 8px;font-weight:300}
+
+  h2{font-size:1.3rem;color:var(--accent-dim);margin-top:52px;margin-bottom:16px;letter-spacing:.5px}
+  h3{font-size:1.05rem;color:var(--head);margin-top:20px;margin-bottom:10px}
+  p{color:var(--text);margin-bottom:12px}
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:var(--bg3);color:#c8a0ff;padding:2px 6px;border-radius:4px;font-size:0.9em}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:16px 0}
+  .card h3{margin-top:0}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+  .tag{display:inline-block;background:var(--accent-soft);color:var(--accent-dim);font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
+
+  /* hero CTA */
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:20px 0 8px}
+  .cta{display:inline-block;padding:11px 24px;border-radius:9px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:.15s;border:1px solid transparent}
+  .cta.primary{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+  .cta.primary:hover{filter:brightness(1.08);transform:translateY(-1px);text-decoration:none}
+  .cta.ghost{background:var(--bg3);color:var(--accent-dim);border-color:var(--border2)}
+  .cta.ghost:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+
+  /* GPT catalog */
+  .catalog-search{margin:8px 0 16px}
+  .catalog-search input{width:100%;padding:14px 18px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--head);font-size:1rem;font-family:inherit}
+  .catalog-search input:focus{outline:none;border-color:var(--accent)}
+  .catalog-search input::placeholder{color:var(--faint)}
+  .catalog-count{color:var(--faint);font-size:0.8rem;margin-bottom:10px}
+  .gpt-group{margin-bottom:28px}
+  .gpt-group h3{color:var(--accent-dim);text-transform:uppercase;letter-spacing:2px;font-size:0.8rem}
+  .gpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.gpt-grid{grid-template-columns:1fr}}
+  .gpt-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:flex-start;transition:border-color .2s,transform .15s}
+  .gpt-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .gpt-card .thumb{width:44px;height:44px;border-radius:9px;flex-shrink:0;object-fit:cover;background:var(--bg3);border:1px solid var(--border2)}
+  .gpt-card .g-body{min-width:0}
+  .gpt-card h4{color:var(--head);font-size:0.95rem;margin-bottom:4px;line-height:1.3}
+  .gpt-card p{color:var(--muted);font-size:0.82rem;margin:0 0 8px;line-height:1.45}
+  .gpt-card .g-links{display:flex;gap:10px;flex-wrap:wrap;font-size:0.8rem}
+  .gpt-card .g-links a{color:var(--accent);font-weight:600}
+  .gpt-card .g-links a.alt{color:var(--link);font-weight:400}
+  .gpt-card.hidden{display:none}
+
+  /* services */
+  .price-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg3);border-radius:8px;margin-bottom:8px;gap:8px;flex-wrap:wrap;border:1px solid var(--border)}
+  .price-item .service{font-weight:600;color:var(--head)}
+  .price-item .price{color:var(--accent);font-weight:700;font-size:1.1rem}
+  .btn-pay{background:var(--accent);color:#0a0a0a;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
+  .btn-pay:hover{filter:brightness(1.1);transform:translateY(-1px);text-decoration:none}
+  .note{color:var(--faint);font-size:0.85rem;margin-top:8px}
+
+  form .form-group{margin:14px 0}
+  form label{display:block;color:var(--muted);margin-bottom:6px;font-size:0.9rem}
+  form input,form textarea{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--head);font-size:1rem;font-family:inherit}
+  form input:focus,form textarea:focus{outline:none;border-color:var(--accent)}
+  form textarea{min-height:100px;resize:vertical}
+  .btn-submit{background:var(--accent);color:#0a0a0a;padding:14px 32px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn-submit:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+  .footer{text-align:center;padding:40px 0 0;color:var(--faint);font-size:0.85rem}
+  .footer a{color:var(--link)}
+  .foot-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+  .foot-links a{color:var(--muted);font-size:0.8rem}
+  .foot-links a:hover{color:var(--accent)}
+
+  @media(max-width:640px){
+    .hat-brim{font-size:1.7rem;letter-spacing:6px}
+    .hat-crown{font-size:1.2rem;letter-spacing:3px}
+    h2{font-size:1.2rem}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <nav aria-label="Primary">
+    <a href="#gpts">GPTs</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="theme-btn" id="themeBtn" type="button" title="Switch color theme" aria-label="Switch color theme">
+    <span class="theme-swatch" id="themeSwatch" aria-hidden="true"></span>
+    <span id="themeLabel">Theme</span>
+  </button>
+</div>
+
+<div class="wrap" id="main">
+  <div class="hat-title">
+    <span class="hat-crown">45dgof8</span>
+    <span class="hat-brim">own the machine</span>
+    <span class="hat-brim-accent">AI AGENTS &middot; CUSTOM GPTs &middot; AUTOMATION &middot; DIGITAL TOOLS</span>
+  </div>
+  <p class="tagline">Custom AI agents built for solo creators. Email bots, Telegram assistants, automation, video &amp; music. Every agent runs on your hardware — you own the machine, not a rented slot. No subscriptions.</p>
+
+  <div class="cta-row">
+    <a class="cta primary" href="agent-services.html">Explore Agent Services</a>
+    <a class="cta ghost" href="hub.html">Everything Hub</a>
+    <a class="cta ghost" href="chat.html">💬 Open Chat</a>
+  </div>
+
+  <!-- ===================== GPT CATALOG ===================== -->
+  <h2 id="gpts">The GPT Family</h2>
+  <p style="color:var(--muted);font-size:0.95rem">Hand-built assistants covering compliance, languages, creativity, and everyday help. Open any one straight in ChatGPT, or browse its homepage.</p>
+  <div class="catalog-search">
+    <input type="text" id="gptSearch" placeholder="Search the family — try 'privacy', 'Mexico', 'creative'…" aria-label="Search GPTs" />
+  </div>
+  <div class="catalog-count" id="catalogCount"></div>
+
+  <div id="catalog"></div>
+
+  <!-- ===================== SERVICES ===================== -->
+  <h2 id="services">What you get (SFr. / CHF)</h2>
+  <div class="card">
+    <div class="price-item"><span class="service">🎬 Custom video ad (30s)</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 19</span><a class="btn-pay" href="https://paypal.me/45dgof8/19" target="_blank" rel="noopener">Pay</a></span></div>
+    <div class="price-item"><span class="service">🎵 Custom music track (30s)</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 15</span><a class="btn-pay" href="https://paypal.me/45dgof8/15" target="_blank" rel="noopener">Pay</a></span></div>
+    <div class="price-item"><span class="service">⚡ Automation workflow</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 25</span><a class="btn-pay" href="https://paypal.me/45dgof8/25" target="_blank" rel="noopener">Pay</a></span></div>
+    <div class="price-item" style="border-bottom:none"><span class="service">🔄 Revision / tweak</span><span style="display:flex;align-items:center;gap:10px"><span class="price">SFr. 5</span><a class="btn-pay" href="https://paypal.me/45dgof8/5" target="_blank" rel="noopener">Pay</a></span></div>
+    <div class="price-item" style="background:var(--accent-soft);margin-top:4px"><span class="service" style="color:var(--accent)">📦 Bundle — video + track</span><span style="display:flex;align-items:center;gap:10px"><span class="price" style="color:var(--accent)">SFr. 29</span><a class="btn-pay" href="https://paypal.me/45dgof8/29" target="_blank" rel="noopener">Pay</a></span></div>
+    <div class="price-item" style="background:var(--accent-soft);margin-top:4px"><span class="service" style="color:var(--accent)">🤖 Telegram bot setup — auto-reply with voice, commands, your own bot</span><span style="display:flex;align-items:center;gap:10px"><span class="price" style="color:var(--accent)">SFr. 35</span><a class="btn-pay" href="https://paypal.me/45dgof8/35" target="_blank" rel="noopener">Pay</a></span></div>
+    <p class="note" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">First revision free. Custom amount below. 👇</p>
+  </div>
+
+  <!-- ===================== ABOUT ===================== -->
+  <h2 id="about">What is 45dgof8?</h2>
+  <div class="card" style="border-color:var(--border)">
+    <p>I build custom AI agents for solo creators — email bots, Telegram assistants, automation workflows, video and music generation. You describe what you need, I build the agent, you get the result.</p>
+    <p style="color:var(--muted)">No subscriptions. No platform lock-in. Every agent runs on your hardware and you own the setup. You don't rent a slot — you own the machine.</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+      <span class="tag">custom AI agents</span>
+      <span class="tag">email + Telegram</span>
+      <span class="tag">video + music</span>
+      <span class="tag">automation</span>
+      <span class="tag">no subscription</span>
+    </div>
+  </div>
+
+  <!-- ===================== CONTACT ===================== -->
+  <h2 id="contact">Get in touch</h2>
+  <div class="card" style="border-color:var(--border2)">
+    <div class="form-group">
+      <label for="email">Your email</label>
+      <input type="email" id="email" placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label for="project">What are you building?</label>
+      <textarea id="project" placeholder="Email bots, automation, video, music, or something else."></textarea>
+    </div>
+    <button class="btn-submit" onclick="submitProject()">Send message</button>
+    <p class="note">No commitment. Just a conversation.</p>
+  </div>
+  <div style="text-align:center;margin-top:8px">
+    <a style="display:inline-block;background:#2a6bb0;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600" href="https://t.me/Jace_mail_bot" target="_blank" rel="noopener">✈️ Message me on Telegram</a>
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <div class="footer">
+    <div class="foot-links">
+      <a href="ambient.html">Ambient Studio</a>
+      <a href="apps.html">Apps</a>
+      <a href="tools.html">Tools</a>
+      <a href="assistant.html">Assistant</a>
+      <a href="https://008amonra.github.io/45dgof8_ComplianceSuite/" target="_blank" rel="noopener">Legacy GPT Hub</a>
+      <a href="accessibility.html">Accessibility</a>
+    </div>
+    <div>© 2026 45dgof8 — custom AI agents, not a subscription.</div>
+    <div style="margin-top:6px">generated but genuine</div>
+  </div>
+</div>
+
+<script>
+/* ============ GPT CATALOG DATA ============ */
+/* groups: each has a label + entries (name, chatgpt url, homepage url, icon, description) */
+var G = {
+  core: {
+    label: "Core Assistants",
+    items: [
+      {n:"Eva Answers — Thoughtful AI, Real Conversations", c:"https://chatgpt.com/g/g-lPUDkYN4z-eva-answers?model=gpt-5", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/Eva_Answers.html", i:"", d:"Your adaptive, empathetic co-pilot — fuses compliance with creativity to launch bold ideas across every frontier."},
+      {n:"TSG — Tech Support GPT", c:"https://chatgpt.com/g/g-QHveZ3pME-tsg-tech-support-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/TSG-tech-support-gpt.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/techsupport.png", d:"Troubleshooting and technical help."},
+      {n:"AI Merch & E-commerce Guide — Dion Wolf Jotham", c:"https://chatgpt.com/g/g-2mPAzRykZ-e-commerce-guide-dion-wolf-jotham", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/Dion_Wolf_Jotham.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/DionW.webp", d:"Explore the digital essence of Dion Wolf."},
+      {n:"Crypto Market Mentor", c:"https://chatgpt.com/g/g-cxKIdjjdq-crypto-market-mentor", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/crypto-market-mentor.html", i:"", d:"Learn crypto trading with clarity, discipline, and risk awareness. New traders build skill, not hype."},
+      {n:"45dgof8 Pulse — Central Payment GPT", c:"", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-pulse.html", i:"", d:"Centralized payment system for all 45dgof8 GPTs — secure links, automated invoices, real-time transaction tracking."}
+    ]
+  },
+  compliance: {
+    label: "Privacy & Compliance",
+    items: [
+      {n:"Global — Compliance GPT", c:"https://chatgpt.com/g/g-pwRUJBPBY-compliancegpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-global-compliance-gpt.html", i:"", d:"Navigate global data laws like GDPR and CCPA with real-time compliance insights. Automation, legal intelligence, Virtual IO support."},
+      {n:"GDPR — Nibbler", c:"https://chatgpt.com/g/g-67c8884a41288191ab4211b6d693b19a-gdpr-nibbler", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-GDPR_Nibbler_Compliance_GPT.html", i:"", d:"GDPR compliance, CDN & hosting risks, legal rulings, best practices."},
+      {n:"GDPR — CGB Compliance GPT", c:"https://chatgpt.com/g/g-evCGCyUMs-gdpr-cgb", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-GDPR_EU_Compliance_GPT.html", i:"", d:"GDPR-specific tools including live self-assessments and actionable compliance steps."},
+      {n:"Ready2Comply — GDPR Compliance Hub", c:"https://chatgpt.com/g/g-evCGCyUMs-gdpr-cgb", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/Ready2Comply.html", i:"", d:"Practical GDPR hub with step-by-step guidance, templates, and a path to privacy-by-design."},
+      {n:"Switzerland — FADP Compliance GPT", c:"https://chatgpt.com/g/g-67d149c68c68819189a786dac0342c55-45dgof8-switzerland-fadp-compliance-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-Switzerland_FADP_Compliance_GPT.html", i:"", d:"Swiss-engineered precision in digital integrity compliance."},
+      {n:"EU — GDPR Compliance GPT", c:"https://chatgpt.com/g/g-evCGCyUMs-gdpr-cgb", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-GDPR_EU_Compliance_GPT.html", i:"", d:"GDPR compliance, consent, and data-transfer tools."},
+      {n:"Indonesia — Compliance GPT", c:"https://chatgpt.com/g/g-6738a01a6edc81919fe6730214086ff7", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-indonesia-compliance-gpt.html", i:"", d:"Bilingual AI for Indonesia's PDP Law with templates, legal guidance, and local insights."},
+      {n:"Brazil — LGPD GPT", c:"https://chatgpt.com/g/g-674365946c7081918b642b3e693fac55", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-brazil-lgpd-compliance-gpt.html", i:"", d:"Expert guidance on LGPD compliance including consent and data-transfer tools."},
+      {n:"South Africa — POPIA GPT", c:"https://chatgpt.com/g/g-67500c79dbcc81919efc3b758e89bb30", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-south-africa-popia-compliance-gpt.html", i:"", d:"Guides SA businesses through POPIA with policy generators and breach tools."},
+      {n:"India — Compliance GPT", c:"https://chatgpt.com/g/g-6753ee6bd6108191a33f017d5b2de60b", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8_india_compliance.html", i:"", d:"Predictive and culturally aware legal support for India's laws."},
+      {n:"Japan — APPI GPT", c:"https://chatgpt.com/g/g-676739efea60819198a77b106e854b7f", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-japan-appi-compliance-gpt.html", i:"", d:"Up-to-date APPI insights, policy tools, and bilingual support."},
+      {n:"Canada — PIPEDA & Law 25 GPT", c:"https://chatgpt.com/g/g-677a2b985e3c8191a73dff182cd1c425", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-Canada_PIPEDA_Compliance_GPT.html", i:"", d:"Automates Canada's data compliance with scalable tools."},
+      {n:"Mexico — LFPDPPP GPT", c:"https://chatgpt.com/g/g-67c81a5951388191aa6d5fd48a83f255-45dgof8-mexico-lfpdppp-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8%E2%80%93Mexico-LFPDPPP-Compliance-GPT.html", i:"", d:"LFPDPPP rights, consent, security, and cross-border compliance."},
+      {n:"USA — Federal Privacy Compliance GPT", c:"https://chatgpt.com/g/g-67d14f0281a48191acf0d141f600152f-usa-federal-privacy-compliance-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-USA_Federal_Privacy_Compliance_GPT.html", i:"", d:"HIPAA, GLBA, COPPA, and AI laws with dynamic compliance tools."},
+      {n:"Australia — Privacy Act / APPs", c:"https://chatgpt.com/g/g-67fd397a2e84819190856a6e3e26897a-45dgof8-australia-privacy-compliance-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-Australia_Privacy_Compliance_GPT.html", i:"", d:"Compliance with Australia's Privacy Act and Privacy Principles (APPs)."},
+      {n:"Peru — Habeas Data GPT", c:"https://chatgpt.com/g/g-67ea5b6720d88191bd94359a1cffc5f3-45dgof8-peru-pdp-law-compliance-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/Peru_Pdp_Compliance_Gpt_Homepage.html", i:"", d:"Compliance with Peru's Habeas Data law."}
+    ]
+  },
+  languages: {
+    label: "Languages",
+    items: [
+      {n:"45dgof8-LinguaNode™ GPT", c:"https://chatgpt.com/g/g-67e88a6f339c8191b0a017584f72ac53-45dgof8-linguanodetm-gpt", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/45dgof8-LinguaNode%E2%84%A2.html", i:"", d:"Detects and translates languages — from English ↔ Spanish to Klingon ↔ English."}
+    ]
+  },
+  creative: {
+    label: "Creative & Fun",
+    items: [
+      {n:"GalacticChoices", c:"https://008amonra.github.io/45dgof8_ComplianceSuite/galactic/GalacticChoices.html", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/galactic/GalacticChoices.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/GalacticChoices.webp", d:"Sci-fi adventure in ethical AI storytelling."},
+      {n:"CatArtGenerator", c:"https://008amonra.github.io/45dgof8_ComplianceSuite/CatArtCreator.html", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/CatArtCreator.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/speedy_cat256.webp", d:"Generate art… with cats!"},
+      {n:"ListGeniusGPT", c:"", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/ListGeniusGPT.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/Listgenius.webp", d:"Generate, refine, and rank high-quality lists for content, research, and ideas."},
+      {n:"DNS Manager GPT", c:"https://008amonra.github.io/45dgof8_ComplianceSuite/dns-manager-gpt.html", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/dns-manager-gpt.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/45dgof8-dns-manager-gpt.webp", d:"Smart DNS management with GPT guidance."}
+    ]
+  },
+  shop: {
+    label: "Shop",
+    items: [
+      {n:"🛒 Etsy Shop — 45dgof8", c:"https://www.etsy.com/ch/shop/45dgof8", h:"https://008amonra.github.io/45dgof8_ComplianceSuite/cups.html", i:"https://raw.githubusercontent.com/008Amonra/45dgof8_ComplianceSuite/main/the_button.png", d:"Potential in Ceramic Form."}
+    ]
+  }
+};
+
+var CATALOG = document.getElementById('catalog');
+var COUNT = document.getElementById('catalogCount');
+var SEARCH = document.getElementById('gptSearch');
+var total = 0;
+for (var g in G) total += G[g].items.length;
+
+function esc(s){ return (s||'').replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+function buildCards(filter){
+  filter = (filter||'').trim().toLowerCase();
+  var shown = 0;
+  var html = '';
+  for (var g in G){
+    var group = G[g];
+    var cards = '';
+    group.items.forEach(function(it){
+      var match = !filter || (esc(it.n)+' '+esc(it.d)).toLowerCase().indexOf(filter) !== -1;
+      if (match) shown++;
+      var thumb = it.i
+        ? '<img class="thumb" alt="" loading="lazy" src="'+esc(it.i)+'" onerror="this.style.display=\'none\'" />'
+        : '<div class="thumb" aria-hidden="true"></div>';
+      var chatgpt = it.c ? '<a href="'+esc(it.c)+'" target="_blank" rel="noopener">Open in ChatGPT</a>' : '';
+      var home = it.h ? '<a class="alt" href="'+esc(it.h)+'">Homepage</a>' : '';
+      cards += '<div class="gpt-card'+(match?'':' hidden')+'">'
+        + thumb
+        + '<div class="g-body"><h4>'+esc(it.n)+'</h4>'
+        + '<p>'+esc(it.d)+'</p>'
+        + '<div class="g-links">'+chatgpt+' '+home+'</div></div></div>';
+    });
+    html += '<div class="gpt-group"><h3>'+esc(group.label)+'</h3><div class="gpt-grid">'+cards+'</div></div>';
+  }
+  CATALOG.innerHTML = html;
+  COUNT.textContent = (filter ? shown : total) + ' of ' + total + ' tools';
+}
+
+SEARCH.addEventListener('input', function(){ buildCards(SEARCH.value); });
+buildCards('');
+
+/* ============ THEME SWITCHER ============ */
+var THEMES = [
+  {id:'ember', label:'Ember'},
+  {id:'ember-hot', label:'Rose'},
+  {id:'ember-amber', label:'Amber'},
+  {id:'ember-ocean', label:'Ocean'}
+];
+var root = document.documentElement;
+var themeBtn = document.getElementById('themeBtn');
+var themeLabel = document.getElementById('themeLabel');
+var themeSwatch = document.getElementById('themeSwatch');
+
+function applyTheme(id){
+  root.setAttribute('data-theme', id);
+  var t = THEMES.filter(function(x){return x.id===id;})[0] || THEMES[0];
+  themeLabel.textContent = t.label;
+  try { localStorage.setItem('45dgof8-theme', id); } catch(e){}
+}
+function cycleTheme(){
+  var cur = root.getAttribute('data-theme') || 'ember';
+  var idx = THEMES.findIndex(function(x){return x.id===cur;});
+  var next = THEMES[(idx+1) % THEMES.length];
+  applyTheme(next.id);
+}
+themeBtn.addEventListener('click', cycleTheme);
+(function(){
+  var saved = null;
+  try { saved = localStorage.getItem('45dgof8-theme'); } catch(e){}
+  applyTheme(saved || 'ember');
+})();
+
+/* ============ CONTACT ============ */
+function submitProject(){
+  var email = (document.getElementById('email').value||'').trim();
+  var project = (document.getElementById('project').value||'').trim();
+  var body = encodeURIComponent('Project: ' + project + '\nFrom: ' + email);
+  window.location.href = 'mailto:45dgof8@gmail.com?subject=' + encodeURIComponent('Project inquiry') + '&body=' + body;
+}
+</script>
+</body>
+</html>
