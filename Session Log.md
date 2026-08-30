@@ -199,3 +199,10 @@
 ## 2026-08-30 — contact form: add Telegram option (homepage)
 - Added "✈️ Message me on Telegram" button (https://t.me/Jace_mail_bot) under the "Get in touch" section on homepage (index.html), alongside the existing email mailto form.
 - Verified assistant.html + hub.html (blind/deaf accessibility + hub sibling pages) have NO /loom/ links — clean, all resolve at root. accessibility.html = 200 live.
+
+## 2026-08-30 — X (Twitter) handle fix → @008Amonra (Jace confirmed)
+- Wrong/inconsistent X addresses across repo; Jace confirmed @008Amonra is correct.
+- Fixed legacy.html (x.com/45dgof8 → x.com/008Amonra) + nomad.html (twitter:site @45dgof8 → @008Amonra). trashbox/gpt-hub.html already correct.
+- Added X link (x.com/008Amonra) to homepage footer (index.html) + new-index.html footer.
+- YouTube handle @45dgof8 (youtube.com/@45dgof8) is SEPARATE and correct — left untouched.
+- REMINDER for Jace (filed as task): upgrade/fix the X post/profile — the address there is wrong (was the 45dgof8 mismatch). Verify real X bio now matches x.com/008Amonra.
