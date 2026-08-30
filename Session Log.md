@@ -206,3 +206,12 @@
 - Added X link (x.com/008Amonra) to homepage footer (index.html) + new-index.html footer.
 - YouTube handle @45dgof8 (youtube.com/@45dgof8) is SEPARATE and correct — left untouched.
 - REMINDER for Jace (filed as task): upgrade/fix the X post/profile — the address there is wrong (was the 45dgof8 mismatch). Verify real X bio now matches x.com/008Amonra.
+
+## 2026-08-30 — LLM vision upgrade (emabled for next boot)
+- Goal: let the local LLM "see" (so I can verify my Blender renders + do image understanding).
+- Found NO new model needed: Gemma 3 4B is multimodal; the vision projector mmproj-model-f16.gguf (851MB) was ALREADY alongside the model in LM Studio cache, just unused.
+- Bedrock: llama-server b9789 supports --mmproj. The only gap: start_llm() in revive.sh never passed -mm.
+- Edited revive.sh: added MMPROJ_PATH/MMPROJ_URL vars, check_mmproj + install_mmproj (graceful text-only fallback), start_llm() now passes -mm when present, wired into quick_status + full_revive status. bash -n syntax OK.
+- VERIFIED end-to-end: spun throwaway server on :1235, fed it the Blender test render PNG, model described it ("brown mushroom-like form against dark blue background"). Vision WORKS.
+- No restart done (Jace: next boot enough). Running server on :1234 untouched.
+- NOTE: revive.sh is UNTRACKED in this repo. Committed Session Log only; decision on tracking revive.sh left to Jace.
