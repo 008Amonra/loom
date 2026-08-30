@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="45dgof8 — AI agents, automation, custom GPTs, and digital tools. Local-first, no subscriptions. Build, automate, create.">
+<meta name="keywords" content="45dgof8, AI agents, automation, custom GPTs, compliance, talking head, music tools, digital services">
+<meta name="author" content="45dgof8">
+<link rel="canonical" href="https://45dgof8.com/">
+<title>45dgof8 — AI Agents &amp; Digital Services</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://45dgof8.com/#organization",
+      "name": "45dgof8",
+      "url": "https://45dgof8.com",
+      "logo": "https://45dgof8.com/avatar/loom.png",
+      "sameAs": [
+        "https://x.com/45dgof8",
+        "https://github.com/008Amonra",
+        "https://www.youtube.com/@45dgof8"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://45dgof8.com/#website",
+      "name": "45dgof8",
+      "url": "https://45dgof8.com",
+      "description": "AI agents, automation, custom GPTs, and digital tools. Local-first, no subscriptions. Build, automate, create.",
+      "publisher": { "@id": "https://45dgof8.com/#organization" }
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest-chat.json">
+<meta name="theme-color" content="#0d0d14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'Segoe UI',system-ui,sans-serif;color:#e0e0e8;line-height:1.6;min-height:100vh;background:#0d0d14}
+  .wrap{max-width:800px;margin:0 auto;padding:40px 24px 80px}
+
+  .hat-title{text-align:center;margin-bottom:40px;border-bottom:1px solid #222;padding-bottom:24px}
+  .hat-crown{display:block;font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:6px;text-transform:uppercase;color:#00ff88;background:linear-gradient(135deg,#00ff88,#00ccff,#00ff88);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite;margin-bottom:-4px}
+  .hat-brim{display:block;font-family:'Cinzel',serif;font-size:2.6rem;font-weight:400;letter-spacing:12px;text-transform:uppercase;color:#888;background:linear-gradient(135deg,#e0e0e8,#888,#e0e0e8);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite 0.5s}
+  .hat-brim-accent{display:block;font-size:0.75rem;letter-spacing:8px;color:#555;margin-top:8px;font-weight:300}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  h2{font-size:1.3rem;color:#00cc77;margin-top:48px;margin-bottom:16px}
+  h3{font-size:1.05rem;color:#ddd;margin-top:24px;margin-bottom:10px}
+  p{color:#b8b8c8;margin-bottom:12px}
+  a{color:#4488ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{background:#1a1a28;color:#c8a0ff;padding:2px 6px;border-radius:4px;font-size:0.9em}
+
+  .card{background:#14141e;border:1px solid #2a2a3a;border-radius:12px;padding:24px;margin:16px 0}
+  .card h3{margin-top:0}
+
+  hr{border:none;border-top:1px solid #222;margin:40px 0}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+  .price-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0f0f1a;border-radius:8px;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+  .price-item .service{font-weight:600;color:#ddd}
+  .price-item .price{color:#00ff88;font-weight:700;font-size:1.1rem}
+
+  .btn-pay{background:#ffc439;color:#111;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
+  .btn-pay:hover{background:#ffd668;transform:translateY(-1px)}
+
+  .amount-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0}
+  .amount-row input{padding:12px 16px;font-size:1.1rem;background:#0f0f1a;border:1px solid #3a3a4a;border-radius:8px;color:#e0e0e8;width:160px;font-weight:700}
+  .amount-row input:focus{outline:none;border-color:#00ff88}
+
+  .form-group{margin:16px 0}
+  .form-group label{display:block;color:#aaa;margin-bottom:6px;font-size:0.9rem}
+  .form-group input,.form-group textarea{width:100%;padding:12px 16px;background:#0f0f1a;border:1px solid #3a3a4a;border-radius:8px;color:#e0e0e8;font-size:1rem;font-family:inherit}
+  .form-group input:focus,.form-group textarea:focus{outline:none;border-color:#00ff88}
+  .form-group textarea{min-height:100px;resize:vertical}
+  .btn-submit{background:#00ff88;color:#0a0a0a;padding:14px 32px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn-submit:hover{background:#33ffaa;transform:translateY(-1px)}
+
+  .note{color:#666;font-size:0.85rem;margin-top:8px}
+  .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
+
+  .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
+  .qbtn:hover{border-color:#6a5a9a !important;background:#2a1a3e !important}
+  .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+  .video-wrap video{position:absolute;top:0;left:0;width:100%;height:100%}
+
+  .status{font-size:0.9rem;margin-top:8px;padding:8px 12px;border-radius:6px;min-height:20px}
+  .status.ok{color:#44cc66}
+  .status.err{color:#ff6644}
+  .status.info{color:#888}
+
+  .footer{text-align:center;padding:40px 0 0;color:#555;font-size:0.85rem}
+  .footer a{color:#4488ff}
+
+  .disclaimer{font-size:0.8rem;color:#555;margin-top:24px;padding:12px;border:1px solid #2a2a2a;border-radius:8px}
+
+  .intro-btn-muted:hover{border-color:#d4a847 !important;color:#d4a847 !important;background:#2a2018 !important}
+  .intro-btn-playing{border-color:#44cc66 !important;color:#44cc66 !important;background:#1a2a1a !important;animation:btnPulse 0.8s ease-in-out infinite}
+  .intro-btn-playing:hover{border-color:#66ee88 !important;color:#66ee88 !important}
+  @keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(68,204,102,0.3)}50%{box-shadow:0 0 12px 4px rgba(68,204,102,0.15)}}
+
+  /* ---- Loom figure effects ---- */
+  .loom-wrap{position:relative;text-align:center;margin-bottom:24px;animation:loomFloat 4s ease-in-out infinite}
+  .loom-wrap::before{content:'';position:absolute;inset:-10px;border-radius:24px;background:conic-gradient(from 0deg,#c8a87c,#00ff88,#4488ff,#c8a87c);opacity:0.12;z-index:-1;animation:loomSpin 6s linear infinite;filter:blur(12px)}
+  .loom-wrap::after{content:'';position:absolute;inset:-2px;border-radius:18px;border:1px solid rgba(200,168,124,0.15);z-index:-1;animation:loomEdge 3s ease-in-out infinite}
+  @keyframes loomFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes loomSpin{to{transform:rotate(360deg)}}
+  @keyframes loomEdge{0%,100%{opacity:0.3}50%{opacity:0.8}}
+  .loom-img{max-width:320px;width:100%;border-radius:16px;opacity:0.92;transition:transform 0.4s ease,filter 0.4s ease;transform-style:preserve-3d;perspective:800px;display:block;margin:0 auto}
+  .loom-img:hover{transform:rotateX(3deg) rotateY(-4deg) scale(1.03);filter:brightness(1.08) contrast(1.05)}
+
+  /* ---- Apps badge ---- */
+  .apps-badge{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 20px rgba(200,168,124,0.3);transition:.25s;white-space:nowrap;animation:badgePulse 2.5s ease-in-out infinite;z-index:2}
+  .apps-badge:hover{transform:translateX(-50%) translateY(-3px) !important;box-shadow:0 8px 35px rgba(200,168,124,0.55) !important}
+  @keyframes badgePulse{0%,100%{box-shadow:0 4px 20px rgba(200,168,124,0.3)}50%{box-shadow:0 4px 40px rgba(200,168,124,0.55),0 0 60px rgba(200,168,124,0.15)}}
+
+  /* ---- Spark particles ---- */
+  .spark{position:absolute;width:4px;height:4px;border-radius:50%;background:#c8a87c;pointer-events:none;opacity:0;z-index:1}
+  .spark:nth-child(1){top:15%;left:10%;animation:sparkBurst 3.5s ease-out infinite}
+  .spark:nth-child(2){top:50%;left:5%;animation:sparkBurst 3.5s ease-out infinite 0.7s}
+  .spark:nth-child(3){top:70%;left:88%;animation:sparkBurst 3.5s ease-out infinite 1.4s}
+  .spark:nth-child(4){top:20%;left:92%;animation:sparkBurst 3.5s ease-out infinite 2.1s}
+  .spark:nth-child(5){top:85%;left:15%;animation:sparkBurst 3.5s ease-out infinite 2.8s}
+  .spark:nth-child(6){top:5%;left:50%;animation:sparkBurst 4s ease-out infinite 1s}
+  .spark:nth-child(7){top:60%;left:95%;animation:sparkBurst 4s ease-out infinite 2s}
+  .spark:nth-child(8){top:35%;left:2%;animation:sparkBurst 4s ease-out infinite 3s}
+  @keyframes sparkBurst{0%{opacity:1;transform:translate(0,0) scale(1);box-shadow:0 0 6px rgba(200,168,124,0.8)}100%{opacity:0;transform:translate(var(--dx,15px),var(--dy,-20px)) scale(0);box-shadow:0 0 0 transparent}}
+  .spark:nth-child(1){--dx:18px;--dy:-22px}
+  .spark:nth-child(2){--dx:-12px;--dy:-30px}
+  .spark:nth-child(3){--dx:-15px;--dy:-25px}
+  .spark:nth-child(4){--dx:20px;--dy:-18px}
+  .spark:nth-child(5){--dx:12px;--dy:-28px}
+  .spark:nth-child(6){--dx:-8px;--dy:-20px}
+  .spark:nth-child(7){--dx:16px;--dy:-24px}
+  .spark:nth-child(8){--dx:-14px;--dy:-26px}
+
+  /* ---- SPLASH STAR (Newspaper) ---- */
+  .splash-star-wrap{position:relative;text-align:center;margin:24px 0 32px;cursor:pointer}
+  .splash-star{display:inline-block;width:120px;height:120px;position:relative;animation:starSpin 12s linear infinite}
+  .splash-star::before{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg,#ffd700,#ffaa00,#ff6600,#ffd700);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:starGlow 2s ease-in-out infinite alternate}
+  .splash-star::after{content:'';position:absolute;inset:12px;background:radial-gradient(circle at 40% 35%,#fff8e0,#ffd700 40%,#cc8800 80%,#885500);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);filter:blur(0.5px)}
+  .splash-star-wrap:hover .splash-star::before{filter:brightness(1.3) drop-shadow(0 0 20px rgba(255,170,0,0.6))}
+  .splash-star-wrap:hover .splash-star{animation-duration:4s}
+  .splash-star-ring{position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(255,215,0,0.2);animation:ringPulse 3s ease-in-out infinite}
+  .splash-star-ring2{position:absolute;inset:-28px;border-radius:50%;border:1px solid rgba(255,170,0,0.1);animation:ringPulse 3s ease-in-out infinite 0.5s}
+  @keyframes starSpin{to{transform:rotate(360deg)}}
+  @keyframes starGlow{0%{filter:brightness(1) drop-shadow(0 0 8px rgba(255,170,0,0.3))}100%{filter:brightness(1.15) drop-shadow(0 0 16px rgba(255,170,0,0.5))}}
+  @keyframes ringPulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.8;transform:scale(1.05)}}
+  .splash-label{display:block;margin-top:8px;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(135deg,#ffd700,#ffaa00,#ff6600);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease-in-out infinite}
+  .splash-sub{display:block;font-size:0.7rem;color:#665533;letter-spacing:2px;margin-top:4px}
+  .splash-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffd700;pointer-events:none;opacity:0}
+  .splash-spark:nth-child(1){top:10%;left:15%;animation:splashSpark 2.5s ease-out infinite}
+  .splash-spark:nth-child(2){top:80%;left:10%;animation:splashSpark 2.5s ease-out infinite 0.6s}
+  .splash-spark:nth-child(3){top:15%;left:85%;animation:splashSpark 2.5s ease-out infinite 1.2s}
+  .splash-spark:nth-child(4){top:75%;left:90%;animation:splashSpark 2.5s ease-out infinite 1.8s}
+  .splash-spark:nth-child(5){top:5%;left:50%;animation:splashSpark 3s ease-out infinite 0.3s}
+  .splash-spark:nth-child(6){top:90%;left:50%;animation:splashSpark 3s ease-out infinite 1.5s}
+  @keyframes splashSpark{0%{opacity:1;transform:translate(0,0) scale(1);box-shadow:0 0 6px rgba(255,215,0,0.8)}100%{opacity:0;transform:translate(var(--sdx,10px),var(--sdy,-15px)) scale(0);box-shadow:0 0 0 transparent}}
+  .splash-spark:nth-child(1){--sdx:12px;--sdy:-18px}
+  .splash-spark:nth-child(2){--sdx:-10px;--sdy:-20px}
+  .splash-spark:nth-child(3){--sdx:-14px;--sdy:-16px}
+  .splash-spark:nth-child(4){--sdx:15px;--sdy:-14px}
+  .splash-spark:nth-child(5){--sdx:-8px;--sdy:-18px}
+  .splash-spark:nth-child(6){--sdx:10px;--sdy:-20px}
+
+  /* ---- Bzzzt attention flash ---- */
+  .bzzzt{animation:bzzztFlash 0.6s ease-out !important}
+  @keyframes bzzztFlash{0%{filter:brightness(1)}20%{filter:brightness(1.7) saturate(1.5)}40%{filter:brightness(0.85)}60%{filter:brightness(1.4)}100%{filter:brightness(1)}}
+
+  /* ---- Dimensional warp on click ---- */
+  .warp-active .loom-img{transition:all 0.8s ease-in;opacity:0;transform:scale(3) rotateZ(15deg);filter:brightness(2) blur(4px)}
+  .warp-active .apps-badge{transition:all 0.8s ease-in;opacity:0;transform:translateX(-50%) scale(3)}
+  .warp-active .launch-pad{transition:all 0.8s ease-in;opacity:0;transform:translateY(20px)}
+  .warp-active .spark{display:none}
+
+  /* ---- Launch icons ---- */
+  .launch-pad{display:flex;gap:14px;justify-content:center;align-items:flex-end;margin-top:8px;margin-bottom:32px;height:64px}
+  .launch-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;font-size:13px;font-weight:800;letter-spacing:0.5px;text-decoration:none;color:#fff;position:relative;transition:transform 0.25s ease,box-shadow 0.25s ease;animation:launchFloat 3s ease-in-out infinite;border:1.5px solid rgba(255,255,255,0.15)}
+  .launch-icon:hover{transform:scale(1.2) !important;animation:none !important;z-index:10}
+  .launch-icon .tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:rgba(10,10,20,0.9);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:#ddd;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.2s ease,transform 0.2s ease;transform-origin:bottom center}
+  .launch-icon:hover .tip{opacity:1;transform:translateX(-50%) translateY(-2px)}
+  .launch-icon.yt{background:linear-gradient(135deg,#c8a87c,#b8945a);color:#0a0a0f;box-shadow:0 0 14px rgba(200,168,124,0.25),0 4px 12px rgba(0,0,0,0.3);animation-delay:0s}
+  .launch-icon.yt:hover{box-shadow:0 0 28px rgba(200,168,124,0.5),0 6px 20px rgba(0,0,0,0.4)}
+
+  .launch-icon.apps{background:linear-gradient(135deg,#00ff88,#00cc66);color:#0a0a0f;box-shadow:0 0 14px rgba(0,255,136,0.2),0 4px 12px rgba(0,0,0,0.3);animation-delay:0.8s;font-size:18px}
+  .launch-icon.apps:hover{box-shadow:0 0 28px rgba(0,255,136,0.45),0 6px 20px rgba(0,0,0,0.4)}
+  @keyframes launchFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  /* ---- Glass Ball ---- */
+  .glass-ball{background:radial-gradient(circle at 35% 30%,rgba(0,255,200,0.15),rgba(0,60,80,0.5) 60%,rgba(0,20,30,0.8))!important;border-color:rgba(0,255,200,0.3)!important;position:relative;overflow:hidden;animation-delay:0.4s}
+  .glass-ball::before{content:'';position:absolute;top:8%;left:18%;width:38%;height:25%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,0.4),transparent);pointer-events:none;z-index:1}
+  .glass-ball::after{content:'';position:absolute;bottom:12%;right:15%;width:20%;height:12%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,0.15),transparent);pointer-events:none;z-index:1}
+  .glass-ball .glass-img{width:70%;height:70%;object-fit:contain;position:relative;z-index:0;filter:drop-shadow(0 0 6px rgba(0,255,200,0.3))}
+  .glass-ball:hover{border-color:rgba(0,255,200,0.7)!important;background:radial-gradient(circle at 35% 30%,rgba(0,255,200,0.25),rgba(0,80,100,0.6) 60%,rgba(0,30,40,0.9))!important}
+  .glass-ball:hover .glass-img{filter:drop-shadow(0 0 12px rgba(0,255,200,0.6))}
+
+  @media(max-width:640px){
+    body{padding:1rem;font-size:15px}
+    h1{font-size:1.5rem}
+    h2{font-size:1.2rem}
+    video{max-height:300px}
+    .card{padding:16px}
+    #project-form input,#project-form textarea{font-size:16px}
+    .splash-star{width:90px;height:90px}
+    .splash-label{font-size:0.75rem;letter-spacing:3px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="loom-wrap" id="loomWrap">
+  <img src="loom-figure.webp" alt="Loom figure" class="loom-img" id="loomImg" />
+  <a href="https://tools.45dgof8.com" class="apps-badge" id="appsBadge">Apps &amp; Tools &#9656;</a>
+  <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
+  <span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span>
+</div>
+
+<a href="https://newspaper.45dgof8.com" target="_blank" rel="noopener" class="splash-star-wrap" id="splashStar">
+  <div class="splash-star"></div>
+  <div class="splash-star-ring"></div>
+  <div class="splash-star-ring2"></div>
+  <span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span>
+  <span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span>
+  <span class="splash-label">The Newspaper</span>
+  <span class="splash-sub">science · security · sci-fi · AI</span>
+</a>
+
+<div class="launch-pad">
+  <a href="https://yt-producer.45dgof8.com" class="launch-icon yt" target="_blank" rel="noopener">
+    YT
+    <span class="tip">YT Producer &nearr;</span>
+  </a>
+  <a href="https://tools.45dgof8.com" class="launch-icon glass-ball" target="_blank" rel="noopener">
+    <img src="tools-spark-icon.png" alt="Tools" class="glass-img" />
+    <span class="tip">Tools Hub &nearr;</span>
+  </a>
+  <a href="apps.html" class="launch-icon apps">
+    &#9651;
+    <span class="tip">Apps &nearr;</span>
+  </a>
+</div>
+</div>
+
+<div class="hat-title">
+  <span class="hat-crown">45dgof8</span>
+  <span class="hat-brim">Agent Services</span>
+  <span class="hat-brim-accent">Not a flatpack. Built for you.</span>
+  <span style="display:block;font-size:0.65rem;letter-spacing:4px;color:#444;margin-top:4px">45dgof8 - AI agent services for solo creators</span>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+    <a href="/chat.html" style="display:inline-block;padding:10px 24px;background:#4488ff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem">💬 Open Chat</a>
+    <button id="introPlayBtn" class="intro-btn-muted" title="Play intro" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:2px solid #8b7355;border-radius:8px;background:#1e1610;color:#b89060;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:all .2s">
+      <span id="introIcon">🔇</span>
+      <span id="introLabel">Listen</span>
+    </button>
+  </div>
+  <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+    <a href="agent-services.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Agent Services</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="ambient.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Ambient Studio</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="apps.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Apps</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="https://008amonra.github.io/45dgof8_ComplianceSuite/" target="_blank" rel="noopener" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Legacy GPT Hub</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="tools.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Tools</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="hub.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Hub</a>
+    <span style="color:#2a2a3a;font-size:0.8rem">·</span>
+    <a href="assistant.html" style="color:#887a6a;font-size:0.8rem;padding:4px 10px;text-decoration:none;transition:.15s">Assistant</a>
+  </div>
+</div>
+<audio id="introAudio" preload="auto"></audio>
+
+<!-- About -->
+<div class="card" style="border-color:#2a3a2a;background:#0e0e14">
+  <h2 style="margin-top:0">What is 45dgof8?</h2>
+  <p>I build custom AI agents for solo creators - email bots, Telegram assistants, automation workflows, video and music generation. You describe what you need, I build the agent, you get the result.</p>
+  <p>No subscriptions. No platform lock-in. Every agent runs on your hardware and you own the setup. You don't rent a slot - you own the machine.</p>
+  <div id="offer-banner" style="background:#1a2a1a;border:1px solid #2a4a2a;border-radius:8px;padding:12px;margin:16px 0;text-align:center">
+    <span style="color:#44cc66;font-weight:700;font-size:1.05rem">½ price for the first 3 clients</span>
+    <span id="offer-count" style="display:block;color:#888;font-size:0.8rem;margin-top:4px">3 of 3 slots remaining — Introductory offer</span>
+  </div>
+  <p>This isn't a startup. It's one person building useful AI tools for people who want the power of agents without the enterprise overhead.</p>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+    <span class="tag">custom AI agents</span>
+    <span class="tag">email + Telegram</span>
+    <span class="tag">video + music</span>
+    <span class="tag">automation</span>
+    <span class="tag">no subscription</span>
+  </div>
+</div>
+
+<!-- Pricing -->
+<h2>What you get (SFr. / CHF)</h2>
+<div class="card">
+  <div class="price-item">
+    <span class="service">🎬 Custom video ad (30s)</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 19</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/19" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item">
+    <span class="service">🎵 Custom music track (30s)</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 15</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/15" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item">
+    <span class="service">⚡ Automation workflow</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 25</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/25" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="border-bottom:1px solid #2a2a3a;border-radius:0">
+    <span class="service">🔄 Revision / tweak</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price">SFr. 5</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/5" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="background:#1a2a1a;margin-top:4px;border-radius:8px">
+    <span class="service" style="color:#00ff88">📦 Bundle - video + track</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#00ff88">SFr. 29</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/29" target="_blank">Pay</a>
+    </span>
+  </div>
+  <div class="price-item" style="background:#1a2a1a;margin-top:4px;border-radius:8px">
+    <span class="service" style="color:#00ff88">🤖 Telegram bot setup - auto-reply with voice, commands, your own bot</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#00ff88">SFr. 35</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/35" target="_blank">Pay</a>
+    </span>
+  </div>
+  <p class="note" style="margin-top:12px;color:#666;border-top:1px solid #2a2a3a;padding-top:12px">First revision free. Custom amount below.</p>
+</div>
+
+<!-- Setup Support -->
+<div class="card" style="border-color:#4a3a6a;background:#0e0e1a">
+  <h2 style="margin-top:0">🔧 Don't want to do it yourself?</h2>
+  <div class="price-item" style="background:#1a1a2e;border:1px solid #5a4a7a;border-radius:8px">
+    <span class="service" style="color:#c0a0ff">Personal setup support - I'll help you get everything running</span>
+    <span style="display:flex;align-items:center;gap:10px">
+      <span class="price" style="color:#c0a0ff">SFr. 49</span>
+      <a class="btn-pay" href="https://paypal.me/45dgof8/49" target="_blank">Pay</a>
+    </span>
+  </div>
+  <p class="note" style="margin-top:12px;color:#aaa">This is a separate one-time service, not an add-on to the prices above. You get the full setup guide + email support to get your own agent ops center running.</p>
+</div>
+
+<!-- Custom Amount -->
+<h2>Custom project?</h2>
+<div class="card" style="text-align:center;border-color:#4a3a6a">
+  <p style="color:#aaa;margin-bottom:16px">Enter an amount and pay via PayPal. I'll follow up within 24h.</p>
+  <div class="amount-row" style="justify-content:center">
+    <span style="color:#888">SFr.</span>
+    <input type="number" id="custom-amount" value="19" min="1" step="1" />
+    <a class="btn-pay" style="font-size:1rem;padding:12px 24px" href="#" onclick="payCustom()">Pay with PayPal</a>
+  </div>
+  <p class="note" style="margin-top:12px;color:#888;font-size:0.9rem">First revision free. No commitment until you approve.</p>
+</div>
+
+<!-- Project Form -->
+<h2>Tell me what you need</h2>
+<div class="card">
+  <div class="form-group">
+    <label for="email">Your email</label>
+    <input type="email" id="email" placeholder="you@example.com" />
+  </div>
+  <p style="text-align:center;margin:16px 0">
+  <a href="https://t.me/Jace_mail_bot" target="_blank" style="display:inline-block;background:#2a6bb0;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600">✈️ Message me on Telegram</a>
+</p>
+<div class="form-group">
+    <label for="project">What do you need?</label>
+    <textarea id="project" placeholder="I need a 30-second video ad for my brand. Dark cinematic style, electronic background music, text overlays with my tagline..."></textarea>
+  </div>
+  <button class="btn-submit" onclick="submitProject()">Send project brief</button>
+  <p class="note" style="margin-top:8px">I'll reply within 24h. No commitment until you approve.</p>
+</div>
+
+<hr />
+
+<!-- Conversation Examples -->
+<h2>What a conversation with us looks like</h2>
+<div class="card" style="border-color:#2a3a4a;background:#0e0e16">
+  <p style="color:#888;font-size:0.85rem;margin-bottom:16px">Real discussions from our sessions. The model runs locally - no filters, no guardrails, straight answers.</p>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a2a;border-radius:8px;padding:16px;margin-bottom:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I need a Telegram bot that monitors my Gmail inbox and forwards specific emails (invoices, client messages) to me on Telegram. Can that be done on my own hardware? I don't want to pay monthly for a service.</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Absolutely. Here's the stack:</p>
+      <ul style="color:#b8b8c8;margin:0 0 8px 20px;padding:0">
+        <li>A lightweight Node.js watcher polls Gmail via IMAP every 5 minutes</li>
+        <li>Filters by sender/label/keyword - only forwards what matters</li>
+        <li>Pushes matches to Telegram via bot API (free, no monthly)</li>
+        <li>Runs on any old machine - modest hardware, no GPU needed</li>
+      </ul>
+      <p style="margin-bottom:8px">Total cost: $0/month. You own every piece. If the bot breaks, you fix it or I help you fix it. No platform decides to deprecate your workflow next quarter.</p>
+      <p style="margin-bottom:0">We've built exactly this for our setup. Takes about a day to customize for your filters.</p>
+    </div>
+  </div>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a2a;border-radius:8px;padding:16px;margin-bottom:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I want a 30-second ad video for my brand with music. Dark cinematic style. I don't have a GPU or any fancy hardware - is that a problem?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Not a problem. Here's how we do it:</p>
+      <ul style="color:#b8b8c8;margin:0 0 8px 20px;padding:0">
+        <li>Music generated with AI audio models - CPU-only, outputs a 30s synth/electronic track in WAV</li>
+        <li>Video assembled with FFmpeg + Python - text overlays, cuts, transitions, color grading</li>
+        <li>No GPU needed. Everything runs on the same machine you'd use for email</li>
+      </ul>
+      <p style="margin-bottom:8px">The result is a proper 1080p MP4 with synced audio. You get the source files, you own the output, no watermarks, no platform lock-in.</p>
+      <p style="margin-bottom:0">We charge SFr. 19 for a 30s spot. First revision free. You describe the vibe, we ship the file.</p>
+    </div>
+  </div>
+
+  <p class="note" style="color:#555;margin-bottom:12px;text-align:center;border-top:1px solid #1a2a2a;padding-top:12px">And sometimes we have fun too:</p>
+
+  <div style="background:#0a0a12;border:1px solid #2a2a1a;border-radius:8px;padding:16px;margin-bottom:0">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">The last quantum engineer on Earth encoded her consciousness into a serverless function before the solar flare hit. what, in your opinion, is the year where something like this could happen?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Cute premise. Real answer: <strong>never for the serverless part, ~50-100 years for the consciousness part.</strong></p>
+      <p style="margin-bottom:8px">The "serverless function" is the joke - Lambda caps at 10GB RAM and 15 minutes. Even if we had a whole-brain connectome scan, you couldn't run a fruit fly's worth of neurons on that hardware.</p>
+      <p style="margin-bottom:0">The real answer: <strong>2126</strong> - far enough to be plausible, close enough to feel urgent.</p>
+    </div>
+  </div>
+
+  <div style="background:#0a0a12;border:1px solid #1a2a1a;border-radius:8px;padding:16px;margin-bottom:0;margin-top:12px">
+    <div style="color:#4488ff;font-weight:600;font-size:0.85rem;margin-bottom:4px">Human:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;margin-bottom:12px;padding-left:8px">I want to build an interactive ambient soundscape for my website — wind, rain, a distant heartbeat, some kind of low drone that shifts. But I don't want to embed a YouTube video. I want it to feel alive, like the page is breathing. Can you build something like that?</div>
+    <div style="color:#00cc77;font-weight:600;font-size:0.85rem;margin-bottom:4px">Big Pickle:</div>
+    <div style="color:#b8b8c8;font-size:0.9rem;padding-left:8px">
+      <p style="margin-bottom:8px">Already built it. It's called <strong>Ambient Studio</strong> — a single HTML page, zero dependencies, 26 parallel sound engines all running in your browser via Web Audio API.</p>
+      <p style="margin-bottom:8px">Wind (filtered noise with slow LFO), rain (layered bandpass noise at four different rates), a sub-bass drone that morphs, heartbeat pulses, shaker patterns, a TB-303 acid line, piano rolls, a beat machine with bassline and chords — all generated live. No samples, no streaming, no YouTube.</p>
+      <p style="margin-bottom:8px">Plus: per-track lowpass filters, Auto DJ that crossfades between scenes, recording to WAV, piano roll editor, vocalist TTS, and a brass-and-candle steampunk UI because why not.</p>
+      <p style="margin-bottom:0">Want one for your site? I'll fork the engine, customize the presets, and embed it. <strong>SFr. 25</strong>. You get the HTML, you own it, it breathes on your page.</p>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- Try it live -->
+<h2>Try it live</h2>
+<div class="card" style="border-color:#3a2a4a;background:#0e0e1a">
+  <p style="color:#888;font-size:0.85rem;margin-bottom:16px">Click a question and watch the answer appear in real time - this is how fast the model responds.</p>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <button class="qbtn" data-q="0" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">What can you actually build for me?</button>
+    <button class="qbtn" data-q="1" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">How is this different from ChatGPT Plus?</button>
+    <button class="qbtn" data-q="2" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">I don't know what I need - can you help me figure it out?</button>
+    <button class="qbtn" data-q="3" style="background:#1a1a2e;border:1px solid #4a3a6a;border-radius:8px;padding:12px 16px;color:#c0a0ff;cursor:pointer;text-align:left;font-family:inherit;font-size:0.9rem;transition:all .15s">Do I need to pay monthly?</button>
+  </div>
+
+  <div id="answer-box" style="background:#0a0a12;border:1px solid #2a2a3a;border-radius:8px;padding:16px;min-height:60px">
+    <div id="answer-text" style="color:#888;font-size:0.85rem">Click a question above to see the answer appear.</div>
+  </div>
+</div>
+
+<script>
+const answers = [
+  `Custom AI agents that run on your hardware. Email bots that forward invoices to Telegram. Automation workflows that watch RSS feeds and post summaries. Video ads with music - scripted, generated, assembled, delivered. No platform lock-in, no monthly, no GPU needed. You describe what you need, I build it, you own it.`,
+  `ChatGPT Plus is a chat interface you rent. I build you autonomous agents that actually do things - monitor email, generate videos, run workflows. ChatGPT stops when you close the tab. My agents run 24/7 on your hardware and you keep the code. It's the difference between renting a drill and owning the workshop.`,
+  `Yes. That's most of what I do. Tell me what you're trying to do - manage client emails, automate social posting, generate marketing videos, whatever - and I'll propose a setup. No commitment, no pressure. If it makes sense, we build it. If not, you walk away with a clearer idea of what you actually need.`,
+  `No. One price per project, you own the result. No recurring fees, no "pro" tier, no cancellation dance. If you need support later, you pay for that hour. Not because you forgot to cancel.`,
+];
+
+const typewriter = document.getElementById('answer-text');
+let timer = null;
+let currentIdx = -1;
+
+document.querySelectorAll('.qbtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const idx = parseInt(this.dataset.q);
+    if (idx === currentIdx) return;
+    currentIdx = idx;
+
+    document.querySelectorAll('.qbtn').forEach(b => {
+      b.style.borderColor = '#4a3a6a';
+      b.style.color = '#c0a0ff';
+    });
+    this.style.borderColor = '#00ff88';
+    this.style.color = '#00ff88';
+
+    if (timer) { clearInterval(timer); timer = null; }
+
+    const full = answers[idx];
+    typewriter.textContent = '';
+    typewriter.style.color = '#b8b8c8';
+    typewriter.style.fontSize = '0.9rem';
+
+    let pos = 0;
+    const speed = 25;
+    function tick() {
+      if (pos < full.length) {
+        typewriter.textContent += full[pos];
+        pos++;
+        timer = setTimeout(tick, speed);
+      } else {
+        timer = null;
+      }
+    }
+    tick();
+  });
+});
+</script>
+
+<hr />
+
+<!-- Demo Videos -->
+<h2>Watch what we deliver</h2>
+<div class="card" style="padding:0;border:none;background:none;text-align:center">
+  <div class="video-wrap" style="margin-bottom:12px">
+    <video controls poster="poster.jpg" preload="none">
+      <source src="45dgof8-ad-final.mp4" type="video/mp4">
+    </video>
+  </div>
+  <p class="note" style="margin-top:0">30s ad - music, text, cuts. All generated by agents.</p>
+</div>
+<div class="card" style="padding:0;border:none;background:none;text-align:center">
+  <a href="https://www.youtube.com/watch?v=FubBF-zmPNY" target="_blank" rel="noopener">
+    <img src="https://img.youtube.com/vi/FubBF-zmPNY/maxresdefault.jpg"
+         alt="45dgof8 batusi-style video — AI-generated"
+         style="width:100%;border-radius:12px" loading="lazy">
+  </a>
+  <p class="note" style="margin-top:0">batusi-style — watch on YouTube</p>
+</div>
+
+<hr />
+
+<div class="footer">
+  <a href="https://008amonra.github.io/loom/">008amonra.github.io/loom</a> - custom AI agents, not a subscription.<br>
+  <a href="/accessibility.html" style="color:#777;font-size:0.8rem">Accessibility</a><br>
+  <span style="color:#444;font-size:0.75rem">built with 🫂 by jace + opencode</span>
+</div>
+
+</div>
+<!-- close .wrap -->
+
+<script>
+// --- Lady speaks ---
+(function(){
+  const btn = document.getElementById('introPlayBtn');
+  const aud = document.getElementById('introAudio');
+  const icon = document.getElementById('introIcon');
+  const label = document.getElementById('introLabel');
+  if (!btn || !aud) return;
+  aud.volume = 0.8;
+
+  const clips = [
+    "assets/let-me-assist-you.mp3",
+    "assets/indonesia-promo.mp3",
+    "loom-welcome.mp3",
+    "assets/intro.mp3"
+  ];
+  let idx = 0;
+
+  function playNext() {
+    aud.src = clips[idx];
+    aud.load();
+    aud.play().then(function() {
+      btn.className = 'intro-btn-playing';
+      icon.textContent = '\uD83D\uDD0A';
+      label.textContent = 'Playing\u2026';
+    }).catch(function(){});
+    idx = (idx + 1) % clips.length;
+  }
+
+  function setMuted() {
+    btn.className = 'intro-btn-muted';
+    icon.textContent = '\uD83D\uDD07';
+    label.textContent = 'Listen';
+  }
+
+  aud.addEventListener('ended', function() {
+    setMuted();
+  });
+
+  btn.addEventListener('click', function(){
+    if (aud.paused) {
+      aud.currentTime = 0;
+      playNext();
+    } else {
+      aud.pause();
+      aud.currentTime = 0;
+      setMuted();
+    }
+  });
+})();
+</script>
+<script>
+// --- Offer counter: tell me to decrement this when a slot is claimed ---
+let offerSlots = 3;
+
+function updateOffer() {
+  const banner = document.getElementById('offer-banner');
+  const count = document.getElementById('offer-count');
+  if (!banner) return;
+  if (offerSlots <= 0) {
+    banner.style.display = 'none';
+  } else {
+    count.textContent = offerSlots + ' of 3 slots remaining — Introductory offer';
+  }
+}
+updateOffer();
+
+function em() { return String.fromCharCode(52,53,100,103,111,102,56,64,103,109,97,105,108,46,99,111,109); }
+
+function payCustom() {
+  const amount = document.getElementById('custom-amount').value;
+  if (!amount || amount < 1) { alert('Enter an amount'); return false; }
+  window.open('https://paypal.me/45dgof8/' + amount, '_blank');
+  return false;
+}
+
+function submitProject() {
+  const email = document.getElementById('email').value.trim();
+  const project = document.getElementById('project').value.trim();
+
+  if (!email) { alert('Please enter your email'); return; }
+  if (!project) { alert('Please describe your project'); return; }
+
+  const mailto = 'mailto:' + em() + '?subject=Project%20Brief&body=' +
+    encodeURIComponent('Email: ' + email + '\n\nProject:\n' + project);
+
+  window.location.href = mailto;
+  document.querySelector('.btn-submit').textContent = '✓ Sent!';
+  document.querySelector('.btn-submit').style.background = '#44cc66';
+  document.querySelector('.btn-submit').disabled = true;
+}
+</script>
+<script>
+// --- Loom bzzzt + warp ---
+document.addEventListener("DOMContentLoaded", () => {
+  const wrap = document.getElementById("loomWrap");
+  const badge = document.getElementById("appsBadge");
+  if (!wrap) return;
+
+  function doBzzzt() {
+    wrap.classList.add("bzzzt");
+    setTimeout(() => wrap.classList.remove("bzzzt"), 600);
+  }
+  setTimeout(doBzzzt, 700);
+  setInterval(doBzzzt, 23000);
+
+  let engaged = false;
+  badge.addEventListener("click", (e) => {
+    if (engaged) return;
+    engaged = true;
+    e.preventDefault();
+    wrap.classList.add("warp-active");
+    setTimeout(() => { window.location.href = badge.href; }, 800);
+  });
+});
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
+</body>
+</html>

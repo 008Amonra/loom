@@ -149,3 +149,23 @@
 - Remaining single "FAIL" is Etsy shop 403 = Etsy bot firewall (valid link, works in real browser).
 - Final: 27 of 27 tools render, 46 unique catalog links all resolve (only Etsy bot-blocked). Playground still live at http://127.0.0.1:8899/homepage.html.
 - NEXT: visual iteration with Jace (theme colors, catalog grouping, pricing/contact), mobile 390px check, then copy into loom as preview page, commit+push, and only swap as homepage after final approval.
+
+## 2026-08-30 — homepage preview deployed live (new-index.html)
+- Per Jace's choice (keep homepage as a SEPARATE page, not appended to agent-services — appending would break both standalone HTML docs), deployed the new homepage prototype to loom as `new-index.html`.
+- Fixed dangling LinguaNode image ref (`linguanode256.webp` doesn't exist anywhere — 404 on loom + legacy hub + raw github) -> cleared `i:` so the card degrades to no-thumbnail instead of a broken image.
+- Nav targets referenced by the new page all confirmed present in loom (accessibility, agent-services, ambient, apps, assistant, chat, hub, tools).
+- Committed ONLY `new-index.html` + Session Log (commit 6f1f858, pushed). Real `index.html` untouched.
+- Verified live: https://45dgof8.com/new-index.html = 200, renders 27/27 tools, data-theme ember; https://45dgof8.com/ still old homepage (unchanged).
+- NEXT (gated on Jace approval of the design): add nav link to index.html/hub, then swap new-index -> index.html as the real homepage.
+
+## 2026-08-30 — homepage restructure (agent-services becomes home)
+- Jace decisions: (1) agent-services = the brand/homepage design; (2) GPT catalog = secondary page with icons added; (3) old confusing index kept at legacy URL.
+- Restructure (in loom repo, commit pending):
+  - `index.html` is now the agent-services content (the real homepage). Old homepage moved to `legacy.html`.
+  - `agent-services.html` is now an instant redirect to `/` (preserves all inbound links, no duplicate content).
+  - Canonicalized all 10 stale `008amonra.github.io/loom/...` links in the new homepage -> `45dgof8.com/...`; removed a redundant footer link; added `id="contact"` and repointed the contact link `-> #contact`.
+  - Added a "📚 Browse the GPT Family" button in the homepage's "Enter the Realm" invitation card -> `new-index.html`.
+  - `new-index.html` (secondary GPT catalog): added the `loom-figure.webp` hero image, the "may the RIGHT Answer be with you" signature, and repointed its primary CTA from agent-services.html -> `/` ("🏠 Homepage").
+- Safety: git tag `homepage-restore-before-restructure-2026-08-30` + tarball at /tmp/opencode/loom-restore-2026-08-30/ BEFORE changes.
+- Verified: inline JS syntax OK on index + new-index; new-index renders 27/27 tools + new iconography; legacy 200; agent-services redirect works.
+- NEXT: commit only intended files, push, verify all URLs live (/, legacy.html, new-index.html, agent-services redirect); then show Jace.
