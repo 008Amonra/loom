@@ -215,3 +215,13 @@
 - VERIFIED end-to-end: spun throwaway server on :1235, fed it the Blender test render PNG, model described it ("brown mushroom-like form against dark blue background"). Vision WORKS.
 - No restart done (Jace: next boot enough). Running server on :1234 untouched.
 - NOTE: revive.sh is UNTRACKED in this repo. Committed Session Log only; decision on tracking revive.sh left to Jace.
+
+## 2026-08-31 — LLM VISION NOW PERMANENTLY LIVE (real fix found)
+- Previous edit to revive.sh did NOT enable vision on boot: the LLM is actually started by a systemd USER service /home/jace/.config/systemd/user/llm-gemma.service (not revive.sh, which is just the recovery tool).
+- FIX (Jace approved service edit + restart):
+  - Created launcher /home/jace/45dgof8/llm/start-gemma.sh — passes -mm (mmproj) only if LLAMA_VISION=1 AND the projector file exists (graceful text-only fallback if missing).
+  - Edited llm-gemma.service: ExecStart -> start-gemma.sh, Environment=LLAMA_VISION=1. daemon-reload + restart.
+  - Backup of old service at /tmp/opencode/llm-gemma.service.bak
+- VERIFIED: new PID 12360 loads mmproj-model-f16.gguf, "model loaded", listening :1234, health ok. Live vision test: correctly identified GhnOk.jpg as "Futuristic city street", tavern:no.
+- So the real boot path for vision is the systemd service + start-gemma.sh wrapper. revive.sh still has the same flags if ever run manually (kept consistent).
+- NOW: permanent vision on :1234 lets the full 35-image Etsy batch audit run efficiently against the always-up server.
