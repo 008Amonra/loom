@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Etsy OAuth callback</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #111; color: #eee; display: grid; place-items: center; height: 100vh; margin: 0; }
+  .card { background: #1c1c1c; border: 1px solid #333; border-radius: 12px; padding: 2rem; max-width: 480px; text-align: center; }
+  code { background: #2a2a2a; padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>OAuth-Weiterleitung</h1>
+  <p>Nur zur einmaligen Nutzung beim Etsy-API-Login. Dieses Fenster leitet dich automatisch an die lokale App weiter.</p>
+  <p id="status">Weiterleitung l&auml;uft&hellip;</p>
+</div>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var code = params.get("code");
+  var state = params.get("state") || "";
+  var status = document.getElementById("status");
+  if (!code) {
+    status.textContent = "Kein Code empfangen. Bitte App-Autorisierung erneut anstossen.";
+    return;
+  }
+  var qs = "code=" + encodeURIComponent(code);
+  if (state) qs += "&state=" + encodeURIComponent(state);
+  var target = "http://localhost:8888/oauth/redirect?" + qs;
+  status.textContent = "Weiterleitung an " + target;
+  window.location.replace(target);
+})();
+</script>
+</body>
+</html>
