@@ -185,7 +185,7 @@ else:
 if os.environ.get("COMMAND_CENTER_RUNNING"):
     add("ok", "Command Center", "running (self-check skipped)", "http://localhost:42042")
 else:
-    rc, _, _ = run(["curl", "-sf", "--max-time", "5", "http://localhost:42042/api/status"])
+    rc, _, _ = run(["curl", "-sf", "--max-time", "10", "http://localhost:42042/api/status"])
     if rc == 0:
         import urllib.request
         try:
