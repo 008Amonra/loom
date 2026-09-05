@@ -2,7 +2,7 @@ const CACHE = '45dgof8-v1';
 const PRECACHE = [
   '/',
   '/index.html',
-  '/loom/chat.html',
+  '/chat.html',
   '/manifest-chat.json',
   '/loom-figure.webp'
 ];
