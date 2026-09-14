@@ -9,6 +9,16 @@ One-person studio. AI agents, automation, tools. Based in Switzerland.
 - **Agent Services** — Custom AI agents, n8n workflows, Telegram bots, ChatGPT integrations.
 - **[Chat](https://agent-n8n.45dgof8.com/webhook/chat)** — AI chat powered by a local Gemma 3 4B model via n8n.
 
+## Agent installer
+
+One-command local AI agent setup (opencode + local LLM + voice tools):
+
+```bash
+curl -fsSL https://008amonra.github.io/loom/install.sh | bash
+```
+
+Installs a **neutral AGENTS.md** — the cross-tool agent standard stewarded by the Linux Foundation's Agentic AI Foundation. One file, read natively by Codex CLI, GitHub Copilot, Cursor, Windsurf, Amp, Aider, Devin and opencode (no plugins needed). Claude Code reads `CLAUDE.md` and Gemini CLI reads `GEMINI.md` — symlink AGENTS.md to either for the same rules.
+
 ## Contact
 
 45dgof8@gmail.com · [PayPal.Me](https://paypal.me/45dgof8)
