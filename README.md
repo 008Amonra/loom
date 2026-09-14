@@ -14,10 +14,13 @@ One-person studio. AI agents, automation, tools. Based in Switzerland.
 One-command local AI agent setup (opencode + local LLM + voice tools):
 
 ```bash
-curl -fsSL https://008amonra.github.io/loom/install.sh | bash
+curl -fsSL https://008amonra.github.io/loom/install.sh | bash      # Linux / macOS
+curl -fsSL https://008amonra.github.io/loom/install.ps1 | powershell -c -   # Windows
 ```
 
 Installs a **neutral AGENTS.md** — the cross-tool agent standard stewarded by the Linux Foundation's Agentic AI Foundation. One file, read natively by Codex CLI, GitHub Copilot, Cursor, Windsurf, Amp, Aider, Devin and opencode (no plugins needed). Claude Code reads `CLAUDE.md` and Gemini CLI reads `GEMINI.md` — symlink AGENTS.md to either for the same rules.
+
+The same neutral AGENTS.md is seeded on Windows, macOS and Linux — one standard, every platform.
 
 ## Contact
 
