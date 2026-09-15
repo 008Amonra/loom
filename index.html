@@ -178,18 +178,27 @@
   .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none;animation:sparkleFloat 2s ease-out infinite}
   @keyframes sparkleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(0)}}
 
-  .baid{position:fixed;top:16px;left:16px;z-index:200;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45));animation:baidWobble 6s ease-in-out infinite;text-decoration:none}
-  .baid-assembly{display:flex;align-items:center;gap:6px;transform:rotate(-4deg);transition:transform .2s}
-  .baid:hover .baid-assembly{transform:rotate(-4deg) scale(1.05)}
-  .baid-burst{background:#ffd400;border:3px solid #1a1a1a;border-radius:50%;color:#1a1a1a;font-weight:900;font-size:.66rem;letter-spacing:1px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;transform:rotate(8deg);box-shadow:inset 0 0 0 2px rgba(0,0,0,.08);flex-shrink:0}
-  .baid-strip{position:relative;background:linear-gradient(180deg,#ffe0b0,#f4c890);border:3px solid #1a1a1a;border-radius:14px;padding:8px 18px 8px 12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
-  .baid-strip::before{content:'';position:absolute;top:0;bottom:0;left:9px;width:6px;background:#e8b878;border-left:1px dashed rgba(26,26,26,.55)}
-  .baid-text{display:flex;flex-direction:column;line-height:1.15}
-  .baid-brand{font-family:'Cinzel',serif;font-weight:900;font-size:.78rem;letter-spacing:1px;color:#1a1a1a}
-  .baid-name{font-weight:800;font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;color:#7a3a00}
-  .baid-arrow{font-size:1.2rem;color:#1a1a1a;font-weight:900;flex-shrink:0}
-  @keyframes baidWobble{0%,100%{transform:rotate(0)}7%{transform:rotate(-2deg)}12%{transform:rotate(2deg)}18%{transform:rotate(0)}}
-  @media(max-width:640px){.baid{top:10px;left:10px}.baid-name{display:none}.baid-strip{padding:6px 12px 6px 11px}}
+  .baid{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:200;text-decoration:none;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.5));animation:baidPop .5s cubic-bezier(.25,1.4,.35,1) both}
+  .baid-assembly{display:flex;align-items:center;gap:8px;transform:rotate(-3deg) scale(1);transition:transform .2s}
+  .baid:hover .baid-assembly{transform:rotate(-3deg) scale(1.07)}
+  .baid-burst{position:relative;width:64px;height:64px;flex-shrink:0;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.35))}
+  .baid-burst svg{position:absolute;inset:0;width:100%;height:100%;animation:burstSpin 9s linear infinite}
+  .baid-burst .burst-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.72rem;letter-spacing:1px;color:#7a2a00;line-height:1;text-align:center;transform:rotate(-3deg)}
+  .baid-strip{position:relative;background:linear-gradient(180deg,#ffe9c2,#f2c88a);border:3px solid #1a1a1a;border-radius:16px 8px 8px 16px;padding:9px 20px 9px 16px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+  .baid-strip::before{content:'';position:absolute;top:-3px;bottom:-3px;left:12px;width:7px;background:#e8b878;border-left:1px dashed rgba(26,26,26,.55);border-right:1px solid rgba(26,26,26,.08)}
+  .baid-strip::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background-image:radial-gradient(rgba(26,26,26,.22) 1px,transparent 1.6px);
+    background-size:7px 7px;opacity:.25}
+  .baid-text{display:flex;flex-direction:column;line-height:1.15;position:relative;z-index:1}
+  .baid-brand{font-family:'Cinzel',serif;font-weight:900;font-size:.85rem;letter-spacing:1px;color:#6b2d00;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+  .baid-name{font-weight:900;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:#3a1400}
+  .baid-arrow{font-size:1.4rem;color:#1a1a1a;font-weight:900;flex-shrink:0;filter:drop-shadow(1px 1px 0 #fff)}
+  @keyframes baidPop{0%{transform:translateX(-50%) scale(0) rotate(-12deg);opacity:0}60%{transform:translateX(-50%) scale(1.15) rotate(2deg);opacity:1}100%{transform:translateX(-50%) scale(1) rotate(0)}}
+  @keyframes burstSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+  .baid:hover .baid-burst svg{animation-play-state:paused}
+  .baid-wob{display:inline-block;animation:baidWobble 5s ease-in-out infinite;transform-origin:center}
+  @keyframes baidWobble{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1.5deg)}}
+  @media(max-width:640px){.baid{top:8px}.baid-burst{width:48px;height:48px}.baid-burst .burst-txt{font-size:.6rem}.baid-name{display:none}.baid-strip{padding:6px 14px 6px 13px}.baid-arrow{font-size:1rem}}
 </style>
 </head>
 <body>
@@ -215,7 +224,14 @@
 
 <a class="baid" href="https://newspaper.45dgof8.com/" aria-label="Open the 45dgof8 newspaper" title="The 45dgof8 tech newspaper">
   <span class="baid-assembly">
-    <span class="baid-burst">NEW</span>
+    <span class="baid-wob">
+      <span class="baid-burst">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <polygon points="100.0,50.0 79.6,37.8 93.3,25.0 69.5,24.6 75.0,6.7 54.2,18.3 50.0,0.0 37.8,20.4 25.0,6.7 24.6,30.5 6.7,25.0 18.3,45.8 0.0,50.0 20.4,62.2 6.7,75.0 30.5,75.4 25.0,93.3 45.8,81.7 50.0,100.0 62.2,79.6 75.0,93.3 75.4,69.5 93.3,75.0 81.7,54.2" fill="#ffd400" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+        <span class="burst-txt">NEW!</span>
+      </span>
+    </span>
     <span class="baid-strip">
       <span class="baid-text"><span class="baid-brand">45dgof8</span><span class="baid-name">Newspaper</span></span>
     </span>
