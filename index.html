@@ -177,6 +177,19 @@
   .bar-stage.party .party-overlay{opacity:1}
   .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none;animation:sparkleFloat 2s ease-out infinite}
   @keyframes sparkleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(0)}}
+
+  .baid{position:fixed;top:16px;left:16px;z-index:200;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45));animation:baidWobble 6s ease-in-out infinite;text-decoration:none}
+  .baid-assembly{display:flex;align-items:center;gap:6px;transform:rotate(-4deg);transition:transform .2s}
+  .baid:hover .baid-assembly{transform:rotate(-4deg) scale(1.05)}
+  .baid-burst{background:#ffd400;border:3px solid #1a1a1a;border-radius:50%;color:#1a1a1a;font-weight:900;font-size:.66rem;letter-spacing:1px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;transform:rotate(8deg);box-shadow:inset 0 0 0 2px rgba(0,0,0,.08);flex-shrink:0}
+  .baid-strip{position:relative;background:linear-gradient(180deg,#ffe0b0,#f4c890);border:3px solid #1a1a1a;border-radius:14px;padding:8px 18px 8px 12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
+  .baid-strip::before{content:'';position:absolute;top:0;bottom:0;left:9px;width:6px;background:#e8b878;border-left:1px dashed rgba(26,26,26,.55)}
+  .baid-text{display:flex;flex-direction:column;line-height:1.15}
+  .baid-brand{font-family:'Cinzel',serif;font-weight:900;font-size:.78rem;letter-spacing:1px;color:#1a1a1a}
+  .baid-name{font-weight:800;font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;color:#7a3a00}
+  .baid-arrow{font-size:1.2rem;color:#1a1a1a;font-weight:900;flex-shrink:0}
+  @keyframes baidWobble{0%,100%{transform:rotate(0)}7%{transform:rotate(-2deg)}12%{transform:rotate(2deg)}18%{transform:rotate(0)}}
+  @media(max-width:640px){.baid{top:10px;left:10px}.baid-name{display:none}.baid-strip{padding:6px 12px 6px 11px}}
 </style>
 </head>
 <body>
@@ -199,6 +212,16 @@
   <span id="ambientLabel">silence</span>
   <div class="switch"><div class="knob"></div></div>
 </div>
+
+<a class="baid" href="https://newspaper.45dgof8.com/" aria-label="Open the 45dgof8 newspaper" title="The 45dgof8 tech newspaper">
+  <span class="baid-assembly">
+    <span class="baid-burst">NEW</span>
+    <span class="baid-strip">
+      <span class="baid-text"><span class="baid-brand">45dgof8</span><span class="baid-name">Newspaper</span></span>
+    </span>
+    <span class="baid-arrow">→</span>
+  </span>
+</a>
 
 <div class="wrap">
 
