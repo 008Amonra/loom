@@ -39,3 +39,8 @@ whisperer-data/
 tts-env/
 email-credentials.enc.json
 .counters/
+
+# Committed-work protection (never share credentials / private tooling)
+n8n-workflow.json
+youtube-agent/n8n-fix-pulse-email.json
+spiritual-animal-generator/
