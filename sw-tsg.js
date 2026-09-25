@@ -1,5 +1,7 @@
-// TSG Prompt Forge – Service Worker v1.0
-const CACHE = "tsg-forge-v1";
+// TSG Prompt Forge - Service Worker v2
+// FIX 2026-09-25: nur noch SHELL cache-first, alle anderen Seiten network-first,
+// damit die Startseite + neue Elemente nicht mehr einfrieren (v1 cache-te alles).
+const CACHE = "tsg-forge-v2";
 const SHELL = [
   "/TSG-prompt-forge.html",
   "/TSG-prompt-forge.css",
@@ -24,24 +26,43 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  // Network-first for API calls, cache-first for shell
-  if (e.request.url.includes("api.") || e.request.url.includes("paypal")) return;
-  
+  const req = e.request;
+  if (req.method !== "GET") return;
+
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return; // nur same-origin
+
+  const isShell = SHELL.some((p) => url.pathname === p);
+
+  if (isShell) {
+    // Shell: cache-first (Offline-Faehigkeit der Forge)
+    e.respondWith(
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req).then((resp) => {
+          if (resp.status === 200) {
+            const clone = resp.clone();
+            caches.open(CACHE).then((c) => c.put(req, clone));
+          }
+          return resp;
+        });
+      })
+    );
+    return;
+  }
+
+  // Alles andere (Startseite, Hub, assets): network-first, damit Updates durchkommen
   e.respondWith(
-    caches.match(e.request).then((cached) => {
+    fetch(req).then((resp) => {
+      if (resp.status === 200 && resp.type === "basic") {
+        const clone = resp.clone();
+        caches.open(CACHE).then((c) => c.put(req, clone));
+      }
+      return resp;
+    }).catch(async () => {
+      const cached = await caches.match(req);
       if (cached) return cached;
-      return fetch(e.request).then((resp) => {
-        if (resp.status === 200 && e.request.method === "GET") {
-          const clone = resp.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, clone));
-        }
-        return resp;
-      }).catch(() => {
-        // Offline fallback
-        if (e.request.destination === "document") {
-          return caches.match("/TSG-prompt-forge.html");
-        }
-      });
+      if (req.destination === "document") return caches.match("/TSG-prompt-forge.html");
     })
   );
 });
