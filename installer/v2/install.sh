@@ -812,10 +812,11 @@ MELIST
 #
 # Zwei moegliche echte Gates, beide brauchen einen Server:
 #   1. Add-on-Code gar nicht ausliefern, nur auf Anfrage. Dann kein Gate noetig.
-#   2. Key gegen einen eigenen Endpunkt pruefen. N8N_LICENSE_URL unten setzen.
-# Solange N8N_LICENSE_URL leer ist, verweigert der Installer den Unlock
-# und sagt das laut. Lieber blockiert als so zu tun, als waere es sicher.
-N8N_LICENSE_URL="${N8N_LICENSE_URL:-}"   # z.B. https://45dgof8.com/api/n8n/activate
+#   2. Key gegen einen eigenen Endpunkt pruefen.
+#
+# Der Endpunkt laeuft hinter TLS auf 45dgof8.com. Ein leerer Wert schaltet
+# die Pruefung bewusst ab, etwa wenn jemand alles offline installiert.
+N8N_LICENSE_URL="${N8N_LICENSE_URL:-https://license.45dgof8.com/activate}"
 
 n8n_key_validate() {
     local key="$1"
