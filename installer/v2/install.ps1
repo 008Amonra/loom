@@ -33,11 +33,17 @@
 param(
     [switch]$DryRun,
     [switch]$ForceReplace,
-    [switch]$SkipVoice
+    [switch]$SkipVoice,
+    [switch]$Telegram
 )
 
 $InstallerVersion = "2.0.0"
 $script:Dry = [bool]$DryRun
+
+# sha256 of telegram-bridge.ps1. Without a pinned hash we refuse to install,
+# same rule as every other binary in this installer.
+#   sha256sum telegram-bridge.ps1 | cut -d" " -f1
+$ExpectedTgBridgeSha256 = "0a6536818e29b79ec74ef109e96fd21f5e5df61414561832efbabd4d282994af"
 
 function Write-Ok    { param($m) Write-Host "OK   $m" }
 function Write-Info  { param($m) Write-Host "--   $m" }
@@ -387,7 +393,76 @@ if (Write-Plan "create $meList") {
     Write-Ok "ME.list created - YOUR rules file (edit anytime)"
 }
 
-# -- 6. summary --------------------------------------------------------------
+  # -- 6. telegram bridge (optional) --------------------------------------------
+  # Same design as the Linux side: the token is never asked for during
+  # install. It is a remote access key, and Read-Host would leave it in the
+  # scrollback and in any screen share. The customer types it into a file
+  # afterwards. Default transport is polling, so no public URL is needed.
+  if ($Telegram) {
+      $tgDir  = Join-Path $env:LOCALAPPDATA '45dgof8\telegram-bridge'
+      $tgPs1  = Join-Path $tgDir 'telegram-bridge.ps1'
+      $tgCfg  = Join-Path $tgDir 'config'
+      $tgTask = '45dgof8 Telegram Bridge'
+
+      if (Write-Plan "install telegram bridge -> $tgPs1") {
+          # dry-run: touch nothing
+      } else {
+          if (-not (Test-Path $tgDir)) { New-Item -ItemType Directory -Path $tgDir -Force | Out-Null }
+
+          $ok = Get-VerifiedFile -Uri 'https://008amonra.github.io/loom/installer/v2/telegram-bridge.ps1' `
+                                 -Dest $tgPs1 -ExpectedSha256 $ExpectedTgBridgeSha256
+          if ($ok) {
+              Write-Ok "bridge installed: $tgPs1"
+          } else {
+              Write-Warn2 "bridge script not installed, skipping the rest"
+          }
+
+          # Only write a config if there is none, so re-running the
+          # installer does not reset someone who already chose webhook mode.
+          if (-not (Test-Path $tgCfg)) {
+              $cfgText = @"
+# 45dgof8 Telegram Bridge
+# KEY=VALUE, a # starts a comment.
+mode=poll
+# workdir=C:\Users\YOURNAME\45dgof8-agent
+# opencode_bin=C:\Users\YOURNAME\.opencode\bin\opencode.exe
+"@
+              $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+              [System.IO.File]::WriteAllText($tgCfg, $cfgText, $utf8NoBom)
+              Write-Ok "config created: $tgCfg"
+          }
+
+          # Scheduled task, registered but not started. Without a token the
+          # bridge would only loop on errors, and a failing task in
+          # Task Scheduler is a bad first impression.
+          $psExe = (Get-Command powershell.exe -ErrorAction SilentlyContinue).Source
+          if (-not $psExe) { $psExe = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" }
+
+          $existing = Get-ScheduledTask -TaskName $tgTask -ErrorAction SilentlyContinue
+          if ($existing) {
+              Write-Info "scheduled task already present: $tgTask"
+          } else {
+              try {
+                  $action = New-ScheduledTaskAction -Execute $psExe `
+                      -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$tgPs1`""
+                  $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+                  # No stored password: the task runs as the interactive
+                  # user. Least privilege, and it needs no admin.
+                  $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME `
+                      -LogonType Interactive -RunLevel Limited
+                  Register-ScheduledTask -TaskName $tgTask -Action $action `
+                      -Trigger $trigger -Principal $principal `
+                      -Description "45dgof8 Telegram bridge, talks to your local agent" | Out-Null
+                  Write-Ok "scheduled task registered (not started yet): $tgTask"
+              } catch {
+                  Write-Warn2 "could not register the scheduled task: $($_.Exception.Message)"
+                  Write-Warn2 "start it manually instead:  powershell -File `"$tgPs1`""
+              }
+          }
+      }
+  }
+
+  # -- 7. summary --------------------------------------------------------------
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "  45dgof8 Agent Services v$InstallerVersion" -ForegroundColor Green
@@ -404,4 +479,33 @@ Write-Host ""
 Write-Host "  Your rules: $meList"
 Write-Host "    Put a '#' in front of a rule to switch it off."
 Write-Host ""
-Write-Host "  Tip: run with -DryRun first if you want to see the plan without changes."
+  Write-Host "  Tip: run with -DryRun first if you want to see the plan without changes."
+
+if ($Telegram) {
+    $tgDir2 = Join-Path $env:LOCALAPPDATA '45dgof8\telegram-bridge'
+    Write-Host ""
+    Write-Host "  -- Telegram: talk to your agent from your phone --------------" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "    1. Create a bot"
+    Write-Host "       Open @BotFather, send /newbot, follow the questions."
+    Write-Host "       You get a token, it looks like 123456789:AAxxxxxx..."
+    Write-Host ""
+    Write-Host "    2. Put the token in a file, without typing it in a terminal"
+    Write-Host "       notepad $tgDir2\token"
+    Write-Host "       One line, the token, save, close."
+    Write-Host ""
+    Write-Host "    3. Start it"
+    Write-Host "       Start-ScheduledTask -TaskName '45dgof8 Telegram Bridge'"
+    Write-Host ""
+    Write-Host "    4. In Telegram find your bot and send /start."
+    Write-Host "       The first message makes you the owner. After that your"
+    Write-Host "       agent answers on your phone."
+    Write-Host ""
+    Write-Host "    Check:  Get-Content $tgDir2\bridge.log -Tail 20"
+    Write-Host "    Stop:   Stop-ScheduledTask -TaskName '45dgof8 Telegram Bridge'"
+    Write-Host ""
+    Write-Host "    !! The token is a remote access key. Whoever has it can" -ForegroundColor Yellow
+    Write-Host "       instruct the agent on your machine. Never commit it," -ForegroundColor Yellow
+    Write-Host "       never put it in a screenshot. If it leaks: /revoke in" -ForegroundColor Yellow
+    Write-Host "       BotFather and generate a new one." -ForegroundColor Yellow
+}

@@ -48,7 +48,11 @@ err()  { printf '%s✗%s %s\n' "$RED" "$NC" "$*" >&2; }
 INSTALLER_VERSION="2.0.0"
 # Wenn du lib-common.sh aenderst, Hash hier neu setzen:
 #   sha256sum lib-common.sh | cut -d" " -f1
-EXPECTED_LIB_SHA256="3ff7f0a71d0600e961397e701acc08415e2d507ae7d604898dc9ab8b5e0fbbcd"
+EXPECTED_LIB_SHA256="e2cfb7c7da829753fa3e829181d27c01e99f0a26d429389c1e0e09b7ebea0fce"
+# Telegram-Bruecke wird bei `curl | bash` genauso geholt und geprueft,
+# weil neben install.sh keine Datei aus dem Repo vorliegt.
+#   sha256sum telegram-bridge.py | cut -d" " -f1
+EXPECTED_TG_BRIDGE_SHA256="56e526eeb8d8b13e5265efc623e01055738987cf7317108995be71d598e7bbce"
 N8N_ACTIVE=0
 DRY_RUN=0
 REPERSONA=0
@@ -57,16 +61,23 @@ for a in "$@"; do
     case "$a" in
         --dry-run|-n) DRY_RUN=1 ;;
         --persona)   REPERSONA=1 ;;
+        --telegram)  TELEGRAM=1 ;;
         --version|-V) printf '45dgof8 installer %s\n' "$INSTALLER_VERSION"; exit 0 ;;
         --help|-h)
             printf '45dgof8 installer %s\n\n' "$INSTALLER_VERSION"
-            printf '  bash install.sh [--dry-run] [--persona] [--version] [--help]\n'
+            printf '  bash install.sh [--dry-run] [--persona] [--telegram] [--version] [--help]\n'
             printf '  curl -fsSL https://008amonra.github.io/loom/install.sh | bash -s -- --dry-run\n\n'
             printf '  --dry-run   show what would change, touch nothing\n'
-    printf '  --persona   re-run the setup quiz and rewrite AGENTS.md\n'
+            printf '  --persona   re-run the setup quiz and rewrite AGENTS.md\n'
+            printf '  --telegram  set up the Telegram bridge, skip the question\n'
             exit 0 ;;
     esac
 done
+
+# Opt-in. Default is no: a bridge nobody asked for is a service nobody
+# starts, and its token is a key nobody should hand out by accident.
+TELEGRAM="${TELEGRAM:-0}"
+TELEGRAM_INSTALLED=0
 
 # In dry-run every mutating step is announced instead of executed.
 plan() {
@@ -1004,6 +1015,23 @@ main() {
     install_me_list
     install_n8n
 
+    # Telegram-Bruecke, opt-in. Ruft nach der Installation bewusst nicht
+    # den Bot ab: ohne Token wuerde der Dienst nur in eine Fehlerschleife
+    # laufen. Die Anleitung kommt als Text, der Token wird nie getippt.
+    #
+    # command -v, weil der Installer ohne lib-common.sh weiterlaeuft und
+    # dann nur ein paar shims hat. Ohne den Test waere das ein
+    # "command not found" mitten in main().
+    if [ "$TELEGRAM" = "1" ] || ask_yes "Telegram-Bruecke einrichten? Antwortet dein Agent auf dem Handy. [y/N] " "N"; then
+        if command -v install_telegram_bridge >/dev/null 2>&1; then
+            if install_telegram_bridge; then
+                TELEGRAM_INSTALLED=1
+            fi
+        else
+            warn "Telegram-Bruecke: Installer-Bibliothek nicht verfuegbar, uebersprungen"
+        fi
+    fi
+
     echo ""
     printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' "$GREEN" "$NC"
     printf '%s  45dgof8 Agent Services v%s   %s\n' "$GREEN" "$INSTALLER_VERSION" "$NC"
@@ -1030,6 +1058,10 @@ main() {
     echo "  (default: auto-detect; v1 was hardcoded to English)"
     echo ""
     echo "  Tip: bind Super+V to voice-button in COSMIC Settings -> Shortcuts"
+
+    if [ "$TELEGRAM_INSTALLED" = "1" ] && command -v tg_bridge_next_steps >/dev/null 2>&1; then
+        tg_bridge_next_steps
+    fi
 }
 
 # Run main only when executed, never when sourced. Without this guard,

@@ -294,3 +294,200 @@ SECRET_EXCLUDES=(
     --exclude='./.ssh/id_ed25519'
     --exclude='./.ssh/termux_phone'
 )
+
+# ─────────────────────────────────────────────────────────
+# Telegram bridge (optional)
+# ─────────────────────────────────────────────────────────
+# Lets the customer talk to their local agent from their phone. The agent
+# runs on their own machine, nothing is routed through 45dgof8 servers.
+#
+# Design decisions worth keeping:
+#
+# 1. The token is NOT asked for during install. It is a remote access key:
+#    whoever holds it can instruct the agent, and the agent acts with the
+#    user's permissions. Same weight as an SSH private key. Asking for it on
+#    a terminal puts it in scrollback and in any screen share. So the
+#    installer prepares everything and the customer types it in afterwards,
+#    straight into a 600 file.
+#
+# 2. The bridge script is fetched and hash-verified, exactly like
+#    lib-common.sh. With `curl | bash` only install.sh is present, so a
+#    sibling file cannot be assumed to exist.
+#
+# 3. Default transport is polling. It needs no public URL and works behind
+#    NAT. Webhook mode exists but only pays off when a tunnel is already
+#    there, and then only because a second poller on the same bot gets
+#    rejected by Telegram with HTTP 409.
+#
+# The service is installed but NOT started. Without a token it would just
+# exit-loop, and a red unit in systemctl is a bad first impression.
+TG_BRIDGE_URL="https://008amonra.github.io/loom/installer/v2/telegram-bridge.py"
+TG_BRIDGE_DEST="$HOME/.local/bin/45dgof8-telegram-bridge"
+TG_BRIDGE_STATE="$HOME/.local/state/telegram-bridge"
+TG_BRIDGE_UNIT="$HOME/.config/systemd/user/45dgof8-telegram-bridge.service"
+
+# sha256 of telegram-bridge.py, pinned in install.sh as
+# EXPECTED_TG_BRIDGE_SHA256 and checked here.
+#
+# CONTRACT: always returns the path of a temp file that the caller owns and
+# must delete. Never return a path inside the repo. An earlier version
+# returned $SELF_DIR/telegram-bridge.py directly, and the caller's
+# `rm -f "$src"` then deleted the repo file during --dry-run. Verified
+# 2026-09-30, do not "optimise" this into returning the sibling path.
+tg_bridge_fetch() {
+    local tmp want got src=""
+    tmp="$(mktemp)"
+
+    # 1. a sibling file, when the installer was run from a checkout.
+    #    Copy it: the caller deletes what we hand back.
+    if [ -n "${SELF_DIR:-}" ] && [ -f "$SELF_DIR/telegram-bridge.py" ]; then
+        if cp "$SELF_DIR/telegram-bridge.py" "$tmp" 2>/dev/null; then
+            src="sibling"
+        fi
+    fi
+
+    # 2. otherwise download and verify
+    if [ -z "$src" ]; then
+        want="${EXPECTED_TG_BRIDGE_SHA256:-}"
+        if ! curl -fsSL --proto '=https' --tlsv1.2 "$TG_BRIDGE_URL" -o "$tmp" 2>/dev/null \
+           || [ ! -s "$tmp" ]; then
+            rm -f "$tmp"
+            return 1
+        fi
+        if [ -n "$want" ] && command -v sha256sum >/dev/null 2>&1; then
+            got="$(sha256sum "$tmp" | cut -d" " -f1)"
+            if [ "$got" != "$want" ]; then
+                err "telegram-bridge.py stimmt nicht mit der erwarteten Pruefsumme"
+                err "  erwartet $want"
+                err "  bekommen  $got"
+                err "  Nichts wird installiert."
+                rm -f "$tmp"
+                return 1
+            fi
+        fi
+    fi
+
+    [ -s "$tmp" ] || { rm -f "$tmp"; return 1; }
+    printf '%s' "$tmp"
+}
+
+tg_bridge_write_unit() {
+    mkdir -p "$(dirname "$TG_BRIDGE_UNIT")"
+    cat > "$TG_BRIDGE_UNIT" <<UNIT
+[Unit]
+Description=45dgof8 Telegram Bridge (Bot zum lokalen Agenten)
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 %h/.local/bin/45dgof8-telegram-bridge
+WorkingDirectory=%h
+Restart=on-failure
+RestartSec=30
+StandardOutput=append:%h/.local/state/telegram-bridge/stdout.log
+StandardError=append:%h/.local/state/telegram-bridge/stderr.log
+
+[Install]
+WantedBy=default.target
+UNIT
+}
+
+install_telegram_bridge() {
+    local src
+    src="$(tg_bridge_fetch)"
+    if [ -z "$src" ] || [ ! -s "$src" ]; then
+        warn "Telegram-Bruecke: Skript nicht verfuegbar, uebersprungen"
+        warn "  Download manuell: $TG_BRIDGE_URL"
+        return 1
+    fi
+
+    if plan "install telegram bridge -> $TG_BRIDGE_DEST"; then
+        rm -f "$src"
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$TG_BRIDGE_DEST")" "$TG_BRIDGE_STATE"
+    chmod 700 "$TG_BRIDGE_STATE"
+    # $src is always a temp file we own, see the contract on tg_bridge_fetch.
+    # 700, not 755: the script is ours, nobody else needs to run it.
+    if ! install -m 700 "$src" "$TG_BRIDGE_DEST" 2>/dev/null; then
+        if ! cp "$src" "$TG_BRIDGE_DEST" 2>/dev/null; then
+            err "Bruecke konnte nicht nach $TG_BRIDGE_DEST kopiert werden"
+            rm -f "$src"
+            return 1
+        fi
+        chmod 700 "$TG_BRIDGE_DEST"
+    fi
+    rm -f "$src"
+    ok "Bruecke installiert: $TG_BRIDGE_DEST"
+
+    # Only write a config if there is none. A customer who already switched
+    # to webhook mode must not be reset to poll by re-running the installer.
+    if [ ! -f "$TG_BRIDGE_STATE/config" ]; then
+        cat > "$TG_BRIDGE_STATE/config" <<'CFG'
+# 45dgof8 Telegram Bridge
+# KEY=VALUE, # startet einen Kommentar.
+mode=poll
+# workdir=/home/USER/45dgof8-agent
+# opencode_bin=/home/USER/.opencode/bin/opencode
+CFG
+        chmod 600 "$TG_BRIDGE_STATE/config"
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        warn "python3 fehlt, die Bruecke kann noch nicht laufen"
+        warn "  Debian/Ubuntu: sudo apt install python3"
+        warn "  Fedora:          sudo dnf install python3"
+    fi
+
+    if [ -d /run/systemd/system ] && command -v systemctl >/dev/null 2>&1; then
+        if plan "register user service $TG_BRIDGE_UNIT"; then
+            return 0
+        fi
+        tg_bridge_write_unit
+        systemctl --user daemon-reload >/dev/null 2>&1 || true
+        systemctl --user enable 45dgof8-telegram-bridge.service >/dev/null 2>&1 \
+            && ok "Dienst registriert, startet aber noch nicht (kein Token)" \
+            || warn "Dienst konnte nicht registriert werden, manuell startbar"
+    else
+        warn "kein systemd, Bruecke manuell starten:"
+        warn "  $TG_BRIDGE_DEST"
+    fi
+    return 0
+}
+
+# Printed after a successful install. Kept separate so install.sh can call it
+# for an already-installed bridge too, without reinstalling anything.
+tg_bridge_next_steps() {
+    local state="$TG_BRIDGE_STATE"
+    cat <<'EOF'
+
+  ── Telegram: mit dem Agenten sprechen ──
+
+  1. Bot bei Telegram anlegen
+     Öffne @BotFather, schick /newbot, folge den Fragen.
+     Du bekommst einen Token. Der sieht aus wie 123456789:AAxxxxxx...
+
+  2. Token eintragen, ohne dass es im Terminal landet
+     nano ~/.local/state/telegram-bridge/token
+     Eine Zeile, den Token, dann Strg-O und Enter.
+     Danach:  chmod 600 ~/.local/state/telegram-bridge/token
+
+  3. Dienst starten
+     systemctl --user start 45dgof8-telegram-bridge
+     systemctl --user enable 45dgof8-telegram-bridge
+
+  4. In Telegram deinen Bot suchen und /start tippen.
+     Die erste Nachricht macht dich zum Besitzer. Ab dann antwortet
+     der Agent auf deinem Handy.
+
+  Prüfen:  cat ~/.local/state/telegram-bridge/bridge.log
+  Stoppen: systemctl --user stop 45dgof8-telegram-bridge
+
+  ⚠  Der Token ist ein Fernzugriffsschlüssel. Wer ihn hat, kann den
+     Agenten auf deinem Rechner anweisen. Nicht ins Git, nicht in
+     Screenshots, nicht weitergeben. Bei Verdacht: /revoke bei BotFather
+     und ein neues Token erzeugen.
+EOF
+}
