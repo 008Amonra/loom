@@ -1,9 +1,13 @@
 # 45dgof8 Agent Services - Windows installer v2
 # Usage:
-#   irm https://008amonra.github.io/loom/install.ps1 | iex
-#   # or, better, inspect first:
-#   irm https://008amonra.github.io/loom/install.ps1 -OutFile install.ps1
-#   .\install.ps1 -DryRun
+#   irm https://008amonra.github.io/loom/installer/v2/install.ps1 -OutFile "$env:TEMP\45dgof8-install.ps1"
+#   powershell -ExecutionPolicy Bypass -File "$env:TEMP\45dgof8-install.ps1" -DryRun
+#   powershell -ExecutionPolicy Bypass -File "$env:TEMP\45dgof8-install.ps1" -Telegram
+#
+#   Note the /installer/v2/ in the URL. The root install.ps1 is v1, kept for
+#   machines already on it, and it has none of the fixes below.
+#   Do not pipe to iex: you cannot pass -Telegram that way, and v1's habit of
+#   running unverified remote code is one of the bugs we are fixing.
 #
 # STATUS: statically reviewed, NOT executed. No PowerShell available on the
 # build machine, so treat the first run as a test run. -DryRun changes nothing.
@@ -28,6 +32,8 @@
 #   -DryRun            show the plan, change nothing
 #   -ForceReplace      replace opencode.json instead of merging
 #   -SkipVoice         skip voice-assistant
+#   -Telegram          prepare the Telegram bridge (token is asked for later,
+#                      never during install)
 
 [CmdletBinding()]
 param(

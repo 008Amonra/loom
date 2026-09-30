@@ -1,7 +1,12 @@
 #!/bin/bash
 # 45dgof8 Agent Services - Cross-platform installer
-# Usage: curl -fsSL https://008amonra.github.io/loom/install.sh | bash
-# For Windows: curl -fsSL https://008amonra.github.io/loom/install.ps1 | powershell -c -
+# Usage: curl -fsSL https://008amonra.github.io/loom/installer/v2/install.sh | bash
+# Telegram: add --telegram, e.g.
+#   curl -fsSL https://008amonra.github.io/loom/installer/v2/install.sh | bash -s -- --telegram
+# For Windows: see installer/v2/install.ps1, it is PowerShell, not bash.
+#
+# Note the /installer/v2/ in the URL. The root install.sh is v1, kept for
+# machines already on it, and it has none of the fixes below.
 #
 # v2 changes over v1 (2026-09-27) - all of them came out of a real
 # session where these exact problems bit us:
