@@ -48,7 +48,7 @@
 - `/home/jace/45dgof8/youtube-agent/yt-producer.py` — Web UI (Flask) on port 5005
   - Start: `python3 yt-producer.py 5005 &`
   - Free mode: adds "45dgof8 YT Producer" watermark to output
-  - Licensed mode: set `YT_PRODUCER_KEY=45DGof8-PAID-2026` or `YT_PAID=1`
+  - Licensed mode: set `YT_PRODUCER_KEY` (value lives in `.keys.local`, untracked - source it, never hardcode) or `YT_PAID=1`
   - Buy page: http://localhost:5005/buy (two tiers: Monthly $19, Lifetime $97)
   - Bug fixed: uses `event.preventDefault()` + click handler (no page reload)
 - `/home/jace/45dgof8/youtube-agent/make_short.py` — Core engine (CLI + importable)

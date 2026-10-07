@@ -44,3 +44,6 @@ email-credentials.enc.json
 n8n-workflow.json
 youtube-agent/n8n-fix-pulse-email.json
 spiritual-animal-generator/
+
+# local license keys
+.keys.local

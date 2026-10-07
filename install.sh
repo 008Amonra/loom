@@ -14,9 +14,10 @@ INSTALLER_VERSION="1.0.4"
 N8N_ACTIVE=0
 
 # n8n license-key validation (offline, checksum-based)
+# Master key comes from the environment, never from this file.
 n8n_key_valid() {
   local key="$1"
-  [ "$key" = "45DGof8-N8N-MASTER-2026" ] && return 0
+  [ -n "$N8N_MASTER_KEY" ] && [ "$key" = "$N8N_MASTER_KEY" ] && return 0
   [[ "$key" =~ ^45DGof8-N8N-([0-9a-fA-F]{8})-([0-9a-fA-F]{2})$ ]] || return 1
   local body="${BASH_REMATCH[1]}" cc="${BASH_REMATCH[2]}"
   local sum=0 i ch code
