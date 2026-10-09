@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>45DGOF8 Shop - Mugs & Cups</title>
+  <meta name="description" content="Shop for printed 45DGOF8 mugs and cups. Ceramic mugs with original artwork: gem medallions, cosmic portals, and signal scenes.">
+
+  <link rel="canonical" href="https://45dgof8.com/shop/">
+
+  <meta property="og:title" content="45DGOF8 Shop - Mugs & Cups">
+  <meta property="og:description" content="Ceramic mugs with original 45DGOF8 artwork. Printed to order, shipped worldwide.">
+  <meta property="og:image" content="https://45dgof8.com/cups-assets/mug-in-the-room-web.jpg">
+  <meta property="og:url" content="https://45dgof8.com/shop/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="45DGOF8">
+
+  <meta name="pinterest-rich-pin" content="enabled">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0908;
+      --card: #171210;
+      --paper: #f3e4c8;
+      --muted: #c6ad87;
+      --line: #4a3427;
+      --accent: #f0a84b;
+      --accent-2: #c75c35;
+      --green: #6a994e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      background: linear-gradient(135deg, #0b0908, #15100d 54%, #080706);
+      color: var(--paper);
+    }
+
+    main {
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 3rem 0;
+    }
+
+    .back {
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .header .kicker {
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 0.95;
+      margin: 0;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.5;
+      max-width: 36rem;
+      margin: 0.8rem 0 0;
+    }
+
+    .note {
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+      border: 1px solid rgba(240, 168, 75, 0.35);
+      border-radius: 999px;
+      padding: 0.5rem 0.9rem;
+      color: var(--muted);
+      background: rgba(240, 168, 75, 0.07);
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(23, 18, 16, 0.82);
+      padding: 1rem 1rem 1.2rem;
+      transition: border-color 0.2s;
+    }
+
+    .product:hover { border-color: rgba(240, 168, 75, 0.45); }
+
+    .product figure {
+      margin: 0;
+    }
+
+    .product img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    .product-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 0.8rem 0 0.3rem;
+      gap: 0.5rem;
+    }
+
+    .product-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .product-price {
+      font-size: 1.2rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .product-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin: 0.2rem 0 0.6rem;
+    }
+
+    .product .stock {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--green);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.7rem;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 0.7rem 1.1rem;
+      color: #170f08;
+      background: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .button.secondary {
+      color: var(--paper);
+      background: transparent;
+      border-color: var(--line);
+    }
+
+    .button:hover { opacity: 0.88; }
+
+    .policies-section {
+      margin-top: 3rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.5rem;
+    }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+
+    .policy-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1rem;
+      background: rgba(23, 18, 16, 0.6);
+    }
+
+    .policy-card h3 {
+      margin: 0 0 0.3rem;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+
+    .policy-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    footer {
+      color: #907b5f;
+      border-top: 1px solid var(--line);
+      margin-top: 3rem;
+      padding-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    .footer-links a { color: var(--muted); }
+    .footer-links a:hover { color: var(--accent); }
+
+    @media (max-width: 680px) {
+      .products { grid-template-columns: 1fr; }
+      main { padding-top: 1.5rem; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "45DGOF8 Mugs & Cups",
+    "url": "https://45dgof8.com/shop/",
+    "description": "Ceramic mugs with original 45DGOF8 artwork. Printed to order.",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@type": "Product",
+          "name": "Signal Mug - Blue Cosmic",
+          "description": "Black ceramic mug with blue cosmic signal artwork.",
+          "image": "https://45dgof8.com/cups-assets/mug-in-the-room-web.jpg",
+          "offers": {
+            "@type": "Offer",
+            "price": "24.00",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.etsy.com/shop/45dgof8"
+          }
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "Product",
+          "name": "White Gem Medallion Mug",
+          "description": "White ceramic mug with colorful circular gem medallion artwork.",
+          "image": "https://45dgof8.com/cups-assets/gem-medallion-white-mug.png",
+          "offers": {
+            "@type": "Offer",
+            "price": "24.00",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.etsy.com/shop/45dgof8"
+          }
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@type": "Product",
+          "name": "Black Portal Mug",
+          "description": "Black ceramic mug with cosmic portal artwork.",
+          "image": "https://45dgof8.com/cups-assets/cosmic-portal-black-mug.png",
+          "offers": {
+            "@type": "Offer",
+            "price": "24.00",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.etsy.com/shop/45dgof8"
+          }
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "item": {
+          "@type": "Product",
+          "name": "Black Gem Medallion Mug",
+          "description": "Black ceramic mug with circular gem medallion artwork.",
+          "image": "https://45dgof8.com/cups-assets/gem-medallion-black-mug-left.png",
+          "offers": {
+            "@type": "Offer",
+            "price": "24.00",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.etsy.com/shop/45dgof8"
+          }
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main>
+    <div class="header">
+      <div class="kicker">45DGOF8 Workshop</div>
+      <h1>Shop</h1>
+      <p>Ceramic mugs with original artwork from the workshop archive. Each mug is printed to order.</p>
+      <div class="note">All orders fulfilled through Etsy. Shipping worldwide.</div>
+    </div>
+
+    <section class="products" aria-label="Available mugs">
+      <article class="product" itemscope itemtype="https://schema.org/Product">
+        <figure>
+          <img src="../cups-assets/mug-in-the-room-web.jpg" width="1800" height="982" alt="Black ceramic mug with blue cosmic signal artwork">
+        </figure>
+        <div class="product-head">
+          <h2 class="product-name" itemprop="name">Signal Mug</h2>
+          <span class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <span itemprop="price" content="24.00">$24</span>
+            <meta itemprop="priceCurrency" content="USD">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+          </span>
+        </div>
+        <p class="product-desc" itemprop="description">Black ceramic mug with blue cosmic signal artwork. 11 oz.</p>
+        <div class="stock">In stock - ships within 5–7 business days</div>
+        <div class="product-actions">
+          <a class="button" href="https://www.etsy.com/shop/45dgof8" rel="noopener noreferrer">Buy on Etsy</a>
+          <a class="button secondary" href="../policies.html">Policies</a>
+        </div>
+      </article>
+
+      <article class="product" itemscope itemtype="https://schema.org/Product">
+        <figure>
+          <img src="../cups-assets/gem-medallion-white-mug.png" width="1000" height="1000" alt="White ceramic mug with colorful gem medallion artwork">
+        </figure>
+        <div class="product-head">
+          <h2 class="product-name" itemprop="name">Gem Medallion - White</h2>
+          <span class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <span itemprop="price" content="24.00">$24</span>
+            <meta itemprop="priceCurrency" content="USD">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+          </span>
+        </div>
+        <p class="product-desc" itemprop="description">White ceramic mug with colorful circular gem medallion artwork. 11 oz.</p>
+        <div class="stock">In stock - ships within 5–7 business days</div>
+        <div class="product-actions">
+          <a class="button" href="https://www.etsy.com/shop/45dgof8" rel="noopener noreferrer">Buy on Etsy</a>
+          <a class="button secondary" href="../policies.html">Policies</a>
+        </div>
+      </article>
+
+      <article class="product" itemscope itemtype="https://schema.org/Product">
+        <figure>
+          <img src="../cups-assets/cosmic-portal-black-mug.png" width="1000" height="1000" alt="Black mug with cosmic portal artwork">
+        </figure>
+        <div class="product-head">
+          <h2 class="product-name" itemprop="name">Portal Mug</h2>
+          <span class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <span itemprop="price" content="24.00">$24</span>
+            <meta itemprop="priceCurrency" content="USD">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+          </span>
+        </div>
+        <p class="product-desc" itemprop="description">Black ceramic mug with cosmic portal artwork. 11 oz.</p>
+        <div class="stock">In stock - ships within 5–7 business days</div>
+        <div class="product-actions">
+          <a class="button" href="https://www.etsy.com/shop/45dgof8" rel="noopener noreferrer">Buy on Etsy</a>
+          <a class="button secondary" href="../policies.html">Policies</a>
+        </div>
+      </article>
+
+      <article class="product" itemscope itemtype="https://schema.org/Product">
+        <figure>
+          <img src="../cups-assets/gem-medallion-black-mug-left.png" width="1000" height="1000" alt="Black mug with gem medallion artwork">
+        </figure>
+        <div class="product-head">
+          <h2 class="product-name" itemprop="name">Gem Medallion - Black</h2>
+          <span class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <span itemprop="price" content="24.00">$24</span>
+            <meta itemprop="priceCurrency" content="USD">
+            <meta itemprop="availability" content="https://schema.org/InStock">
+          </span>
+        </div>
+        <p class="product-desc" itemprop="description">Black ceramic mug with circular gem medallion artwork. 11 oz.</p>
+        <div class="stock">In stock - ships within 5–7 business days</div>
+        <div class="product-actions">
+          <a class="button" href="https://www.etsy.com/shop/45dgof8" rel="noopener noreferrer">Buy on Etsy</a>
+          <a class="button secondary" href="../policies.html">Policies</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="policies-section" aria-label="Shop policies">
+      <h2 style="margin:0; font-size:1.3rem;">Policies</h2>
+      <div class="policy-grid">
+        <div class="policy-card">
+          <h3>Payment</h3>
+          <p>Secure checkout via Etsy. Credit cards, PayPal, and Etsy gift cards accepted.</p>
+        </div>
+        <div class="policy-card">
+          <h3>Shipping</h3>
+          <p>Ships within 5–7 business days. US and international. Full tracking included.</p>
+        </div>
+        <div class="policy-card">
+          <h3>Returns</h3>
+          <p>Accepted within 14 days of delivery. Item must be unused. Contact via Etsy to start a return. Refund processed after item is received.</p>
+        </div>
+        <div class="policy-card">
+          <h3>Damaged</h3>
+          <p>Photo-document damage and contact via Etsy within 48 hours of delivery. Full replacement or refund.</p>
+        </div>
+        <div class="policy-card">
+          <h3>Contact</h3>
+          <p><a href="mailto:45dgof8@gmail.com">45dgof8@gmail.com</a> or Etsy messages. Usually same day.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      45DGOF8 Workshop - small-batch ceramic prints<br>
+      All mug artwork created at <a href="https://nightcafe.studio" style="color:var(--muted);">nightcafe.studio</a>
+      <nav class="footer-links">
+        <a href="https://www.etsy.com/shop/45dgof8">Etsy Shop</a>
+        <a href="../policies.html">Full Policies</a>
+        <a href="mailto:45dgof8@gmail.com">Contact</a>
+        <a href="../">Home</a>
+      </nav>
+    </footer>
+  </main>
+</body>
+</html>

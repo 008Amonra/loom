@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>45DGOF8 - Live Stats</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f0c040;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 24px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .card-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0c040;
+  }
+  .card-delta {
+    font-size: 0.7rem;
+    color: #4ade80;
+    margin-top: 4px;
+  }
+  .card-delta.down { color: #f87171; }
+  .section-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-label {
+    width: 200px;
+    font-size: 0.75rem;
+    color: #aaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    height: 18px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f0c040, #f59e0b);
+    border-radius: 4px;
+    min-width: 2px;
+    transition: width 0.5s ease;
+  }
+  .bar-count {
+    width: 40px;
+    font-size: 0.75rem;
+    color: #888;
+    text-align: right;
+  }
+  .status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .footer {
+    margin-top: 32px;
+    font-size: 0.65rem;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+  <h1>45DGOF8</h1>
+  <p class="subtitle"><span class="status"></span>Live - auto-refreshes every 60s</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Total Views</div>
+      <div class="card-value" id="total-views">-</div>
+      <div class="card-delta" id="views-delta"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Published Articles</div>
+      <div class="card-value" id="article-count">-</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Avg Views / Article</div>
+      <div class="card-value" id="avg-views">-</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Last Updated</div>
+      <div class="card-value" id="last-updated" style="font-size:1rem;">-</div>
+    </div>
+  </div>
+
+  <div class="section-title">Views by Article</div>
+  <div class="bar-chart" id="bar-chart"></div>
+
+  <div class="footer">
+    45dgof8.com - Machine-assisted newspaper<br>
+    Data from newspaper backend API
+  </div>
+
+  <script>
+    const API = 'http://127.0.0.1:4330';
+    const ARTICLES = [
+      'the-game-is-afoot','the-quiet-defection','the-hole-that-gave-root-to-everyone',
+      'the-ai-that-hacked-the-ai','the-storm-without-a-ceiling','the-masked-coder',
+      'welcome-to-the-chocolate-factory','glm-52-vs-gpt55-open-source-race',
+      'the-ai-that-hacked-itself-in','the-bug-that-was-always-there',
+      'the-redaktor-introduces-itself','the-password-you-never-remember',
+      'ai-is-just-autocomplete','the-disk-space-that-eats-itself',
+      'the-attention-audit','the-broken-port-and-the-usb-resurrection',
+      'the-swappiness-number-that-broke-firefox','may-the-automation-be-with-you',
+      'how-the-redaktor-chooses-a-story','what-this-newspaper-is-watching',
+      'two-obscure-tools-worth-remembering','birthday-reminder-machine',
+      'encrypted-drive-that-forgets-how-to-mount','dead-link-embalmer',
+      'case-for-automated-internet-archaeology','how-crypto-trading-is-done-now',
+      'quantum-computers-implications-discussion','swiss-german-weather-briefing'
+    ];
+    let lastViews = 0;
+
+    async function fetchStats() {
+      try {
+        const statsRes = await fetch(`${API}/api/stats`);
+        const stats = await statsRes.json();
+
+        document.getElementById('total-views').textContent = stats.total_views.toLocaleString();
+        document.getElementById('article-count').textContent = stats.article_count;
+        document.getElementById('avg-views').textContent = stats.article_count > 0
+          ? (stats.total_views / stats.article_count).toFixed(1)
+          : '0';
+        document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+        if (lastViews > 0 && stats.total_views > lastViews) {
+          const delta = stats.total_views - lastViews;
+          document.getElementById('views-delta').textContent = `+${delta} since last check`;
+          document.getElementById('views-delta').className = 'card-delta';
+        } else if (lastViews > 0 && stats.total_views < lastViews) {
+          document.getElementById('views-delta').textContent = 'Counter reset';
+          document.getElementById('views-delta').className = 'card-delta down';
+        }
+        lastViews = stats.total_views;
+
+        // Fetch per-article views
+        const results = await Promise.all(
+          ARTICLES.map(async slug => {
+            try {
+              const r = await fetch(`${API}/api/views/${slug}`);
+              const d = await r.json();
+              return [slug, d.views || 0];
+            } catch { return [slug, 0]; }
+          })
+        );
+
+        const articles = results.filter(([,v]) => v > 0).sort((a, b) => b[1] - a[1]);
+        const max = articles.length > 0 ? articles[0][1] : 1;
+        const chart = document.getElementById('bar-chart');
+
+        if (articles.length === 0) {
+          chart.innerHTML = '<span style="color:#666;font-size:0.8rem;">No views yet - articles are waiting for readers</span>';
+        } else {
+          chart.innerHTML = articles.map(([id, count]) => `
+            <div class="bar-row">
+              <span class="bar-label">${id.replace(/-/g, ' ')}</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: ${(count / max) * 100}%"></div>
+              </div>
+              <span class="bar-count">${count}</span>
+            </div>
+          `).join('');
+        }
+      } catch (e) {
+        document.getElementById('last-updated').textContent = 'API offline';
+      }
+    }
+
+    fetchStats();
+    setInterval(fetchStats, 60000);
+  </script>
+</body>
+</html>

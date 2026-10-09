@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>45dgof8 Plaquette</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0d0d14;color:#e0e0e8;font-family:'Inter',-apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+  .plaquette{position:relative;width:100%;max-width:700px;margin:0 auto;padding:40px 24px}
+
+  .plaquette-title{text-align:center;margin-bottom:32px}
+  .plaquette-title h2{font-family:'Cinzel',serif;font-size:1.4rem;letter-spacing:6px;color:#00ff88;text-transform:uppercase;margin-bottom:4px}
+  .plaquette-title p{font-size:0.8rem;letter-spacing:3px;color:#555}
+
+  /* === BAR STAGE === */
+  .bar-stage{
+    position:relative;
+    height:220px;
+    margin:24px 0;
+    perspective:800px;
+    perspective-origin:50% 80%;
+    overflow:hidden;
+  }
+  .bar-stage.party{perspective:600px}
+
+  .bar-row{
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:6px;
+    height:100%;
+    transform-style:preserve-3d;
+    transform:rotateX(8deg) rotateY(0deg);
+    transition:transform 1.2s cubic-bezier(.25,.8,.25,1);
+  }
+  .bar-row.party{
+    animation:barDance 2s ease-in-out infinite;
+  }
+
+  @keyframes barDance{
+    0%,100%{transform:rotateX(8deg) rotateY(0deg) translateZ(0)}
+    25%{transform:rotateX(5deg) rotateY(15deg) translateZ(20px)}
+    50%{transform:rotateX(12deg) rotateY(-10deg) translateZ(-10px)}
+    75%{transform:rotateX(6deg) rotateY(-20deg) translateZ(15px)}
+  }
+
+  .bar{
+    flex:0 0 auto;
+    width:clamp(18px,4vw,36px);
+    border-radius:6px 6px 2px 2px;
+    position:relative;
+    transition:height 0.8s cubic-bezier(.25,.8,.25,1),
+               opacity 0.6s ease,
+               transform 0.8s cubic-bezier(.25,.8,.25,1);
+    cursor:pointer;
+    transform-origin:bottom center;
+  }
+  .bar:hover{filter:brightness(1.3)}
+
+  /* depth layers */
+  .bar[data-depth="0"]{opacity:1}
+  .bar[data-depth="1"]{opacity:0.85;transform:scaleY(0.75) translateZ(-30px)}
+  .bar[data-depth="2"]{opacity:0.65;transform:scaleY(0.55) translateZ(-60px)}
+  .bar[data-depth="3"]{opacity:0.45;transform:scaleY(0.38) translateZ(-90px)}
+
+  .bar .bar-label{
+    position:absolute;
+    bottom:-22px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:0.55rem;
+    letter-spacing:1px;
+    color:#555;
+    white-space:nowrap;
+    text-transform:uppercase;
+    transition:color 0.3s;
+  }
+  .bar:hover .bar-label{color:#00ff88}
+
+  .bar .bar-icon{
+    position:absolute;
+    top:-28px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:1.1rem;
+    transition:transform 0.4s, filter 0.3s;
+  }
+  .bar:hover .bar-icon{transform:translateX(-50%) scale(1.3)}
+
+  /* party mode bar glow */
+  .bar-row.party .bar{
+    animation:barGlow 1.5s ease-in-out infinite alternate;
+  }
+  .bar-row.party .bar:nth-child(odd){animation-delay:0.15s}
+  .bar-row.party .bar:nth-child(3n){animation-delay:0.3s}
+  .bar-row.party .bar:nth-child(4n){animation-delay:0.45s}
+
+  @keyframes barGlow{
+    0%{filter:brightness(1) saturate(1);transform:scaleY(1) translateZ(0)}
+    50%{filter:brightness(1.6) saturate(1.4);transform:scaleY(1.15) translateZ(10px)}
+    100%{filter:brightness(1.2) saturate(1.1);transform:scaleY(0.9) translateZ(-5px)}
+  }
+
+  /* === CONTROLS === */
+  .controls{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+
+  .btn-hypno{
+    padding:10px 24px;
+    border-radius:20px;
+    border:1px solid #2a4a3a;
+    background:#0e0e14;
+    color:#44cc66;
+    font-family:'Inter',sans-serif;
+    font-size:0.85rem;
+    font-weight:600;
+    letter-spacing:2px;
+    cursor:pointer;
+    transition:all 0.2s;
+    user-select:none;
+  }
+  .btn-hypno:hover{background:#1a2a1a;border-color:#44cc66;transform:translateY(-1px)}
+  .btn-hypno:active{transform:translateY(0);box-shadow:0 0 20px rgba(0,255,136,0.15)}
+
+  .click-counter{
+    font-size:0.7rem;
+    letter-spacing:2px;
+    color:#333;
+    text-align:center;
+    margin-top:8px;
+    transition:color 0.3s;
+  }
+  .click-counter.hot{color:#ff6644}
+  .click-counter.fire{color:#ff4444;text-shadow:0 0 8px rgba(255,68,68,0.4)}
+
+  /* party overlay */
+  .party-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity 0.5s;
+    background:radial-gradient(ellipse at center,rgba(0,255,136,0.05) 0%,transparent 70%);
+  }
+  .bar-stage.party .party-overlay{opacity:1}
+
+  /* party sparkles */
+  .sparkle{
+    position:absolute;
+    width:4px;height:4px;
+    border-radius:50%;
+    pointer-events:none;
+    animation:sparkleFloat 2s ease-out infinite;
+  }
+  @keyframes sparkleFloat{
+    0%{opacity:1;transform:translateY(0) scale(1)}
+    100%{opacity:0;transform:translateY(-80px) scale(0)}
+  }
+</style>
+</head>
+<body>
+
+<div class="plaquette">
+  <div class="plaquette-title">
+    <h2>The Loom</h2>
+    <p>Every thread a service. Press to weave.</p>
+  </div>
+
+  <div class="bar-stage" id="barStage">
+    <div class="bar-row" id="barRow"></div>
+    <div class="party-overlay"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-hypno" id="shuffleBtn">REARRANGE</button>
+    <button class="btn-hypno" id="danceBtn" style="display:none">STOP THE PARTY</button>
+  </div>
+  <div class="click-counter" id="clickCounter"></div>
+</div>
+
+<script>
+const SERVICES = [
+  {name:'Email Bot',  icon:'📬', color:'#00ff88', h:85},
+  {name:'Telegram',   icon:'💬', color:'#00ccff', h:70},
+  {name:'n8n',        icon:'⚙️', color:'#c0a0ff', h:95},
+  {name:'Video',      icon:'🎬', color:'#ffc439', h:80},
+  {name:'Music',      icon:'🎵', color:'#ff6688', h:60},
+  {name:'Search',     icon:'🔍', color:'#44cc66', h:75},
+  {name:'TTS',        icon:'🗣️', color:'#88ccff', h:55},
+  {name:'Agent',      icon:'🤖', color:'#00ff88', h:90},
+  {name:'Monitor',    icon:'📊', color:'#c0a0ff', h:50},
+  {name:'Backup',     icon:'💾', color:'#44cc66', h:65},
+  {name:'Security',   icon:'🛡️', color:'#ff6644', h:45},
+  {name:'AI Ops',     icon:'🧠', color:'#ffc439', h:100},
+];
+
+let bars = [];
+let clickCount = 0;
+let partyMode = false;
+let currentPattern = 0;
+
+const stage = document.getElementById('barStage');
+const row = document.getElementById('barRow');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const danceBtn = document.getElementById('danceBtn');
+const counter = document.getElementById('clickCounter');
+
+// patterns: [depth for each bar index]
+const PATTERNS = [
+  // default: all front
+  () => SERVICES.map(() => 0),
+  // wave: front-back-front-back
+  () => SERVICES.map((_, i) => i % 3),
+  // pyramid: edges far, center close
+  () => SERVICES.map((_, i) => {
+    const mid = SERVICES.length / 2;
+    const dist = Math.abs(i - mid) / mid;
+    return Math.floor(dist * 3);
+  }),
+  // diagonal: left near, right far
+  () => SERVICES.map((_, i) => Math.floor((i / SERVICES.length) * 3.5)),
+  // reverse diagonal
+  () => SERVICES.map((_, i) => Math.floor(((SERVICES.length - 1 - i) / SERVICES.length) * 3.5)),
+  // alternating pairs
+  () => SERVICES.map((_, i) => (Math.floor(i / 2) % 2 === 0) ? 0 : 2),
+  // random scatter
+  () => SERVICES.map(() => Math.floor(Math.random() * 4)),
+  // v-shape: edges near, center far
+  () => SERVICES.map((_, i) => {
+    const mid = SERVICES.length / 2;
+    const dist = Math.abs(i - mid) / mid;
+    return Math.floor((1 - dist) * 3);
+  }),
+];
+
+function renderBars(depths, animate = true) {
+  row.innerHTML = '';
+  SERVICES.forEach((s, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.dataset.depth = depths[i];
+    bar.style.height = s.h + '%';
+    bar.style.background = `linear-gradient(180deg, ${s.color} 0%, ${s.color}44 100%)`;
+    bar.style.boxShadow = `0 0 12px ${s.color}33`;
+
+    const icon = document.createElement('div');
+    icon.className = 'bar-icon';
+    icon.textContent = s.icon;
+
+    const label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = s.name;
+
+    bar.appendChild(icon);
+    bar.appendChild(label);
+    bar.addEventListener('click', () => {
+      bar.style.transform = `scaleY(1.2) translateZ(20px)`;
+      setTimeout(() => bar.style.transform = '', 300);
+    });
+    row.appendChild(bar);
+  });
+
+  if (animate) {
+    row.querySelectorAll('.bar').forEach((b, i) => {
+      b.style.opacity = '0';
+      b.style.transform += ' translateY(30px)';
+      setTimeout(() => {
+        b.style.opacity = '';
+        b.style.transform = '';
+      }, 60 + i * 50);
+    });
+  }
+}
+
+function shuffle() {
+  clickCount++;
+  currentPattern = (currentPattern + 1) % PATTERNS.length;
+  const depths = PATTERNS[currentPattern]();
+  renderBars(depths);
+
+  // update counter
+  const remaining = 20 - clickCount;
+  if (remaining > 0) {
+    counter.textContent = `${remaining} more to party`;
+    if (remaining <= 5) counter.className = 'click-counter fire';
+    else if (remaining <= 10) counter.className = 'click-counter hot';
+  }
+
+  // party mode at 20
+  if (clickCount >= 20 && !partyMode) {
+    startParty();
+  }
+}
+
+function startParty() {
+  partyMode = true;
+  stage.classList.add('party');
+  row.classList.add('party');
+  shuffleBtn.style.display = 'none';
+  danceBtn.style.display = '';
+  counter.textContent = '🎉 PARTY MODE 🎉';
+  counter.className = 'click-counter fire';
+
+  // spawn sparkles
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => spawnSparkle(), i * 100);
+  }
+
+  // play music
+  playPartyMusic();
+}
+
+function spawnSparkle() {
+  if (!partyMode) return;
+  const sp = document.createElement('div');
+  sp.className = 'sparkle';
+  sp.style.left = Math.random() * 100 + '%';
+  sp.style.bottom = Math.random() * 40 + '%';
+  sp.style.background = ['#00ff88','#00ccff','#c0a0ff','#ffc439','#ff6688'][Math.floor(Math.random()*5)];
+  stage.appendChild(sp);
+  setTimeout(() => sp.remove(), 2000);
+  if (partyMode) setTimeout(spawnSparkle, 200 + Math.random() * 400);
+}
+
+function stopParty() {
+  partyMode = false;
+  stage.classList.remove('party');
+  row.classList.remove('party');
+  shuffleBtn.style.display = '';
+  danceBtn.style.display = 'none';
+  counter.textContent = '';
+  counter.className = 'click-counter';
+  clickCount = 0;
+  currentPattern = 0;
+  renderBars(PATTERNS[0]());
+  if (partyCtx) { partyCtx.close(); partyCtx = null; }
+}
+
+// === PARTY MUSIC ===
+let partyCtx = null;
+
+function playPartyMusic() {
+  partyCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = partyCtx.createGain();
+  master.gain.value = 0.3;
+  master.connect(partyCtx.destination);
+
+  // bass drum
+  function kick(time) {
+    const osc = partyCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, time);
+    osc.frequency.exponentialRampToValueAtTime(30, time + 0.15);
+    const g = partyCtx.createGain();
+    g.gain.setValueAtTime(0.8, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+    osc.connect(g); g.connect(master);
+    osc.start(time); osc.stop(time + 0.2);
+  }
+
+  // hi-hat
+  function hihat(time) {
+    const buf = partyCtx.createBuffer(1, partyCtx.sampleRate * 0.05, partyCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+    const src = partyCtx.createBufferSource();
+    src.buffer = buf;
+    const f = partyCtx.createBiquadFilter();
+    f.type = 'highpass'; f.frequency.value = 8000;
+    const g = partyCtx.createGain();
+    g.gain.setValueAtTime(0.4, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(time);
+  }
+
+  // synth melody
+  function synth(time, freq, dur) {
+    const osc = partyCtx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    const f = partyCtx.createBiquadFilter();
+    f.type = 'lowpass'; f.frequency.value = 2000;
+    const g = partyCtx.createGain();
+    g.gain.setValueAtTime(0.15, time);
+    g.gain.setValueAtTime(0.15, time + dur * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+    osc.connect(f); f.connect(g); g.connect(master);
+    osc.start(time); osc.stop(time + dur);
+  }
+
+  const bpm = 130;
+  const beat = 60 / bpm;
+  const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 523.25, 587.33];
+  let t = partyCtx.currentTime + 0.1;
+
+  // 8 bars of party loop
+  for (let bar = 0; bar < 16; bar++) {
+    for (let step = 0; step < 8; step++) {
+      const s = t + (bar * 8 + step) * beat * 0.5;
+      // kick on every beat
+      if (step % 2 === 0) kick(s);
+      // hihat on offbeats
+      if (step % 2 === 1) hihat(s);
+      // melody
+      if (step === 0 || step === 3 || step === 5) {
+        synth(s, notes[Math.floor(Math.random() * notes.length)], beat * 0.8);
+      }
+    }
+  }
+
+  // loop it
+  const loopLen = 16 * 8 * beat * 0.5;
+  setTimeout(() => { if (partyMode) playPartyMusic(); }, loopLen * 1000);
+}
+
+shuffleBtn.addEventListener('click', shuffle);
+danceBtn.addEventListener('click', stopParty);
+
+// init
+renderBars(PATTERNS[0](), false);
+</script>
+</body>
+</html>
