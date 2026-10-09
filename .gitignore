@@ -47,3 +47,12 @@ spiritual-animal-generator/
 
 # local license keys
 .keys.local
+
+# Private life files - NEVER publish (Jace rule 2026-10-09)
+/Memory.md
+/Session Log.md
+/ledger.csv
+/ledger.ods
+*.kdbx
+/backup-realisierung-plan-2026-09-10.xlsx
+/backup-safety-analysis-2026-09-10.xlsx
