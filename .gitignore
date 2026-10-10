@@ -57,6 +57,7 @@ spiritual-animal-generator/
 
 # Private life files - NEVER publish (Jace rule 2026-10-09)
 /Memory.md
+/Session Log.md
 /ledger.csv
 /ledger.ods
 *.kdbx
