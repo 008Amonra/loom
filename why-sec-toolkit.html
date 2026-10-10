@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Why you should harden your computer now: automated attackers, one-day exploit windows, fragile routers, and why DIY security guides fail.">
+<title>Why Harden Your Computer - 45dgof8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:100vh}
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:
+  radial-gradient(circle at 20% 30%,rgba(0,180,100,0.03) 0%,transparent 50%),
+  radial-gradient(circle at 80% 70%,rgba(200,168,124,0.03) 0%,transparent 50%);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,180,100,0.08)}
+.nav-brand{font-family:'Cinzel',serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#c8a87c;text-decoration:none}
+.nav-links{display:flex;gap:24px;font-size:0.8rem}
+.nav-links a{color:#666;text-decoration:none;transition:.2s;letter-spacing:1px}
+.nav-links a:hover{color:#00ff88}
+.hero{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 60px;position:relative}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(135deg,#00ff88,#00cc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero-sub{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#555;letter-spacing:2px;margin-bottom:24px}
+.hero-tag{font-size:clamp(0.85rem,2vw,1.05rem);color:#888;max-width:640px;line-height:1.7;font-weight:300;margin-bottom:36px}
+.hero-tag strong{color:#00ff88;font-weight:600}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 32px;border-radius:10px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .25s;letter-spacing:1px;border:none;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#00ff88,#00cc66);color:#08080e;box-shadow:0 4px 24px rgba(0,255,136,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,255,136,0.3)}
+.btn-ghost{background:transparent;border:1px solid #333;color:#888}
+.btn-ghost:hover{border-color:#00ff88;color:#00ff88}
+section{max-width:720px;margin:0 auto;padding:70px 24px}
+.section-title{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#00ff88;text-align:center;margin-bottom:8px}
+.section-sub{text-align:center;color:#555;font-size:0.85rem;margin-bottom:40px;font-weight:300}
+p.prose{color:#999;font-size:0.95rem;line-height:1.95;margin-bottom:22px}
+p.prose strong{color:#00ff88;font-weight:600}
+p.prose .gold{color:#c8a87c;font-weight:600}
+.stat-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:40px 0}
+.stat{text-align:center;background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:22px 28px;flex:1;min-width:140px}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:#00ff88}
+.stat-label{font-size:0.68rem;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-top:6px}
+.fail{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:26px 26px;margin-bottom:18px}
+.fail-title{color:#e0e0e8;font-weight:700;font-size:0.95rem;margin-bottom:8px}
+.fail-desc{font-size:0.84rem;color:#666;line-height:1.7}
+.faq{margin-top:36px}
+.faq-item{margin-bottom:14px}
+.faq-q{color:#c8a87c;font-weight:600;font-size:0.92rem;margin-bottom:6px}
+.faq-a{color:#777;font-size:0.85rem;line-height:1.7}
+code{color:#00ff88;background:#0a1a0a;padding:1px 6px;border-radius:4px;font-size:0.85em}
+.cta-banner{text-align:center;padding:80px 24px}
+.cta-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:4px;color:#00ff88;margin-bottom:16px}
+.cta-desc{color:#666;font-size:0.9rem;margin-bottom:24px}
+.footer{text-align:center;padding:40px 24px;color:#333;font-size:0.7rem;border-top:1px solid #111}
+.footer a{color:#00ff88;text-decoration:none}
+@media(max-width:640px){.nav-links{display:none}.stat-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<nav class="nav">
+  <a href="./" class="nav-brand">45DGOF8</a>
+  <div class="nav-links">
+    <a href="sec-toolkit.html">Free Tool</a>
+    <a href="sec-toolkit-service.html">Offers</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1 class="hero-title">They Are Targeting Your Computer</h1>
+  <div class="hero-sub">NOT IN A MOVIE. IN THE LAST 12 MONTHS.</div>
+  <p class="hero-tag">
+    The attackers of 2026 do not choose their victims. <strong>They scan everything</strong>,
+    and they hit whatever is open. A PC or server behind a weak router is not a small target.
+    It is the default target.
+  </p>
+  <div class="hero-cta">
+    <a href="sec-toolkit-service.html" class="btn btn-primary">Get it fixed</a>
+    <a href="sec-toolkit.html" class="btn btn-ghost">Free check first</a>
+  </div>
+</header>
+
+<section>
+  <div class="section-title">The numbers</div>
+  <div class="section-sub">Reported by cybersecurity firms watching live traffic, autumn 2026</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">500-650k</div><div class="stat-label">probes / day on a home broadband</div></div>
+    <div class="stat"><div class="stat-num">&lt; 1 day</div><div class="stat-label">vuln to exploitation</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">AI-automated scanning</div></div>
+  </div>
+  <p class="prose">
+    Attack tools now run around the clock and reason for themselves. They fingerprint your router,
+    your IoT boxes, your open ports - and they try everything, at machine speed, without ever getting tired.
+    One security firm logged over <span class="gold">half a million probes a day</span> against a single
+    ordinary home connection. This traffic is not personal. It is not revenge. It is simply the cost of
+    being online in 2026.
+  </p>
+</section>
+
+<section style="padding-top:0">
+  <div class="section-title">What they want</div>
+  <div class="section-sub">Not your homework. Your identity, your bank, your inbox.</div>
+  <p class="prose">
+    <strong>Routers and IoT boxes</strong> are the favourite first step: old firmware, no updates, default passwords.
+    A compromised router sees everything - your banking sessions, your email, your passwords - before they
+    even leave the house.
+  </p>
+  <p class="prose">
+    <strong>Credentials</strong> are the real loot. Stolen logins are sold by the batch, and a single reused
+    password across accounts is enough to start the dominoes. Recent attack waves even abuse AI chatbots to
+    hand-deliver malware: a "helpful" custom GPT that quietly drops a remote-access trojan onto the machine
+    that asked it for help.
+  </p>
+  <p class="prose">
+    And the machines that are not looted directly are often <strong>recruited</strong> - silent members of
+    a botnet, burning your bandwidth and your electricity inside someone else's attack.
+  </p>
+</section>
+
+<section style="padding-top:0">
+  <div class="section-title">Why DIY fails</div>
+  <div class="section-sub">The guides are right. Nobody finishes them.</div>
+  <div class="fail">
+    <div class="fail-title">The fragment problem</div>
+    <div class="fail-desc">Firewall from one tutorial, AppArmor from another, kernel settings from a forum post from 2019. Ten tabs, three sudo prompts, one dented confidence.</div>
+  </div>
+  <div class="fail">
+    <div class="fail-title">The verify problem</div>
+    <div class="fail-desc">"I think I enabled it." A filter set but never checked is a filter that may be off. Guides teach the command, not the proof.</div>
+  </div>
+  <div class="fail">
+    <div class="fail-title">The fear problem</div>
+    <div class="fail-desc">The right fix for a listening port is scary: it touches the network, it needs sudo, it could lock something out. So it stays open.</div>
+  </div>
+  <p class="prose" style="margin-top:30px">
+    The answer is not willpower. It is a <strong>TODO list written by someone who has done it a hundred times</strong>,
+    and - in the hardening tier - a pair of hands that already pressed the scary buttons.
+  </p>
+</section>
+
+<section style="padding-top:0">
+  <div class="section-title">What locked down actually means</div>
+  <div class="section-sub">Measurable, not magical</div>
+  <p class="prose">
+    A hardened machine looks like this: <strong>firewall denies everything incoming by default</strong>,
+    services bind only to loopback, SSH reachable only from your own network or VPN, automatic updates on,
+    kernel hardening active, and a <code>check</code> + <code>verify</code> report that proves each line.
+    Nothing is "trust me". Everything is "look". That is the whole pitch.
+  </p>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="section-title">FAQ</div>
+  <div class="section-sub">Asked, answered</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">I do not think I am interesting enough to attack.</div>
+      <div class="faq-a">You are right, and you are missing the point. The attackers are not interested in you. They scan everything and attack what is open. Being uninteresting is not protection; being closed is.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is the free check safe to run?</div>
+      <div class="faq-a">Yes. <code>./sec-toolkit.sh check</code> is read-only and needs no sudo. It inspects firewall state, services, and settings, and changes nothing. Hardening is a separate, explicit, sudo step.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Will this break my computer?</div>
+      <div class="faq-a">Conservative defaults, a system snapshot before any change, and a restore path. That is the security mind-set applied to the process itself.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this only for Linux?</div>
+      <div class="faq-a">Linux is our standard - desktops and servers (Ubuntu, Pop!_OS, Debian). macOS and Windows are available on request, done hands-on with a restore point first.</div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div class="cta-title">The market is already scared.</div>
+  <p class="cta-desc">Be the person who actually did something when the fear was real.</p>
+  <a href="sec-toolkit-service.html" class="btn btn-primary">See the offers</a>
+</div>
+
+<footer class="footer">
+  <p>built by <a href="https://45dgof8.com">45dgof8</a> - Zurich, Switzerland</p>
+  <p style="font-size:0.65rem;color:#555;margin-top:0.5rem">Statistics summarize public reporting by cybersecurity firms in autumn 2026. Not legal or security advice.</p>
+</footer>
+
+</body>
+</html>
