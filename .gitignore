@@ -63,3 +63,12 @@ spiritual-animal-generator/
 *.kdbx
 /backup-realisierung-plan-2026-09-10.xlsx
 /backup-safety-analysis-2026-09-10.xlsx
+
+# Generated / local build output - never source
+**/.venv/
+**/__pycache__/
+youtube-agent/output/
+youtube-agent/uploads/
+youtube-agent/demo-slides/
+blender-art/**/renders/
+*.bak.*

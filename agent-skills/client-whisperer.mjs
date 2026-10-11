@@ -9,7 +9,7 @@ const DATA_DIR = path.join(__dirname, 'whisperer-data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const TG_TOKEN = process.env.TG_BOT_TOKEN;
-const TG_CHAT = process.env.TG_WHISPER_CHAT || '5032947163';
+const TG_CHAT = process.env.TG_WHISPER_CHAT;
 const HOURLY_RATE = process.env.WHISPERER_RATE || '50';
 const CURRENCY = process.env.WHISPERER_CURRENCY || 'SFr.';
 
@@ -473,7 +473,7 @@ function extractHours(text) {
 }
 
 async function sendTelegram(text) {
-  if (!TG_TOKEN) return;
+  if (!TG_TOKEN || !TG_CHAT) return;
   try {
     await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
       method: 'POST',
