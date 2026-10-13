@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Concrete use cases for 45dgof8 local AI agents: a student compresses a semester, an associate reads a 34-page contract, a collector buys back a 1990 Walkman. No cloud, no per-seat fee.">
+<meta name="keywords" content="AI agent use cases, local AI, private AI, research assistant, contract review, collector research, 45dgof8">
+<title>Use Cases - What People Run Them For | 45dgof8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#08080e;color:#d8d8e4;min-height:100vh}
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:
+  radial-gradient(circle at 20% 30%,rgba(0,180,100,0.03) 0%,transparent 50%),
+  radial-gradient(circle at 80% 70%,rgba(200,168,124,0.03) 0%,transparent 50%);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,180,100,0.08)}
+.nav-brand{font-family:'Cinzel',serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#c8a87c;text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:24px}
+.nav-links{display:flex;gap:24px;font-size:0.8rem}
+.nav-links a{color:#666;text-decoration:none;transition:.2s;letter-spacing:1px}
+.nav-links a:hover{color:#00ff88}
+.nav-links a.active{color:#00ff88}
+.hero{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 60px;position:relative}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(135deg,#00ff88,#00cc66);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero-sub{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#555;letter-spacing:2px;margin-bottom:24px}
+.hero-tag{font-size:clamp(0.85rem,2vw,1.05rem);color:#888;max-width:700px;line-height:1.7;font-weight:300;margin-bottom:36px}
+.hero-tag strong{color:#00ff88;font-weight:600}
+section{max-width:720px;margin:0 auto;padding:60px 24px}
+.section-sub{text-align:center;color:#555;font-size:0.85rem;margin-bottom:40px;font-weight:300}
+.case{background:#0c0c14;border:1px solid #1a1a2a;border-radius:14px;padding:28px 30px;margin-bottom:20px}
+.case-kicker{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:2px;color:#00ff88;text-transform:uppercase;margin-bottom:8px}
+.case-head{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#e0e0e8;margin-bottom:16px}
+.case-list{margin:0;padding-left:20px;color:#888;font-size:0.92rem;line-height:1.75}
+.case-list li{margin-bottom:8px}
+.case-list strong{color:#00ff88;font-weight:600}
+.case-result{margin-top:18px;padding-top:14px;border-top:1px solid #1a1a2a;color:#c8a87c;font-size:0.92rem;line-height:1.6}
+.case-result strong{font-weight:600}
+.small-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.chip{background:#0a1a0a;color:#44cc66;border:1px solid #1a4a2a;border-radius:20px;padding:6px 14px;font-size:0.78rem;letter-spacing:0.5px}
+.quote{text-align:center;max-width:640px;margin:0 auto 40px}
+.quote-text{color:#999;font-size:1rem;line-height:1.8}
+.quote-by{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:10px}
+.btn{padding:14px 32px;border-radius:10px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .25s;letter-spacing:1px;border:none;font-family:'Inter',sans-serif;display:inline-block}
+.btn-primary{background:linear-gradient(135deg,#00ff88,#00cc66);color:#08080e;box-shadow:0 4px 24px rgba(0,255,136,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,255,136,0.3)}
+.btn-ghost{background:transparent;border:1px solid #333;color:#888}
+.btn-ghost:hover{border-color:#00ff88;color:#00ff88}
+.cta-banner{text-align:center;padding:80px 24px}
+.cta-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:4px;color:#00ff88;margin-bottom:16px}
+.cta-desc{color:#666;font-size:0.9rem;margin-bottom:28px}
+.cta-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.footer{text-align:center;padding:40px 24px;color:#333;font-size:0.7rem;border-top:1px solid #111}
+.footer a{color:#00ff88;text-decoration:none}
+.disclaimer{font-size:0.72rem;color:#444;margin-top:14px;line-height:1.6}
+@media(max-width:640px){.nav-links{display:none}.nav-right{gap:8px}.case{ padding:22px 20px}}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<nav class="nav">
+  <a href="./" class="nav-brand">45DGOF8</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="index.html">Services</a>
+      <a href="use-cases.html" class="active">Use cases</a>
+      <a href="security-suite.html">Security</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1 class="hero-title">Use Cases</h1>
+  <div class="hero-sub">THREE THINGS A LOCAL AGENT DID LAST WEEK</div>
+  <p class="hero-tag">
+    A student, an associate and a collector ran the same software on their own machines.
+    No cloud account, no per-seat fee, nothing uploaded to a server. What follows is
+    what the agent did in each case, told in the kind of detail you can check
+    <strong>between two buses</strong>.
+  </p>
+</header>
+
+<section style="padding-top:0">
+  <div class="section-sub" style="margin-bottom:24px">Each job below started with a few plain-language instructions on a local machine.</div>
+
+  <div class="case">
+    <div class="case-kicker">Studies</div>
+    <div class="case-head">The semester, compressed</div>
+    <ul class="case-list">
+      <li>Took 38 lecture PDFs and turned each into a reading-points sheet, not a blurb.</li>
+      <li>Generated practice problems from the week's slides, so the test set never repeated itself.</li>
+      <li>Built an Anki deck every night from the parts marked "exam relevant" in the professor's own handouts.</li>
+      <li>Three days before the paper, printed a single sheet of the formulas that actually appear on past exams.</li>
+    </ul>
+    <div class="case-result"><strong>Outcome:</strong> He sat the paper with a printed sheet and a pen. The screen stayed closed.</div>
+  </div>
+
+  <div class="case">
+    <div class="case-kicker">Law</div>
+    <div class="case-head">The clause on page 14</div>
+    <ul class="case-list">
+      <li>Read a vendor's 34-page contract and pulled every clause about renewal - including the <strong>auto-renewal on page 14</strong> that the covering email did not mention.</li>
+      <li>Compared two competitor drafts side by side and listed, per clause, where the liability caps and deletion windows differed.</li>
+      <li>Drafted a one-page risk memo for the partner with the three points worth negotiating.</li>
+      <li>The working files never left the laptop, so the analysis stayed inside the firm.</li>
+    </ul>
+    <div class="case-result"><strong>Outcome:</strong> The client got a line-item change instead of a surprise invoice.</div>
+  </div>
+
+  <div class="case">
+    <div class="case-kicker">The collector</div>
+    <div class="case-head">A 1990 Walkman, right price</div>
+    <ul class="case-list">
+      <li>Built a spec table of the 1990 line: which models took the flat 6V adapter, which ran on the gum-stick battery, which had Dolby B and which did not.</li>
+      <li>Cross-referenced sold listings and put a price band on each model by condition grade.</li>
+      <li>Spotted a "refurbished" unit that was an original shell with replacement guts, and passed on it.</li>
+      <li>Set the bid ceiling from data, not from feels, the night of the auction.</li>
+    </ul>
+    <div class="case-result"><strong>Outcome:</strong> Ninety minutes after the hammer, the Walkman was back on his shelf at 60% of the first asking price.</div>
+  </div>
+
+  <div class="small-row">
+    <span class="chip">newsletter drafts</span>
+    <span class="chip">invoice triage</span>
+    <span class="chip">recipe scaling</span>
+    <span class="chip">backup reminders</span>
+    <span class="chip">packing lists</span>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="quote">
+    <div class="quote-text">"The proposal, the invoice, the shipper quote and the packing plan - the machine held the whole thread. I just clicked."</div>
+    <div class="quote-by">A seller, illustrative</div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div class="cta-title">Your job is probably somewhere in those three.</div>
+  <p class="cta-desc">Set an agent up against your own work and give it a week.</p>
+  <div class="cta-actions">
+    <a href="index.html" class="btn btn-primary">See the services</a>
+    <a href="sec-toolkit.html" class="btn btn-ghost">Start with the free check</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><span>built by</span> <a href="https://45dgof8.com">45dgof8</a><span> - Zurich, Switzerland</span></p>
+  <div class="disclaimer">Illustrative use cases. Individual setups and results vary. Nothing leaves your machine unless you send it.</div>
+</footer>
+
+<script src="assets/i18n.de.js"></script>
+<script src="assets/i18n.js"></script>
+
+</body>
+</html>
