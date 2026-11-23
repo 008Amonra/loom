@@ -35,7 +35,9 @@
   { id: "mythic_ink",       label: "Mythic ink illustration",    text: "handcrafted ink style, elegant linework, mythical motifs" },
   { id: "signal_walker",    label: "Signal walker",              text: "male figure moving through invisible signal currents, subtle light traces around him, attentive calm, modern mythic tone" },
   { id: "threshold_keeper", label: "Keeper of thresholds",       text: "calm masculine presence standing between spaces, doors and light frames implied, patient watchfulness, soft suspended atmosphere" },
-  { id: "memory_tide",      label: "Memory tide bearer",         text: "male figure carrying slow-moving waves of memory and light, gentle forward motion, emotional depth without heaviness, luminous pastel flow" }
+  { id: "memory_tide",      label: "Memory tide bearer",         text: "male figure carrying slow-moving waves of memory and light, gentle forward motion, emotional depth without heaviness, luminous pastel flow" },
+  { id: "dawn_post",        label: "Dawn post carrier",           text: "a figure in a yellow coat carrying a canvas mail bag up a wet street at first light, one window opening above, reflections on the road, calm purposeful stride" },
+  { id: "open_garden_gate", label: "The open garden gate",        text: "a wooden gate standing open onto a small courtyard, lavender along the path, a table set with three cups, late afternoon sun on the wall, no one waiting and everything ready" }
   ],
 
     /* ===== SUBJECTS – triplicate: male / female / android ===== */
