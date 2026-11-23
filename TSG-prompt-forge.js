@@ -779,6 +779,7 @@ palettes: [
 
       <div class="pf-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <select id="pf-target" class="pf-mini" style="min-width:160px;">
+          <option value="perchance" selected>Perchance AI Text to Image Pro</option>
           <option value="nightcafe">NightCafe Studio</option>
           <option value="midjourney">MidJourney</option>
           <option value="sdwebui">Stable Diffusion WebUI</option>
@@ -792,7 +793,7 @@ palettes: [
       </div>
 
       <p class="pf-hint">
-        Tip: Paste the prompt into NightCafe (Coherent or SDXL), Midjourney, or your favorite model.
+        Tip: Perchance AI Text to Image Pro is selected by default. "Copy & open" copies the prompt and opens Perchance in a new tab.
         You can tweak words after generation for even finer control.
       </p>
     `;
@@ -1022,9 +1023,10 @@ if (neutralSwitch) {
         }
 
         const targetSel = $("pf-target");
-        const target = targetSel ? targetSel.value : "nightcafe";
+        const target = targetSel ? targetSel.value : "perchance";
 
         const destinations = {
+          perchance:  "https://perchance.org/ai-text-to-image-pro",
           nightcafe:  "https://creator.nightcafe.studio/",
           midjourney: "https://www.midjourney.com/app/",
           sdwebui:    "http://127.0.0.1:7860",
@@ -1035,7 +1037,7 @@ if (neutralSwitch) {
           dalle:      "https://chat.openai.com"
         };
 
-        const url = destinations[target] || destinations.nightcafe;
+        const url = destinations[target] || destinations.perchance;
         window.open(url, "_blank", "noopener,noreferrer");
         showToast("Prompt copied and destination opened.");
       });
@@ -1125,6 +1127,7 @@ if (neutralSwitch) {
 
       <div class="pf-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <select id="cf-target" class="pf-mini" style="min-width:160px;">
+          <option value="perchance" selected>Perchance AI Text to Image Pro</option>
           <option value="nightcafe">NightCafe Studio</option>
           <option value="midjourney">MidJourney</option>
           <option value="sdwebui">Stable Diffusion WebUI</option>
@@ -1138,7 +1141,7 @@ if (neutralSwitch) {
       </div>
 
       <p class="pf-hint">
-        Tip: Select your narrative elements and generate a prompt for any AI image generator.
+        Tip: Select your narrative elements and generate a prompt. Perchance is the default generator.
       </p>
     `;
   }
@@ -1258,9 +1261,10 @@ if (neutralSwitch) {
         } catch { /* ignore */ }
 
         const targetSel = $("cf-target");
-        const target = targetSel ? targetSel.value : "nightcafe";
+        const target = targetSel ? targetSel.value : "perchance";
 
         const destinations = {
+          perchance:  "https://perchance.org/ai-text-to-image-pro",
           nightcafe:  "https://creator.nightcafe.studio/",
           midjourney: "https://www.midjourney.com/app/",
           sdwebui:    "http://127.0.0.1:7860",
@@ -1271,7 +1275,7 @@ if (neutralSwitch) {
           dalle:      "https://chat.openai.com"
         };
 
-        const url = destinations[target] || destinations.nightcafe;
+        const url = destinations[target] || destinations.perchance;
         window.open(url, "_blank", "noopener,noreferrer");
         showToast("Prompt copied and destination opened.");
       });

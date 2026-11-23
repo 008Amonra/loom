@@ -1,7 +1,7 @@
 // TSG Prompt Forge - Service Worker v2
 // FIX 2026-09-25: nur noch SHELL cache-first, alle anderen Seiten network-first,
 // damit die Startseite + neue Elemente nicht mehr einfrieren (v1 cache-te alles).
-const CACHE = "tsg-forge-v2";
+const CACHE = "tsg-forge-v3";
 const SHELL = [
   "/TSG-prompt-forge.html",
   "/TSG-prompt-forge.css",
