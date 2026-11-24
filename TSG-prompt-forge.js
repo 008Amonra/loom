@@ -451,7 +451,9 @@ palettes: [
       { id: "low_poly",             label: "Low poly 3D",                text: "low-polygon 3D aesthetic, faceted surfaces, modern minimal" },
       { id: "stained_glass",        label: "Stained glass",              text: "stained glass window style, bold color panels, lead outlines" },
       { id: "matte_painting",       label: "Matte painting",             text: "cinematic matte painting, photorealistic environment, dramatic scale" },
-      { id: "sketch_and_watercolor", label: "Sketch + watercolor",       text: "pencil sketch combined with soft watercolor fills" }
+      { id: "sketch_and_watercolor", label: "Sketch + watercolor",       text: "pencil sketch combined with soft watercolor fills" },
+      { id: "dawn_post",             label: "Dawn post carrier",          text: "a figure in a yellow coat carrying a canvas mail bag up a wet street at first light, one window opening above, reflections on the road, calm purposeful stride" },
+      { id: "open_garden_gate",      label: "The open garden gate",       text: "a wooden gate standing open onto a small courtyard, lavender along the path, a table set with three cups, late afternoon sun on the wall, no one waiting and everything ready" }
     ],
 
     timelines: [
@@ -556,7 +558,7 @@ palettes: [
       toast = document.createElement("div");
       toast.id = "pf-toast";
       toast.className = "pf-toast";
-      toast.textContent = "Prompt copied — paste into your generator!";
+      toast.textContent = "Prompt copied - paste into your generator!";
       document.body.appendChild(toast);
     }
     return toast;
@@ -1005,7 +1007,7 @@ if (neutralSwitch) {
           setTimeout(() => { btn.textContent = original; }, 1000);
         } catch (err) {
           console.error(err);
-          showToast("Copy failed — please copy manually.");
+          showToast("Copy failed - please copy manually.");
         }
       });
     });
@@ -1245,7 +1247,7 @@ if (neutralSwitch) {
           setTimeout(() => { btn.textContent = original; }, 1000);
         } catch (err) {
           console.error(err);
-          showToast("Copy failed — please copy manually.");
+          showToast("Copy failed - please copy manually.");
         }
       });
     });
@@ -1414,7 +1416,7 @@ if (neutralSwitch) {
     section.style.cssText = "margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);";
     section.innerHTML = `
       <h2 style="font-size:1.4rem;text-align:center;margin-bottom:0.3rem;letter-spacing:0.04em;">Movie Storyline Generator</h2>
-      <p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem;">Scene-by-scene image prompts — 3×5s quick mode or custom</p>
+      <p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem;">Scene-by-scene image prompts - 3×5s quick mode or custom</p>
 
       <div class="pf-grid">
         <div class="pf-column ms-controls" id="ms-controls"></div>
@@ -1470,11 +1472,11 @@ if (neutralSwitch) {
       <div class="pf-actions" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <button type="button" id="ms-copy-all" class="pf-mini">📋 Copy all scenes</button>
         <button type="button" id="ms-copy-json" class="pf-mini">📋 Copy as JSON</button>
-        <button type="button" id="ms-send-runway" class="pf-nc-btn" style="background:#6366f1;">Open NightCafe</button>
+        <button type="button" id="ms-send-runway" class="pf-nc-btn" style="background:#6366f1;">Open Perchance</button>
       </div>
 
       <p class="pf-hint">
-        Tip: Type a premise, pick genre, hit Generate. Or use Quick 3×5s for instant results. Copy prompts into NightCafe.
+        Tip: Type a premise, pick genre, hit Generate. Or use Quick 3×5s for instant results. Copy prompts into Perchance.
       </p>
     `;
   }
@@ -1593,7 +1595,7 @@ if (neutralSwitch) {
     // Summary
     const totalDuration = scenes.reduce((a, s) => a + s.duration, 0);
     const chainedCount = scenes.filter(s => s.chainImage).length;
-    html += `<p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:10px;">Total: ${scenes.length} scenes × ${scenes[0].duration}s = ${totalDuration}s — ${chainedCount} chained</p>`;
+    html += `<p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:10px;">Total: ${scenes.length} scenes × ${scenes[0].duration}s = ${totalDuration}s - ${chainedCount} chained</p>`;
 
     board.innerHTML = html;
 
@@ -1666,7 +1668,7 @@ if (neutralSwitch) {
           scene.prompt = continuationPrompt;
 
           renderScenes(window._msScenes);
-          showToast(`Scene ${sceneIdx + 1} chained — prompt updated from last frame.`);
+          showToast(`Scene ${sceneIdx + 1} chained - prompt updated from last frame.`);
         }
       };
       reader.readAsDataURL(file);
@@ -1757,7 +1759,7 @@ if (neutralSwitch) {
 
       const scenes = template.beats.map((beat, i) => ({
         number: i + 1,
-        title: `${template.arc} — Beat ${i + 1}`,
+        title: `${template.arc} - Beat ${i + 1}`,
         prompt: `${beat}. ${rand(MS.genres.find(g=>g.id===genreId).keywords)} style, ${rand(MS.cameras).text}, ${rand(MS.lighting).toLowerCase()} lighting, film grain, anamorphic lens, 2.39:1 aspect ratio, high detail`,
         camera: rand(MS.cameras).label,
         mood: rand(MS.moods),
@@ -1795,11 +1797,11 @@ if (neutralSwitch) {
       } catch { showToast("Copy failed."); }
     });
 
-    // Send to NightCafe
+    // Send to Perchance
     const runwayBtn = $("ms-send-runway");
     if (runwayBtn) runwayBtn.addEventListener("click", () => {
-      window.open("https://creator.nightcafe.studio/", "_blank", "noopener,noreferrer");
-      showToast("NightCafe opened — paste your prompts.");
+      window.open("https://perchance.org/ai-text-to-image-pro", "_blank", "noopener,noreferrer");
+      showToast("Perchance opened - paste your prompts.");
     });
   }
 
