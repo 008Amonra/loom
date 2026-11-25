@@ -784,6 +784,7 @@ palettes: [
       <div class="pf-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <select id="pf-target" class="pf-mini" style="min-width:160px;">
           <option value="perchance" selected>Perchance AI Text to Image Pro</option>
+          <option value="invokeai">InvokeAI (web)</option>
           <option value="nightcafe">NightCafe Studio</option>
           <option value="midjourney">MidJourney</option>
           <option value="sdwebui">Stable Diffusion WebUI</option>
@@ -799,6 +800,7 @@ palettes: [
       <p class="pf-hint">
         Tip: Perchance AI Text to Image Pro is selected by default. "Copy & open" copies the prompt and opens Perchance in a new tab.
         You can tweak words after generation for even finer control.
+        Note: InvokeAI (web) opens invoke-ai.org, a third-party site, not the official Invoke host. Do not paste private or work-sensitive prompts there.
       </p>
     `;
 
@@ -1031,6 +1033,7 @@ if (neutralSwitch) {
 
         const destinations = {
           perchance:  "https://perchance.org/ai-text-to-image-pro",
+          invokeai:   "https://invoke-ai.org/",
           nightcafe:  "https://creator.nightcafe.studio/",
           midjourney: "https://www.midjourney.com/app/",
           sdwebui:    "http://127.0.0.1:7860",
@@ -1132,6 +1135,7 @@ if (neutralSwitch) {
       <div class="pf-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <select id="cf-target" class="pf-mini" style="min-width:160px;">
           <option value="perchance" selected>Perchance AI Text to Image Pro</option>
+          <option value="invokeai">InvokeAI (web)</option>
           <option value="nightcafe">NightCafe Studio</option>
           <option value="midjourney">MidJourney</option>
           <option value="sdwebui">Stable Diffusion WebUI</option>
@@ -1146,6 +1150,7 @@ if (neutralSwitch) {
 
       <p class="pf-hint">
         Tip: Select your narrative elements and generate a prompt. Perchance is the default generator.
+        Note: InvokeAI (web) opens invoke-ai.org, a third-party site, not the official Invoke host. Do not paste private or work-sensitive prompts there.
       </p>
     `;
   }
@@ -1269,6 +1274,7 @@ if (neutralSwitch) {
 
         const destinations = {
           perchance:  "https://perchance.org/ai-text-to-image-pro",
+          invokeai:   "https://invoke-ai.org/",
           nightcafe:  "https://creator.nightcafe.studio/",
           midjourney: "https://www.midjourney.com/app/",
           sdwebui:    "http://127.0.0.1:7860",
