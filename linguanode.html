@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LinguaNode Translation Desk | 45dgof8</title>
+<meta name="description" content="LinguaNode translation services: language detection, faithful translation, cultural notes and smart routing, including languages the big services skip." />
+<meta name="theme-color" content="#070A12" />
+<link rel="canonical" href="https://45dgof8.com/linguanode.html" />
+<style>
+  :root{
+    --bg0:#070A12; --bg1:#0B1220;
+    --ink:#EAF0FF; --muted:#A9B6D3;
+    --line:rgba(234,240,255,.12);
+    --p1:#6D5EF8; --p2:#12D6DF; --p3:#FF5DA7;
+    --ok:#5CE6A8;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    --r:22px; --r2:14px;
+    --shadow: 0 14px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink); font-family:var(--sans); line-height:1.5;
+    background:
+      radial-gradient(1000px 620px at 12% 8%, rgba(109,94,248,.24), transparent 62%),
+      radial-gradient(900px 700px at 88% 18%, rgba(18,214,223,.17), transparent 58%),
+      radial-gradient(900px 900px at 62% 96%, rgba(255,93,167,.13), transparent 58%),
+      linear-gradient(180deg,var(--bg0),var(--bg1) 55%,var(--bg0));
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(1120px,92vw);margin:0 auto}
+  .mono{font-family:var(--mono)}
+
+  /* topbar */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    backdrop-filter:saturate(140%) blur(14px);
+    background:linear-gradient(180deg,rgba(7,10,18,.86),rgba(7,10,18,.46));
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:11px}
+  .logo{
+    width:36px;height:36px;border-radius:11px;position:relative;overflow:hidden;
+    background:radial-gradient(12px 12px at 28% 30%,rgba(255,255,255,.6),transparent 62%),linear-gradient(135deg,var(--p1),var(--p2));
+    box-shadow:0 0 0 1px rgba(255,255,255,.14),0 12px 34px rgba(109,94,248,.25);
+  }
+  .logo:after{content:"";position:absolute;inset:-50%;background:radial-gradient(circle at 62% 42%,rgba(255,93,167,.5),transparent 56%);transform:rotate(24deg)}
+  .brand b{display:block;font-size:14px;letter-spacing:.2px}
+  .brand span{display:block;font-size:11px;color:var(--muted)}
+  nav{display:flex;gap:6px;align-items:center}
+  nav a{font-size:12.5px;color:var(--muted);padding:7px 10px;border-radius:9px;transition:.2s}
+  nav a:hover{color:var(--ink);background:rgba(255,255,255,.07)}
+  @media(max-width:820px){nav{display:none}}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:10px 15px;border-radius:13px;border:1px solid var(--line);
+    background:rgba(255,255,255,.05);color:var(--ink);font-weight:650;font-size:13px;
+    cursor:pointer;transition:transform .15s,background .2s,border-color .2s;
+    box-shadow:0 8px 24px rgba(0,0,0,.24);user-select:none;
+  }
+  .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2)}
+  .btn.primary{border-color:rgba(109,94,248,.6);background:linear-gradient(135deg,rgba(109,94,248,.95),rgba(18,214,223,.75));box-shadow:0 0 0 1px rgba(255,255,255,.1),0 18px 50px rgba(109,94,248,.25)}
+  .btn.small{padding:8px 12px;font-size:12px}
+  .btn .led{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px rgba(92,230,168,.15)}
+  @media(max-width:520px){.topbar .btn{display:none}}
+
+  /* hero */
+  header.hero{padding:56px 0 26px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:stretch}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+  .kicker{
+    display:inline-flex;align-items:center;gap:9px;padding:7px 12px;border-radius:999px;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;width:fit-content;
+  }
+  .kicker .spark{width:7px;height:7px;border-radius:50%;background:var(--p2);box-shadow:0 0 12px var(--p2);animation:blink 2s infinite}
+  h1{
+    font-size:clamp(2.9rem,7vw,5.2rem);line-height:.98;margin:20px 0 10px;letter-spacing:-.04em;font-weight:800;
+    background:linear-gradient(100deg,#fff 8%,#BFC9FF 42%,#6DE6EA 78%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  h1 sup{font-size:.24em;vertical-align:super;letter-spacing:0;-webkit-text-fill-color:var(--p3)}
+  .lede{font-size:clamp(1.05rem,2.2vw,1.32rem);color:#DCE5FF;max-width:34ch;margin:0 0 12px}
+  .sub{color:var(--muted);max-width:56ch;font-size:14.5px;margin:0 0 22px}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .hero-stats{display:flex;gap:22px;margin-top:26px;flex-wrap:wrap}
+  .stat b{display:block;font-family:var(--mono);font-size:19px;color:var(--p2)}
+  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+  .node-map{
+    position:relative;min-height:330px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);
+    background:radial-gradient(600px 340px at 50% 40%,rgba(18,214,223,.11),transparent 65%),rgba(255,255,255,.025);
+    box-shadow:var(--shadow);
+  }
+  .node-map canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
+  .map-label{position:absolute;left:16px;top:14px;font:600 10px var(--mono);letter-spacing:.16em;color:var(--muted);z-index:2}
+  .map-label em{color:var(--ok);font-style:normal}
+  .map-foot{position:absolute;left:16px;right:16px;bottom:13px;z-index:2;display:flex;justify-content:space-between;gap:10px;font:10px var(--mono);color:var(--muted)}
+  .map-foot b{color:var(--ink)}
+
+  /* generic sections */
+  section{padding:34px 0}
+  .sec-head{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+  .sec-head .tag{font:600 11px var(--mono);letter-spacing:.18em;color:var(--p3);text-transform:uppercase}
+  h2{font-size:clamp(1.5rem,3.4vw,2.15rem);margin:7px 0 0;letter-spacing:-.025em}
+  .sec-note{color:var(--muted);font-size:13px;max-width:42ch}
+
+  /* console */
+  .console{
+    border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:rgba(7,10,18,.62);
+    box-shadow:var(--shadow);
+  }
+  .console-bar{display:flex;align-items:center;gap:8px;padding:11px 15px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .dot.r{background:#FF6B8B}.dot.y{background:#FFD166}.dot.g{background:#5CE6A8}
+  .console-bar .path{margin-left:8px;font:11px var(--mono);color:var(--muted)}
+  .console-bar .path b{color:var(--ink)}
+  .console-bar .right{margin-left:auto;font:10px var(--mono);color:var(--muted);display:flex;align-items:center;gap:7px}
+  .console-bar .right .spark{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+  .console-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media(max-width:860px){.console-body{grid-template-columns:1fr}}
+  .console-in,.console-out{padding:20px}
+  .console-out{border-left:1px solid var(--line);background:rgba(0,0,0,.18)}
+  @media(max-width:860px){.console-out{border-left:0;border-top:1px solid var(--line)}}
+  label{display:block;font:600 10px var(--mono);letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
+  textarea,select{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--r2);
+    color:var(--ink);font-family:var(--mono);font-size:13.5px;padding:12px 13px;outline:none;
+  }
+  textarea{min-height:96px;resize:vertical;line-height:1.55}
+  select{appearance:none;cursor:pointer;margin-bottom:12px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  textarea:focus,select:focus{border-color:rgba(18,214,223,.6);box-shadow:0 0 0 3px rgba(18,214,223,.1)}
+  .row-btns{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .samples{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+  .chip{
+    font:11px var(--mono);color:var(--muted);padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);cursor:pointer;transition:.2s;
+  }
+  .chip:hover{color:var(--ink);border-color:rgba(18,214,223,.5);background:rgba(18,214,223,.08)}
+  .chip.hot{color:#FFD3E8;border-color:rgba(255,93,167,.45)}
+  .status{font:11px var(--mono);color:var(--muted);margin-top:11px;min-height:16px}
+  .status b{color:var(--p2);font-weight:600}
+
+  .out{
+    min-height:250px;border:1px solid var(--line);border-radius:var(--r2);padding:14px;
+    background:linear-gradient(180deg,rgba(18,214,223,.05),transparent 55%),rgba(0,0,0,.25);
+    position:relative;overflow:auto;
+  }
+  .out:after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:var(--r2);
+    background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);
+  }
+  .out pre{margin:0;font:12.5px/1.65 var(--mono);white-space:pre-wrap;word-break:break-word}
+  .out .k{color:#9C8FFF}.out .s{color:#7EE7C8}.out .n{color:#FFB27A}
+  .out .decode{font:12px var(--mono);color:var(--p2);letter-spacing:.1em}
+  .blink{animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:.15}}
+  .out.pop{animation:pop .35s ease}
+  @keyframes pop{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .console-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:11px 20px;border-top:1px solid var(--line);font:11px var(--mono);color:var(--muted)}
+  .console-foot b{color:var(--ink)}
+  .custom-row{display:flex;align-items:center;gap:8px;margin:-6px 0 12px}
+  .custom-row span{font:10px var(--mono);color:var(--muted);white-space:nowrap}
+  input[type=text]{flex:1;min-width:0;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--r2);color:var(--ink);font-family:var(--mono);font-size:12.5px;padding:9px 11px;outline:none}
+  input[type=text]:focus{border-color:rgba(18,214,223,.6);box-shadow:0 0 0 3px rgba(18,214,223,.1)}
+  .trace-wrap{border-top:1px solid var(--line);padding:13px 20px 16px;background:rgba(109,94,248,.05)}
+  .trace-head{display:flex;justify-content:space-between;align-items:center;gap:10px;font:600 10px var(--mono);letter-spacing:.16em;color:var(--p1);margin-bottom:10px}
+  .trace-head span:last-child{color:var(--muted);letter-spacing:.06em}
+  .trace{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  @media(max-width:860px){.trace{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.trace{grid-template-columns:1fr}}
+  .tstep{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:rgba(0,0,0,.22);opacity:0;transform:translateY(6px);animation:stepIn .3s ease forwards}
+  .tstep .ti{font:700 10px var(--mono);color:var(--p2)}
+  .tstep b{display:block;font-size:11.5px;margin:5px 0 3px;color:var(--ink)}
+  .tstep span{display:block;font:10px/1.45 var(--mono);color:var(--muted)}
+  @keyframes stepIn{to{opacity:1;transform:none}}
+  .console.sending{animation:sending .5s ease}
+  @keyframes sending{50%{box-shadow:0 0 0 2px rgba(18,214,223,.5),0 14px 40px rgba(18,214,223,.22)}}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:820px){.pipe{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.pipe{grid-template-columns:1fr}}
+  .step{
+    border:1px solid var(--line);border-radius:var(--r2);padding:17px;background:rgba(255,255,255,.03);
+    position:relative;transition:.2s;
+  }
+  .step:hover{transform:translateY(-3px);background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2)}
+  .step .num{font:700 11px var(--mono);color:var(--p3);letter-spacing:.12em}
+  .step h3{margin:9px 0 6px;font-size:15px;letter-spacing:-.01em}
+  .step p{margin:0;color:var(--muted);font-size:12.5px}
+  .step .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--p1);font:700 15px var(--mono);z-index:2}
+  @media(max-width:820px){.step .arrow{display:none}}
+
+  /* service cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+  @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  .card{
+    border:1px solid var(--line);border-radius:var(--r2);padding:18px;background:rgba(255,255,255,.028);
+    transition:.2s;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+  .card .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:700 13px var(--mono);margin-bottom:12px;background:linear-gradient(135deg,rgba(109,94,248,.85),rgba(18,214,223,.7))}
+  .card:nth-child(3n+2) .ico{background:linear-gradient(135deg,rgba(18,214,223,.85),rgba(92,230,168,.7))}
+  .card:nth-child(3n+3) .ico{background:linear-gradient(135deg,rgba(255,93,167,.85),rgba(109,94,248,.7))}
+  .card h3{margin:0 0 7px;font-size:14.5px}
+  .card p{margin:0;color:var(--muted);font-size:12.7px}
+
+  /* ticker */
+  .ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(0,0,0,.2);overflow:hidden;padding:12px 0}
+  .track{display:flex;width:max-content;animation:slide 34s linear infinite}
+  .track span{font:600 12px var(--mono);letter-spacing:.16em;color:var(--muted);padding:0 22px;white-space:nowrap}
+  .track span b{color:var(--p2)}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* cookie corner */
+  .corner{display:grid;grid-template-columns:.8fr 1.2fr;gap:20px;align-items:center;border:1px solid rgba(255,93,167,.28);border-radius:var(--r);padding:24px;background:radial-gradient(500px 260px at 85% 20%,rgba(255,93,167,.11),transparent 62%),rgba(255,255,255,.025)}
+  @media(max-width:800px){.corner{grid-template-columns:1fr}}
+  .corner h3{margin:8px 0;font-size:clamp(1.3rem,3vw,1.8rem)}
+  .corner p{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .corner pre{margin:0;padding:14px;border-radius:var(--r2);border:1px solid var(--line);background:rgba(0,0,0,.32);font:12px/1.6 var(--mono);color:#7EE7C8;overflow:auto}
+
+  /* fine print + cta */
+  .fine{border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;background:rgba(255,255,255,.02)}
+  .fine ul{margin:0;padding-left:18px;color:var(--muted);font-size:12.8px}
+  .fine li+li{margin-top:7px}
+  .fine b{color:var(--ink)}
+  .cta{text-align:center;padding:44px 0 54px}
+  .cta h2{font-size:clamp(1.7rem,4vw,2.6rem)}
+  .cta p{color:var(--muted);max-width:54ch;margin:10px auto 20px;font-size:14px}
+  footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font:11px var(--mono)}
+  footer .inner{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  footer b{color:var(--ink)}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="inner wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div><b>LinguaNode<sup style="color:var(--p3)">TM</sup></b><span>45dgof8 translation desk</span></div>
+    </div>
+    <nav aria-label="Page sections">
+      <a href="#decoder">Decoder</a>
+      <a href="#how">How it works</a>
+      <a href="#services">Services</a>
+      <a href="#cookie">Cookie test</a>
+    </nav>
+    <a class="btn small" href="mailto:45dgof8@gmail.com?subject=LinguaNode%20translation%20job"><span class="led"></span>Send a job</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker"><span class="spark"></span>Signal online / languages included</div>
+      <h1>LinguaNode<sup>TM</sup></h1>
+      <p class="lede">Translation that keeps the context in.</p>
+      <p class="sub">Give it a sentence and a destination, from 190 world languages to one you name yourself. It detects the source, carries the meaning across, writes down the choices it made, and tags where the message should go. Sensitive text stays on this machine.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#decoder">Open the decoder <span aria-hidden="true">→</span></a>
+        <button class="btn" type="button" id="heroCookie">Cookie test</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>190+</b><span>target languages</span></div>
+        <div class="stat"><b>16</b><span>nodes linked</span></div>
+        <div class="stat"><b>8</b><span>language packs</span></div>
+        <div class="stat"><b>0</b><span>cloud calls</span></div>
+      </div>
+    </div>
+    <div class="node-map" aria-label="Animated map of connected language nodes">
+      <div class="map-label">NODE MAP / <em>LIVE</em></div>
+      <canvas id="constellation"></canvas>
+      <div class="map-foot"><span>EN · DE · JA · AR · TLH · GN · YUA</span><span><b>route_to</b> → open</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="decoder">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="tag">01 / The decoder</div><h2>Send a packet, get a packet.</h2></div>
+      <p class="sec-note">Pick from ~190 world languages or name your own. Samples are real; other text is queued for the local desk.</p>
+    </div>
+
+    <div class="console" id="console">
+      <div class="console-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="path">~/linguanode/<b>decode</b></span>
+        <span class="right"><span class="spark"></span>LOCAL ONLY</span>
+      </div>
+      <div class="console-body">
+        <div class="console-in">
+          <label for="source">Source text</label>
+          <textarea id="source" spellcheck="false" placeholder="give me my cookies! Now!">give me my cookies! Now!</textarea>
+          <label for="target" style="margin-top:14px">Target language</label>
+          <select id="target"></select>
+          <div class="custom-row"><span>or name any language</span><input id="customTarget" type="text" placeholder="e.g. Saterland Frisian, Elvish, ..." autocomplete="off" /></div>
+          <div class="row-btns">
+            <button class="btn primary small" type="button" id="transmit">Transmit <span aria-hidden="true">→</span></button>
+            <button class="btn small" type="button" id="sendText">Send this job by email</button>
+          </div>
+          <div class="samples" aria-label="Sample packets">
+            <button class="chip hot" type="button" data-sample="cookie">cookie test</button>
+            <button class="chip" type="button" data-sample="japanese">Japanese politeness</button>
+            <button class="chip" type="button" data-sample="arabic">Arabic context</button>
+            <button class="chip" type="button" data-sample="german">German terms</button>
+          </div>
+          <div class="status" id="status" role="status">Ready. Nothing typed here leaves the browser.</div>
+        </div>
+        <div class="console-out">
+          <label>Output packet / JSON</label>
+          <div class="out" id="out" aria-live="polite"><pre><span class="decode">AWAITING INPUT<span class="blink">_</span></span></pre></div>
+        </div>
+      </div>
+      <div class="trace-wrap">
+        <div class="trace-head"><span>AGENT ACTIONS / WHAT THE NODE DID</span><span id="traceStatus">idle</span></div>
+        <div class="trace" id="trace"><div class="tstep" style="opacity:1;transform:none"><span class="ti">00</span><b>Waiting</b><span>Send a packet to see the actions.</span></div></div>
+      </div>
+      <div class="console-foot"><span>Packets decoded this visit: <b id="count">0</b></span><span>schema: original_language · target_language · translated_text · notes · route_to</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="track" id="track"></div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="tag">02 / How it works</div><h2>Four stops, one packet.</h2></div>
+      <p class="sec-note">You can read every decision in the notes field. Nothing is hidden behind a single opaque answer.</p>
+    </div>
+    <div class="pipe">
+      <div class="step"><span class="num">01</span><h3>Detect</h3><p>Names the language and dialect before a word is moved.</p><span class="arrow" aria-hidden="true">→</span></div>
+      <div class="step"><span class="num">02</span><h3>Translate</h3><p>Carries the meaning across and keeps the original in the packet.</p><span class="arrow" aria-hidden="true">→</span></div>
+      <div class="step"><span class="num">03</span><h3>Annotate</h3><p>Records terminology and cultural choices so a reviewer can see them.</p><span class="arrow" aria-hidden="true">→</span></div>
+      <div class="step"><span class="num">04</span><h3>Route</h3><p>Tags the destination from your rules, or leaves it unrouted.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="tag">03 / Services</div><h2>What the node does.</h2></div>
+      <p class="sec-note">Built for the messages that get dropped when a service only knows the ten biggest languages.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="ico">01</div><h3>Language detection</h3><p>Identifies the language and dialect first. When a form is not marked in the source, the packet says so instead of assuming.</p></div>
+      <div class="card"><div class="ico">02</div><h3>Faithful translation</h3><p>Meaning before word order. The source text stays in the packet so you can always check it against the result.</p></div>
+      <div class="card"><div class="ico">03</div><h3>Cultural and term notes</h3><p>Politeness level, regional usage, technical vocabulary. The choices are written down in plain language.</p></div>
+      <div class="card"><div class="ico">04</div><h3>Indigenous language packs</h3><p>Chol, Guarani, Yucatec Maya, Nahuatl, Otomi, Totonac and Zapotec. Community-contributed, with no legal guarantee.</p></div>
+      <div class="card"><div class="ico">05</div><h3>Routing you define</h3><p>Give the node your rules once. Privacy rights to one queue, support requests to another, or leave it unrouted.</p></div>
+      <div class="card"><div class="ico">06</div><h3>Local by default</h3><p>Private and compliance-sensitive text stays on this machine. The demo console above makes no network calls at all.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cookie">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="tag">04 / Field test</div><h2>The cookie transmission.</h2></div>
+    </div>
+    <div class="corner">
+      <div>
+        <h3>"give me my cookies! Now!"</h3>
+        <p>The first job this desk ever took. English in, Klingon out, with the uncertainty printed next to the answer.</p>
+        <button class="btn small" type="button" id="rerunCookie">Run it again</button>
+      </div>
+      <pre>{
+  "original_language": "English",
+  "target_language": "Klingon (tlhIngan Hol)",
+  "translated_text": "kukimeywIj HInob! DaH!",
+  "notes": "HInob is the imperative 'give me' form,
+            DaH is 'now', -wIj marks 'my'. No verified
+            dictionary noun for 'cookie' in the sources
+            checked, so kuki is a flagged loanword
+            with plural -mey. Approximate noun.",
+  "route_to": "unrouted"
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="tag">05 / Fine print</div><h2>What this is, and is not.</h2></div>
+    </div>
+    <div class="fine">
+      <ul>
+        <li><b>Not a certified legal translation service.</b> Nothing here is a sworn or legally valid translation.</li>
+        <li><b>Community translations.</b> The language packs are contributed by speakers. Accuracy is not guaranteed, and gaps are flagged rather than filled with guesses.</li>
+        <li><b>Private text stays local.</b> Compliance, health, finance and personal material are handled on this machine, never sent to a cloud model without a separate OK.</li>
+        <li><b>The console is a display.</b> Sample packets are fixed examples. Other input is queued for the local desk and is not auto-translated in your browser.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="tag">06 / Intake</div>
+    <h2>Have a job for the node?</h2>
+    <p>Send the source text, the target language and any routing rules. You get the packet back with the notes attached.</p>
+    <div class="hero-actions" style="justify-content:center">
+      <a class="btn primary" id="mailJob" href="mailto:45dgof8@gmail.com?subject=LinguaNode%20translation%20job"><span class="led"></span>Open the job template</a>
+      <button class="btn" type="button" id="copyJob">Copy job template</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <span><b>45dgof8 · LinguaNodeTM</b> · translation desk</span>
+    <span>standalone page · local-first · no trackers</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- constellation ---------- */
+  var cv = document.getElementById("constellation");
+  var ctx = cv.getContext("2d");
+  var labels = ["EN","DE","FR","ES","JA","AR","ZH","KO","TLH","GN","YUA","NAH","ZAP","TZO","TOT","OTO"];
+  var nodes = [], W = 0, H = 0, dpr = 1, flashUntil = 0;
+
+  function sizeCanvas(){
+    var box = cv.parentNode.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = box.width; H = box.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    if(!nodes.length){
+      nodes = labels.map(function(l,i){
+        return {
+          x: 24 + Math.random()*(W-48), y: 24 + Math.random()*(H-48),
+          vx:(Math.random()-.5)*.22, vy:(Math.random()-.5)*.22,
+          label:l, r: l==="TLH" ? 4.4 : 2.4, phase: Math.random()*Math.PI*2
+        };
+      });
+    } else {
+      nodes.forEach(function(n){ n.x=Math.min(Math.max(n.x,20),W-20); n.y=Math.min(Math.max(n.y,20),H-20); });
+    }
+  }
+  sizeCanvas();
+  window.addEventListener("resize", sizeCanvas);
+
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    var i,j,a,b,dx,dy,dist,limit=Math.min(130, W*.32);
+    for(i=0;i<nodes.length;i++){
+      a=nodes[i];
+      if(!reduce){ a.x+=a.vx; a.y+=a.vy; }
+      if(a.x<14||a.x>W-14) a.vx*=-1;
+      if(a.y<14||a.y>H-14) a.vy*=-1;
+    }
+    for(i=0;i<nodes.length;i++){
+      for(j=i+1;j<nodes.length;j++){
+        a=nodes[i]; b=nodes[j];
+        dx=a.x-b.x; dy=a.y-b.y; dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<limit){
+          ctx.strokeStyle="rgba(120,190,230,"+(0.05+0.20*(1-dist/limit))+")";
+          ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    if(t<flashUntil){
+      var p=1-(flashUntil-t)/900;
+      var s=nodes[8], e=nodes[9];
+      ctx.strokeStyle="rgba(18,214,223,"+(0.85*(1-p))+")";
+      ctx.lineWidth=1.8;
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(e.x,e.y); ctx.stroke();
+      var px=s.x+(e.x-s.x)*p, py=s.y+(e.y-s.y)*p;
+      ctx.fillStyle="#EAF0FF";
+      ctx.shadowColor="#12D6DF"; ctx.shadowBlur=16;
+      ctx.beginPath(); ctx.arc(px,py,3.2,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0;
+    }
+    nodes.forEach(function(n){
+      var pulse = reduce ? 1 : 1+.22*Math.sin(t/520+n.phase);
+      ctx.fillStyle = n.label==="TLH" ? "#FF5DA7" : "#12D6DF";
+      ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*pulse,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0;
+      if(n.r>3 || n.label==="EN" || n.label==="JA" || n.label==="YUA"){
+        ctx.fillStyle="rgba(234,240,255,.62)";
+        ctx.font="9px ui-monospace, monospace";
+        ctx.fillText(n.label,n.x+7,n.y+3);
+      }
+    });
+    if(!reduce) window.requestAnimationFrame(draw);
+  }
+  if(reduce){ draw(0); } else { window.requestAnimationFrame(draw); }
+
+  /* ---------- ticker ---------- */
+  var names = ["ENGLISH","DEUTSCH","FRANCAIS","ESPANOL","日本語","العربية","中文","한국어","KLINGON","GUARANI","YUCATEC MAYA","NAHUATL","ZAPOTEC","CHOL","TOTONAC","OTOMI"];
+  var track=document.getElementById("track");
+  track.innerHTML = names.concat(names).map(function(n){ return "<span><b>◈</b> "+n+"</span>"; }).join("");
+
+  /* ---------- samples ---------- */
+  var SAMPLES = {
+    cookie: {
+      input: "give me my cookies! Now!", target: "tlh",
+      packet: {
+        original_language:"English", target_language:"Klingon (tlhIngan Hol)",
+        translated_text:"kukimeywIj HInob! DaH!",
+        notes:"HInob is the imperative 'give me' form, DaH is 'now', and -wIj marks 'my'. Klingon has no verified dictionary noun for 'cookie' in the sources checked, so kuki is a flagged loanword with plural -mey. Treat that noun as approximate.",
+        route_to:"unrouted"
+      }
+    },
+    japanese: {
+      input: "この文章を英語にして、丁寧さはそのままでお願いします。", target: "en",
+      packet: {
+        original_language:"Japanese", target_language:"English",
+        translated_text:"Please translate this sentence into English, keeping the politeness level as it is.",
+        notes:"The source is polite but not formal. The keigo level is carried into the English request instead of being flattened into a command.",
+        route_to:"support-intake"
+      }
+    },
+    arabic: {
+      input: "أحتاج ترجمة دقيقة مع ملاحظة عن السياق الثقافي.", target: "en",
+      packet: {
+        original_language:"Arabic", target_language:"English",
+        translated_text:"I need an accurate translation with a note on the cultural context.",
+        notes:"The source asks for a cultural-context note. Modern Standard Arabic is assumed; no dialect is marked in the text.",
+        route_to:"support-intake"
+      }
+    },
+    german: {
+      input: "Bitte übersetzen, aber Fachbegriffe konsistent halten.", target: "en",
+      packet: {
+        original_language:"German", target_language:"English",
+        translated_text:"Please translate, but keep technical terms consistent.",
+        notes:"Fachbegriffe implies domain terminology. Supply a glossary if the terms must match a fixed list.",
+        route_to:"support-intake"
+      }
+    }
+  };
+
+  var LANGS = "aa|Afar,ab|Abkhazian,ae|Avestan,af|Afrikaans,ak|Akan,am|Amharic,an|Aragonese,ar|Arabic,as|Assamese,av|Avaric,ay|Aymara,az|Azerbaijani,"+
+    "ba|Bashkir,be|Belarusian,bg|Bulgarian,bh|Bihari,bi|Bislama,bm|Bambara,bn|Bengali,bo|Tibetan,br|Breton,bs|Bosnian,"+
+    "ca|Catalan,ce|Chechen,ch|Chamorro,co|Corsican,cr|Cree,cs|Czech,cu|Church Slavic,cv|Chuvash,cy|Welsh,"+
+    "da|Danish,de|German,dv|Divehi,dz|Dzongkha,ee|Ewe,el|Greek,en|English,eo|Esperanto,es|Spanish,et|Estonian,eu|Basque,"+
+    "fa|Persian,ff|Fulah,fi|Finnish,fj|Fijian,fo|Faroese,fr|French,fy|Western Frisian,ga|Irish,gd|Scottish Gaelic,"+
+    "gl|Galician,gn|Guarani,gu|Gujarati,gv|Manx,ha|Hausa,he|Hebrew,hi|Hindi,ho|Hiri Motu,hr|Croatian,ht|Haitian,"+
+    "hu|Hungarian,hy|Armenian,hz|Herero,ia|Interlingua,id|Indonesian,ie|Interlingue,ig|Igbo,ii|Sichuan Yi,ik|Inupiaq,"+
+    "io|Ido,is|Icelandic,it|Italian,iu|Inuktitut,ja|Japanese,jv|Javanese,ka|Georgian,kg|Kongo,ki|Kikuyu,kj|Kuanyama,"+
+    "kk|Kazakh,kl|Kalaallisut,km|Khmer,kn|Kannada,ko|Korean,kr|Kanuri,ks|Kashmiri,ku|Kurdish,kv|Komi,kw|Cornish,"+
+    "ky|Kirghiz,la|Latin,lb|Luxembourgish,lg|Ganda,li|Limburgish,ln|Lingala,lo|Lao,lt|Lithuanian,lu|Luba-Katanga,"+
+    "lv|Latvian,mg|Malagasy,mh|Marshallese,mi|Maori,mk|Macedonian,ml|Malayalam,mn|Mongolian,mr|Marathi,ms|Malay,"+
+    "mt|Maltese,my|Burmese,na|Nauru,nb|Norwegian Bokmal,nd|North Ndebele,ne|Nepali,ng|Ndonga,nl|Dutch,"+
+    "nn|Norwegian Nynorsk,no|Norwegian,nr|South Ndebele,nv|Navajo,ny|Chichewa,oc|Occitan,oj|Ojibwa,om|Oromo,"+
+    "or|Oriya,os|Ossetian,pa|Punjabi,pi|Pali,pl|Polish,ps|Pashto,pt|Portuguese,qu|Quechua,rm|Romansh,rn|Rundi,"+
+    "ro|Romanian,ru|Russian,rw|Kinyarwanda,sa|Sanskrit,sc|Sardinian,sd|Sindhi,se|Northern Sami,sg|Sango,si|Sinhala,"+
+    "sk|Slovak,sl|Slovenian,sm|Samoan,sn|Shona,so|Somali,sq|Albanian,sr|Serbian,ss|Swati,st|Southern Sotho,"+
+    "su|Sundanese,sv|Swedish,sw|Swahili,ta|Tamil,te|Telugu,tg|Tajik,th|Thai,ti|Tigrinya,tk|Turkmen,tl|Tagalog,"+
+    "tn|Tswana,to|Tonga,tr|Turkish,ts|Tsonga,tt|Tatar,tw|Twi,ty|Tahitian,ug|Uighur,uk|Ukrainian,ur|Urdu,uz|Uzbek,"+
+    "ve|Venda,vi|Vietnamese,vo|Volapuk,wa|Walloon,wo|Wolof,xh|Xhosa,yi|Yiddish,yo|Yoruba,za|Zhuang,zh|Chinese,zu|Zulu,"+
+    "tlh|Klingon (tlhIngan Hol),yua|Yucatec Maya,nah|Nahuatl,zap|Zapotec,tzo|Chol,tot|Totonac,oto|Otomi";
+
+  var targetSel=document.getElementById("target"), source=document.getElementById("source");
+  var customEl=document.getElementById("customTarget");
+  var out=document.getElementById("out"), status=document.getElementById("status");
+  var traceEl=document.getElementById("trace"), traceStatus=document.getElementById("traceStatus");
+  var countEl=document.getElementById("count"), consoleEl=document.getElementById("console");
+  var count=0, timer=null;
+
+  LANGS.split(",").forEach(function(pair){
+    var p=pair.split("|"), o=document.createElement("option");
+    o.value=p[0]; o.textContent=p[1];
+    if(p[0]==="tlh") o.selected=true;
+    targetSel.appendChild(o);
+  });
+
+  function targetInfo(){
+    var custom=customEl.value.trim();
+    if(custom) return { code:"custom", label:custom };
+    return { code:targetSel.value, label:targetSel.options[targetSel.selectedIndex].text };
+  }
+  function targetLabel(){ return targetInfo().label; }
+  function detect(text){
+    if(/[\u3040-\u30ff]/.test(text)) return "Japanese";
+    if(/[\u0600-\u06ff]/.test(text)) return "Arabic";
+    if(/[\u4e00-\u9fff]/.test(text)) return "Chinese";
+    if(/[\uac00-\ud7af]/.test(text)) return "Korean";
+    if(/[\u0400-\u04ff]/.test(text)) return "Cyrillic script";
+    if(/[\u0900-\u097f]/.test(text)) return "Devanagari script";
+    return "Latin script (language not named in this demo)";
+  }
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function hl(json){
+    return esc(json).replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?)/g,
+      function(m,str,colon,bool,num){
+        if(str) return '<span class="'+(colon?"k":"s")+'">'+str+'</span>'+(colon||"");
+        if(bool) return '<span class="n">'+bool+'</span>';
+        if(num) return '<span class="n">'+num+'</span>';
+        return m;
+      });
+  }
+  function render(packet){
+    var json=JSON.stringify(packet,null,2);
+    out.innerHTML='<pre><span class="decode">DECODING PACKET<span class="blink">_</span></span></pre>';
+    if(timer) window.clearTimeout(timer);
+    timer=window.setTimeout(function(){
+      out.innerHTML='<pre>'+hl(json)+'</pre>';
+      out.classList.remove("pop"); void out.offsetWidth; out.classList.add("pop");
+    }, reduce?0:420);
+  }
+  function say(msg){ status.innerHTML="<b>&gt;</b> "+msg; }
+  function norm(s){ return s.toLowerCase().replace(/\s+/g," ").trim(); }
+  function showTrace(steps,label){
+    traceEl.innerHTML="";
+    traceStatus.textContent=label;
+    steps.forEach(function(s,i){
+      var d=document.createElement("div");
+      d.className="tstep";
+      if(reduce){ d.style.opacity="1"; d.style.transform="none"; }
+      else d.style.animationDelay=(i*0.11)+"s";
+      d.innerHTML='<span class="ti">'+s[0]+'</span><b>'+s[1]+'</b><span>'+s[2]+'</span>';
+      traceEl.appendChild(d);
+    });
+  }
+
+  function transmit(textArg,targetArg){
+    var text = textArg===undefined ? source.value : textArg;
+    var info = targetArg===undefined ? targetInfo() : { code:targetArg, label:targetSel.options[targetSel.selectedIndex].text };
+    text = text.trim();
+    if(!text){ say("Type something first."); source.focus(); return; }
+    var hit=null, key;
+    for(key in SAMPLES){
+      if(!SAMPLES.hasOwnProperty(key)) continue;
+      if(norm(SAMPLES[key].input)===norm(text) && SAMPLES[key].target===info.code && !customEl.value.trim()){ hit=SAMPLES[key]; break; }
+    }
+    if(hit){
+      render(hit.packet);
+      say("Sample packet loaded. No network call made.");
+      showTrace([
+        ["01","SCAN","source read: "+hit.packet.original_language],
+        ["02","LOOKUP","dictionary and pack checked"],
+        ["03","MAP","meaning carried into "+hit.packet.target_language],
+        ["04","NOTE","uncertainty written to notes field"],
+        ["05","ROUTE",hit.packet.route_to]
+      ],"5 actions / local");
+    } else {
+      var detected=detect(text);
+      render({
+        original_language: detected,
+        target_language: info.label,
+        translated_text: "[queued - this browser holds no translation engine]",
+        notes: "Send the job to the local LinguaNode desk with the source text, target language and any routing rules.",
+        route_to: "unrouted"
+      });
+      say("Job queued for the local desk. Use 'Send this job by email'.");
+      showTrace([
+        ["01","SCAN",detected],
+        ["02","LOOKUP","local desk queue selected"],
+        ["03","MAP","waiting for agent"],
+        ["04","NOTE","source text kept verbatim"],
+        ["05","ROUTE","no rule matched, unrouted"]
+      ],"5 actions / queued");
+    }
+    var cta=document.getElementById("mailJob");
+    if(cta) cta.setAttribute("href", mailHref());
+    count++; countEl.textContent=count;
+    consoleEl.classList.remove("sending"); void consoleEl.offsetWidth; consoleEl.classList.add("sending");
+    if(!reduce) flashUntil=performance.now()+900;
+  }
+
+  document.getElementById("transmit").addEventListener("click",function(){ transmit(); });
+  source.addEventListener("keydown",function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); transmit(); }
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-sample]"),function(btn){
+    btn.addEventListener("click",function(){
+      var s=SAMPLES[btn.getAttribute("data-sample")];
+      customEl.value=""; source.value=s.input; targetSel.value=s.target; transmit(s.input,s.target);
+    });
+  });
+  document.getElementById("heroCookie").addEventListener("click",function(){
+    document.getElementById("decoder").scrollIntoView({behavior:reduce?"auto":"smooth"});
+    var s=SAMPLES.cookie; customEl.value=""; source.value=s.input; targetSel.value=s.target; transmit(s.input,s.target);
+  });
+  document.getElementById("rerunCookie").addEventListener("click",function(){
+    document.getElementById("decoder").scrollIntoView({behavior:reduce?"auto":"smooth"});
+    var s=SAMPLES.cookie; customEl.value=""; source.value=s.input; targetSel.value=s.target; transmit(s.input,s.target);
+  });
+
+  var templateText = "LinguaNode translation job\n\nSource text:\n\nTarget language:\n\nRouting rules (if any):\n\nPrivacy: keep local / cloud OK";
+  function mailHref(){
+    var body = "LinguaNode translation job\n\nSource text:\n"+source.value.trim()+"\n\nTarget language:\n"+targetLabel()+"\n\nRouting rules (if any):\n\nPrivacy: keep local / cloud OK";
+    return "mailto:45dgof8@gmail.com?subject="+encodeURIComponent("LinguaNode translation job")+"&body="+encodeURIComponent(body);
+  }
+  document.getElementById("sendText").addEventListener("click",function(){
+    window.location.href=mailHref(); say("Mail client opened with the job template.");
+  });
+  document.getElementById("mailJob").setAttribute("href","mailto:45dgof8@gmail.com?subject="+encodeURIComponent("LinguaNode translation job")+"&body="+encodeURIComponent(templateText));
+  document.getElementById("copyJob").addEventListener("click",function(){
+    try{
+      navigator.clipboard.writeText(templateText).then(function(){ say("Job template copied."); },function(){ say("Copy failed, select the text manually."); });
+    }catch(e){ say("Clipboard unavailable in this browser."); }
+  });
+})();
+</script>
+</body>
+</html>
