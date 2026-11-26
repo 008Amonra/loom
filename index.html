@@ -96,6 +96,10 @@
   .btn-submit:hover{background:#33ffaa;transform:translateY(-1px)}
 
   .note{color:#666;font-size:0.85rem;margin-top:8px}
+  .tech-details{margin-top:10px;font-size:0.85rem}
+  .tech-details summary{cursor:pointer;color:#4488ff}
+  .tech-details[open] summary{margin-bottom:8px}
+  .tech-details>div{padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;color:#aaa;line-height:1.6}
   .tag{display:inline-block;background:#1a2a1a;color:#44cc66;font-size:0.75rem;padding:2px 8px;border-radius:4px;margin-right:4px}
 
   .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
@@ -380,15 +384,27 @@
   <p class="note" style="margin-top:12px;color:#666;border-top:1px solid #2a2a3a;padding-top:12px">Search services (below) are pay-what-you-can. Set your own amount.</p>
 </div>
 
-<!-- Setup Support -->
+<!-- Private AI Desk -->
 <div class="card" style="border-color:#4a3a6a;background:#0e0e1a">
-  <h2 style="margin-top:0">🔧 Setup support</h2>
+  <h2 style="margin-top:0">🧠 Private AI Desk</h2>
   <div class="price-item" style="background:#1a1a2e;border:1px solid #5a4a7a;border-radius:8px">
-    <span class="service" style="color:#c0a0ff">Personal setup — I'll help you get everything running</span>
+    <span class="service" style="color:#c0a0ff">Your own AI assistant, installed and checked for you</span>
     <span class="price" style="color:#c0a0ff">CHF 49</span>
   </div>
-  <p style="color:#aaa;font-size:0.9rem;margin:12px 0">One-time service: full setup guide + email support to get your own agent ops center running on your hardware.</p>
-  <a href="#contact" class="btn" style="background:#4a3a6a;color:#e0e0e8;text-decoration:none;border:1px solid #6a5a8a;text-align:center">Get in touch</a>
+  <p style="color:#aaa;font-size:0.9rem;margin:12px 0">I set up a private assistant on your computer and make sure it runs. Your files stay with you. No cloud account, no subscription, and it works offline.</p>
+  <ul style="color:#b8b8c8;font-size:0.9rem;margin:0 0 12px 18px;line-height:1.7">
+    <li>Writes and answers in your language</li>
+    <li>Keeps your notes and documents on your machine</li>
+    <li>Comes with your own rules, so it works the way you want</li>
+    <li>Email support after setup, and a one-command recovery if anything stops</li>
+  </ul>
+  <details class="tech-details">
+    <summary>What is installed (technical details)</summary>
+    <div>
+      opencode CLI, a local model server on port 1234 running Gemma 3 4B (Q4_K_M), an AGENTS.md personality file, your ME.list rules, memory files, voice tools, and the revive.sh recovery script. Everything runs locally, no API key needed.
+    </div>
+  </details>
+  <a href="#contact" class="btn" style="background:#4a3a6a;color:#e0e0e8;text-decoration:none;border:1px solid #6a5a8a;text-align:center;margin-top:12px">Get in touch</a>
   <p class="note" style="margin-top:8px">Pay for the setup first via the payment section below, then get in touch.</p>
 </div>
 
@@ -452,12 +468,18 @@
   </div>
   <p class="note" style="margin-top:12px">Or run: <code>curl -fsSL https://45dgof8.com/install.sh | bash</code></p>
   <div style="margin-top:14px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
-    <strong style="color:#44cc66">📦 After installing:</strong> opencode needs a local model server on port 1234.
-    Install <a href="https://lmstudio.ai/" target="_blank" style="color:#4488ff">LM Studio</a> (free), search for
-    <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Gemma 3 4B</code>, download the
-    <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Q4_K_M</code> quant, load it, and press
-    <strong style="color:#ddd">Start Server</strong> in the Developer tab. install.sh walks you through this and confirms when it's live.
-    Or let install.sh do it all automatically (optional, downloads ~3 GB).
+    <strong style="color:#44cc66">📦 After installing:</strong> your assistant is ready to use. It runs on your own computer, so your notes and documents stay there. No account, no monthly fee, and it works offline. The installer checks that everything is live.
+    <details class="tech-details">
+      <summary>Technical details: how the local model is set up</summary>
+      <div>
+        opencode needs a local model server on port 1234.
+        Install <a href="https://lmstudio.ai/" target="_blank" style="color:#4488ff">LM Studio</a> (free), search for
+        <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Gemma 3 4B</code>, download the
+        <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">Q4_K_M</code> quant, load it, and press
+        <strong style="color:#ddd">Start Server</strong> in the Developer tab. install.sh walks you through this and confirms when it's live.
+        Or let install.sh do it all automatically (optional, downloads ~3 GB).
+      </div>
+    </details>
   </div>
   <div style="margin-top:10px;padding:12px;background:#0a0a12;border:1px solid #2a3a2a;border-radius:8px;font-size:0.85rem">
     <strong style="color:#44cc66">📋 Also included:</strong> a neutral agent personality file (AGENTS.md) and <strong style="color:#ddd">YOUR rules file (ME.list)</strong> - pre-filled with sensible defaults, and every rule can be switched off by putting a <code style="background:#1a1a2a;padding:2px 6px;border-radius:4px">#</code> in front of its line. Plus voice tools: <strong style="color:#ddd">speak</strong>, <strong style="color:#ddd">voice-button</strong>, <strong style="color:#ddd">v-toggle</strong>, and <strong style="color:#ddd">voice-assistant</strong> (blind + deaf access). One command, everything works.
