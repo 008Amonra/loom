@@ -203,6 +203,12 @@
   .baid-wob{display:inline-block;animation:baidWobble 5s ease-in-out infinite;transform-origin:center}
   @keyframes baidWobble{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1.5deg)}}
   @media(max-width:640px){.baid{top:8px}.baid-burst{width:48px;height:48px}.baid-burst .burst-txt{font-size:.6rem}.baid-name{display:none}.baid-strip{padding:6px 14px 6px 13px}.baid-arrow{font-size:1rem}}
+  /* Prompt Forge artwork rotation */
+  .pf-art{position:relative;display:block;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;margin:10px 0 12px;background:#050810}
+  .pf-art img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:blur(8px);transform:scale(1.04);transition:opacity 1.2s ease,filter 1.2s ease,transform 15s linear}
+  .pf-art img.is-active{opacity:1;filter:blur(0);animation:pfZoom 15s linear forwards}
+  @keyframes pfZoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+  @media(prefers-reduced-motion:reduce){.pf-art img{transition:none;animation:none;filter:none;transform:none}}
 </style>
 <script type="application/ld+json">
 {
@@ -299,7 +305,14 @@
   <div style="position:absolute;top:10px;right:14px;font-size:0.7rem;letter-spacing:2px;color:#00ff88;border:1px solid #00ff88;border-radius:20px;padding:3px 10px">★ DAILY</div>
   <div style="font-size:2.2rem;margin-bottom:4px">🎬</div>
   <h2 style="margin-top:0;color:#00ff88">TSG Prompt Forge</h2>
-  <img src="assets/soherzig-2000.webp" alt="Prompt Forge artwork" style="display:block;width:100%;max-width:100%;height:auto;border-radius:10px;margin:10px 0 12px" />
+  <div class="pf-art" aria-label="Prompt Forge artwork, rotating every 15 seconds">
+    <img class="is-active" src="assets/promptforge-01.jpg" alt="Prompt Forge artwork 1 of 6" />
+    <img src="assets/promptforge-02.jpg" alt="Prompt Forge artwork 2 of 6" />
+    <img src="assets/promptforge-03.jpg" alt="Prompt Forge artwork 3 of 6" />
+    <img src="assets/promptforge-04.jpg" alt="Prompt Forge artwork 4 of 6" />
+    <img src="assets/promptforge-05.jpg" alt="Prompt Forge artwork 5 of 6" />
+    <img src="assets/promptforge-06.jpg" alt="Prompt Forge artwork 6 of 6" />
+  </div>
   <p style="color:#b8b8c8">Generate <strong style="color:#ddd">pictures and animations</strong> for your YouTube content with the advanced AI prompt builder - creative workflows, right in your browser. Runs local, no subscription.</p>
   <div style="margin-top:14px"><a href="https://45dgof8.com/TSG-prompt-forge.html" class="btn" style="display:inline-block;padding:12px 30px;background:#00ff88;color:#0a0a0a;border:none;border-radius:10px;text-decoration:none;font-weight:700;transition:all .15s;box-shadow:0 0 18px rgba(0,255,136,.35)">🧭 Open the Forge</a></div>
 </div>
@@ -1739,6 +1752,20 @@ renderBars(PATTERNS[0]());
     var sel = window.getSelection();
     if (!sel || sel.isCollapsed) { lastSpokenSel = ''; return; }
   });
+})();
+</script>
+
+<script>
+/* Rotate the six Prompt Forge artwork images on the homepage card every 15 seconds */
+(function () {
+  var slides = document.querySelectorAll('.pf-art img');
+  if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var current = 0;
+  setInterval(function () {
+    slides[current].classList.remove('is-active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('is-active');
+  }, 15000);
 })();
 </script>
 
