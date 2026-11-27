@@ -209,6 +209,19 @@
   .pf-art img.is-active{opacity:1;filter:blur(0);animation:pfZoom 15s linear forwards}
   @keyframes pfZoom{from{transform:scale(1)}to{transform:scale(1.08)}}
   @media(prefers-reduced-motion:reduce){.pf-art img{transition:none;animation:none;filter:none;transform:none}}
+  /* Prompt Forge local image drop point */
+  .pf-drop{margin:0 0 10px;padding:12px 14px;border:1px dashed #00ff88;border-radius:10px;background:rgba(0,255,136,.04);color:#b8b8c8;text-align:center;cursor:pointer;transition:background .2s,border-color .2s}
+  .pf-drop:hover,.pf-drop.dragover{background:rgba(0,255,136,.12);color:#00ff88}
+  .pf-drop strong{display:block;color:#00ff88;font-size:.9rem;letter-spacing:.5px}
+  .pf-drop small{display:block;font-size:.75rem;color:#777;margin-top:4px}
+  .pf-drop-result{margin:0 0 12px;padding:10px;border:1px solid #2a4a3a;border-radius:10px;background:rgba(0,0,0,.25)}
+  .pf-drop-result img{display:block;width:100%;max-height:280px;object-fit:contain;border-radius:6px;background:#050810}
+  .pf-drop-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.75rem;color:#888;margin:8px 0}
+  .pf-drop-meta b{color:#00ff88;font-weight:600;word-break:break-all}
+  .pf-drop-actions{display:flex;flex-wrap:wrap;gap:8px}
+  .pf-drop-actions button,.pf-drop-actions a{font:inherit;font-size:.8rem;padding:7px 12px;border:1px solid #00ff88;border-radius:8px;background:transparent;color:#00ff88;cursor:pointer;text-decoration:none}
+  .pf-drop-actions button:hover,.pf-drop-actions a:hover{background:#00ff88;color:#0a0a0a}
+  .pf-drop-actions button:disabled{cursor:default;opacity:.6}
 </style>
 <script type="application/ld+json">
 {
@@ -312,6 +325,20 @@
     <img src="assets/promptforge-04.jpg" alt="Prompt Forge artwork 4 of 6" />
     <img src="assets/promptforge-05.jpg" alt="Prompt Forge artwork 5 of 6" />
     <img src="assets/promptforge-06.jpg" alt="Prompt Forge artwork 6 of 6" />
+  </div>
+  <div class="pf-drop" id="pfDrop" role="button" tabindex="0" aria-label="Drop an image here to optimize it in your browser">
+    <strong>Drop an image here</strong>
+    <span>or click to choose a file</span>
+    <small>Resized, compressed and renamed in your browser. Nothing is uploaded.</small>
+    <input type="file" id="pfDropInput" accept="image/*" hidden />
+  </div>
+  <div class="pf-drop-result" id="pfDropResult" hidden>
+    <img id="pfDropPreview" alt="Optimized image preview" />
+    <div class="pf-drop-meta"><span>New name: <b id="pfDropName"></b></span><span id="pfDropSize"></span></div>
+    <div class="pf-drop-actions">
+      <button type="button" id="pfDropShow">Show above</button>
+      <a id="pfDropDownload" download>Download WebP</a>
+    </div>
   </div>
   <p style="color:#b8b8c8">Generate <strong style="color:#ddd">pictures and animations</strong> for your YouTube content with the advanced AI prompt builder - creative workflows, right in your browser. Runs local, no subscription.</p>
   <div style="margin-top:14px"><a href="https://45dgof8.com/TSG-prompt-forge.html" class="btn" style="display:inline-block;padding:12px 30px;background:#00ff88;color:#0a0a0a;border:none;border-radius:10px;text-decoration:none;font-weight:700;transition:all .15s;box-shadow:0 0 18px rgba(0,255,136,.35)">🧭 Open the Forge</a></div>
@@ -1756,16 +1783,103 @@ renderBars(PATTERNS[0]());
 </script>
 
 <script>
-/* Rotate the six Prompt Forge artwork images on the homepage card every 15 seconds */
+/* Rotate the Prompt Forge artwork every 15 seconds. Slides are re-read so dropped images join in. */
 (function () {
-  var slides = document.querySelectorAll('.pf-art img');
-  if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var current = 0;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   setInterval(function () {
-    slides[current].classList.remove('is-active');
-    current = (current + 1) % slides.length;
-    slides[current].classList.add('is-active');
+    var art = document.querySelector('.pf-art');
+    if (!art) return;
+    var slides = art.querySelectorAll('img');
+    if (slides.length < 2) return;
+    var active = art.querySelector('img.is-active');
+    var index = active ? Array.prototype.indexOf.call(slides, active) : -1;
+    if (slides[index]) slides[index].classList.remove('is-active');
+    slides[(index + 1 + slides.length) % slides.length].classList.add('is-active');
   }, 15000);
+})();
+
+/* Drop zone: resize, compress, rename and preview entirely in the browser */
+(function () {
+  var zone = document.getElementById('pfDrop');
+  var input = document.getElementById('pfDropInput');
+  var result = document.getElementById('pfDropResult');
+  var preview = document.getElementById('pfDropPreview');
+  var nameEl = document.getElementById('pfDropName');
+  var sizeEl = document.getElementById('pfDropSize');
+  var download = document.getElementById('pfDropDownload');
+  var show = document.getElementById('pfDropShow');
+  if (!zone || !input) return;
+
+  function stamp() {
+    var d = new Date(), p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+  }
+  function human(bytes) {
+    return bytes > 1048576 ? (bytes / 1048576).toFixed(1) + ' MB' : Math.round(bytes / 1024) + ' KB';
+  }
+  function encode(canvas, quality) {
+    return new Promise(function (resolve) { canvas.toBlob(resolve, 'image/webp', quality); });
+  }
+  function optimize(file) {
+    if (!file || !/^image\//.test(file.type)) return;
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      var max = 1600;
+      var scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      var w = Math.max(1, Math.round(img.naturalWidth * scale));
+      var h = Math.max(1, Math.round(img.naturalHeight * scale));
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      encode(canvas, 0.82).then(function (blob) {
+        if (blob && blob.size > 600000) return encode(canvas, 0.68);
+        return blob;
+      }).then(function (blob) {
+        if (blob && blob.size > 600000) return encode(canvas, 0.55);
+        return blob;
+      }).then(function (blob) {
+        if (!blob) return;
+        var fileName = 'promptforge-drop-' + stamp() + '.webp';
+        var view = URL.createObjectURL(blob);
+        preview.src = view;
+        nameEl.textContent = fileName;
+        sizeEl.textContent = img.naturalWidth + 'x' + img.naturalHeight + ' -> ' + w + 'x' + h + ', ' + human(file.size) + ' -> ' + human(blob.size);
+        download.href = view;
+        download.setAttribute('download', fileName);
+        result.hidden = false;
+        show.onclick = function () {
+          var art = document.querySelector('.pf-art');
+          var currentSlide = art.querySelector('img.is-active');
+          if (currentSlide) currentSlide.classList.remove('is-active');
+          var slide = document.createElement('img');
+          slide.className = 'is-active';
+          slide.src = view;
+          slide.alt = 'Dropped artwork preview, this tab only';
+          art.appendChild(slide);
+          show.textContent = 'Added above';
+          show.disabled = true;
+        };
+      });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+
+  zone.addEventListener('click', function (e) { if (e.target === input) return; input.click(); });
+  zone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    zone.addEventListener(evt, function (e) { e.preventDefault(); zone.classList.add('dragover'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    zone.addEventListener(evt, function (e) { e.preventDefault(); zone.classList.remove('dragover'); });
+  });
+  zone.addEventListener('drop', function (e) {
+    var files = e.dataTransfer && e.dataTransfer.files;
+    if (files && files.length) optimize(files[0]);
+  });
+  input.addEventListener('change', function () { if (input.files && input.files.length) optimize(input.files[0]); });
 })();
 </script>
 
